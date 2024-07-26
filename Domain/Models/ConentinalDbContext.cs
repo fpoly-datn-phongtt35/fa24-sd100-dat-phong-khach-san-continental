@@ -27,8 +27,6 @@ namespace Domain.Models
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ConentinalDbContext).Assembly);
         }
 
-
-
         #region DBSet
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<AmenityRoomDetail> AmenityRoomDetails { get; set; }

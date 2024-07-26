@@ -13,7 +13,8 @@ namespace Domain.Configuration
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.UserName).IsUnicode(true).IsRequired();
             builder.Property(x => x.Password).IsUnicode(false).IsRequired();
-            builder.Property(x => x.Name).IsUnicode(true).IsRequired();
+            builder.Property(x => x.FirstName).IsUnicode(true).IsRequired();
+            builder.Property(x => x.LastName).IsUnicode(false).IsRequired();
             builder.Property(x => x.Email).IsUnicode(false).IsRequired();
             builder.Property(x => x.PhoneNumber).IsUnicode(false).IsRequired().HasMaxLength(20);
         }
