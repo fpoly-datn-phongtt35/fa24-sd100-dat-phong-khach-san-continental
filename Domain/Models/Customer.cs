@@ -1,10 +1,9 @@
 ﻿using Domain.Enums;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class Customer : IdentityUser
+    public class Customer
     {
         [Key]
         public Guid Id { get; set; }
