@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
-    <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="Repositories\ExampleRepository\" />
+    <Folder Include="Repositories\IExampleRepository\" />
+    <Folder Include="Services\ExampleService\" />
   </ItemGroup>
 
 </Project>
