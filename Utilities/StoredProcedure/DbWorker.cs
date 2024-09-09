@@ -196,7 +196,15 @@ namespace Utilities.StoredProcedure
             {
                /* LogHelper.InsertLogTelegram("ExecuteScalar - DbWorker: " + ex);*/
             }
-            return oReturnValue;
+
+            if (oReturnValue != null)
+            {
+                return oReturnValue;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public int ExecuteNonQuery(string procedureName, SqlParameter[] parameters = null)
