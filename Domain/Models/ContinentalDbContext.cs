@@ -2,14 +2,14 @@
 
 namespace Domain.Models
 {
-    public class ConentinalDbContext : DbContext
+    public class ContinentalDbContext : DbContext
     {
-        public ConentinalDbContext()
+        public ContinentalDbContext()
         {
             
         }
 
-        public ConentinalDbContext(DbContextOptions options) : base(options)
+        public ContinentalDbContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Domain.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ConentinalDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ContinentalDbContext).Assembly);
         }
 
         #region DBSet

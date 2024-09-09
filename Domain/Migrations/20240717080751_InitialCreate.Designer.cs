@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Domain.Migrations
 {
-    [DbContext(typeof(ConentinalDbContext))]
+    [DbContext(typeof(ContinentalDbContext))]
     [Migration("20240717080751_InitialCreate")]
     partial class InitialCreate
     {
