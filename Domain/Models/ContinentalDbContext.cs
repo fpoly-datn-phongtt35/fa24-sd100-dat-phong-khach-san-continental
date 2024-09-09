@@ -17,7 +17,7 @@ namespace Domain.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Conentinal;Integrated Security=True;Trust Server Certificate=True");
+                optionsBuilder.UseSqlServer("Data Source=Nghh;Initial Catalog=Conentinal;Persist Security Info=True;User ID=sa;Trust Server Certificate=True");
             }
         }
 
