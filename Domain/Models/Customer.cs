@@ -1,9 +1,10 @@
 ﻿using Domain.Enums;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class Customer
+    public class Customer : IdentityUser
     {
         [Key]
         public Guid Id { get; set; }
@@ -25,6 +26,11 @@ namespace Domain.Models
         [Required]
         [RegularExpression(@"^(\+?\d{1,2}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$",ErrorMessage ="Vui lòng nhập số điện thoại hợp lệ!")]
         public string PhoneNumber { get; set; } = string.Empty;
+        public int Gender { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [RegularExpression(@"^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$", ErrorMessage = "Vui lòng theo dạng DD-MM-YYYY.")]
+        public DateTime DateOfBirth { get; set; } 
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset CreatedTime { get; set; }
