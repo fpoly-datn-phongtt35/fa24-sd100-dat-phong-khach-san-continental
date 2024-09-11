@@ -219,8 +219,7 @@ namespace Utilities.StoredProcedure
                     {
                         oCommand.Parameters.AddRange(parameters);
                     }
-                    SqlParameter OuputParam = oCommand.Parameters.Add("@Identity", SqlDbType.Int);
-                    OuputParam.Direction = ParameterDirection.Output;
+                    int Rs = -1;
                     oConnection.Open();
                     using (SqlTransaction oTransaction = oConnection.BeginTransaction())
                     {
@@ -230,17 +229,10 @@ namespace Utilities.StoredProcedure
                             oCommand.Transaction = oTransaction;
                             oCommand.ExecuteNonQuery();
                             oTransaction.Commit();
+                            Rs = 1;
                         }
                         catch (Exception ex)
                         {
-                            string data_log = "";
-                            if (parameters != null && parameters.Length > 0)
-                            {
-                                data_log = string.Join(",", parameters.Select(x => x.ParameterName)) + ":" + string.Join(",", parameters.Select(x => x.Value == null ? "NULL" : x.Value.ToString()));
-
-                            }
-                            /*LogHelper.InsertLogTelegram("SP Name: " + procedureName + "\n" + "Params GetDataTable - Transaction Rollback - DbWorker: " + data_log + "\n ExecuteNonQuery - Transaction Rollback - DbWorker: " + ex);*/
-
                             oTransaction.Rollback();
                             oCommand.Parameters.Clear();
                             return -1;
@@ -256,7 +248,7 @@ namespace Utilities.StoredProcedure
                             oCommand.Dispose();
                         }
                     }
-                    return Convert.ToInt32(OuputParam.Value);
+                    return Rs;
                 }
             }
             catch (Exception ex)

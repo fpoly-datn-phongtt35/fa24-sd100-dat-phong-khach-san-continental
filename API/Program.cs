@@ -1,5 +1,7 @@
 
 using Domain.Models;
+using Domain.Services.IServices;
+using Domain.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace API
@@ -16,7 +18,7 @@ namespace API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));

@@ -1,6 +1,4 @@
-﻿using Domain.DTO.Email;
-using Domain.Models;
-using MailKit.Security;
+﻿using MailKit.Security;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,7 @@ namespace Utilities
 {
     public class MailHelpers
     {
-        public async Task<bool> SeedGmail(SeedMailRequest request,string mailName,string appPass)
+        /*public async Task<bool> SeedGmail(SeedMailRequest request,string mailName,string appPass)
         {
             User user = new();
             using (var context = new ContinentalDbContext())
@@ -74,10 +72,10 @@ namespace Utilities
 
                     emailMessage.Body = bodyBuilder.ToMessageBody();
 
-/*                    user.ConfirmCode = message.ToString();
+*//*                    user.ConfirmCode = message.ToString();
                     user.SentTime = DateTime.UtcNow.AddMinutes(2);
                     _db.Users.Update(user);
-                    await _db.SaveChangesAsync();*/
+                    await _db.SaveChangesAsync();*//*
                 }
 
 
@@ -91,6 +89,6 @@ namespace Utilities
                 return true;
             }
             return false;
-        }
+        }*/
     }
 }

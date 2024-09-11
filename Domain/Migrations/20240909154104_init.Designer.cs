@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ConentinalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240909154104_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("CreatedTime")
+                    b.Property<DateTimeOffset>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -40,7 +43,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("DeletedTime")
+                    b.Property<DateTimeOffset>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
@@ -51,7 +54,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("ModifiedTime")
+                    b.Property<DateTimeOffset>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")

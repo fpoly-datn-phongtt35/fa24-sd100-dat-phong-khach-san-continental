@@ -18,6 +18,6 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public List<Service> Services { get; set; }
+        public virtual List<Service> Services { get; set; }
     }
 }
