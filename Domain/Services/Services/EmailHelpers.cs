@@ -39,7 +39,7 @@ namespace Domain.Services.Services
                     var message = rand.Next(10000, 99999);
 
 
-                    emailMessage.From.Add(new MailboxAddress("Mei", mail));
+                    emailMessage.From.Add(new MailboxAddress("Continental", mail));
                     emailMessage.To.Add(new MailboxAddress("Recipient Name", request.email));
                     emailMessage.Subject = "Xác nhận thay đổi mật khẩu";
                     var bodyBuilder = new BodyBuilder();

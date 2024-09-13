@@ -81,15 +81,13 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<DataTable> GetServiceTypeById(ServiceTypeGetByIdRequest Search)
+        public async Task<DataTable> GetServiceTypeById(Guid Search)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Id", Search.Id != null ? Search.Id : DBNull.Value ),
-                    new SqlParameter("@PageSize", Search.PageSize),
-                    new SqlParameter("@PageIndex", Search.PageIndex)
+                    new SqlParameter("@Id", Search != null ? Search : DBNull.Value ),
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceType, sqlParameters);
