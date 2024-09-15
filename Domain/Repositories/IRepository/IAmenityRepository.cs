@@ -1,5 +1,4 @@
-﻿using Domain.DTO.Amenity;
-using Domain.Models;
+﻿using Domain.Models;
 
 namespace Domain.Repositories.IRepository;
 
