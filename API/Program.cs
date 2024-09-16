@@ -60,9 +60,11 @@ namespace API
 
             builder.Services.AddTransient<ServiceTypeRepo>();
             builder.Services.AddTransient<ServiceRepo>();
+            builder.Services.AddTransient<BuildingRepo>();
 
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
+            builder.Services.AddTransient<IBuildingService, BuildingService>();
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
