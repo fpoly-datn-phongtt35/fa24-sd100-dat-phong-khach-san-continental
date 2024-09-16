@@ -1,4 +1,7 @@
-﻿using MailKit.Security;
+﻿using Domain.DTO.Email;
+using Domain.Models;
+using Domain.Services.IServices;
+using MailKit.Security;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -6,24 +9,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utilities
+namespace Domain.Services.Services
 {
-    public class MailHelpers
+    public class EmailHelpers : IEmailHelpers
     {
-        /*public async Task<bool> SeedGmail(SeedMailRequest request,string mailName,string appPass)
+        public async Task<bool> SeedGmail(SeedMailRequest request, string mailName, string appPass)
         {
             User user = new();
             using (var context = new ContinentalDbContext())
             {
                 var genericRepository = new GenericRepository<User>(context);
                 var getUser = genericRepository.FindAsync(x => x.Email.ToLower() == request.email.ToLower());
-                if (getUser != null) 
+                if (getUser != null)
                 {
                     user.Email = getUser.Result.Email;
                 }
             }
-            
-       
+
+
             if (user.Email != null)
             {
                 var mail = mailName;
@@ -36,7 +39,7 @@ namespace Utilities
                     var message = rand.Next(10000, 99999);
 
 
-                    emailMessage.From.Add(new MailboxAddress("Mei", mail));
+                    emailMessage.From.Add(new MailboxAddress("Continental", mail));
                     emailMessage.To.Add(new MailboxAddress("Recipient Name", request.email));
                     emailMessage.Subject = "Xác nhận thay đổi mật khẩu";
                     var bodyBuilder = new BodyBuilder();
@@ -72,10 +75,10 @@ namespace Utilities
 
                     emailMessage.Body = bodyBuilder.ToMessageBody();
 
-*//*                    user.ConfirmCode = message.ToString();
+/*                    user.ConfirmCode = message.ToString();
                     user.SentTime = DateTime.UtcNow.AddMinutes(2);
                     _db.Users.Update(user);
-                    await _db.SaveChangesAsync();*//*
+                    await _db.SaveChangesAsync();*/
                 }
 
 
@@ -89,6 +92,6 @@ namespace Utilities
                 return true;
             }
             return false;
-        }*/
+        }
     }
 }

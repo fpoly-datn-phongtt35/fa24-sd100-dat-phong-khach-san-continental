@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTO.ServiceType
+namespace Domain.DTO.Service
 {
-    public class ServiceTypeGetByIdRequest : PagingRequest
+    public class ServiceGetRequest : PagingRequest
     {
-        public Guid Id { get; set; }
+        public string Name { get; set; }
     }
 }

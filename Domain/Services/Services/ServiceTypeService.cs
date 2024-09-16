@@ -52,13 +52,9 @@ namespace Domain.Services.Services
         public async Task<ServiceType> GetServiceTypeById(Guid Id)
         {
             ServiceType serviceType = new();
-            ServiceTypeGetByIdRequest request = new ServiceTypeGetByIdRequest()
-            {
-                Id = Id
-            };
             try 
             {
-                DataTable table = await _serviceTypeRepo.GetServiceTypeById(request);
+                DataTable table = await _serviceTypeRepo.GetServiceTypeById(Id);
                 serviceType = (from row in table.AsEnumerable()
                                select new ServiceType
                                {
