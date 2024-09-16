@@ -2,7 +2,10 @@ using Domain.Models;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Domain.Services.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Utilities.JWTSettings;
 
 namespace API
@@ -31,7 +34,26 @@ namespace API
             var expirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"]);
 
             builder.Services.AddSingleton(new TokenService(privateKey, jwtIssuer, jwtAudience, expirationMinutes));
+
             builder.Services.AddControllers();
+
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -55,7 +77,7 @@ namespace API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors("abc");
