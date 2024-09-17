@@ -3,19 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class RoomDetail
+    public class AmenityRoom
     {
         [Key]
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public string Address { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public double RoomSize { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
-        public Guid? FloorId { get; set; }
+        public Guid AmenityId { get; set; }
         public Guid RoomTypeId { get; set; }
-        public RoomStatus Status { get; set; } = RoomStatus.Vacant;
+        public int Amount { get; set; }
+        public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
@@ -25,8 +20,7 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public Floor Floor { get; set; }
+        public Amenity Amenity { get; set; }
         public RoomType RoomType { get; set; }
-        public List<RoomBookingDetail> RoomBookingDetails { get; set; }
     }
 }
