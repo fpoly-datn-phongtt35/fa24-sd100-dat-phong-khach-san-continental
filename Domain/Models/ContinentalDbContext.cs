@@ -29,7 +29,7 @@ namespace Domain.Models
 
         #region DBSet
         public DbSet<Amenity> Amenities { get; set; }
-        public DbSet<AmenityRoomDetail> AmenityRoomDetails { get; set; }
+        public DbSet<AmenityRoom> AmenityRooms { get; set; }
         public DbSet<Bill> Bills { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -39,7 +39,7 @@ namespace Domain.Models
         public DbSet<Floor> Floors { get; set; }
         public DbSet<RoomBookingDetail> RoomBookingDetails { get; set; }
         public DbSet<RoomBooking> RoomBookings { get; set; }
-        public DbSet<RoomDetail> RoomDetails { get; set; }
+        public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceOrderDetail> ServiceOrderDetails { get; set; }

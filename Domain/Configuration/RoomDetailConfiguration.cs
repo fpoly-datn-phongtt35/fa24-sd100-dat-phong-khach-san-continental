@@ -5,11 +5,11 @@ using Newtonsoft.Json;
 
 namespace Domain.Configuration
 {
-    public class RoomDetailConfiguration : IEntityTypeConfiguration<RoomDetail>
+    public class RoomConfiguration : IEntityTypeConfiguration<Room>
     {
-        public void Configure(EntityTypeBuilder<RoomDetail> builder)
+        public void Configure(EntityTypeBuilder<Room> builder)
         {
-            builder.ToTable("RoomDetail");
+            builder.ToTable("Room");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Name).IsUnicode(false).IsRequired();
@@ -20,8 +20,8 @@ namespace Domain.Configuration
             builder.Property(x => x.Images).HasConversion(
                 v => JsonConvert.SerializeObject(v),
                 v => JsonConvert.DeserializeObject<List<string>>(v));
-            builder.HasOne(x => x.Floor).WithMany(x => x.RoomDetails).HasForeignKey(x => x.FloorId);
-            builder.HasOne(x => x.RoomType).WithMany(x => x.RoomDetails).HasForeignKey(x => x.RoomTypeId);
+            builder.HasOne(x => x.Floor).WithMany(x => x.Rooms).HasForeignKey(x => x.FloorId);
+            builder.HasOne(x => x.RoomType).WithMany(x => x.Rooms).HasForeignKey(x => x.RoomTypeId);
         }
     }
 }
