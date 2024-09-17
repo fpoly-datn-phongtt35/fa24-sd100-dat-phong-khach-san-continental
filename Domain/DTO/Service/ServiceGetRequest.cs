@@ -9,6 +9,6 @@ namespace Domain.DTO.Service
 {
     public class ServiceGetRequest : PagingRequest
     {
-        public string Name { get; set; }
+        //public string Name { get; set; }
     }
 }

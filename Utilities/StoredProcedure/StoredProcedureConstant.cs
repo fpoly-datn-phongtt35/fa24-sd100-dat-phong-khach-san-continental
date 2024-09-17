@@ -22,6 +22,8 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteService = "SP_DeleteService";
         public const string SP_GetServiceById = "SP_GetServiceById";
         public const string SP_UpdateService = "SP_UpdateService";
+        public const string SP_GetServiceByTypeId = "PP_GetServiceByTypeId";
+        
 
     }
 }
