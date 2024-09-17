@@ -17,7 +17,7 @@ namespace Domain.Configuration
             builder.Property(x => x.CheckInReality).IsRequired();
             builder.Property(x => x.CheckOutReality).IsRequired();
             builder.Property(x => x.Deposit).HasDefaultValue(0);
-            builder.HasOne(x => x.RoomDetail).WithMany(x => x.RoomBookingDetails).HasForeignKey(x => x.RoomDetailId);
+            builder.HasOne(x => x.Room).WithMany(x => x.RoomBookingDetails).HasForeignKey(x => x.RoomId);
             builder.HasOne(x => x.RoomBooking).WithMany(x => x.RoomBookingDetails).HasForeignKey(x => x.RoomBookingId);
         }
     }
