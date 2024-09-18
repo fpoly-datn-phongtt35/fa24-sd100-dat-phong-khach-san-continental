@@ -28,5 +28,11 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteBuilding = "SP_DeleteBuilding";
         public const string SP_GetBuildingById = "SP_GetBuildingById";
         public const string SP_UpdateBuilding = "SP_UpdateBuilding";
+        //floor
+        public const string SP_InsertFloor = "SP_InsertFloor";
+        public const string SP_GetListFloor = "SP_GetListFloor";
+        public const string SP_DeleteFloor = "SP_DeleteFloor";
+        public const string SP_GetFloorById = "SP_GetFloorById";
+        public const string SP_UpdateFloor = "SP_UpdateFloor";
     }
 }
