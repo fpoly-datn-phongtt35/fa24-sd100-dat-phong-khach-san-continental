@@ -31,5 +31,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteBuilding = "SP_DeleteBuilding";
         public const string SP_GetBuildingById = "SP_GetBuildingById";
         public const string SP_UpdateBuilding = "SP_UpdateBuilding";
+        //amenity
+        public const string SP_InsertAmenity = "SP_InsertAmenity";
     }
 }
