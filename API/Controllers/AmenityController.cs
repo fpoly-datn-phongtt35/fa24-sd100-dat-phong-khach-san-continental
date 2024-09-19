@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.Models;
 using Domain.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,32 @@ public class AmenityController : ControllerBase
         catch (Exception ex)
         {
             throw new NullReferenceException("The list of amenities could not be retrieved", ex);
+        }
+    }
+    
+    [HttpGet("GetAmenityById")]
+    public async Task<AmenityResponse?> GetAmenityById(Guid amenityId)
+    {
+        try
+        {
+            return await _amenityService.GetAmenityById(amenityId);
+        }
+        catch (Exception ex)
+        {
+            throw new NullReferenceException("Not found the amenity", ex);
+        }
+    }
+
+    [HttpPut("UpdateAmenity")]
+    public async Task<AmenityResponse> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
+    {
+        try
+        {
+            return await _amenityService.UpdateAmenity(amenityUpdateRequest);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Domain.DTO.Amenity;
-using Domain.Models;
 
 namespace Domain.Services.IServices;
 
@@ -9,5 +8,5 @@ public interface IAmenityService
     Task<AmenityResponse> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest);
     Task<bool> DeleteAmenityById(Guid amenityId);
     Task<List<AmenityResponse>> GetAllAmenities();
-    Task<AmenityResponse?> GetAmenityById(Guid amenityId);
+    Task<AmenityResponse?> GetAmenityById(Guid? amenityId);
 }
