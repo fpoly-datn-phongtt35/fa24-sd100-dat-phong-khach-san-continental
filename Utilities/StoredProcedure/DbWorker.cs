@@ -112,7 +112,7 @@ namespace Utilities.StoredProcedure
                         {
                             oAdapter.SelectCommand.Transaction = oTransaction;
                             // Convert to async await
-                            await Task.Run(() => oAdapter.Fill(dataTable));
+                            oAdapter.Fill(dataTable);
                             oTransaction.Commit();
                         }
                         catch (Exception ex)
@@ -143,7 +143,7 @@ namespace Utilities.StoredProcedure
             {
                 throw new Exception("An error occurred while accessing the database.", ex);
             }
-            return dataTable;
+            return await Task.FromResult(dataTable);
         }
         
         /// <summary>

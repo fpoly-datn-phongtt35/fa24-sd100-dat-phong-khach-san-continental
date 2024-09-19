@@ -1,10 +1,6 @@
 ﻿using Domain.DTO.Amenity;
-using Domain.Enums;
-using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices;
-using Microsoft.Data.SqlClient;
-using Utilities.StoredProcedure;
 
 namespace Domain.Services.Services;
 
@@ -45,9 +41,15 @@ public class AmenityService : IAmenityService
         throw new NotImplementedException();
     }
 
-    public Task<List<AmenityResponse>> GetAllAmenities()
+    public async Task<List<AmenityResponse>> GetAllAmenities()
     {
-       throw new NotImplementedException();
+        var amenities = await _amenityRepository.GetAllAmenities();
+
+        var amenityResponses = amenities
+            .Select(amenity => amenity.ToAmenityResponse())
+            .ToList();
+        
+        return amenityResponses;
     }
 
     public Task<AmenityResponse?> GetAmenityById(Guid amenityId)
