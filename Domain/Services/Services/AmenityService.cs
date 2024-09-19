@@ -1,43 +1,38 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
+using Utilities.StoredProcedure;
 
 namespace Domain.Services.Services;
 
 public class AmenityService : IAmenityService
 {
     private readonly IAmenityRepository _amenityRepository;
-    private readonly IConfiguration _configuration;
 
-    public AmenityService(IAmenityRepository amenityRepository, IConfiguration configuration)
+    public AmenityService(IAmenityRepository amenityRepository)
     {
         _amenityRepository = amenityRepository;
-        _configuration = configuration;
     }
 
     public async Task<AmenityResponse> AddAmenity(AmenityCreateRequest amenityCreateRequest)
     {
-        // Create a new Amenity object from AmenityCreateRequest
-        var newAmenity = new Amenity
+        // Check if AmenityCreateRequest is not null
+        if (amenityCreateRequest == null)
         {
-            Id = Guid.NewGuid(), // Generate a new GUID for the Amenity
-            Name = amenityCreateRequest.Name,
-            Description = amenityCreateRequest.Description,
-            Status = amenityCreateRequest.Status,
-            CreatedTime = amenityCreateRequest.CreatedTime ?? DateTimeOffset.UtcNow, // Use current time if not provided
-            CreatedBy = amenityCreateRequest.CreatedBy
-        };
+            throw new ArgumentNullException(nameof(amenityCreateRequest));
+        }
+        // Convert amenityCreateRequest into Amenity type
+        var amenity = amenityCreateRequest.ToAmenity();
+        
+        amenity.Id = Guid.NewGuid();
+        
+        // Add amenity object to AmenityResponse type
+        await _amenityRepository.AddAmenity(amenity);
 
-        // Add the new Amenity using the repository
-        var addedAmenity = await _amenityRepository.AddAmenity(newAmenity);
-
-        // Convert the Amenity to AmenityResponse and return it
-        var amenityResponse = AmenityResponse.AmenityExtensions.ToAmenityResponse(addedAmenity);
-
-        return amenityResponse;
+        return amenity.ToAmenityResponse();
     }
 
     public Task<AmenityResponse> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
@@ -52,7 +47,7 @@ public class AmenityService : IAmenityService
 
     public Task<List<AmenityResponse>> GetAllAmenities()
     {
-        throw new NotImplementedException();
+       throw new NotImplementedException();
     }
 
     public Task<AmenityResponse?> GetAmenityById(Guid amenityId)

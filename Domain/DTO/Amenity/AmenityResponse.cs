@@ -59,20 +59,21 @@ public class AmenityResponse
             DeletedTime = DeletedTime
         };
     }
-    
-    public static class AmenityExtensions
+}
+
+public static class AmenityExtensions
+{
+    public static AmenityResponse ToAmenityResponse(this Models.Amenity amenity)
     {
-        public static AmenityResponse ToAmenityResponse(Models.Amenity amenity)
+        // amenity => convert => AmenityResponse
+        return new AmenityResponse()
         {
-            return new AmenityResponse()
-            {
-                Id = amenity.Id,
-                Name = amenity.Name,
-                Description = amenity.Description,
-                Status = amenity.Status,
-                CreatedTime = amenity.CreatedTime,
-                CreatedBy = amenity.CreatedBy
-            };
-        }
+            Id = amenity.Id,
+            Name = amenity.Name,
+            Description = amenity.Description,
+            Status = amenity.Status,
+            CreatedTime = amenity.CreatedTime,
+            CreatedBy = amenity.CreatedBy
+        };
     }
 }

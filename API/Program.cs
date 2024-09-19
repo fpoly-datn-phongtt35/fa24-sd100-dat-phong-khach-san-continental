@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Domain.Repositories.IRepository;
 using Utilities.JWTSettings;
 
 namespace API
@@ -61,10 +62,13 @@ namespace API
             builder.Services.AddTransient<ServiceTypeRepo>();
             builder.Services.AddTransient<ServiceRepo>();
             builder.Services.AddTransient<BuildingRepo>();
-
+            builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
+            
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
+            builder.Services.AddTransient<IAmenityService, AmenityService>();
+            
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
