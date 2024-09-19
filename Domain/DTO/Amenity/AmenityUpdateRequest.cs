@@ -10,4 +10,17 @@ public class AmenityUpdateRequest
     public EntityStatus Status { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
+
+    public Models.Amenity ToAmenity()
+    {
+        return new Models.Amenity()
+        {
+            Id = Id,
+            Name = Name,
+            Description = Description,
+            Status = Status,
+            ModifiedTime = ModifiedTime,
+            ModifiedBy = ModifiedBy
+        };
+    }
 }
