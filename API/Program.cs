@@ -60,12 +60,14 @@ namespace API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddTransient<ServiceTypeRepo>();
-            builder.Services.AddTransient<ServiceRepo>();
+            builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
+            builder.Services.AddTransient<IServiceOrderRepo, ServiceOrderRepo>();
             builder.Services.AddTransient<BuildingRepo>();
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
+            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
             builder.Services.AddTransient<IAmenityService, AmenityService>();
             
