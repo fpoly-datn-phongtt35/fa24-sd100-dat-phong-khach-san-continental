@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTO.Building
+namespace Domain.DTO.Floor
 {
-    public class BuildingGetByIdRequest: PagingRequest
+    public class FloorGetRequest : PagingRequest
     {
-        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }
