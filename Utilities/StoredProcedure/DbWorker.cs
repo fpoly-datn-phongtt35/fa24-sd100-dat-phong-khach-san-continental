@@ -87,6 +87,65 @@ namespace Utilities.StoredProcedure
             return _dataTable;
         }
 
+        public async Task<DataTable> GetDataTableAsync(string procedureName, SqlParameter[]? parameters)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                using (SqlConnection oConnection = new SqlConnection(_connection))
+                {
+                    SqlCommand oCommand = new SqlCommand(procedureName, oConnection);
+                    oCommand.CommandType = CommandType.StoredProcedure;
+
+                    if (parameters != null)
+                    {
+                        oCommand.Parameters.AddRange(parameters);
+                    }
+
+                    SqlDataAdapter oAdapter = new SqlDataAdapter();
+                    oAdapter.SelectCommand = oCommand;
+                    oConnection.Open();
+
+                    using (SqlTransaction oTransaction = oConnection.BeginTransaction())
+                    {
+                        try
+                        {
+                            oAdapter.SelectCommand.Transaction = oTransaction;
+                            // Convert to async await
+                            oAdapter.Fill(dataTable);
+                            oTransaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            string data_log = "";
+                            if (parameters != null && parameters.Length > 0)
+                            {
+                                data_log = string.Join(",", parameters.Select(x => x.ParameterName)) + ":" + 
+                                           string.Join(",", parameters.Select(x => x.Value == null ? "NULL" : x.Value.ToString()));
+                            }
+                            /*LogHelper.InsertLogTelegram("SP Name: " + procedureName + "\n" + "Params: " + data_log + "\nGetDataTable - Transaction Rollback - DbWorker: " + ex);*/
+                            oTransaction.Rollback();
+                            throw;
+                        }
+                        finally
+                        {
+                            if (oConnection.State == ConnectionState.Open)
+                            {
+                                oConnection.Close();
+                            }
+                            oConnection.Dispose();
+                            oAdapter.Dispose();
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("An error occurred while accessing the database.", ex);
+            }
+            return await Task.FromResult(dataTable);
+        }
+        
         /// <summary>
         /// GET DataSet
         /// </summary>
@@ -430,5 +489,33 @@ namespace Utilities.StoredProcedure
                 throw;
             }
         }
+        
+        public async Task ExecuteNonQueryAsync(string procedureName, SqlParameter[] parameters)
+        {
+            try
+            {
+                using (SqlConnection oConnection = new SqlConnection(_connection))
+                {
+                    SqlCommand oCommand = new SqlCommand(procedureName, oConnection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    if (parameters != null)
+                    {
+                        oCommand.Parameters.AddRange(parameters);
+                    }
+
+                    oConnection.Open();
+
+                    await oCommand.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("An error occurred while executing the SQL command.", ex);
+            }
+        }
+
     }
 }

@@ -18,7 +18,7 @@ namespace API.Controllers
         }
 
         [HttpPost("CreateServiceType")]
-        public async Task<int> CreateServiceType(ServiceTypeCreateRequest request) 
+        public async Task<int> CreateServiceType(ServiceTypeCreateRequest request)
         {
             try 
             {
