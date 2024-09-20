@@ -112,7 +112,7 @@ namespace Utilities.StoredProcedure
                         {
                             oAdapter.SelectCommand.Transaction = oTransaction;
                             // Convert to async await
-                            await Task.Run(() => oAdapter.Fill(dataTable));
+                            oAdapter.Fill(dataTable);
                             oTransaction.Commit();
                         }
                         catch (Exception ex)
@@ -143,7 +143,7 @@ namespace Utilities.StoredProcedure
             {
                 throw new Exception("An error occurred while accessing the database.", ex);
             }
-            return dataTable;
+            return await Task.FromResult(dataTable);
         }
         
         /// <summary>
@@ -489,5 +489,33 @@ namespace Utilities.StoredProcedure
                 throw;
             }
         }
+        
+        public async Task ExecuteNonQueryAsync(string procedureName, SqlParameter[] parameters)
+        {
+            try
+            {
+                using (SqlConnection oConnection = new SqlConnection(_connection))
+                {
+                    SqlCommand oCommand = new SqlCommand(procedureName, oConnection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    if (parameters != null)
+                    {
+                        oCommand.Parameters.AddRange(parameters);
+                    }
+
+                    oConnection.Open();
+
+                    await oCommand.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("An error occurred while executing the SQL command.", ex);
+            }
+        }
+
     }
 }

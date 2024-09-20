@@ -55,6 +55,8 @@ public class AmenityResponse
         return new AmenityDeleteRequest()
         {
             Id = Id,
+            Status = Status,
+            Deleted = Deleted,
             DeletedBy = DeletedBy,
             DeletedTime = DeletedTime
         };
@@ -73,7 +75,12 @@ public static class AmenityExtensions
             Description = amenity.Description,
             Status = amenity.Status,
             CreatedTime = amenity.CreatedTime,
-            CreatedBy = amenity.CreatedBy
+            CreatedBy = amenity.CreatedBy,
+            ModifiedTime = amenity.ModifiedTime,
+            ModifiedBy = amenity.ModifiedBy,
+            Deleted = amenity.Deleted,
+            DeletedTime = amenity.DeletedTime,
+            DeletedBy = amenity.DeletedBy
         };
     }
 }

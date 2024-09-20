@@ -1,10 +1,9 @@
-﻿using Domain.DTO.Amenity;
+﻿using System.Data;
+using Domain.DTO.Amenity;
 using Domain.Enums;
-using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices;
 using Microsoft.Data.SqlClient;
-using Utilities.StoredProcedure;
 
 namespace Domain.Services.Services;
 
@@ -35,23 +34,76 @@ public class AmenityService : IAmenityService
         return amenity.ToAmenityResponse();
     }
 
-    public Task<AmenityResponse> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
+    public async Task<AmenityResponse?> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
     {
-        throw new NotImplementedException();
+        if (amenityUpdateRequest == null)
+        {
+            throw new ArgumentNullException(nameof(amenityUpdateRequest));
+        }
+        var existingAmenity = await _amenityRepository.GetAmenityById(amenityUpdateRequest.Id);
+        if (existingAmenity == null)
+        {
+            throw new ArgumentException("Id amenity does not exist");
+        }
+        
+        existingAmenity.Name = amenityUpdateRequest.Name;
+        existingAmenity.Description = amenityUpdateRequest.Description;
+        existingAmenity.Status = amenityUpdateRequest.Status;
+        existingAmenity.ModifiedTime = amenityUpdateRequest.ModifiedTime;
+        existingAmenity.ModifiedBy = amenityUpdateRequest.ModifiedBy;
+        
+        await _amenityRepository.UpdateAmenity(existingAmenity);
+        
+        return existingAmenity.ToAmenityResponse();
+    }
+    
+    public async Task<AmenityResponse?> DeleteAmenityById(AmenityDeleteRequest amenityDeleteRequest)
+    {
+        if (amenityDeleteRequest == null)
+        {
+            throw new ArgumentNullException(nameof(amenityDeleteRequest));
+        }
+        var existingAmenity = await _amenityRepository.GetAmenityById(amenityDeleteRequest.Id);
+        if (existingAmenity == null)
+        {
+            throw new ArgumentException("Id amenity does not exist");
+        }
+
+        existingAmenity.Status = (EntityStatus)3;
+        existingAmenity.Deleted = true;
+        existingAmenity.DeletedTime = amenityDeleteRequest.DeletedTime;
+        existingAmenity.DeletedBy = amenityDeleteRequest.DeletedBy;
+        
+        await _amenityRepository.DeleteAmenityById(existingAmenity);
+        
+        return existingAmenity.ToAmenityResponse();
     }
 
-    public Task<bool> DeleteAmenityById(Guid amenityId)
+    public async Task<List<AmenityResponse>> GetAllAmenities()
     {
-        throw new NotImplementedException();
+        var amenities = await _amenityRepository.GetAllAmenities();
+
+        var amenityResponses = amenities
+            .Select(amenity => amenity.ToAmenityResponse())
+            .ToList();
+        
+        return amenityResponses;
     }
 
-    public Task<List<AmenityResponse>> GetAllAmenities()
+    public async Task<AmenityResponse?> GetAmenityById(Guid? amenityId)
     {
-       throw new NotImplementedException();
+        if (amenityId == null)
+            return null;
+        
+        var amenity = await _amenityRepository.GetAmenityById(amenityId.Value);
+        if (amenity == null)
+            return null;
+        
+        return amenity.ToAmenityResponse();
     }
 
-    public Task<AmenityResponse?> GetAmenityById(Guid amenityId)
+    public string GenerateToken()
     {
-        throw new NotImplementedException();
+        return _amenityRepository.GenerateToken();
     }
 }
