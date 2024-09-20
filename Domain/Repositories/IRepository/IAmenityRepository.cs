@@ -9,4 +9,5 @@ public interface IAmenityRepository
     Task<Amenity?> DeleteAmenityById(Amenity amenity);
     Task<List<Amenity>> GetAllAmenities();
     Task<Amenity?> GetAmenityById(Guid amenityId);
+    string GenerateToken();
 }

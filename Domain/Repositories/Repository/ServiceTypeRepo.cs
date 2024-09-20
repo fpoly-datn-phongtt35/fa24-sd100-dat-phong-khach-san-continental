@@ -51,7 +51,7 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
                     new SqlParameter("@DeletedTime", DateTime.Now),
-                    new SqlParameter("@DeletedBy", request.DeletedBy != null ? request.DeletedBy : DBNull.Value)
+                    new SqlParameter("@DeletedBy", request.DeletedBy.HasValue ? (object)request.DeletedBy : DBNull.Value)
                 };
 
                 return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_DeleteServiceType, sqlParameters);
@@ -90,7 +90,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Id", Search != null ? Search : DBNull.Value ),
                 };
 
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceType, sqlParameters);
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrder, sqlParameters);
             }
             catch (Exception ex)
             {

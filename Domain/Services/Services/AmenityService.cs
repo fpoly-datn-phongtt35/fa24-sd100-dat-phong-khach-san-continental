@@ -101,4 +101,9 @@ public class AmenityService : IAmenityService
         
         return amenity.ToAmenityResponse();
     }
+
+    public string GenerateToken()
+    {
+        return _amenityRepository.GenerateToken();
+    }
 }

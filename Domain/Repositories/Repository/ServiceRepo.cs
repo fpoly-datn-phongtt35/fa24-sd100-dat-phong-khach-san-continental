@@ -78,7 +78,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
+                    //new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@PageSize", request.PageSize),
                     new SqlParameter("@PageIndex", request.PageIndex)
                 };
@@ -107,6 +107,30 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+
+        public async Task<DataTable> GetServiceByTypeId(ServiceGetRequest request, Guid serviceTypeId)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+            new SqlParameter("@ServiceTypeId", serviceTypeId),
+            new SqlParameter("@PageSize", request.PageSize),
+            new SqlParameter("@PageIndex", request.PageIndex)
+                };
+
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetServiceByTypeId, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
+
 
 
         public async Task<int> UpdateService(ServiceUpdateRequest request)
