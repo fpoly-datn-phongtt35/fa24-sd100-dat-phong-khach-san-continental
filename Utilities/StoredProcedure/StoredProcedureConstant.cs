@@ -33,5 +33,6 @@ namespace Utilities.StoredProcedure
         public const string SP_GetAllAmenities = "SP_GetAllAmenities";
         public const string SP_GetAmenityById = "SP_GetAmenityById";
         public const string SP_UpdateAmenity = "SP_UpdateAmenity";
+        public const string SP_DeleteAmenity = "SP_DeleteAmenity";
     }
 }

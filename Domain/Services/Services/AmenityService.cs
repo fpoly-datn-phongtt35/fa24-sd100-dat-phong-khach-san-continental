@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Domain.DTO.Amenity;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices;
 using Microsoft.Data.SqlClient;
@@ -33,7 +34,7 @@ public class AmenityService : IAmenityService
         return amenity.ToAmenityResponse();
     }
 
-    public async Task<AmenityResponse> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
+    public async Task<AmenityResponse?> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
     {
         if (amenityUpdateRequest == null)
         {
@@ -56,9 +57,26 @@ public class AmenityService : IAmenityService
         return existingAmenity.ToAmenityResponse();
     }
     
-    public Task<bool> DeleteAmenityById(Guid amenityId)
+    public async Task<AmenityResponse?> DeleteAmenityById(AmenityDeleteRequest amenityDeleteRequest)
     {
-        throw new NotImplementedException();
+        if (amenityDeleteRequest == null)
+        {
+            throw new ArgumentNullException(nameof(amenityDeleteRequest));
+        }
+        var existingAmenity = await _amenityRepository.GetAmenityById(amenityDeleteRequest.Id);
+        if (existingAmenity == null)
+        {
+            throw new ArgumentException("Id amenity does not exist");
+        }
+
+        existingAmenity.Status = (EntityStatus)3;
+        existingAmenity.Deleted = true;
+        existingAmenity.DeletedTime = amenityDeleteRequest.DeletedTime;
+        existingAmenity.DeletedBy = amenityDeleteRequest.DeletedBy;
+        
+        await _amenityRepository.DeleteAmenityById(existingAmenity);
+        
+        return existingAmenity.ToAmenityResponse();
     }
 
     public async Task<List<AmenityResponse>> GetAllAmenities()

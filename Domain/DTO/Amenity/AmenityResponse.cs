@@ -55,6 +55,8 @@ public class AmenityResponse
         return new AmenityDeleteRequest()
         {
             Id = Id,
+            Status = Status,
+            Deleted = Deleted,
             DeletedBy = DeletedBy,
             DeletedTime = DeletedTime
         };
