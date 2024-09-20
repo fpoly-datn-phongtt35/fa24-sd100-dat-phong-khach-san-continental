@@ -55,7 +55,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("DeleteServiceOrder")]
+        [HttpPost("DeleteServiceOrder")]
         public async Task<int> DeleteServiceType(ServiceOrderDeleteRequest request)
         {
             try

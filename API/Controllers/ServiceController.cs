@@ -87,17 +87,16 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("DeleteService{Id}")]
-        public async Task<IActionResult> DeleteService([FromBody] ServiceDeleteRequest request)
+        [HttpPost("DeleteService")]
+        public async Task<int> DeleteService([FromBody] ServiceDeleteRequest request)
         {
             try
             {
-                int result = await _serviceSV.DeleteService(request);
-                return Ok(result);
+                return await _serviceSV.DeleteService(request);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Error deleting service", Details = ex.Message });
+                throw ex;
             }
         }
     }
