@@ -1,7 +1,12 @@
-﻿using Domain.DTO.Amenity;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Domain.DTO.Amenity;
 using Domain.Models;
 using Domain.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers;
 
@@ -16,7 +21,7 @@ public class AmenityController : ControllerBase
         _amenityService = amenityService;
     }
     
-    [HttpPost("CreateAmenity")]
+    [HttpPost(nameof(CreateAmenity))]
     public async Task<AmenityResponse> CreateAmenity(AmenityCreateRequest amenityCreateRequest)
     {
         try
@@ -30,7 +35,7 @@ public class AmenityController : ControllerBase
         }
     }
     
-    [HttpGet("GetAllAmenities")]
+    [HttpGet(nameof(GetAllAmenities))]
     public async Task<List<AmenityResponse>> GetAllAmenities()
     {
         try
@@ -43,7 +48,7 @@ public class AmenityController : ControllerBase
         }
     }
     
-    [HttpGet("GetAmenityById")]
+    [HttpPost(nameof(GetAmenityById))]
     public async Task<AmenityResponse?> GetAmenityById(Guid amenityId)
     {
         try
@@ -56,7 +61,7 @@ public class AmenityController : ControllerBase
         }
     }
 
-    [HttpPut("UpdateAmenity")]
+    [HttpPost(nameof(UpdateAmenity))]
     public async Task<AmenityResponse?> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
     {
         try
@@ -69,7 +74,7 @@ public class AmenityController : ControllerBase
         }
     }
 
-    [HttpPut("DeleteAmenity")]
+    [HttpPut(nameof(DeleteAmenity))]
     public async Task<AmenityResponse?> DeleteAmenity(AmenityDeleteRequest amenityDeleteRequest)
     {
         try
@@ -82,4 +87,12 @@ public class AmenityController : ControllerBase
             throw new Exception("Amenity cannot be deleted", e);
         }
     }
+    
+    [HttpGet("GenerateToken")]
+    public IActionResult GenerateToken()
+    {
+        var token = _amenityService.GenerateToken();
+        return Ok(new { token });
+    }
+
 }

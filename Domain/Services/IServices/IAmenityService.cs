@@ -9,4 +9,5 @@ public interface IAmenityService
     Task<AmenityResponse?> DeleteAmenityById(AmenityDeleteRequest amenityDeleteRequest);
     Task<List<AmenityResponse>> GetAllAmenities();
     Task<AmenityResponse?> GetAmenityById(Guid? amenityId);
+    string GenerateToken();
 }
