@@ -63,11 +63,14 @@ namespace API
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
             builder.Services.AddTransient<IServiceOrderRepo, ServiceOrderRepo>();
             builder.Services.AddTransient<BuildingRepo>();
+
+            builder.Services.AddTransient<IFloorRepo, FloorRepo>();
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
             builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
+            builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
             builder.Services.AddTransient<IAmenityService, AmenityService>();
             
