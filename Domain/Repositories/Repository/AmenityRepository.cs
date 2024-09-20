@@ -1,9 +1,13 @@
 ﻿using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository;
@@ -91,7 +95,7 @@ public class AmenityRepository : IAmenityRepository
                 new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenity.Deleted },
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy },
+                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = amenity.DeletedBy },
             };
             
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_DeleteAmenity, parameters);
@@ -191,5 +195,22 @@ public class AmenityRepository : IAmenityRepository
         }
 
         return null;
+    }
+    
+    public string GenerateToken()
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:PrivateKey"]);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[] { new Claim("id", "1"), new Claim(ClaimTypes.Role, "User") }),
+            Expires = DateTime.UtcNow.AddMinutes(15),
+            Issuer = _configuration["JwtSettings:JWTIssuer"],
+            Audience = _configuration["JwtSettings:JWTAudience"],
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
 }
