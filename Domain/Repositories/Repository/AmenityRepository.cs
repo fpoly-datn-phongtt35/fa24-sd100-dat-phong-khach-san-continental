@@ -45,7 +45,7 @@ public class AmenityRepository : IAmenityRepository
         return amenity;
     }
 
-    public async Task<Amenity> UpdateAmenity(Amenity amenity)
+    public async Task<Amenity?> UpdateAmenity(Amenity amenity)
     {
         try
         {
@@ -61,15 +61,13 @@ public class AmenityRepository : IAmenityRepository
                 new SqlParameter("@Name", SqlDbType.NVarChar) { Value = amenity.Name },
                 new SqlParameter("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
-                //new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = amenity.CreatedTime },
-                //new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenity.CreatedBy },
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy }
             };
         
             await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdateAmenity, parameters);
-        
-            return await GetAmenityById(amenity.Id);
+
+            return await existingAmenity;
         }
         catch (Exception e)
         {
@@ -77,9 +75,33 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public Task<bool> DeleteAmenityById(Guid amenityId)
+    public async Task<Amenity?> DeleteAmenityById(Amenity amenity)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingAmenity = GetAmenityById(amenity.Id);
+            if (existingAmenity == null)
+            {
+                throw new Exception("Amenity not found");
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenity.Id },
+                new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
+                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenity.Deleted },
+                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy },
+            };
+            
+            await _worker.GetDataTableAsync(StoredProcedureConstant.SP_DeleteAmenity, parameters);
+
+            return await existingAmenity;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Some errors when deleted amenity", e);
+        }
     }
 
     public async Task<List<Amenity>> GetAllAmenities()
@@ -114,7 +136,7 @@ public class AmenityRepository : IAmenityRepository
             };
 
             // Get data from Stored Procedure
-            var dataTable = await _worker.GetDataTableAsync("SP_GetAmenityById", parameters);
+            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAmenityById, parameters);
 
             if (dataTable.Rows.Count == 0)
             {

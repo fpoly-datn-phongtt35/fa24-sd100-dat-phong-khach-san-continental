@@ -57,7 +57,7 @@ public class AmenityController : ControllerBase
     }
 
     [HttpPut("UpdateAmenity")]
-    public async Task<AmenityResponse> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
+    public async Task<AmenityResponse?> UpdateAmenity(AmenityUpdateRequest amenityUpdateRequest)
     {
         try
         {
@@ -66,6 +66,20 @@ public class AmenityController : ControllerBase
         catch (Exception e)
         {
             throw new Exception(e.Message);
+        }
+    }
+
+    [HttpPut("DeleteAmenity")]
+    public async Task<AmenityResponse?> DeleteAmenity(AmenityDeleteRequest amenityDeleteRequest)
+    {
+        try
+        {
+            return await _amenityService.DeleteAmenityById(amenityDeleteRequest);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Amenity cannot be deleted", e);
         }
     }
 }
