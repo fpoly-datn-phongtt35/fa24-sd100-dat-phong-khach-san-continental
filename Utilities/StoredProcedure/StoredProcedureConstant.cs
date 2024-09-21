@@ -29,6 +29,12 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteServiceOrder = "SP_DeleteServiceOrder";
         public const string SP_UpdateServiceOrder = "SP_UpdateServiceOrder";
         public const string SP_GetServiceOrderById = "SP_GetServiceOrderById";
+        //service order detail
+        public const string SP_InsertServiceOrderDetail = "SP_InsertServiceOrderDetail";
+        public const string SP_GetListServiceOrderDetail = "SP_GetListServiceOrderDetail";
+        public const string SP_DeleteServiceOrderDetail = "SP_DeleteServiceOrderDetail";
+        public const string SP_UpdateServiceOrderDetail = "SP_UpdateServiceOrderDetail";
+        public const string SP_GetServiceOrderDetailById = "SP_GetServiceOrderDetailById";
 
 
         //building
