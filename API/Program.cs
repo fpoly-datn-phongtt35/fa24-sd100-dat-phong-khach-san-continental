@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Repositories.IRepository;
+using Domain.Services.IServices.IAmenity;
+using Domain.Services.Services.Amenity;
 using Utilities.JWTSettings;
 
 namespace API
@@ -72,7 +74,12 @@ namespace API
             builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
-            builder.Services.AddTransient<IAmenityService, AmenityService>();
+            //AmenityService
+            builder.Services.AddTransient<IAmenityAddService, AmenityAddService>();
+            builder.Services.AddTransient<IAmenityDeleteService, AmenityDeleteService>();
+            builder.Services.AddTransient<IAmenityGetService, AmenityGetService>();
+            builder.Services.AddTransient<IAmenityRollBackService, AmenityRollBackService>();
+            builder.Services.AddTransient<IAmenityUpdateService, AmenityUpdateService>();
             
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {

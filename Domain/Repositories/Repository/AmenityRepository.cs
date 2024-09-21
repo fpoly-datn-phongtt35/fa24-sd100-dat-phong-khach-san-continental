@@ -68,7 +68,7 @@ public class AmenityRepository : IAmenityRepository
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy }
             };
-        
+
             await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdateAmenity, parameters);
 
             return await existingAmenity;
@@ -97,7 +97,7 @@ public class AmenityRepository : IAmenityRepository
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = amenity.DeletedBy },
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_DeleteAmenity, parameters);
 
             return await existingAmenity;
@@ -159,6 +159,42 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
+    public async Task<Amenity> RollBackDeletedAmenity(Amenity amenity)
+    {
+        try
+        {
+            var existingAmenity = GetAmenityById(amenity.Id);
+            if (existingAmenity == null)
+            {
+                throw new Exception("Amenity not found");
+            }
+
+            //Set default value
+            amenity.Deleted = false;
+            amenity.DeletedTime = null;
+            amenity.DeletedBy = null;
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenity.Id },
+                new SqlParameter("@Status", SqlDbType.Int) { Value = (int)amenity.Status },
+                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy },
+                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenity.Deleted },
+                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = (object)amenity.DeletedTime! ?? DBNull.Value },
+                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = (object)amenity.DeletedBy! ?? DBNull.Value }
+            };
+
+            await _worker.GetDataTableAsync(StoredProcedureConstant.SP_RollBackDeletedAmenity, parameters);
+            return amenity;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public Amenity ConvertDataRowToAmenity(DataRow row)
     {
         return new Amenity()
@@ -196,7 +232,7 @@ public class AmenityRepository : IAmenityRepository
 
         return null;
     }
-    
+
     public string GenerateToken()
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -207,7 +243,8 @@ public class AmenityRepository : IAmenityRepository
             Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _configuration["JwtSettings:JWTIssuer"],
             Audience = _configuration["JwtSettings:JWTAudience"],
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
