@@ -64,5 +64,10 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomType = "SP_UpdateRoomType";
         public const string SP_DeleteRoomType = "SP_DeleteRoomType";
         public const string SP_RollBackDeletedRoomType = "SP_RollBackDeletedRoomType";
+        // Customer
+        public const string SP_InsertCustomer = "SP_InsertCustomer";
+        public const string SP_GetCustomerById = "SP_GetCustomerById";
+        public const string SP_DeleteCustomer = "SP_DeleteCustomer";
+        public const string SP_UpdateCustomer = "SP_UpdateCustomer";
     }
 }
