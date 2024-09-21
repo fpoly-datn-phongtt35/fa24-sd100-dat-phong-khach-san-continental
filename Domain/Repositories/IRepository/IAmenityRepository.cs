@@ -10,4 +10,5 @@ public interface IAmenityRepository
     Task<List<Amenity>> GetAllAmenities();
     Task<Amenity?> GetAmenityById(Guid amenityId);
     string GenerateToken();
+    Task<Amenity> RollBackDeletedAmenity(Amenity amenity);
 }
