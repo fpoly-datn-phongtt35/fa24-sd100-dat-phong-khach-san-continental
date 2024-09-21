@@ -51,5 +51,12 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateAmenity = "SP_UpdateAmenity";
         public const string SP_DeleteAmenity = "SP_DeleteAmenity";
         public const string SP_RollBackDeletedAmenity = "SP_RollBackDeletedAmenity";
+        //roomType
+        public const string SP_InsertRoomType = "SP_InsertRoomType";
+        public const string SP_GetAllRoomTypes = "SP_GetAllRoomTypes";
+        public const string SP_GetRoomTypeById = "SP_GetRoomTypeById";
+        public const string SP_UpdateRoomType = "SP_UpdateRoomType";
+        public const string SP_DeleteRoomType = "SP_DeleteRoomType";
+        public const string SP_RollBackDeletedRoomType = "SP_RollBackDeletedRoomType";
     }
 }

@@ -34,6 +34,7 @@ public class AmenityResponse
 
     public override int GetHashCode()
     {
+        // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
         return base.GetHashCode();
     }
 
@@ -44,7 +45,7 @@ public class AmenityResponse
             Id = Id,
             Name = Name,
             Description = Description,
-            Status = (EntityStatus)Status,
+            Status = Status,
             ModifiedTime = ModifiedTime,
             ModifiedBy = ModifiedBy
         };

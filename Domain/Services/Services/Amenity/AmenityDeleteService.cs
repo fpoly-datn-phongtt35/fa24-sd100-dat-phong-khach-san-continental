@@ -25,7 +25,7 @@ public class AmenityDeleteService : IAmenityDeleteService
         {
             throw new ArgumentException("Id amenity does not exist");
         }
-
+        
         existingAmenity.Status = (EntityStatus)3;
         existingAmenity.Deleted = true;
         existingAmenity.DeletedTime = amenityDeleteRequest.DeletedTime;
