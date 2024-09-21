@@ -50,13 +50,9 @@ namespace Domain.Services.Services
         public async Task<Building> GetBuildingById(Guid Id)
         {
             Building building = new();
-            BuildingGetByIdRequest request = new BuildingGetByIdRequest()
-            {
-                Id = Id
-            };
             try
             {
-                DataTable table = await _buildingRepo.GetBuildingById(request);
+                DataTable table = await _buildingRepo.GetBuildingById(Id);
                 building = (from row in table.AsEnumerable()
                             select new Building
                             {
