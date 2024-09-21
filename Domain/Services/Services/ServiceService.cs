@@ -69,12 +69,6 @@ namespace Domain.Services.Services
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>                   ("CreatedBy") : Guid.Empty,
                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
-                                  
-                                  //ServiceType = new ServiceType
-                                  //{
-                                  //    Id = row.Field<Guid>("ServiceTypeId"),
-                                  //    Name = row.Field<string>("ServiceTypeName") 
-                                  //}
                               }).ToList();
 
                 //phân trang
@@ -133,6 +127,61 @@ namespace Domain.Services.Services
             }
             return service;
         }
+
+        public async Task<ResponseData<Service>> GetServiceByTypeId(ServiceGetRequest request, Guid serviceTypeId)
+        {
+            var model = new ResponseData<Service>();
+            try
+            {
+                // Gọi repo để lấy DataTable
+                DataTable table = await _serviceRepo.GetServiceByTypeId(request, serviceTypeId);
+
+                model.data = (from row in table.AsEnumerable()
+                              select new Service
+                              {
+                                  Id = row.Field<Guid>("Id"),
+                                  Name = row.Field<string>("Name"),
+                                  Description = row.Field<string>("Description"),
+                                  Status = row.Field<EntityStatus>("Status"),
+                                  Price = row.Field<decimal>("Price"),
+                                  Unit = (UnitType)row.Field<int>("Unit"),
+                                  CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
+                                  CreatedBy = row.Field<Guid?>("CreatedBy") ?? Guid.Empty,
+                                  ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
+                                  ModifiedBy = row.Field<Guid?>("ModifiedBy") ?? Guid.Empty,
+                                  Deleted = row.Field<bool>("Deleted"),
+                                  DeletedBy = row.Field<Guid?>("DeletedBy") ?? Guid.Empty,
+                                  DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
+                              }).ToList();
+
+                // Phân trang
+                model.CurrentPage = request.PageIndex;
+                model.PageSize = request.PageSize;
+
+                try
+                {
+                    // Gán giá trị tổng số bản ghi
+                    model.totalRecord = table.AsEnumerable().FirstOrDefault()?.Field<int>("TotalRows") ?? 0;
+                }
+                catch (Exception ex)
+                {
+                    // Nếu có lỗi, gán totalRecord = 0
+                    model.totalRecord = 0;
+                }
+
+                // Tổng số trang
+                model.totalPage = (int)Math.Ceiling((double)model.totalRecord / request.PageSize);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return model;
+        }
+
+
+
 
         public Task<int> UpdateService(ServiceUpdateRequest request)
         {

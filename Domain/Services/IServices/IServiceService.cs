@@ -16,6 +16,7 @@ namespace Domain.Services.IServices
         Task<int> UpdateService(ServiceUpdateRequest request);
         Task<int> DeleteService(ServiceDeleteRequest request);
         Task<Service> GetServiceById(Guid Id);
+        public Task<ResponseData<Service>> GetServiceByTypeId(ServiceGetRequest request, Guid ServiceTypeId);
         Task<ResponseData<Service>> GetServices(ServiceGetRequest request);
     }
 }
