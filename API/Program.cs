@@ -66,8 +66,17 @@ namespace API
             
 
             builder.Services.AddTransient<ServiceTypeRepo>();
+            //builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
+            builder.Services.AddTransient<IServiceService, ServiceService>();
+
             builder.Services.AddTransient<IServiceOrderRepo, ServiceOrderRepo>();
+            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
+
+            builder.Services.AddTransient<IServiceOrderDetailRepo, ServiceOrderDetailRepo>();
+            builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
+
             builder.Services.AddTransient<BuildingRepo>();
 
             builder.Services.AddTransient<IFloorRepo, FloorRepo>();
@@ -75,8 +84,6 @@ namespace API
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
-            builder.Services.AddTransient<IServiceService, ServiceService>();
-            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
             //AmenityService

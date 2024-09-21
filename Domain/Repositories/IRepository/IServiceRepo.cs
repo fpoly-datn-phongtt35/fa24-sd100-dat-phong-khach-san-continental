@@ -1,5 +1,6 @@
 ﻿using Domain.DTO.Service;
 using Domain.DTO.ServiceType;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +15,7 @@ namespace Domain.Repositories.IRepository
         Task<int> AddService(ServiceCreateRequest request);
         Task<int> UpdateService(ServiceUpdateRequest request);
         Task<int> DeleteService(ServiceDeleteRequest request);
+        Task<DataTable> GetServiceById(Guid id);
         Task<DataTable> GetServices(ServiceGetRequest request);
     }
 }
