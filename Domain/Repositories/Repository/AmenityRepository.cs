@@ -159,7 +159,7 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public async Task<Amenity> RollBackDeletedAmenity(Amenity amenity)
+    public async Task<Amenity?> RollBackDeletedAmenity(Amenity amenity)
     {
         try
         {
@@ -186,16 +186,15 @@ public class AmenityRepository : IAmenityRepository
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_RollBackDeletedAmenity, parameters);
-            return amenity;
+            return await existingAmenity;
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            throw new Exception("An error occurred while rolling back deleted amenity", e);
         }
     }
 
-    public Amenity ConvertDataRowToAmenity(DataRow row)
+    private Amenity ConvertDataRowToAmenity(DataRow row)
     {
         return new Amenity()
         {
@@ -213,7 +212,7 @@ public class AmenityRepository : IAmenityRepository
         };
     }
 
-    public static DateTimeOffset? ConvertDateTimeOffsetToString(DataRow row, string columnName)
+    private static DateTimeOffset? ConvertDateTimeOffsetToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)
         {
@@ -223,7 +222,7 @@ public class AmenityRepository : IAmenityRepository
         return null;
     }
 
-    public static Guid? ConvertGuidToString(DataRow row, string columnName)
+    private static Guid? ConvertGuidToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)
         {

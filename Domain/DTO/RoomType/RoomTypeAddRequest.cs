@@ -1,25 +1,23 @@
 ﻿using Domain.Enums;
 
-namespace Domain.DTO.Amenity;
+namespace Domain.DTO.RoomType;
 
-public class AmenityCreateRequest
+public class RoomTypeAddRequest
 {
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public int MaximumOccupancy { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset? CreatedTime { get; set; } 
+    public DateTimeOffset CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
 
-    /// <summary>
-    /// Convert the current object of AmenityCreateRequest into a new object of Amenity type
-    /// </summary>
-    /// <returns>Returns Amenity object</returns>
-    public Models.Amenity ToAmenity()
+    public Models.RoomType ToRoomType()
     {
-        return new Models.Amenity()
+        return new Models.RoomType()
         {
             Name = Name,
             Description = Description,
+            MaximumOccupancy = MaximumOccupancy,
             Status = Status,
             CreatedTime = CreatedTime,
             CreatedBy = CreatedBy

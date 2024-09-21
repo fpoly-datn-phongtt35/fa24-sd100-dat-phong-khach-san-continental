@@ -8,8 +8,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenity;
+using Domain.Services.IServices.RoomType;
 using Domain.Services.Services.Amenity;
+using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
+using Utilities.StoredProcedure;
 
 namespace API
 {
@@ -60,6 +63,7 @@ namespace API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
 
             builder.Services.AddTransient<ServiceTypeRepo>();
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
@@ -68,6 +72,7 @@ namespace API
 
             builder.Services.AddTransient<IFloorRepo, FloorRepo>();
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
+            builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
@@ -80,6 +85,13 @@ namespace API
             builder.Services.AddTransient<IAmenityGetService, AmenityGetService>();
             builder.Services.AddTransient<IAmenityRollBackService, AmenityRollBackService>();
             builder.Services.AddTransient<IAmenityUpdateService, AmenityUpdateService>();
+            //RoomTypeService
+            builder.Services.AddTransient<IRoomTypeAddService, RoomTypeAddService>();
+            builder.Services.AddTransient<IRoomTypeDeleteService, RoomTypeDeleteService>();
+            builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>(); 
+            builder.Services.AddTransient<IRoomTypeRollBackService, RoomTypeRollBackService>();
+            builder.Services.AddTransient<IRoomTypeUpdateService, RoomTypeUpdateService>();
+            
             
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
