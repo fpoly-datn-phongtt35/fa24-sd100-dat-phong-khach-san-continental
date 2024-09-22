@@ -69,12 +69,6 @@ namespace Domain.Services.Services
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>                   ("CreatedBy") : Guid.Empty,
                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
-                                  
-                                  //ServiceType = new ServiceType
-                                  //{
-                                  //    Id = row.Field<Guid>("ServiceTypeId"),
-                                  //    Name = row.Field<string>("ServiceTypeName") 
-                                  //}
                               }).ToList();
 
                 //phân trang

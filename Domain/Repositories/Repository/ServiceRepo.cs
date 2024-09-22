@@ -15,7 +15,7 @@ namespace Domain.Repositories.Repository
     public class ServiceRepo : IServiceRepo
     {
         private readonly ServiceTypeRepo _serviceTypeRepo;
-        private static DbWorker _DbWorker;
+        private readonly DbWorker _DbWorker;
         private readonly IConfiguration _configuration;
         public ServiceRepo(IConfiguration configuration, ServiceTypeRepo serviceTypeRepo)
         {
@@ -78,7 +78,6 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    //new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@PageSize", request.PageSize),
                     new SqlParameter("@PageIndex", request.PageIndex)
                 };

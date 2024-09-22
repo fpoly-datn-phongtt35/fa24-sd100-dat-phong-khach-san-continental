@@ -66,8 +66,17 @@ namespace API
             
 
             builder.Services.AddTransient<ServiceTypeRepo>();
+            //builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
+            builder.Services.AddTransient<IServiceService, ServiceService>();
+
             builder.Services.AddTransient<IServiceOrderRepo, ServiceOrderRepo>();
+            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
+
+            builder.Services.AddTransient<IServiceOrderDetailRepo, ServiceOrderDetailRepo>();
+            builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
+
             builder.Services.AddTransient<BuildingRepo>();
 
             builder.Services.AddTransient<IFloorRepo, FloorRepo>();
@@ -75,8 +84,6 @@ namespace API
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
-            builder.Services.AddTransient<IServiceService, ServiceService>();
-            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
             //AmenityService
@@ -88,11 +95,13 @@ namespace API
             //RoomTypeService
             builder.Services.AddTransient<IRoomTypeAddService, RoomTypeAddService>();
             builder.Services.AddTransient<IRoomTypeDeleteService, RoomTypeDeleteService>();
-            builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>(); 
+            builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
             builder.Services.AddTransient<IRoomTypeRollBackService, RoomTypeRollBackService>();
             builder.Services.AddTransient<IRoomTypeUpdateService, RoomTypeUpdateService>();
-            
-            
+
+            builder.Services.AddTransient<ICustomerService, CustomerService>();
+
+
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
