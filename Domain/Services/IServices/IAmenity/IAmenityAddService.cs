@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.DTO.AmenityRoom;
 
 namespace Domain.Services.IServices.IAmenity;
 

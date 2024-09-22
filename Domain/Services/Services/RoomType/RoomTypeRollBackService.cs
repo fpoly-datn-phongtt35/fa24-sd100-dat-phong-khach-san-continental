@@ -1,5 +1,5 @@
 ﻿using Domain.DTO.RoomType;
-using Domain.Services.IServices.RoomType;
+using Domain.Services.IServices.IRoomType;
 
 namespace Domain.Services.Services.RoomType;
 

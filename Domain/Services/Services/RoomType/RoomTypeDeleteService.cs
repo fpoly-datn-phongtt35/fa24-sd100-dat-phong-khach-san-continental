@@ -2,7 +2,7 @@
 using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
-using Domain.Services.IServices.RoomType;
+using Domain.Services.IServices.IRoomType;
 
 namespace Domain.Services.Services.RoomType;
 
@@ -25,7 +25,7 @@ public class RoomTypeDeleteService : IRoomTypeDeleteService
 
         if (existingRoomType is null)
         {
-            throw new ArgumentNullException(nameof(roomTypeDeleteRequest));
+            throw new Exception("Room Type not found");
         }
 
         existingRoomType.Status = (EntityStatus)3;

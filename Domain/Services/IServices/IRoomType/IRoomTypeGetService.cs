@@ -1,6 +1,6 @@
 ﻿using Domain.DTO.RoomType;
 
-namespace Domain.Services.IServices.RoomType;
+namespace Domain.Services.IServices.IRoomType;
 
 public interface IRoomTypeGetService
 {

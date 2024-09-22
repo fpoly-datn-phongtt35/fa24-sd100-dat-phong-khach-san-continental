@@ -69,5 +69,12 @@ namespace Utilities.StoredProcedure
         public const string SP_GetCustomerById = "SP_GetCustomerById";
         public const string SP_DeleteCustomer = "SP_DeleteCustomer";
         public const string SP_UpdateCustomer = "SP_UpdateCustomer";
+        // amenityRoom
+        public const string SP_InsertAmenityRoom = "SP_InsertAmenityRoom";
+        public const string SP_GetAllAmenityRooms = "SP_GetAllAmenityRooms";
+        public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
+        public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
+        public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
+        
     }
 }

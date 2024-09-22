@@ -152,7 +152,7 @@ public class RoomTypeRepository : IRoomTypeRepository
         }
         catch (Exception e)
         {
-            throw new Exception("Some errors when deleted amenity", e);
+            throw new Exception("Some errors when deleted room type", e);
         }
     }
 

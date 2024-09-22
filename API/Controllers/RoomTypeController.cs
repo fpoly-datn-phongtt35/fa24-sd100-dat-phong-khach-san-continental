@@ -1,6 +1,6 @@
 ﻿using Domain.DTO.RoomType;
 using Domain.Models;
-using Domain.Services.IServices.RoomType;
+using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -15,7 +15,11 @@ public class RoomTypeController : Controller
     private readonly IRoomTypeRollBackService _roomTypeRollBackService;
     private readonly IRoomTypeUpdateService _roomTypeUpdateService;
 
-    public RoomTypeController(IRoomTypeAddService roomTypeAddService, IRoomTypeUpdateService roomTypeUpdateService, IRoomTypeRollBackService roomTypeRollBackService, IRoomTypeGetService roomTypeGetService, IRoomTypeDeleteService roomTypeDeleteService)
+    public RoomTypeController(IRoomTypeAddService roomTypeAddService, 
+        IRoomTypeUpdateService roomTypeUpdateService, 
+        IRoomTypeRollBackService roomTypeRollBackService, 
+        IRoomTypeGetService roomTypeGetService, 
+        IRoomTypeDeleteService roomTypeDeleteService)
     {
         _roomTypeAddService = roomTypeAddService;
         _roomTypeUpdateService = roomTypeUpdateService;

@@ -1,7 +1,6 @@
 ﻿using Domain.DTO.RoomType;
-using Domain.Repositories.IRepository;
 
-namespace Domain.Services.IServices.RoomType;
+namespace Domain.Services.IServices.IRoomType;
 
 public interface IRoomTypeAddService
 {

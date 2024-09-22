@@ -8,8 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenity;
-using Domain.Services.IServices.RoomType;
+using Domain.Services.IServices.IAmenityRoom;
+using Domain.Services.IServices.IRoomType;
 using Domain.Services.Services.Amenity;
+using Domain.Services.Services.AmenityRoom;
 using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
@@ -82,6 +84,7 @@ namespace API
             builder.Services.AddTransient<IFloorRepo, FloorRepo>();
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
+            builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
             
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
@@ -98,9 +101,13 @@ namespace API
             builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
             builder.Services.AddTransient<IRoomTypeRollBackService, RoomTypeRollBackService>();
             builder.Services.AddTransient<IRoomTypeUpdateService, RoomTypeUpdateService>();
-
-            builder.Services.AddTransient<ICustomerService, CustomerService>();
-
+            
+            builder.Services.AddTransient<ICustomerService, CustomerService>(); 
+            //AmenityRoomService
+            builder.Services.AddTransient<IAmenityRoomAddService, AmenityRoomAddService>();
+            builder.Services.AddTransient<IAmenityRoomDeleteService, AmenityRoomDeleteService>();
+            builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
+            builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
 
             builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
