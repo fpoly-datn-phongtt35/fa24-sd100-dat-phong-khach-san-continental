@@ -11,7 +11,7 @@ public class AmenityCreateRequest
     public Guid? CreatedBy { get; set; }
 
     /// <summary>
-    /// Convert the current object of AmentityCreateRequest into a new object of Amenity type
+    /// Convert the current object of AmenityCreateRequest into a new object of Amenity type
     /// </summary>
     /// <returns>Returns Amenity object</returns>
     public Models.Amenity ToAmenity()
