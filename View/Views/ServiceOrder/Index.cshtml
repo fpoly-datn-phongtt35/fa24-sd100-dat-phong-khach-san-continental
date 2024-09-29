@@ -1,0 +1,83 @@
+﻿@using Domain.DTO.Paging
+@model ResponseData<Domain.Models.ServiceOrder>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    body {
+        color: white;
+    }
+
+    .table th, .table td {
+        color: white;
+    }
+
+    h1 {
+        color: white;
+    }
+</style>
+
+<h1>List of ServiceOrders</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@if (Model != null && Model.data != null && Model.data.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.data.First().RoomBookingDetailId)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().CreatedTime)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().CreatedBy)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().ModifiedTime)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().ModifiedBy)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().Deleted)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().DeletedTime)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().DeletedBy)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.data)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.RoomBookingDetailId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedBy)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ModifiedTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ModifiedBy)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Deleted)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DeletedTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DeletedBy)</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No data available.</p>
+}
+
+  <div>
+      <nav>
+          <ul class="pagination">
+              @for (var i = 1; i <= Model.totalPage; i++)
+              {
+                  <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                      <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                  </li>
+              }
+          </ul>
+      </nav>
+  </div>

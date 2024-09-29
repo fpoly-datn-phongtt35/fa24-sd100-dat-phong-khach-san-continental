@@ -1,0 +1,44 @@
+﻿@model Domain.DTO.Service.ServiceCreateRequest
+@{
+    ViewData["Title"] = "Create Service";
+}
+
+<h2>Create Service</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Unit">Unit</label>
+        <select asp-for="Unit" class="form-control" asp-items="@(new SelectList(ViewBag.Units, Model.Unit))"></select>
+        <span asp-validation-for="Unit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ServiceTypeId">Service Type</label>
+        <input asp-for="ServiceTypeId" class="form-control" placeholder="Nhập Service Type Id" />
+        <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+    @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
