@@ -41,6 +41,7 @@ namespace Domain.Models
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<RoomTypeService> RoomTypeServices { get; set; }
         public DbSet<ServiceOrderDetail> ServiceOrderDetails { get; set; }
         public DbSet<ServiceOrder> ServiceOrders { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
