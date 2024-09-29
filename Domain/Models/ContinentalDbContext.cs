@@ -30,7 +30,6 @@ namespace Domain.Models
         #region DBSet
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<AmenityRoom> AmenityRooms { get; set; }
-        public DbSet<Bill> Bills { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<FeedBack> FeedBacks { get; set; }
@@ -46,7 +45,7 @@ namespace Domain.Models
         public DbSet<ServiceOrder> ServiceOrders { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<VoucherDetail> VouchersDetails { get; set; }
         #endregion

@@ -15,10 +15,10 @@ namespace Domain.Services.Services
     {
         public async Task<bool> SeedGmail(SeedMailRequest request, string mailName, string appPass)
         {
-            User user = new();
+            Staff user = new();
             using (var context = new ContinentalDbContext())
             {
-                var genericRepository = new GenericRepository<User>(context);
+                var genericRepository = new GenericRepository<Staff>(context);
                 var getUser = genericRepository.FindAsync(x => x.Email.ToLower() == request.email.ToLower());
                 if (getUser != null)
                 {

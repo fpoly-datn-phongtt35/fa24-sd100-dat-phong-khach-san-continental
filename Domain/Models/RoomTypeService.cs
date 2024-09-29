@@ -3,14 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class Bill
+    public class RoomTypeService
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid CustomerId { get; set; }
-        public Guid? RoomBookingId { get; set; }
-        public Guid? ServiceOrderId { get; set; }
-        public Guid FeedBackId { get; set; }
+        public Guid RoomTypeId { get; set; }
+        public Guid ServiceId { get; set; }
+        public int Amount { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset CreatedTime { get; set; }
@@ -21,10 +20,7 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public Customer Customer { get; set; }
-        public RoomBooking RoomBooking { get; set; }
-        public ServiceOrder ServiceOrder { get; set; }
-        public FeedBack FeedBack { get; set; }
-        public List<VoucherDetail> VoucherDetails { get; set; }
+        public RoomType RoomType { get; set; }
+        public Service Service { get; set; }
     }
 }

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Domain.Configuration
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class StaffConfiguration : IEntityTypeConfiguration<Staff>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Staff> builder)
         {
-            builder.ToTable("User");
+            builder.ToTable("Staff");
             builder.HasKey(t => t.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.UserName).IsUnicode(false).IsRequired();
@@ -19,7 +19,7 @@ namespace Domain.Configuration
             builder.Property(x => x.Email).IsUnicode(false).IsRequired();
             builder.HasIndex(x => x.Email).IsUnique();
             builder.Property(x => x.PhoneNumber).IsUnicode(false).IsRequired().HasMaxLength(20);
-            builder.HasOne(x => x.Role).WithMany(x => x.Users).HasForeignKey(x => x.RoleId);
+            builder.HasOne(x => x.Role).WithMany(x => x.Staffs).HasForeignKey(x => x.RoleId);
         }
     }
 }

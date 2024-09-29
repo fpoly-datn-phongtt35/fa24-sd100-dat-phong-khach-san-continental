@@ -13,7 +13,7 @@ namespace Domain.Configuration
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.BookingType).IsRequired();
             builder.HasOne(x => x.Customer).WithMany(x => x.RoomBookings).HasForeignKey(x => x.CustomerId);
-            builder.HasOne(x => x.User).WithMany(x => x.RoomBookings).HasForeignKey(x => x.UserId).IsRequired(false);
+            builder.HasOne(x => x.Staff).WithMany(x => x.RoomBookings).HasForeignKey(x => x.StaffId).IsRequired(false);
         }
     }
 }

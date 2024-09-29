@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class User
+    public class Staff
     {
         [Key]
         public Guid Id { get; set; }

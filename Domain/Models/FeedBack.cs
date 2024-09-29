@@ -7,8 +7,9 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id  { get; set; }
-        public Guid UserId { get; set; }
+        public Guid StaffId { get; set; }
         public Guid CustomerId { get; set; }
+        public Guid RoomBookingId { get; set; }
         public string Comments { get; set; }
         public int Rating { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
@@ -21,8 +22,9 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public User User { get; set; }
+        public Staff Staff { get; set; }
         public Customer Customer { get; set; }
-        public Bill Bill { get; set; }
+        public RoomBooking RoomBooking { get; set; }
+        
     }
 }

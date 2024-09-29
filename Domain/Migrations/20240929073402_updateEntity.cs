@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class updateEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,13 +19,13 @@ namespace Domain.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,9 +59,12 @@ namespace Domain.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
                     Email = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
                     PhoneNumber = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -213,13 +216,14 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Staff",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "varchar(900)", unicode: false, nullable: false),
                     Password = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "varchar(900)", unicode: false, nullable: false),
                     PhoneNumber = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -234,9 +238,9 @@ namespace Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Staff", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Role_RoleId",
+                        name: "FK_Staff_Role_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id",
@@ -244,7 +248,7 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AmenityRoomDetail",
+                name: "AmenityRoom",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -262,15 +266,15 @@ namespace Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AmenityRoomDetail", x => x.Id);
+                    table.PrimaryKey("PK_AmenityRoom", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AmenityRoomDetail_Amenity_AmenityId",
+                        name: "FK_AmenityRoom_Amenity_AmenityId",
                         column: x => x.AmenityId,
                         principalTable: "Amenity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AmenityRoomDetail_RoomType_RoomTypeId",
+                        name: "FK_AmenityRoom_RoomType_RoomTypeId",
                         column: x => x.RoomTypeId,
                         principalTable: "RoomType",
                         principalColumn: "Id",
@@ -308,7 +312,7 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomDetail",
+                name: "Room",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -331,52 +335,17 @@ namespace Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomDetail", x => x.Id);
+                    table.PrimaryKey("PK_Room", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoomDetail_Floor_FloorId",
+                        name: "FK_Room_Floor_FloorId",
                         column: x => x.FloorId,
                         principalTable: "Floor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoomDetail_RoomType_RoomTypeId",
+                        name: "FK_Room_RoomType_RoomTypeId",
                         column: x => x.RoomTypeId,
                         principalTable: "RoomType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FeedBack",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FeedBack", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FeedBack_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FeedBack_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -387,7 +356,7 @@ namespace Domain.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -409,9 +378,9 @@ namespace Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Post_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_Post_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -423,7 +392,7 @@ namespace Domain.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BookingType = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    StaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -443,10 +412,86 @@ namespace Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoomBooking_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_RoomBooking_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomTypeService",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoomTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomTypeService", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoomTypeService_RoomType_RoomTypeId",
+                        column: x => x.RoomTypeId,
+                        principalTable: "RoomType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoomTypeService_Service_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Service",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeedBack",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoomBookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeedBack", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FeedBack_Customer_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FeedBack_RoomBooking_RoomBookingId",
+                        column: x => x.RoomBookingId,
+                        principalTable: "RoomBooking",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FeedBack_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -454,7 +499,7 @@ namespace Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoomDetailId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomBookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CheckInBooking = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CheckOutBooking = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -481,19 +526,23 @@ namespace Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoomBookingDetail_RoomDetail_RoomDetailId",
-                        column: x => x.RoomDetailId,
-                        principalTable: "RoomDetail",
+                        name: "FK_RoomBookingDetail_Room_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Room",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceOrder",
+                name: "VoucherDetail",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoomBookingDetailId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RoomBookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VoucherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
+                    StartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    EndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -505,23 +554,27 @@ namespace Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceOrder", x => x.Id);
+                    table.PrimaryKey("PK_VoucherDetail", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ServiceOrder_RoomBookingDetail_RoomBookingDetailId",
-                        column: x => x.RoomBookingDetailId,
-                        principalTable: "RoomBookingDetail",
-                        principalColumn: "Id");
+                        name: "FK_VoucherDetail_RoomBooking_RoomBookingId",
+                        column: x => x.RoomBookingId,
+                        principalTable: "RoomBooking",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VoucherDetail_Voucher_VoucherId",
+                        column: x => x.VoucherId,
+                        principalTable: "Voucher",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bill",
+                name: "ServiceOrder",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomBookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ServiceOrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FeedBackId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -530,36 +583,20 @@ namespace Domain.Migrations
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    FeedBackId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    RoomBookingDetailId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bill", x => x.Id);
+                    table.PrimaryKey("PK_ServiceOrder", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bill_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bill_FeedBack_FeedBackId",
-                        column: x => x.FeedBackId,
-                        principalTable: "FeedBack",
+                        name: "FK_ServiceOrder_RoomBookingDetail_RoomBookingDetailId",
+                        column: x => x.RoomBookingDetailId,
+                        principalTable: "RoomBookingDetail",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Bill_FeedBack_FeedBackId1",
-                        column: x => x.FeedBackId1,
-                        principalTable: "FeedBack",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bill_RoomBooking_RoomBookingId",
+                        name: "FK_ServiceOrder_RoomBooking_RoomBookingId",
                         column: x => x.RoomBookingId,
                         principalTable: "RoomBooking",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bill_ServiceOrder_ServiceOrderId",
-                        column: x => x.ServiceOrderId,
-                        principalTable: "ServiceOrder",
                         principalColumn: "Id");
                 });
 
@@ -599,83 +636,15 @@ namespace Domain.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "VoucherDetail",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VoucherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
-                    StartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    EndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VoucherDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_VoucherDetail_Bill_BillId",
-                        column: x => x.BillId,
-                        principalTable: "Bill",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_VoucherDetail_Voucher_VoucherId",
-                        column: x => x.VoucherId,
-                        principalTable: "Voucher",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_AmenityRoomDetail_AmenityId",
-                table: "AmenityRoomDetail",
+                name: "IX_AmenityRoom_AmenityId",
+                table: "AmenityRoom",
                 column: "AmenityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AmenityRoomDetail_RoomTypeId",
-                table: "AmenityRoomDetail",
+                name: "IX_AmenityRoom_RoomTypeId",
+                table: "AmenityRoom",
                 column: "RoomTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_CustomerId",
-                table: "Bill",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_FeedBackId",
-                table: "Bill",
-                column: "FeedBackId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_FeedBackId1",
-                table: "Bill",
-                column: "FeedBackId1",
-                unique: true,
-                filter: "[FeedBackId1] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_RoomBookingId",
-                table: "Bill",
-                column: "RoomBookingId",
-                unique: true,
-                filter: "[RoomBookingId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_ServiceOrderId",
-                table: "Bill",
-                column: "ServiceOrderId",
-                unique: true,
-                filter: "[ServiceOrderId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FeedBack_CustomerId",
@@ -683,9 +652,14 @@ namespace Domain.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FeedBack_UserId",
+                name: "IX_FeedBack_RoomBookingId",
                 table: "FeedBack",
-                column: "UserId");
+                column: "RoomBookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FeedBack_StaffId",
+                table: "FeedBack",
+                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Floor_BuildingId",
@@ -698,9 +672,19 @@ namespace Domain.Migrations
                 column: "PostTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_UserId",
+                name: "IX_Post_StaffId",
                 table: "Post",
-                column: "UserId");
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Room_FloorId",
+                table: "Room",
+                column: "FloorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Room_RoomTypeId",
+                table: "Room",
+                column: "RoomTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomBooking_CustomerId",
@@ -708,9 +692,9 @@ namespace Domain.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomBooking_UserId",
+                name: "IX_RoomBooking_StaffId",
                 table: "RoomBooking",
-                column: "UserId");
+                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomBookingDetail_RoomBookingId",
@@ -718,19 +702,19 @@ namespace Domain.Migrations
                 column: "RoomBookingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomBookingDetail_RoomDetailId",
+                name: "IX_RoomBookingDetail_RoomId",
                 table: "RoomBookingDetail",
-                column: "RoomDetailId");
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomDetail_FloorId",
-                table: "RoomDetail",
-                column: "FloorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoomDetail_RoomTypeId",
-                table: "RoomDetail",
+                name: "IX_RoomTypeService_RoomTypeId",
+                table: "RoomTypeService",
                 column: "RoomTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomTypeService_ServiceId",
+                table: "RoomTypeService",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Service_ServiceTypeId",
@@ -743,6 +727,11 @@ namespace Domain.Migrations
                 column: "RoomBookingDetailId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServiceOrder_RoomBookingId",
+                table: "ServiceOrder",
+                column: "RoomBookingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceOrderDetail_ServiceId",
                 table: "ServiceOrderDetail",
                 column: "ServiceId");
@@ -753,26 +742,26 @@ namespace Domain.Migrations
                 column: "ServiceOrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
+                name: "IX_Staff_Email",
+                table: "Staff",
                 column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_RoleId",
-                table: "User",
+                name: "IX_Staff_RoleId",
+                table: "Staff",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_UserName",
-                table: "User",
+                name: "IX_Staff_UserName",
+                table: "Staff",
                 column: "UserName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_VoucherDetail_BillId",
+                name: "IX_VoucherDetail_RoomBookingId",
                 table: "VoucherDetail",
-                column: "BillId");
+                column: "RoomBookingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VoucherDetail_VoucherId",
@@ -784,10 +773,16 @@ namespace Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AmenityRoomDetail");
+                name: "AmenityRoom");
+
+            migrationBuilder.DropTable(
+                name: "FeedBack");
 
             migrationBuilder.DropTable(
                 name: "Post");
+
+            migrationBuilder.DropTable(
+                name: "RoomTypeService");
 
             migrationBuilder.DropTable(
                 name: "ServiceOrderDetail");
@@ -802,37 +797,31 @@ namespace Domain.Migrations
                 name: "PostType");
 
             migrationBuilder.DropTable(
-                name: "Service");
+                name: "ServiceOrder");
 
             migrationBuilder.DropTable(
-                name: "Bill");
+                name: "Service");
 
             migrationBuilder.DropTable(
                 name: "Voucher");
 
             migrationBuilder.DropTable(
-                name: "ServiceType");
-
-            migrationBuilder.DropTable(
-                name: "FeedBack");
-
-            migrationBuilder.DropTable(
-                name: "ServiceOrder");
-
-            migrationBuilder.DropTable(
                 name: "RoomBookingDetail");
+
+            migrationBuilder.DropTable(
+                name: "ServiceType");
 
             migrationBuilder.DropTable(
                 name: "RoomBooking");
 
             migrationBuilder.DropTable(
-                name: "RoomDetail");
+                name: "Room");
 
             migrationBuilder.DropTable(
                 name: "Customer");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Staff");
 
             migrationBuilder.DropTable(
                 name: "Floor");

@@ -19,6 +19,6 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public List<User> Users { get; set; }
+        public List<Staff> Staffs { get; set; }
     }
 }
