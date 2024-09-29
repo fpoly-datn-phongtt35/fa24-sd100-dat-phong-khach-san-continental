@@ -57,7 +57,7 @@ namespace Domain.Services.Services
                                select new ServiceOrder
                                {
                                    Id = row.Field<Guid>("Id"),
-                                   RoomBookingId = row.IsNull("RoomBookingDetailId") ? (Guid?)null : row.Field<Guid>("RoomBookingId"),
+                                   RoomBookingId = row.IsNull("RoomBookingId") ? (Guid?)null : row.Field<Guid>("RoomBookingId"),
                                    Status = row.Field<EntityStatus>("Status"),
                                    CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                    CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
@@ -86,7 +86,7 @@ namespace Domain.Services.Services
                               {
                                   Id = row.Field<Guid>("Id"),
                                   //xử lý nếu RoomBookingDetailId là null
-                                  RoomBookingId = row.IsNull("RoomBookingDetailId") ? (Guid?)null : row.Field<Guid>("RoomBookingId"),
+                                  RoomBookingId = row.IsNull("RoomBookingId") ? (Guid?)null : row.Field<Guid>("RoomBookingId"),
                                   Status = row.Field<EntityStatus>("Status"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,

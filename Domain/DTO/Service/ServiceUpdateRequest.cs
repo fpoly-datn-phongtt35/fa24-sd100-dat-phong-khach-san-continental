@@ -16,6 +16,7 @@ namespace Domain.DTO.Service
         public decimal Price { get; set; }
         public int Unit { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
+        public bool Deleted { get; set; }
         public DateTimeOffset ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
     }

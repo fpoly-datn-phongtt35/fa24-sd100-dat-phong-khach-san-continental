@@ -1,39 +1,31 @@
 ﻿using Domain.DTO.Paging;
 using Domain.DTO.Service;
-using Domain.DTO.ServiceOrder;
+using Domain.DTO.ServiceType;
 using Domain.Enums;
 using Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace View.Controllers
 {
-    public class ServiceOrderController : Controller
+    public class ServiceTypeController : Controller
     {
         HttpClient _client;
 
-        public ServiceOrderController(HttpClient client)
+        public ServiceTypeController(HttpClient client)
         {
             _client = client;
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
-        // GET: ServiceOrderController
         public async Task<IActionResult> Index()
         {
-            string requestUrl = "https://localhost:7130/api/ServiceOrder/GetListServiceOrders";
+            string requestUrl = "api/ServiceType/GetListServiceType";
 
-            //var request = new ServiceOrderGetRequest
-            //{
-            //    PageIndex = 1,
-            //    PageSize = 10
-            //    ,RoomBookingId = null
-            //};
-            var request = new ServiceOrderGetRequest();
+            var request = new ServiceTypeGetRequest();
 
             var jsonRequest = JsonConvert.SerializeObject(request);
-            
+
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             try
@@ -42,21 +34,9 @@ namespace View.Controllers
 
                 var responseString = await response.Content.ReadAsStringAsync();
 
-                var serviceOrders = JsonConvert.DeserializeObject<ResponseData<ServiceOrder>>(responseString);
+                var serviceTypes = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(responseString);
 
-                if (serviceOrders == null || serviceOrders.data == null)
-                {
-                    serviceOrders = new ResponseData<ServiceOrder>
-                    {
-                        data = new List<ServiceOrder>(),
-                        totalPage = 0,
-                        totalRecord = 0,
-                        CurrentPage = 1,
-                        PageSize = 10
-                    };
-                }
-
-                return View(serviceOrders);
+                return View(serviceTypes);
             }
             catch (Exception ex)
             {
@@ -64,10 +44,10 @@ namespace View.Controllers
             }
         }
 
-        // GET: ServiceOrderController/Details/5
+        // GET: ServiceTypeController/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/ServiceOrder/GetServiceOrderById?id={id}";
+            string requestUrl = $"https://localhost:7130/api/ServiceType/GetServiceTypeById?id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
@@ -82,7 +62,7 @@ namespace View.Controllers
                 }
 
                 var responseString = await response.Content.ReadAsStringAsync();
-                var services = JsonConvert.DeserializeObject<ServiceOrder>(responseString);
+                var services = JsonConvert.DeserializeObject<ServiceType>(responseString);
 
 
 
@@ -94,44 +74,45 @@ namespace View.Controllers
             }
         }
 
-        // GET: ServiceOrderController/Create
-        public ActionResult Create()
+        // GET: ServiceTypeController/Create
+        public async Task<IActionResult> Create()
         {
-            return View(new ServiceOrderCreateRequest());
+            return View(new ServiceTypeCreateRequest());
         }
 
-        // POST: ServiceOrderController/Create
+        // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiceOrderCreateRequest request)
+        public async Task<IActionResult> Create(ServiceCreateRequest request)
         {
             if (ModelState.IsValid)
             {
                 request.Status = EntityStatus.Active;
                 request.CreatedTime = DateTimeOffset.Now;
-                var response = await _client.PostAsJsonAsync("api/ServiceOrder/CreateServiceOrder", request);
+                request.CreatedBy = Guid.NewGuid();
+                var response = await _client.PostAsJsonAsync("api/ServiceType/CreateServiceType", request);
 
                 if (response.IsSuccessStatusCode)
                 {
                     return RedirectToAction("Index");
                 }
             }
-
             return View(request);
         }
 
-        // GET: ServiceOrderController/Edit/5
+        // GET: ServiceController/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/ServiceOrder/GetServiceOrderById?id={id}";
-
-            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
+            string requestUrl = $"api/ServiceType/GetServiceTypeById?id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
+            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
+
             try
             {
+                
                 var response = await _client.PostAsync(requestUrl, content);
 
                 if (!response.IsSuccessStatusCode)
@@ -139,8 +120,9 @@ namespace View.Controllers
                     return View("Error");
                 }
 
+
                 var responseString = await response.Content.ReadAsStringAsync();
-                var services = JsonConvert.DeserializeObject<ServiceOrder>(responseString);
+                var services = JsonConvert.DeserializeObject<ServiceType>(responseString);
 
 
 
@@ -152,27 +134,26 @@ namespace View.Controllers
             }
         }
 
-        // POST: ServiceOrderController/Edit/5
+        // POST: ServiceController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ServiceOrder request)
+        public async Task<IActionResult> Edit(Service request)
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
             request.ModifiedTime = DateTimeOffset.Now;
-            await _client.PutAsJsonAsync("api/ServiceOrder/UpdateServiceOrder", request);
+            var response = await _client.PutAsJsonAsync("api/ServiceType/UpdateServiceType", request);
             return RedirectToAction("Index");
         }
 
-        // DELETE: ServiceOrderController/Delete/5
+        // DELETE: ServiceTypeController/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
-            string requestUrl = "https://localhost:7130/api/ServiceOrder/DeleteServiceOrder";
+            string requestUrl = "https://localhost:7130/api/ServiceType/DeleteServiceType";
 
-            var request = new ServiceOrderDeleteRequest
+            var request = new ServiceTypeDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),  
+                DeletedBy = Guid.NewGuid(),  //tạm thời, sau lấy giá trị từ người dùng đang đăng nhập
                 DeletedTime = DateTimeOffset.Now
             };
 
@@ -184,7 +165,7 @@ namespace View.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return View("Error", new Exception("Unable to delete the service."));
+            return View("Error");
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Domain.DTO.ServiceOrder
 {
     public class ServiceOrderCreateRequest
     {
-        public Guid? RoomBookingDetailId { get; set; }
+        public Guid? RoomBookingId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
         public DateTimeOffset CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }

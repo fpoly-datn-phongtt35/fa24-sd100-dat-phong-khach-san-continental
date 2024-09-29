@@ -111,6 +111,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@Status", request.Status),
+                    new SqlParameter("@Deleted", request.Deleted),
                     new SqlParameter("@ModifiedTime", DateTimeOffset.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy != null ? request.ModifiedBy : (object)DBNull.Value)
                 };

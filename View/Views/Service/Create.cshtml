@@ -23,13 +23,14 @@
     </div>
     <div class="form-group">
         <label asp-for="Unit">Unit</label>
-        <select asp-for="Unit" class="form-control" asp-items="@(new SelectList(ViewBag.Units, Model.Unit))"></select>
+        <select asp-for="Unit" class="form-control" asp-items="@(new SelectList(ViewBag.Units))"></select>
         <span asp-validation-for="Unit" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ServiceTypeId">Service Type</label>
-        <input asp-for="ServiceTypeId" class="form-control" placeholder="Nhập Service Type Id" />
-        <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
+        <label asp-for="ServiceTypeId">Service type</label>
+        <select asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name"))">
+            <option value="">-- Select Service Type --</option>
+        </select>
     </div>
     <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@

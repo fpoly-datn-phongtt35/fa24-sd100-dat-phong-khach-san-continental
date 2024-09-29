@@ -1,7 +1,7 @@
-﻿@model Domain.Models.ServiceOrder
+﻿@model Domain.Models.ServiceOrderDetail
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "ServiceOrderDetail";
 }
 
 <h1>Details</h1>
@@ -17,10 +17,28 @@
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RoomBookingId)
+            @Html.DisplayNameFor(model => model.ServiceOrderId)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RoomBookingId)
+            @Html.DisplayFor(model => model.ServiceOrderId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ServiceId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ServiceId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Status)

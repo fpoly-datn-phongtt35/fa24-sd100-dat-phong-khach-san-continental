@@ -7,6 +7,7 @@ using Domain.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Drawing;
 using System.Net.Http;
 using System.Text;
 using View.Models;
@@ -27,29 +28,42 @@ namespace View.Controllers
         public async Task<IActionResult> Index()
         {
             // api url
-            string requestUrl = "https://localhost:7130/api/Service/GetListService";
+            string requestUrl = "api/Service/GetListService";
 
-            var request = new ServiceGetRequest
-            {
-                PageIndex = 1,  
-                PageSize = 10
-            };
+            var request = new ServiceGetRequest();
 
             // comvert request to json
-            var jsonRequest = JsonConvert.SerializeObject(request);
+            var jsonRequest = JsonConvert.SerializeObject(request); //chuyển đối tượng thành json
 
-            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json"); //nội để gửi lên api
 
             try
             {
-                // send request den api
+                // gửi request lên api
                 var response = await _client.PostAsync(requestUrl, content);
 
-                // doc ket qua tu api
+                // đọc nội dung trả về từ api
                 var responseString = await response.Content.ReadAsStringAsync();
 
-                // convert json to respondata 
+                // chuyển đổi lại thành respondata 
                 var services = JsonConvert.DeserializeObject<ResponseData<Service>>(responseString);
+
+                #region lấy ra name của serviceType
+                string serviceTyperequestUrl = "api/ServiceType/GetListServiceType";
+
+                var serviceTypeRequest = new ServiceTypeGetRequest();
+
+                var serviceTypeJsonRequest = JsonConvert.SerializeObject(serviceTypeRequest);
+                var serviceTypeContent = new StringContent(serviceTypeJsonRequest, Encoding.UTF8, "application/json");
+
+                var serviceTypeResponse = await _client.PostAsync(serviceTyperequestUrl, serviceTypeContent);
+
+                var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
+
+                var serviceTypes = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
+
+                ViewBag.ServiceTypeList = serviceTypes.data;
+                #endregion
 
                 return View(services);
             }
@@ -63,7 +77,7 @@ namespace View.Controllers
         // GET: ServiceController/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/Service/GetServiceById?id={id}";
+            string requestUrl = $"api/Service/GetServiceById?id={id}";
 
             // Tạo nội dung json cho request
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
@@ -81,8 +95,6 @@ namespace View.Controllers
                 var responseString = await response.Content.ReadAsStringAsync();
                 var services = JsonConvert.DeserializeObject<Service>(responseString);
 
-
-
                 return View(services);
             }
             catch (Exception ex)
@@ -92,14 +104,17 @@ namespace View.Controllers
         }
 
 
-
-
-
-
-
         // GET: ServiceController/Create
         public async Task<IActionResult> Create()
         {
+            // Lấy danh sách ServiceType
+            string serviceTypeRequestUrl = "api/ServiceType/GetListServiceType";
+            var serviceTypeResponse = await _client.PostAsync(serviceTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
+            var serviceType = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
+
+
+            ViewBag.ServiceTypes = serviceType?.data;
             ViewBag.Units = Enum.GetValues(typeof(UnitType));
             return View(new ServiceCreateRequest());
         }
@@ -111,6 +126,8 @@ namespace View.Controllers
         {
             if (ModelState.IsValid)
             {
+                request.Status = EntityStatus.Active;
+                request.CreatedTime = DateTimeOffset.Now;
                 var response = await _client.PostAsJsonAsync("api/Service/CreateService", request);
 
                 if (response.IsSuccessStatusCode)
@@ -118,15 +135,23 @@ namespace View.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
-
             return View(request);
         }
 
         // GET: ServiceController/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/Service/GetServiceById?id={id}";
+            // Lấy danh sách ServiceType
+            string serviceTypeRequestUrl = "api/ServiceType/GetListServiceType";
+            var serviceTypeResponse = await _client.PostAsync(serviceTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
+            var serviceType = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
+
+            ViewBag.ServiceTypes = serviceType?.data;
+
+
+            //lấy view hiện tại
+            string requestUrl = $"api/Service/GetServiceById?id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
@@ -163,6 +188,7 @@ namespace View.Controllers
             ViewBag.Units = Enum.GetValues(typeof(UnitType));
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
+            request.ModifiedTime = DateTimeOffset.Now;
             var response = await _client.PutAsJsonAsync("api/Service/UpdateService", request);
             return RedirectToAction("Index"); 
         }
