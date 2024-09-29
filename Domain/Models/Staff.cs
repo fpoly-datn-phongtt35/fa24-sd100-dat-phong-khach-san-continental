@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class User
+    public class Staff
     {
         [Key]
         public Guid Id { get; set; }
@@ -27,6 +27,6 @@ namespace Domain.Models
         public Role Role { get; set; }
         public List<RoomBooking> RoomBookings { get; set; }
         public List<Post> Posts { get; set; }
-        public List<FeedBack> FeedBacks { get; set; }
+        public ICollection<FeedBack> FeedBacks { get; set; }
     }
 }

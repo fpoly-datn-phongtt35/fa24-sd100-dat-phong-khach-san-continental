@@ -13,8 +13,20 @@ namespace Domain.Configuration
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Comments).IsUnicode(true).IsRequired();
             builder.Property(x => x.Rating).IsRequired();
-            builder.HasOne(x => x.User).WithMany(x => x.FeedBacks).HasForeignKey(x => x.UserId);
-            builder.HasOne(x => x.Customer).WithMany(x =>x.FeedBacks).HasForeignKey(x => x.CustomerId);
+            builder.HasOne(x => x.Staff)
+                 .WithMany(x => x.FeedBacks)
+                 .HasForeignKey(x => x.StaffId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Customer)
+                .WithMany(x => x.FeedBacks)
+                .HasForeignKey(x => x.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.RoomBooking)
+                .WithMany(x => x.FeedBacks)
+                .HasForeignKey(x => x.RoomBookingId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

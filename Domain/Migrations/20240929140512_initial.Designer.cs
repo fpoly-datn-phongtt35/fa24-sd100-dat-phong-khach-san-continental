@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    [Migration("20240921183036_deleteNameFromServiceOrderDetail")]
-    partial class deleteNameFromServiceOrderDetail
+    [Migration("20240929140512_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,73 +116,6 @@ namespace Domain.Migrations
                     b.HasIndex("RoomTypeId");
 
                     b.ToTable("AmenityRoom", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.Bill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("DeletedTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("FeedBackId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("FeedBackId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("ModifiedTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid?>("RoomBookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ServiceOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("FeedBackId")
-                        .IsUnique();
-
-                    b.HasIndex("FeedBackId1")
-                        .IsUnique()
-                        .HasFilter("[FeedBackId1] IS NOT NULL");
-
-                    b.HasIndex("RoomBookingId")
-                        .IsUnique()
-                        .HasFilter("[RoomBookingId] IS NOT NULL");
-
-                    b.HasIndex("ServiceOrderId")
-                        .IsUnique()
-                        .HasFilter("[ServiceOrderId] IS NOT NULL");
-
-                    b.ToTable("Bill", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Building", b =>
@@ -335,17 +268,20 @@ namespace Domain.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("RoomBookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StaffId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("StaffId");
 
                     b.ToTable("FeedBack", (string)null);
                 });
@@ -433,6 +369,9 @@ namespace Domain.Migrations
                     b.Property<Guid>("PostTypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("StaffId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -441,14 +380,11 @@ namespace Domain.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PostTypeId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("StaffId");
 
                     b.ToTable("Post", (string)null);
                 });
@@ -647,17 +583,17 @@ namespace Domain.Migrations
                     b.Property<DateTimeOffset>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<Guid?>("StaffId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("StaffId");
 
                     b.ToTable("RoomBooking", (string)null);
                 });
@@ -775,6 +711,54 @@ namespace Domain.Migrations
                     b.ToTable("RoomType", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.RoomTypeService", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("ModifiedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RoomTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomTypeId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("RoomTypeService", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Models.Service", b =>
                 {
                     b.Property<Guid>("Id")
@@ -861,12 +845,17 @@ namespace Domain.Migrations
                     b.Property<Guid?>("RoomBookingDetailId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("RoomBookingId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoomBookingDetailId");
+
+                    b.HasIndex("RoomBookingId");
 
                     b.ToTable("ServiceOrder", (string)null);
                 });
@@ -966,7 +955,7 @@ namespace Domain.Migrations
                     b.ToTable("ServiceType", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.User", b =>
+            modelBuilder.Entity("Domain.Models.Staff", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1040,7 +1029,7 @@ namespace Domain.Migrations
                     b.HasIndex("UserName")
                         .IsUnique();
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Staff", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Voucher", b =>
@@ -1100,9 +1089,6 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BillId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Code")
                         .IsRequired()
                         .IsUnicode(false)
@@ -1132,6 +1118,9 @@ namespace Domain.Migrations
                     b.Property<DateTimeOffset>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<Guid>("RoomBookingId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("datetimeoffset");
 
@@ -1143,7 +1132,7 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillId");
+                    b.HasIndex("RoomBookingId");
 
                     b.HasIndex("VoucherId");
 
@@ -1169,56 +1158,31 @@ namespace Domain.Migrations
                     b.Navigation("RoomType");
                 });
 
-            modelBuilder.Entity("Domain.Models.Bill", b =>
-                {
-                    b.HasOne("Domain.Models.Customer", "Customer")
-                        .WithMany("Bills")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.FeedBack", "FeedBack")
-                        .WithOne()
-                        .HasForeignKey("Domain.Models.Bill", "FeedBackId");
-
-                    b.HasOne("Domain.Models.FeedBack", null)
-                        .WithOne("Bill")
-                        .HasForeignKey("Domain.Models.Bill", "FeedBackId1");
-
-                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
-                        .WithOne()
-                        .HasForeignKey("Domain.Models.Bill", "RoomBookingId");
-
-                    b.HasOne("Domain.Models.ServiceOrder", "ServiceOrder")
-                        .WithOne()
-                        .HasForeignKey("Domain.Models.Bill", "ServiceOrderId");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("FeedBack");
-
-                    b.Navigation("RoomBooking");
-
-                    b.Navigation("ServiceOrder");
-                });
-
             modelBuilder.Entity("Domain.Models.FeedBack", b =>
                 {
                     b.HasOne("Domain.Models.Customer", "Customer")
                         .WithMany("FeedBacks")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User", "User")
+                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
                         .WithMany("FeedBacks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Staff", "Staff")
+                        .WithMany("FeedBacks")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
-                    b.Navigation("User");
+                    b.Navigation("RoomBooking");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Domain.Models.Floor", b =>
@@ -1240,15 +1204,15 @@ namespace Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User", "Users")
+                    b.HasOne("Domain.Models.Staff", "Staff")
                         .WithMany("Posts")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("PostType");
 
-                    b.Navigation("Users");
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Domain.Models.Room", b =>
@@ -1278,13 +1242,13 @@ namespace Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.User", "User")
+                    b.HasOne("Domain.Models.Staff", "Staff")
                         .WithMany("RoomBookings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("StaffId");
 
                     b.Navigation("Customer");
 
-                    b.Navigation("User");
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Domain.Models.RoomBookingDetail", b =>
@@ -1306,6 +1270,25 @@ namespace Domain.Migrations
                     b.Navigation("RoomBooking");
                 });
 
+            modelBuilder.Entity("Domain.Models.RoomTypeService", b =>
+                {
+                    b.HasOne("Domain.Models.RoomType", "RoomType")
+                        .WithMany("RoomsTypeServices")
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Service", "Service")
+                        .WithMany("RoomTypeServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RoomType");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("Domain.Models.Service", b =>
                 {
                     b.HasOne("Domain.Models.ServiceType", "ServiceType")
@@ -1319,11 +1302,15 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.ServiceOrder", b =>
                 {
-                    b.HasOne("Domain.Models.RoomBookingDetail", "RoomBookingDetail")
+                    b.HasOne("Domain.Models.RoomBookingDetail", null)
                         .WithMany("ServiceOrders")
                         .HasForeignKey("RoomBookingDetailId");
 
-                    b.Navigation("RoomBookingDetail");
+                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
+                        .WithMany("ServiceOrders")
+                        .HasForeignKey("RoomBookingId");
+
+                    b.Navigation("RoomBooking");
                 });
 
             modelBuilder.Entity("Domain.Models.ServiceOrderDetail", b =>
@@ -1345,10 +1332,10 @@ namespace Domain.Migrations
                     b.Navigation("ServiceOrder");
                 });
 
-            modelBuilder.Entity("Domain.Models.User", b =>
+            modelBuilder.Entity("Domain.Models.Staff", b =>
                 {
                     b.HasOne("Domain.Models.Role", "Role")
-                        .WithMany("Users")
+                        .WithMany("Staffs")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1358,9 +1345,9 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.VoucherDetail", b =>
                 {
-                    b.HasOne("Domain.Models.Bill", "Bill")
+                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
                         .WithMany("VoucherDetails")
-                        .HasForeignKey("BillId")
+                        .HasForeignKey("RoomBookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1370,7 +1357,7 @@ namespace Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Bill");
+                    b.Navigation("RoomBooking");
 
                     b.Navigation("Voucher");
                 });
@@ -1380,11 +1367,6 @@ namespace Domain.Migrations
                     b.Navigation("AmenityRooms");
                 });
 
-            modelBuilder.Entity("Domain.Models.Bill", b =>
-                {
-                    b.Navigation("VoucherDetails");
-                });
-
             modelBuilder.Entity("Domain.Models.Building", b =>
                 {
                     b.Navigation("Floors");
@@ -1392,17 +1374,9 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Customer", b =>
                 {
-                    b.Navigation("Bills");
-
                     b.Navigation("FeedBacks");
 
                     b.Navigation("RoomBookings");
-                });
-
-            modelBuilder.Entity("Domain.Models.FeedBack", b =>
-                {
-                    b.Navigation("Bill")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Models.Floor", b =>
@@ -1417,7 +1391,7 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Role", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("Staffs");
                 });
 
             modelBuilder.Entity("Domain.Models.Room", b =>
@@ -1427,7 +1401,13 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.RoomBooking", b =>
                 {
+                    b.Navigation("FeedBacks");
+
                     b.Navigation("RoomBookingDetails");
+
+                    b.Navigation("ServiceOrders");
+
+                    b.Navigation("VoucherDetails");
                 });
 
             modelBuilder.Entity("Domain.Models.RoomBookingDetail", b =>
@@ -1440,10 +1420,14 @@ namespace Domain.Migrations
                     b.Navigation("AmenityRooms");
 
                     b.Navigation("Rooms");
+
+                    b.Navigation("RoomsTypeServices");
                 });
 
             modelBuilder.Entity("Domain.Models.Service", b =>
                 {
+                    b.Navigation("RoomTypeServices");
+
                     b.Navigation("ServiceOrderDetails");
                 });
 
@@ -1457,7 +1441,7 @@ namespace Domain.Migrations
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("Domain.Models.User", b =>
+            modelBuilder.Entity("Domain.Models.Staff", b =>
                 {
                     b.Navigation("FeedBacks");
 

@@ -24,5 +24,6 @@ namespace Domain.Models
 
         public ServiceType ServiceType { get; set; }
         public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
+        public List<RoomTypeService> RoomTypeServices { get; set; }
     }
 }

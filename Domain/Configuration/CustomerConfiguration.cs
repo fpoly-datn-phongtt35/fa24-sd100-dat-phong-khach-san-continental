@@ -17,6 +17,7 @@ namespace Domain.Configuration
             builder.Property(x => x.LastName).IsUnicode(false).IsRequired();
             builder.Property(x => x.Email).IsUnicode(false).IsRequired();
             builder.Property(x => x.PhoneNumber).IsUnicode(false).IsRequired().HasMaxLength(20);
+            builder.HasMany(x => x.FeedBacks).WithOne(x => x.Customer).HasForeignKey(x => x.CustomerId);
         }
     }
 }
