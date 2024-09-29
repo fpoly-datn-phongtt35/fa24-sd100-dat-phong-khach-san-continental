@@ -149,7 +149,8 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Description",!string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Price",request.Price),
                     new SqlParameter("@Unit",request.Unit),
-                    new SqlParameter("@Status",1),
+                    new SqlParameter("@Status",request.Status),
+                    new SqlParameter("@Deleted",request.Deleted),
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
