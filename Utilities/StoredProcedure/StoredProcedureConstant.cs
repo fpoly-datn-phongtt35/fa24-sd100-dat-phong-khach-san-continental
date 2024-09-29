@@ -30,5 +30,11 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateBuilding = "SP_UpdateBuilding";
         //amenity
         public const string SP_InsertAmenity = "SP_InsertAmenity";
+
+        // customer
+        public const string SP_InsertCustomer = "SP_InsertCustomer";
+        public const string SP_GetCustomerById = "SP_GetCustomerById";
+        public const string SP_DeleteCustomer = "SP_DeleteCustomer";
+        public const string SP_UpdateCustomer = "SP_UpdateCustomer";
     }
 }
