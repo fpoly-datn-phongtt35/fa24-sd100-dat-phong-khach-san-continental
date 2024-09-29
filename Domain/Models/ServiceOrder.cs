@@ -7,7 +7,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid? RoomBookingDetailId { get; set; }
+        public Guid? RoomBookingId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset CreatedTime { get; set; }
@@ -18,7 +18,7 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public RoomBookingDetail RoomBookingDetail { get; set; }
+        public RoomBooking RoomBooking { get; set; }
         public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
     }
 }

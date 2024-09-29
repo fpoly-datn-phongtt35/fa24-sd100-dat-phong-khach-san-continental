@@ -22,5 +22,6 @@ namespace Domain.Models
 
         public List<AmenityRoom> AmenityRooms { get; set; }
         public List<Room> Rooms { get; set; }
+        public List<RoomTypeService> RoomsTypeServices { get; set; }
     }
 }
