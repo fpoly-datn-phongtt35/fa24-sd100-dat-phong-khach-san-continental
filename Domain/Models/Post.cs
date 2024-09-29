@@ -8,7 +8,7 @@ namespace Domain.Models
         [Key]
         public Guid Id { get; set; }
         public Guid PostTypeId { get; set; }
-        public Guid UserId { get; set; }
+        public Guid StaffId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
@@ -22,6 +22,6 @@ namespace Domain.Models
         public DateTimeOffset DeletedTime { get; set; }
 
         public PostType PostType { get; set; }
-        public User Users { get; set; }
+        public Staff Staff { get; set; }
     }
 }

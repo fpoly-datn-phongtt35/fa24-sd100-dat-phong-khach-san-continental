@@ -14,7 +14,7 @@ namespace Domain.Models
         public Guid Id { get; set; }
         public BookingType BookingType { get; set; } = BookingType.Online;
         public Guid CustomerId { get; set; }
-        public Guid? UserId { get; set; }
+        public Guid? StaffId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset CreatedTime { get; set; }
@@ -26,7 +26,10 @@ namespace Domain.Models
         public DateTimeOffset DeletedTime { get; set; }
 
         public Customer Customer { get; set; }
-        public User User { get; set; }
+        public Staff Staff { get; set; }
         public List<RoomBookingDetail> RoomBookingDetails { get; set; }
+        public ICollection<FeedBack> FeedBacks { get; set; }
+        public List<VoucherDetail> VoucherDetails { get; set; }
+        public List<ServiceOrder> ServiceOrders { get; set; }
     }
 }

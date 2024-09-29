@@ -11,7 +11,7 @@ namespace Domain.Configuration
             builder.ToTable("ServiceOrder");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.HasOne(x => x.RoomBookingDetail).WithMany(x => x.ServiceOrders).HasForeignKey(x => x.RoomBookingDetailId).IsRequired(false);
+            builder.HasOne(x => x.RoomBooking).WithMany(x => x.ServiceOrders).HasForeignKey(x => x.RoomBookingId).IsRequired(false);
         }
     }
 }

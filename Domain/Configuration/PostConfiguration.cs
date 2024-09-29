@@ -14,7 +14,7 @@ namespace Domain.Configuration
             builder.Property(x => x.Title).IsUnicode(true).IsRequired();
             builder.Property(x => x.Content).IsUnicode(true).IsRequired();
             builder.HasOne(x => x.PostType).WithMany(x => x.Posts).HasForeignKey(x => x.PostTypeId);
-            builder.HasOne(x => x.Users).WithMany(x => x.Posts).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.Staff).WithMany(x => x.Posts).HasForeignKey(x => x.StaffId);
         }
     }
 }

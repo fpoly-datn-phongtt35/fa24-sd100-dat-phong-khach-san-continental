@@ -7,7 +7,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid BillId { get; set; }
+        public Guid RoomBookingId { get; set; }
         public Guid VoucherId { get; set; }
         public string Code { get; set; }
         public DateTimeOffset StartDate { get; set; }
@@ -21,8 +21,7 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
-
+        public RoomBooking RoomBooking { get; set; }
         public Voucher Voucher { get; set; }
-        public Bill Bill { get; set; }
     }
 }
