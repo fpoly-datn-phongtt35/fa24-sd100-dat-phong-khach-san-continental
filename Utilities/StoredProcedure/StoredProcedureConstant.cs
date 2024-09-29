@@ -36,6 +36,12 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateServiceOrderDetail = "SP_UpdateServiceOrderDetail";
         public const string SP_GetServiceOrderDetailById = "SP_GetServiceOrderDetailById";
 
+        //room
+        public const string SP_InsertRoom = "SP_InsertRoom";
+        public const string SP_GetListRoom = "SP_GetListRoom";
+        public const string SP_DeleteRoom = "SP_DeleteRoom";
+        public const string SP_GetRoomById = "SP_GetRoomById";
+        public const string SP_UpdateRoom = "SP_UpdateRoom";
 
         //building
         public const string SP_InsertBuilding = "SP_InsertBuilding";
