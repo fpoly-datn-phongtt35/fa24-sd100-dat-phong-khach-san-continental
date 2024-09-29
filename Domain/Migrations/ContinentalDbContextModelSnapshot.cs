@@ -1166,19 +1166,19 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Customer", "Customer")
                         .WithMany("FeedBacks")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
                         .WithMany("FeedBacks")
                         .HasForeignKey("RoomBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Staff", "Staff")
                         .WithMany("FeedBacks")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");

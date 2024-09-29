@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    [Migration("20240929073402_updateEntity")]
+    [Migration("20240929125415_updateEntity")]
     partial class updateEntity
     {
         /// <inheritdoc />
@@ -1169,19 +1169,19 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Customer", "Customer")
                         .WithMany("FeedBacks")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
                         .WithMany("FeedBacks")
                         .HasForeignKey("RoomBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Staff", "Staff")
                         .WithMany("FeedBacks")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
