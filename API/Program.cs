@@ -15,6 +15,8 @@ using Domain.Services.Services.AmenityRoom;
 using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
+using Domain.Services.IServices.IRoom;
+using Domain.Services.Services.Room;
 
 namespace API
 {
@@ -85,7 +87,13 @@ namespace API
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
-            
+            builder.Services.AddTransient<IRoomRepo, RoomRepo>();
+            //room
+            builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
+            builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
+            builder.Services.AddTransient<IRoomGetService, RoomGetService>();
+            builder.Services.AddTransient<IRoomUpdateService, RoomUpdateService>();
+
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();

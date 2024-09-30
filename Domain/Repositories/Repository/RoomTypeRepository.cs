@@ -78,7 +78,7 @@ public class RoomTypeRepository : IRoomTypeRepository
                 new SqlParameter("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = roomType.Status },
                 new SqlParameter("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = roomType.CreatedTime },
+                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier){ Value = roomType.CreatedBy },
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomType.ModifiedTime },
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },

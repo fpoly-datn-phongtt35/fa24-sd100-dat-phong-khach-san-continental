@@ -30,11 +30,11 @@ public class AmenityRepository : IAmenityRepository
             // Creating list of SQL parameters
             SqlParameter[] parameters =
             {
-                new SqlParameter("@Name", amenity.Name),
-                new SqlParameter("@Description", amenity.Description),
-                new SqlParameter("@Status", (int)amenity.Status),
-                new SqlParameter("@CreatedTime", amenity.CreatedTime),
-                new SqlParameter("@CreatedBy", amenity.CreatedBy)
+                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = amenity.Name },
+                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
+                new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
+                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenity.CreatedBy }
             };
 
             // Executing the stored procedure to insert data

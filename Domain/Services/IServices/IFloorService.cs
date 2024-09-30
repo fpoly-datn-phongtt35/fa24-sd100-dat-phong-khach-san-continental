@@ -15,7 +15,6 @@ namespace Domain.Services.IServices
         Task<int> UpdateFloor(FloorUpdateRequest request);
         Task<int> DeleteFloor(FloorDeleteRequest request);
         Task<Floor> GetFloorById(Guid Id);
-        public Task<ResponseData<Floor>> GetFloorBybuildingId(FloorGetRequest request, Guid BuildingId);
         Task<ResponseData<Floor>> GetFloor(FloorGetRequest request);
     }
 }

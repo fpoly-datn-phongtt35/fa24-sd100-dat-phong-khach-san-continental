@@ -9,6 +9,5 @@ namespace Domain.DTO.Floor
 {
     public class FloorGetRequest : PagingRequest
     {
-        public string Name { get; set; } = string.Empty;
     }
 }
