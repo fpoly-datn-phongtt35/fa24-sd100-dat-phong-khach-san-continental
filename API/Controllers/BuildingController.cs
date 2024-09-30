@@ -69,7 +69,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("DeleteBuilding")]
+        [HttpPost("DeleteBuilding")]
         public async Task<int> DeleteBuilding(BuildingDeleteRequest request)
         {
             try

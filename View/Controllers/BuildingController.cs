@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Building;
+using Domain.DTO.Floor;
 using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
@@ -54,7 +55,6 @@ namespace View.Controllers
         }
 
 
-        // GET: ServiceController/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
             string requestUrl = $"https://localhost:7130/api/Building/GetBuildingById?id={id}";
@@ -85,20 +85,19 @@ namespace View.Controllers
             }
         }
 
-        // GET: ServiceController/Create
         public async Task<IActionResult> Create()
         {
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
             return View(new BuildingCreateRequest());
         }
 
-        // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BuildingCreateRequest request)
         {
             if (ModelState.IsValid)
             {
+                request.Status = EntityStatus.Active;
+                request.CreatedTime = DateTimeOffset.Now;
                 var response = await _client.PostAsJsonAsync("api/Building/CreateBuilding", request);
 
                 if (response.IsSuccessStatusCode)
@@ -106,20 +105,16 @@ namespace View.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
-
             return View(request);
         }
 
-        // GET: ServiceController/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/Building/UpdateBuilding?id={id}";
+            string requestUrl = $"api/Building/GetBuildingById?id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
             try
@@ -132,31 +127,27 @@ namespace View.Controllers
                 }
 
                 var responseString = await response.Content.ReadAsStringAsync();
-                var services = JsonConvert.DeserializeObject<Building>(responseString);
+                var buildings = JsonConvert.DeserializeObject<Building>(responseString);
 
 
 
-                return View(services);
+                return View(buildings);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
-
-        // POST: ServiceController/Edit/5
         [HttpPost]
-        public async Task<IActionResult> Edit(Service request)
+        public async Task<IActionResult> Edit(Floor request)
         {
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
+            request.ModifiedTime = DateTimeOffset.Now;
             var response = await _client.PutAsJsonAsync("api/Building/UpdateBuilding", request);
             return RedirectToAction("Index");
         }
 
-
-        // DELETE: ServiceController/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
             string requestUrl = "https://localhost:7130/api/Building/DeleteBuilding";
@@ -164,7 +155,7 @@ namespace View.Controllers
             var request = new BuildingDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),  
+                DeletedBy = Guid.NewGuid(),
                 DeletedTime = DateTimeOffset.Now
             };
 
