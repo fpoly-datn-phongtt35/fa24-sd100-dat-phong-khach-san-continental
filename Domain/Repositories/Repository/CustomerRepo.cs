@@ -84,6 +84,11 @@ namespace Domain.Repositories.Repository
 
         public async Task<int> UpdateCustomer(CustomerUpdateRequest request)
         {
+            var existingCustomer = GetCustomerById(request.Id);
+            if (existingCustomer == null)
+            {
+                throw new Exception("Customer could not be found");
+            }
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
@@ -97,7 +102,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
                     new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
-                    new SqlParameter("@Status", 1),
+                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
