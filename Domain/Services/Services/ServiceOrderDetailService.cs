@@ -115,7 +115,6 @@ namespace Domain.Services.Services
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             return model;
@@ -129,7 +128,6 @@ namespace Domain.Services.Services
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

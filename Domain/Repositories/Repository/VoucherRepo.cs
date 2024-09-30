@@ -113,7 +113,8 @@ namespace Domain.Repositories.Repository
 					new SqlParameter("@DiscountType", request.DiscountType),
 					new SqlParameter("@DiscountValue", request.DiscountValue),
 					new SqlParameter("@Status", (int)request.Status),
-					new SqlParameter("@ModifiedTime",DateTime.Now),
+					new SqlParameter("@Deleted", request.Deleted),
+                    new SqlParameter("@ModifiedTime",DateTime.Now),
 					new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
 				};
 
