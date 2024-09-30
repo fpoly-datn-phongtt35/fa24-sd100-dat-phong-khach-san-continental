@@ -117,7 +117,10 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
             builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
 
-            builder.Services.AddDbContext<ContinentalDbContext>(options =>
+            builder.Services.AddTransient<VoucherRepo>();
+			builder.Services.AddTransient<IVoucherService, VoucherService>();
+
+			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
             });
