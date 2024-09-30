@@ -89,7 +89,8 @@ public class AmenityController : Controller
     {
         string requestUrl = "/api/Amenity/CreateAmenity";
 
-        var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Post, amenityCreateRequest);
+        var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl, 
+            HttpMethod.Post, amenityCreateRequest);
         if (createdAmenity != null)
             return RedirectToAction("Index");
         

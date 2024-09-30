@@ -1,0 +1,62 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.DTO.RoomType
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model Domain.Models.AmenityRoom
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4>Chi tiết tiện nghi</h4>
+
+<div>
+    <hr/>
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayName("Tên tiện nghi")</dt>
+        <dd class="col-sm-10">
+            @{
+                var amenities = ViewBag.Amenities as List<AmenityResponse>;
+                var amenity = amenities?.FirstOrDefault(a => a.Id == Model.AmenityId);
+            }
+            @amenity?.Name
+        </dd>
+        <dt class="col-sm-2">@Html.DisplayName("Loại phòng")</dt>
+        <dd class="col-sm-10">
+            @{
+                var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+                var roomType = roomTypes?.FirstOrDefault(r => r.Id == Model.RoomTypeId);
+            }
+            @roomType?.Name
+        </dd>
+        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
+        <dd class="col-sm-10">@StatusHelper.DisplayStatusBadge(Model.Status)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
+        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Sửa", "Edit", new { amenityRoomId = Model.Id }, new { @class = "btn btn-warning" })
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+
+<style>
+    dt {
+        margin-bottom: 10px;
+    }
+    dd {
+        margin-bottom: 20px;
+    }
+</style>

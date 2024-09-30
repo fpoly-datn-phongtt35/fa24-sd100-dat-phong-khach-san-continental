@@ -74,7 +74,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.RoomTypeId },
                 new SqlParameter("@Amount", SqlDbType.Int) { Value = amenityRoom.Amount },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.CreatedTime },
+                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.CreatedBy },
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.ModifiedTime },
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
