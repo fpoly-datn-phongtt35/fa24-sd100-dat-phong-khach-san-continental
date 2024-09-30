@@ -87,6 +87,11 @@ namespace Utilities.StoredProcedure
         public const string SP_GetVoucherById = "SP_GetVoucherById";
         public const string SP_UpdateVoucher = "SP_UpdateVoucher";
         public const string SP_DeleteVoucher = "SP_DeleteVoucher";
-
-	}
+        // PostType
+        public const string SP_InsertPostType = "SP_InsertPostType";
+        public const string SP_GetAllPostType = "SP_GetAllPostType";
+        public const string SP_GetPostTypeById = "SP_GetPostTypeById";
+        public const string SP_UpdatePostType = "SP_UpdatePostType";
+        public const string SP_DeletePostType = "SP_DeletePostType";
+    }
 }
