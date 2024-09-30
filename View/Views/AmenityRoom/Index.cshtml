@@ -1,0 +1,50 @@
+﻿@using System.Diagnostics
+@using Domain.DTO.Amenity
+@using Domain.DTO.RoomType
+@using Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.AmenityRoom.AmenityRoomResponse>
+
+@{
+    ViewData["Title"] = "Index";
+    // Lấy danh sách Amenities và RoomTypes từ ViewBag
+    var amenities = ViewBag.Amenities as List<AmenityResponse>;
+    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+}
+
+<h1>Danh sách tiện nghi</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th>@Html.DisplayName("Loại phòng")</th>
+        <th>@Html.DisplayName("Tiên nghi sử dụng")</th>
+        <th>@Html.DisplayName("Số lượng")</th>
+        <th>@Html.DisplayName("Trạng thái")</th>
+        <th>@Html.DisplayName("Chức năng")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        var roomTypeName = roomTypes?.FirstOrDefault(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type"; // Lấy tên RoomType
+        var amenityName = amenities?.FirstOrDefault(a => a.Id == item.AmenityId)?.Name ?? "Unknown Amenity"; // Lấy tên Amenity
+        
+        <tr>
+            <td>@roomTypeName</td>
+            <td>@amenityName</td>
+            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td>
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityRoomId = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { amenityRoomId = item.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { amenityRoomId = item.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
