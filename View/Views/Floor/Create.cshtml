@@ -1,0 +1,37 @@
+﻿@model Domain.DTO.Floor.FloorCreateRequest
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>FloorCreateRequest</h4>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NumberOfRoom"></label>
+        <input asp-for="NumberOfRoom" class="form-control" />
+        <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BuildingId">Building</label>
+        <select asp-for="BuildingId" class="form-control" asp-items="@(new SelectList(ViewBag.Buildings, "Id", "Name"))">
+            <option value="">-- Select Building --</option>
+        </select>
+    </div>
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+    @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
