@@ -39,6 +39,7 @@ namespace Domain.Services.Services.Room
 
             existingRoom.FloorId = roomUpdateRequest.FloorId;
             existingRoom.RoomTypeId = roomUpdateRequest.RoomTypeId;
+            existingRoom.Name = roomUpdateRequest.Name;
             existingRoom.Price = roomUpdateRequest.Price;
             existingRoom.Address = roomUpdateRequest.Address;
             existingRoom.RoomSize = roomUpdateRequest.RoomSize;
