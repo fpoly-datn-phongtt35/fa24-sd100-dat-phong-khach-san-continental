@@ -81,7 +81,6 @@ namespace View.Controllers
             return View(new CustomerCreateRequest());
         }
 
-        // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerCreateRequest request)

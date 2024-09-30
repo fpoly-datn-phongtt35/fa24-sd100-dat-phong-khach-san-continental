@@ -76,6 +76,12 @@ namespace Utilities.StoredProcedure
         public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
         public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
         public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
-        
-    }
+        // Voucher
+        public const string SP_InsertVoucher = "SP_InsertVoucher";
+        public const string SP_GetListVoucher = "SP_GetListVoucher";
+        public const string SP_GetVoucherById = "SP_GetVoucherById";
+        public const string SP_UpdateVoucher = "SP_UpdateVoucher";
+        public const string SP_DeleteVoucher = "SP_DeleteVoucher";
+
+	}
 }
