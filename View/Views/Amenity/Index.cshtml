@@ -1,0 +1,39 @@
+﻿@using System.Diagnostics
+@using Domain.Enums
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.Amenity.AmenityResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Danh sách tiện nghi</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th>@Html.DisplayName("Tên tiện nghi")</th>
+        <th>@Html.DisplayName("Mô tả")</th>
+        <th>@Html.DisplayName("Trạng thái")</th>
+        <th>@Html.DisplayName("Chức năng")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td>
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityId = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { amenityId = item.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { amenityId = item.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

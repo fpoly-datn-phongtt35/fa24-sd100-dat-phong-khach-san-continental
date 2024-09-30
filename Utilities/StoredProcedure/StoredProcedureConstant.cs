@@ -36,6 +36,12 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateServiceOrderDetail = "SP_UpdateServiceOrderDetail";
         public const string SP_GetServiceOrderDetailById = "SP_GetServiceOrderDetailById";
 
+        //room
+        public const string SP_InsertRoom = "SP_InsertRoom";
+        public const string SP_GetListRoom = "SP_GetListRoom";
+        public const string SP_DeleteRoom = "SP_DeleteRoom";
+        public const string SP_GetRoomById = "SP_GetRoomById";
+        public const string SP_UpdateRoom = "SP_UpdateRoom";
 
         //building
         public const string SP_InsertBuilding = "SP_InsertBuilding";
@@ -49,7 +55,6 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteFloor = "SP_DeleteFloor";
         public const string SP_GetFloorById = "SP_GetFloorById";
         public const string SP_UpdateFloor = "SP_UpdateFloor";
-        public const string SP_GetFloorByBuildingId = "SP_GetFloorBybuildingId";
         //amenity
         public const string SP_InsertAmenity = "SP_InsertAmenity";
         public const string SP_GetAllAmenities = "SP_GetAllAmenities";
@@ -69,12 +74,19 @@ namespace Utilities.StoredProcedure
         public const string SP_GetCustomerById = "SP_GetCustomerById";
         public const string SP_DeleteCustomer = "SP_DeleteCustomer";
         public const string SP_UpdateCustomer = "SP_UpdateCustomer";
+        public const string SP_GetAllCustomer = "SP_GetAllCustomers";
         // amenityRoom
         public const string SP_InsertAmenityRoom = "SP_InsertAmenityRoom";
         public const string SP_GetAllAmenityRooms = "SP_GetAllAmenityRooms";
         public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
         public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
         public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
-        
-    }
+        // Voucher
+        public const string SP_InsertVoucher = "SP_InsertVoucher";
+        public const string SP_GetListVoucher = "SP_GetListVoucher";
+        public const string SP_GetVoucherById = "SP_GetVoucherById";
+        public const string SP_UpdateVoucher = "SP_UpdateVoucher";
+        public const string SP_DeleteVoucher = "SP_DeleteVoucher";
+
+	}
 }

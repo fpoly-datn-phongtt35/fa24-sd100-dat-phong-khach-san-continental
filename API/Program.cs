@@ -15,6 +15,8 @@ using Domain.Services.Services.AmenityRoom;
 using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
+using Domain.Services.IServices.IRoom;
+using Domain.Services.Services.Room;
 
 namespace API
 {
@@ -28,10 +30,10 @@ namespace API
             {
                 options.AddPolicy(name: "abc", builder =>
                 {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()
-                           ;
+                    builder.WithOrigins("http://localhost:7114")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials();
                 });
             });
             // Add services to the container.
@@ -85,7 +87,13 @@ namespace API
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
-            
+            builder.Services.AddTransient<IRoomRepo, RoomRepo>();
+            //room
+            builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
+            builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
+            builder.Services.AddTransient<IRoomGetService, RoomGetService>();
+            builder.Services.AddTransient<IRoomUpdateService, RoomUpdateService>();
+
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
@@ -109,7 +117,10 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
             builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
 
-            builder.Services.AddDbContext<ContinentalDbContext>(options =>
+            builder.Services.AddTransient<VoucherRepo>();
+			builder.Services.AddTransient<IVoucherService, VoucherService>();
+
+			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
             });
@@ -121,12 +132,12 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("abc");
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors("abc");
+          
             app.MapControllers();
 
             app.Run();

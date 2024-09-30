@@ -14,5 +14,6 @@ namespace Domain.Repositories.IRepository
         Task<int> UpdateFloor(FloorUpdateRequest request);
         Task<int> DeleteFloor(FloorDeleteRequest request);
         Task<DataTable> GetFloor(FloorGetRequest request);
+        Task<DataTable> GetFloorById(Guid id);
     }
 }

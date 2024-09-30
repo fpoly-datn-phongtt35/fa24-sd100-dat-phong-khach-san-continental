@@ -14,6 +14,7 @@ namespace Domain.DTO.Floor
         public string Name { get; set; } = string.Empty;
         public int NumberOfRoom { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
+        public bool Deleted { get; set; }
         public DateTimeOffset ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
     }
