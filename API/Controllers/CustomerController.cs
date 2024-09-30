@@ -4,6 +4,8 @@ using Domain.Models;
 using Domain.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System;
 
 namespace API.Controllers
 {
@@ -29,7 +31,6 @@ namespace API.Controllers
                 throw ex;
             }
         }
-
         [HttpPost("GetListCustomer")]
         public async Task<ResponseData<Customer>> GetListCustomer(CustomerGetByUserNameRequest request)
         {
