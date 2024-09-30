@@ -1,3 +1,8 @@
+using Domain.Repositories.IRepository;
+using Domain.Repositories.Repository;
+using Domain.Services.IServices;
+using Domain.Services.Services;
+
 namespace View
 {
 	public class Program
@@ -9,7 +14,9 @@ namespace View
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
 
-			var app = builder.Build();
+			builder.Services.AddHttpClient();
+
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
@@ -23,6 +30,8 @@ namespace View
 			app.UseStaticFiles();
 
 			app.UseRouting();
+
+
 
 			app.UseAuthorization();
 

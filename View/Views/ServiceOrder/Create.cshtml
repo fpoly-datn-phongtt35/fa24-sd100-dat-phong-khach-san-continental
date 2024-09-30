@@ -1,0 +1,24 @@
+﻿@model Domain.DTO.ServiceOrder.ServiceOrderCreateRequest
+@{
+    ViewData["Title"] = "Create Service";
+}
+
+<h2>Create Service</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="RoomBookingId">RoomBookingId</label>
+        <input asp-for="RoomBookingId" class="form-control" placeholder="Nhập RoomBooking Id" />
+        <span asp-validation-for="RoomBookingId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+    @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

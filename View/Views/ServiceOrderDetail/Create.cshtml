@@ -1,0 +1,34 @@
+﻿@model Domain.DTO.ServiceOrderDetail.ServiceOrderDetailCreateRequest
+@{
+    ViewData["Title"] = "Create ServiceOrderDetail";
+}
+<h2>Create Service Order Detail</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="ServiceOrderId">Service Order</label>
+        <select asp-for="ServiceOrderId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceOrders, "Id", "Id"))">
+            <option value="">-- Select Service Order --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ServiceId">Service</label>
+        <select asp-for="ServiceId" class="form-control" asp-items="@(new SelectList(ViewBag.Services, "Id", "Name"))">
+            <option value="">-- Select Service --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Amount"></label>
+        <input asp-for="Amount" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

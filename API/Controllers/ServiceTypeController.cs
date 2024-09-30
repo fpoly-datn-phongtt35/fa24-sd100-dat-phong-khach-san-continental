@@ -69,7 +69,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("DeleteServiceType")]
+        [HttpPost("DeleteServiceType")]
         public async Task<int> DeleteServiceType(ServiceTypeDeleteRequest request)
         {
             try

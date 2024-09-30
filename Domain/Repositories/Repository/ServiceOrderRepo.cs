@@ -27,7 +27,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("RoomBookingDetailId", request.RoomBookingDetailId != null ? request.RoomBookingDetailId : DBNull.Value),
+                    new SqlParameter("RoomBookingId", request.RoomBookingId != null ? request.RoomBookingId : DBNull.Value),
                     new SqlParameter("Status",1),
                     new SqlParameter("CreatedTime", DateTime.Now),
                     new SqlParameter("CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
@@ -66,7 +66,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@RoomBookingDetailId", request.RoomBookingDetailId.HasValue ? (object)request.RoomBookingDetailId.Value : DBNull.Value),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId.HasValue ? (object)request.RoomBookingId.Value : DBNull.Value),
                     new SqlParameter("@PageSize", request.PageSize),
                     new SqlParameter("@PageIndex", request.PageIndex),
                 };
@@ -86,7 +86,8 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
-                    new SqlParameter("@RoomBookingDetailId", request.RoomBookingDetailId.HasValue ? (object)request.Id : DBNull.Value),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId.HasValue ? (object)request.RoomBookingId : DBNull.Value),
+                    new SqlParameter("Deleted", request.Deleted),
                     new SqlParameter("@Status",1),
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy.HasValue ? (object)request.ModifiedBy : DBNull.Value)
