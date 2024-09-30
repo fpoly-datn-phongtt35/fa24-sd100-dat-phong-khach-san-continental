@@ -108,24 +108,6 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<DataTable> GetFloorByBuildingId(FloorGetRequest request, Guid buildingId)
-        {
-            try
-            {
-                SqlParameter[] sqlParameters = new SqlParameter[]
-                {
-            new SqlParameter("@BuildingId", buildingId),
-            new SqlParameter("@PageSize", request.PageSize),
-            new SqlParameter("@PageIndex", request.PageIndex)
-                };
-
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetFloorByBuildingId, sqlParameters);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         public async Task<int> UpdateFloor(FloorUpdateRequest request)
         {
             var buildings = await _floorRepo.GetBuildingById(request.BuildingId);
