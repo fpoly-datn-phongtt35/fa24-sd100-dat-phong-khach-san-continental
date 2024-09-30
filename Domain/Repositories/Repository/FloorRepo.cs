@@ -18,11 +18,10 @@ namespace Domain.Repositories.Repository
         private readonly BuildingRepo _floorRepo;
         private static DbWorker _DbWorker;
         private readonly IConfiguration _configuration;
-        public FloorRepo(IConfiguration configuration, BuildingRepo floorRepo)
+        public FloorRepo(IConfiguration configuration)
         {
             _configuration = configuration;
             _DbWorker = new DbWorker(StoredProcedureConstant.Continetal);
-            _floorRepo = floorRepo;
         }
         public async Task<int> AddFloor(FloorCreateRequest request)
         {
