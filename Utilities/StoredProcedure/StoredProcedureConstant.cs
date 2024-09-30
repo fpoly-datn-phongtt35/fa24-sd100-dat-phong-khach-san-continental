@@ -87,6 +87,10 @@ namespace Utilities.StoredProcedure
         public const string SP_GetVoucherById = "SP_GetVoucherById";
         public const string SP_UpdateVoucher = "SP_UpdateVoucher";
         public const string SP_DeleteVoucher = "SP_DeleteVoucher";
-
-	}
+        //voucher detail
+        public const string SP_InsertVoucherDetail = "SP_InsertVoucherDetail";
+        public const string SP_GetListVoucherDetail = "SP_GetListVoucherDetail";
+        public const string SP_UpdateVoucherDetail = "SP_UpdateVoucherDetail";
+        public const string SP_DeleteVoucherDetail = "SP_DeleteVoucherDetail";
+    }
 }

@@ -108,6 +108,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@Description",!string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Status",1),
+                    new SqlParameter("@Deleted", request.Deleted),
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
