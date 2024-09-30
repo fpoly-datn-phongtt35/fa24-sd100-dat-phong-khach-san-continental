@@ -70,7 +70,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("DeleteCustomer")]
+        [HttpPost("DeleteCustomer")]
         public async Task<int> DeleteCustomer(CustomerDeleteRequest request)
         {
             try
