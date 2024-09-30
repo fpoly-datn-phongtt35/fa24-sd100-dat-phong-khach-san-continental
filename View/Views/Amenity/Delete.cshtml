@@ -1,0 +1,60 @@
+﻿@using Domain.Enums
+@model Domain.DTO.Amenity.AmenityResponse
+
+@{
+ViewData["Title"] = "Delete";
+}
+
+<h3>Xác nhận xóa tiện nghi</h3>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Delete">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Tên tiện nghi</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            @* <div class="form-group"> *@
+            @*     <label asp-for="Status" class="control-label">Trạng thái</label> *@
+            @*     <select asp-for="Status" class="form-control"> *@
+            @*         @{ *@
+            @*             string[] status = (string[])Enum.GetNames(typeof(EntityStatus)); *@
+            @*         } *@
+            @*         @foreach (string item in status) *@
+            @*         { *@
+            @*             <option value="@item">@item</option> *@
+            @*         } *@
+            @*     </select> *@
+            @* </div> *@
+            <div class="form-group" hidden>
+                <label asp-for="Deleted" class="control-label">Đã xóa</label>
+                <input asp-for="Deleted" class="form-control" />
+                <span asp-validation-for="Deleted" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="DeletedTime" class="control-label">Thời gian xóa</label>
+                <input asp-for="DeletedTime" class="form-control" />
+                <span asp-validation-for="DeletedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedBy" class="control-label">Được xóa bởi</label>
+                <input asp-for="DeletedBy" class="form-control" />
+                <span asp-validation-for="DeletedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Xóa" class="btn btn-danger" />
+            </div>
+
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

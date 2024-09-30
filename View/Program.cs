@@ -1,7 +1,9 @@
 using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
-using Domain.Services.IServices;
-using Domain.Services.Services;
+using Domain.Services.IServices.IAmenity;
+using Domain.Services.IServices.IRoomType;
+using Domain.Services.Services.Amenity;
+using Domain.Services.Services.RoomType;
 
 namespace View
 {
@@ -15,9 +17,9 @@ namespace View
 			builder.Services.AddControllersWithViews();
 
 			builder.Services.AddHttpClient();
-
-            var app = builder.Build();
-
+			
+			var app = builder.Build();
+			
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
@@ -25,13 +27,11 @@ namespace View
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-
+			
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseRouting();
-
-
 
 			app.UseAuthorization();
 
