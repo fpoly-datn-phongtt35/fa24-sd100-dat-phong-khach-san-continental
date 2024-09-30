@@ -1,3 +1,10 @@
+using Domain.Repositories.IRepository;
+using Domain.Repositories.Repository;
+using Domain.Services.IServices.IAmenity;
+using Domain.Services.IServices.IRoomType;
+using Domain.Services.Services.Amenity;
+using Domain.Services.Services.RoomType;
+
 namespace View
 {
     public class Program

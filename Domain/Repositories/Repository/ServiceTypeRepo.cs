@@ -90,7 +90,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Id", Search != null ? Search : DBNull.Value ),
                 };
 
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrder, sqlParameters);
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceType, sqlParameters);
             }
             catch (Exception ex)
             {

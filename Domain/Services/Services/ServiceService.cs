@@ -67,7 +67,7 @@ namespace Domain.Services.Services
                                   Unit = (UnitType)row.Field<int>("Unit"),
                                   Status = row.Field<EntityStatus>("Status"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
-                                  CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>                   ("CreatedBy") : Guid.Empty,
+                                  CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
                               }).ToList();
 
@@ -111,6 +111,9 @@ namespace Domain.Services.Services
                                    Name = row.Field<string>("Name"),
                                    Description = row.Field<string>("Description"),
                                    Status = row.Field<EntityStatus>("Status"),
+                                   Price = row.Field<decimal>("Price"),
+                                   Unit = (UnitType)row.Field<int>("Unit"),
+                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
                                    CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                    CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty
                                    ,

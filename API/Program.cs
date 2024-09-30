@@ -30,10 +30,10 @@ namespace API
             {
                 options.AddPolicy(name: "abc", builder =>
                 {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()
-                           ;
+                    builder.WithOrigins("http://localhost:7114")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials();
                 });
             });
             // Add services to the container.
@@ -129,12 +129,12 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("abc");
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors("abc");
+          
             app.MapControllers();
 
             app.Run();
