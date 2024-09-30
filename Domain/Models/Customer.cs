@@ -13,9 +13,7 @@ namespace Domain.Models
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Mật khẩu gồm chữ viết hoa, chữ viết thường, chữ số và chỉ từ 8-15 kí tự!")]
         public string Password { get; set; } = string.Empty;
-        [RegularExpression(@"^[\\p{L}]{3,50}$", ErrorMessage = "Vui lòng nhập tên chỉ chữa chữ!")]
         public string? FirstName { get; set; } = string.Empty;
-        [RegularExpression(@"^[\\p{L}]{3,30}$", ErrorMessage = "Vui lòng nhập tên chỉ chữa chữ!")]
         public string? LastName { get; set; } = string.Empty;
         [Required]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Vui lòng nhập đúng định dạng: example@domain.com")]
@@ -23,8 +21,6 @@ namespace Domain.Models
         [RegularExpression(@"^(\+?\d{1,2}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$", ErrorMessage = "Vui lòng nhập số điện thoại hợp lệ!")]
         public string? PhoneNumber { get; set; } = string.Empty;
         public int? Gender { get; set; }
-        [DataType(DataType.Date)]
-        [RegularExpression(@"^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$", ErrorMessage = "Vui lòng theo dạng DD-MM-YYYY.")]
         public DateTime? DateOfBirth { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 

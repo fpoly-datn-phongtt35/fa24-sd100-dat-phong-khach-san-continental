@@ -22,6 +22,6 @@ namespace Domain.Models
         public DateTimeOffset DeletedTime { get; set; }
 
         public PostType PostType { get; set; }
-        public Staff Staff { get; set; }
+        public virtual Staff Staff { get; set; }
     }
 }
