@@ -1,7 +1,9 @@
 ﻿using Domain.DTO.Floor;
 using Domain.DTO.Paging;
+using Domain.DTO.Service;
 using Domain.Enums;
 using Domain.Models;
+using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Microsoft.Extensions.Configuration;
@@ -18,10 +20,10 @@ namespace Domain.Services.Services
     {
         private readonly FloorRepo _floorRepo;
         private readonly IConfiguration _configuration;
-        public FloorService(IConfiguration configuration)
+        public FloorService(IConfiguration configuration, BuildingRepo building)
         {
             _configuration = configuration;
-            _floorRepo = new FloorRepo(_configuration);
+            _floorRepo = new FloorRepo(_configuration, building);
         }
         public Task<int> AddFloor(FloorCreateRequest request)
         {
@@ -60,12 +62,11 @@ namespace Domain.Services.Services
                               {
                                   Id = row.Field<Guid>("Id"),
                                   Name = row.Field<string>("Name"),
-                                  NumberOfRoom = row.Field<int>("Number"),
                                   Status = row.Field<EntityStatus>("Status"),
+                                  NumberOfRoom= row.Field<int>("NumberOfRoom"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                   BuildingId = row.Field<Guid>("BuildingId"),
-
                               }).ToList();
 
                 //phân trang
@@ -107,6 +108,8 @@ namespace Domain.Services.Services
                                Id = row.Field<Guid>("Id"),
                                Name = row.Field<string>("Name"),
                                Status = row.Field<EntityStatus>("Status"),
+                               NumberOfRoom = row.Field<int>("NumberOfRoom"),
+                               BuildingId = row.Field<Guid>("BuildingId"),
                                CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty
                                ,
