@@ -1,7 +1,9 @@
-﻿namespace Domain.DTO.Customer
+﻿using Domain.DTO.Paging;
+
+namespace Domain.DTO.Customer
 {
-    public class CustomerGetByUserNameRequest
+    public class CustomerGetByUserNameRequest : PagingRequest
     {
-        public string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
     }
 }

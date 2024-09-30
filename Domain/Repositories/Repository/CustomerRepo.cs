@@ -1,4 +1,6 @@
 ﻿using Domain.DTO.Customer;
+using Domain.DTO.ServiceType;
+using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -101,6 +103,26 @@ namespace Domain.Repositories.Repository
                 };
 
                 return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public async Task<DataTable> GetAllCustomer(CustomerGetByUserNameRequest customer)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                new SqlParameter("@UserName", !string.IsNullOrEmpty(customer.UserName) ? customer.UserName : DBNull.Value),
+                new SqlParameter("@PageSize", customer.PageSize),
+                new SqlParameter("@PageIndex", customer.PageIndex)
+                };
+
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetAllCustomer, sqlParameters);
             }
             catch (Exception ex)
             {

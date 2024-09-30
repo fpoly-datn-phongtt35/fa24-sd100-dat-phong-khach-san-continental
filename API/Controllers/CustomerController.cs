@@ -4,6 +4,8 @@ using Domain.Models;
 using Domain.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System;
 
 namespace API.Controllers
 {
@@ -29,19 +31,18 @@ namespace API.Controllers
                 throw ex;
             }
         }
-
-        //[HttpPost("GetListCustomer")]
-        //public async Task<ResponseData<Customer>> GetListCustomer(CustomerRequest request)
-        //{
-        //    try
-        //    {
-        //        return await _CustomerRepo.GetCustomers(request);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        [HttpPost("GetListCustomer")]
+        public async Task<ResponseData<Customer>> GetListCustomer(CustomerGetByUserNameRequest request)
+        {
+            try
+            {
+                return await _CustomerRepo.GetAllCustomer(request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [HttpPost("GetCustomerById")]
         public async Task<Customer> GetCustomerById(Guid Id)

@@ -1,16 +1,18 @@
 ﻿using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Models
+namespace View.Models.Customer
 {
-    public class Post
+    public class Customer
     {
-        [Key]
         public Guid Id { get; set; }
-        public Guid PostTypeId { get; set; }
-        public Guid StaffId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string? FirstName { get; set; } = string.Empty;
+        public string? LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; } = string.Empty;
+        public int? Gender { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset CreatedTime { get; set; }
@@ -20,8 +22,5 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
-
-        public PostType PostType { get; set; }
-        public virtual Staff Staff { get; set; }
     }
 }
