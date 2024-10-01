@@ -30,9 +30,9 @@
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.data.First().RoomBookingId)</th>
-                <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>@* 
+                <th>@Html.DisplayNameFor(model => model.data.First().Status)</th> 
                 <th>@Html.DisplayNameFor(model => model.data.First().CreatedTime)</th>
-                <th>@Html.DisplayNameFor(model => model.data.First().CreatedBy)</th>
+                @*<th>@Html.DisplayNameFor(model => model.data.First().CreatedBy)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().ModifiedTime)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().ModifiedBy)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().Deleted)</th>
@@ -46,9 +46,9 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.RoomBookingId)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Status)</td>@* 
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td> 
                     <td>@Html.DisplayFor(modelItem => item.CreatedTime)</td>
-                    <td>@Html.DisplayFor(modelItem => item.CreatedBy)</td>
+                    @*<td>@Html.DisplayFor(modelItem => item.CreatedBy)</td>
                     <td>@Html.DisplayFor(modelItem => item.ModifiedTime)</td>
                     <td>@Html.DisplayFor(modelItem => item.ModifiedBy)</td>
                     <td>@Html.DisplayFor(modelItem => item.Deleted)</td>
