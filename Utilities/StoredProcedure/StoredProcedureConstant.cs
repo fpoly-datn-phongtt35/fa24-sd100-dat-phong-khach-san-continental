@@ -98,5 +98,11 @@ namespace Utilities.StoredProcedure
         public const string SP_GetPostTypeById = "SP_GetPostTypeById";
         public const string SP_UpdatePostType = "SP_UpdatePostType";
         public const string SP_DeletePostType = "SP_DeletePostType";
+        //Staff 
+        public const string SP_GetAllStaff = "SP_GetStaffList";
+        public const string SP_CreateStaff = "SP_InsertStaff";
+        public const string SP_DeleteStaff = "SP_DeleteStaff";
+        public const string SP_UpdateStaff = "SP_UpdateStaff";
+        public const string SP_GetStaffById = "SP_GetStaffById";
     }
 }

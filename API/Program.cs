@@ -118,6 +118,8 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomDeleteService, AmenityRoomDeleteService>();
             builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
             builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
+            //Staff
+            builder.Services.AddTransient<IStaffService, StaffService>();
 
             builder.Services.AddTransient<VoucherRepo>();
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
