@@ -127,6 +127,9 @@ namespace API
             builder.Services.AddTransient<IRoomTypeServiceGetService, RoomTypeServiceGetService>();
             builder.Services.AddTransient<IRoomTypeServiceUpdateService, RoomTypeServiceUpdateService>();
             
+            //Staff
+            builder.Services.AddTransient<IStaffService, StaffService>();
+
             builder.Services.AddTransient<VoucherRepo>();
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
 
