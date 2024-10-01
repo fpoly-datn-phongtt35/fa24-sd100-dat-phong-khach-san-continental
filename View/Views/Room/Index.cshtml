@@ -1,0 +1,76 @@
+﻿@using System.Diagnostics
+@using Domain.Enums
+@model System.Collections.Generic.List<Domain.DTO.Room.RoomResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Danh sách Room</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+<table class="table" style="color: whitesmoke">
+    <thead>
+        <tr>
+            <th>@Html.DisplayName("Name")</th>
+            <th>@Html.DisplayName("Price")</th>
+            <th>@Html.DisplayName("Address")</th>
+            <th>@Html.DisplayName("Description")</th>
+            <th>@Html.DisplayName("Room Size")</th>
+            <th>@Html.DisplayName("Images")</th>
+            <th>@Html.DisplayName("Floor")</th>
+            <th>@Html.DisplayName("Room Type")</th>
+            <th>@Html.DisplayName("Status")</th>
+            <th>@Html.DisplayName("Options")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.RoomSize)</td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        @foreach (var img in item.Images)
+                        {
+                            var extension = System.IO.Path.GetExtension(img);
+                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                            {
+                                <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
+                                    <img class="responsive-img" src="~/images/@img" alt="@item.Name" style="object-fit: cover; width: 100%; height: 100%;">
+                                </div>
+                            }
+                        }
+                    </div>
+                </td>
+                <td>
+                    @{
+                        var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
+                        var floor = floorList?.FirstOrDefault(s => s.Id == item.FloorId);
+                    }
+                    @floor.Name
+                </td>
+                <td>
+                    @{
+                        var roomtypeList = ViewBag.RoomTypeList as List<Domain.Models.RoomType>;
+                        var roomtype = roomtypeList?.FirstOrDefault(s => s.Id == item.RoomTypeId);
+                    }
+                    @(roomtype != null ? roomtype.Name : "Không có loại phòng")
+                </td>
+
+                <td>@Html.DisplayFor(modelItem=>item.Status)</td>
+                <td>
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Delete", "Delete", new { roomId = item.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
