@@ -2,7 +2,7 @@
 @model ResponseData<Domain.Models.ServiceOrderDetail>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Services";
 }
 
 <style>
@@ -20,6 +20,10 @@
 </style>
 
 <h1>ServiceOrderDetails</h1>
+
+<div>
+    <a asp-controller="ServiceOrderDetail" asp-action="Create" asp-route-serviceOrderId="@Model.data.FirstOrDefault()?.ServiceOrderId" class="btn btn-primary">Thêm dịch vụ</a>
+</div>
 
 @if (Model != null && Model.data != null && Model.data.Any())
 {
@@ -41,20 +45,17 @@
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.ServiceOrderId)</td>
                     <td>
-                        @{
-                            var serviceList = ViewBag.ServiceList as List<Domain.Models.Service>;
-                            var service = serviceList?.FirstOrDefault(s => s.Id == item.ServiceId);
-                        }                       
-                        @service.Name
+                         @{
+                             var serviceList = ViewBag.Services as List<Domain.Models.Service>;
+                             var service = serviceList?.FirstOrDefault(s => s.Id == item.ServiceId);
+                         }
+                         @service.Name
                     </td>
                     <td>@Html.DisplayFor(modelItem => item.Amount)</td>
                     <td>@Html.DisplayFor(modelItem => item.Price)</td>
                     <td>@Html.DisplayFor(modelItem => item.CreatedTime)</td>
                     <td>@Html.DisplayFor(modelItem => item.Status)</td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                     </td>
                 </tr>
             }

@@ -61,6 +61,22 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+        public async Task<DataTable> GetServiceOrderDetailByServiceOrderId(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@ServiceOrderId", id != null ? id : DBNull.Value ),
+                };
+
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetail, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<int> DeleteServiceOrderDetail(ServiceOrderDetailDeleteRequest request)
         {

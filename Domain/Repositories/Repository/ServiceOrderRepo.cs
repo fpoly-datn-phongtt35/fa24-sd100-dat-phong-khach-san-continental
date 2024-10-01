@@ -21,7 +21,7 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
             _DbWorker = new DbWorker(StoredProcedureConstant.Continetal);
         }
-        public async Task<int> AddServiceOrder(ServiceOrderCreateRequest request)
+        public async Task<Guid> AddServiceOrder(ServiceOrderCreateRequest request)
         {
             try
             {
@@ -33,11 +33,13 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
                 };
 
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertServiceOrder, sqlParameters);
+                var result = _DbWorker.ExecuteScalar(StoredProcedureConstant.SP_InsertServiceOrder, sqlParameters);
+
+                return result != null ? (Guid)result : Guid.Empty;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 

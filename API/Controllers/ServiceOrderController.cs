@@ -31,7 +31,7 @@ namespace API.Controllers
             }
         }
         [HttpPost("CreateServiceOrder")]    
-        public async Task<int> CreateServiceOrder(ServiceOrderCreateRequest request)
+        public async Task<Guid> CreateServiceOrder(ServiceOrderCreateRequest request)
         {
             try
             {

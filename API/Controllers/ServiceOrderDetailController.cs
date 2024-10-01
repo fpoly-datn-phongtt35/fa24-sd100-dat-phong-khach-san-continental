@@ -45,6 +45,19 @@ namespace API.Controllers
             }
         }
 
+        [HttpPost("GetServiceOrderDetailByServiceOrderId")]
+        public async Task<ResponseData<ServiceOrderDetail>> GetListServiceOrderDetailByServiceOrderId(Guid id)
+        {
+            try
+            {
+                return await _serviceOrderDetailService.GetServiceOrderDetailByServiceOrderId(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost("DeleteServiceOrderDetail")]
         public async Task<int> DeleteServiceOrderDetail(ServiceOrderDetailDeleteRequest request)
         {
