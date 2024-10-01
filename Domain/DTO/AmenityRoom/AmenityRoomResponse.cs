@@ -9,7 +9,6 @@ public class AmenityRoomResponse
     public Guid RoomTypeId { get; set; }
     public int Amount { get; set; }
     public EntityStatus Status { get; set; }
-
     public DateTimeOffset CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTimeOffset ModifiedTime { get; set; }

@@ -16,20 +16,16 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
     public async Task<AmenityRoomResponse?> UpdateAmenityRoom(AmenityRoomUpdateRequest amenityRoomUpdateRequest)
     {
         if (amenityRoomUpdateRequest is null)
-        {
             throw new ArgumentNullException(nameof(amenityRoomUpdateRequest));
-        }
 
-        var existingAmenityRoom = await _amenityRoomRepository.GetAmenityRoomById(amenityRoomUpdateRequest.Id);
+        var existingAmenityRoom = await _amenityRoomRepository
+            .GetAmenityRoomById(amenityRoomUpdateRequest.Id);
+        
         if (existingAmenityRoom is null)
-        {
             throw new Exception("Id amenity room does not exist");
-        }
 
         if (existingAmenityRoom.Deleted)
-        {
             throw new InvalidOperationException("This amenity room type already deleted, cannot update it.");
-        }
         
         existingAmenityRoom.AmenityId = amenityRoomUpdateRequest.AmenityId;
         existingAmenityRoom.RoomTypeId = amenityRoomUpdateRequest.RoomTypeId;
@@ -39,7 +35,6 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
         existingAmenityRoom.ModifiedBy = amenityRoomUpdateRequest.ModifiedBy;
         
         await _amenityRoomRepository.UpdateAmenityRoom(existingAmenityRoom);
-
         return existingAmenityRoom.ToAmenityRoomResponse();
     }
 }
