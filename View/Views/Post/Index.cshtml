@@ -1,5 +1,5 @@
 ﻿@using Domain.DTO.Paging
-@model ResponseData<Domain.Models.PostType>
+@model ResponseData<Domain.Models.Post>
 
 @{
     ViewData["Title"] = "Index";
@@ -17,7 +17,6 @@
         color: white;
     }
 </style>
-
 <h1>Index</h1>
 
 <p>
@@ -30,7 +29,13 @@
                 @Html.DisplayNameFor(model => model.data.First().Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().TitleOfType)
+                @Html.DisplayNameFor(model => model.data.First().PostTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().StaffId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.data.First().Content)
@@ -38,7 +43,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.data.First().Status)
             </th>
-          
             <th></th>
         </tr>
     </thead>
@@ -49,7 +53,13 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TitleOfType)
+                @Html.DisplayFor(modelItem => item.PostTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StaffId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Content)
@@ -57,7 +67,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-          
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |

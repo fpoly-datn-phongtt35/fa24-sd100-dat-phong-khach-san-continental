@@ -102,7 +102,7 @@ namespace Domain.Services.Services
                             select new Post
                             {
                                 Id = row.Field<Guid>("Id"),
-                                Title = row.Field<string>("TitleOfType"),
+                                Title = row.Field<string>("Title"),
                                 Content = row.Field<string>("Content"),
                                 StaffId = row.Field<Guid>("StaffId"),
                                 PostTypeId = row.Field<Guid>("PostTypeId"),
