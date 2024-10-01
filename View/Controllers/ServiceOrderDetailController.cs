@@ -96,7 +96,7 @@ namespace View.Controllers
         }
 
         // GET: ServiceOrderDetailController/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(Guid serviceOrderId)
         {
             // Lấy danh sách ServiceOrder
             string serviceOrderRequestUrl = "api/ServiceOrder/GetListServiceOrders";
@@ -104,16 +104,25 @@ namespace View.Controllers
             var serviceOrderResponseString = await serviceOrderResponse.Content.ReadAsStringAsync();
             var serviceOrders = JsonConvert.DeserializeObject<ResponseData<ServiceOrder>>(serviceOrderResponseString);
 
+            ViewBag.ServiceOrders = serviceOrders?.data;
+
             // Lấy danh sách Service
             string serviceRequestUrl = "api/Service/GetListService"; 
             var serviceResponse = await _client.PostAsync(serviceRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var serviceResponseString = await serviceResponse.Content.ReadAsStringAsync();
             var services = JsonConvert.DeserializeObject<ResponseData<Service>>(serviceResponseString);
 
-            ViewBag.ServiceOrders = serviceOrders?.data; 
-            ViewBag.Services = services?.data; 
+            ViewBag.Services = services?.data;
 
-            return View(new ServiceOrderDetailCreateRequest());
+            var request = new ServiceOrderDetailCreateRequest
+            {
+                ServiceOrderId = serviceOrderId
+            };
+
+            var servicePrices = services?.data.ToDictionary(s => s.Id.ToString(), s => s.Price);
+            ViewBag.ServicePrices = servicePrices;
+
+            return View(request);
         }
 
         // POST: ServiceOrderDetailController/Create
@@ -129,7 +138,13 @@ namespace View.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index","ServiceOrder");
+                }
+                else
+                {
+                    // Nếu không thành công, có thể xem phản hồi để debug
+                    var errorResponse = await response.Content.ReadAsStringAsync();
+                    ModelState.AddModelError("", $"Error: {errorResponse}");
                 }
             }
             return View(request); 

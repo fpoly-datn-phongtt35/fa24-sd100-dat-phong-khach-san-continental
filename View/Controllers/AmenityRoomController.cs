@@ -162,7 +162,7 @@ public class AmenityRoomController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(AmenityRoomDeleteRequest amenityRoomDeleteRequest)
     {
-        string requestUrl = $"AmenityRoom/DeleteRoomType?amenityRoomId={amenityRoomDeleteRequest.Id}";
+        string requestUrl = $"AmenityRoom/DeleteAmenityRoom?amenityRoomId={amenityRoomDeleteRequest.Id}";
         
         var deletedAmenityRoom = await SendHttpRequest<AmenityRoomResponse>(requestUrl, 
             HttpMethod.Put, amenityRoomDeleteRequest);

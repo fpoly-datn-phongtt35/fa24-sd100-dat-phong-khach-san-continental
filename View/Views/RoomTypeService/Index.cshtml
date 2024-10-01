@@ -1,0 +1,63 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.DTO.RoomType
+@using Domain.DTO.Service
+@using Domain.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
+
+@{
+    ViewData["Title"] = "Index";
+    // Lấy danh sách Amenities và RoomTypes từ ViewBag
+    // var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+    // var serviceList = ViewBag.ServiceList as List<Service>;
+}
+
+<h1>Danh sách dịch vụ loại phòng</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th>@Html.DisplayName("Loại phòng")</th>
+        <th>@Html.DisplayName("Dịch vụ")</th>
+        <th>@Html.DisplayName("Số lượng")</th>
+        <th>@Html.DisplayName("Trạng thái")</th>
+        <th>@Html.DisplayName("Chức năng")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        // var roomTypeName = roomTypes?.FirstOrDefault(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type";
+        // var serviceName = serviceList?.FirstOrDefault(s => s.Id == item.ServiceId)?.Name ?? "Unknown Service";
+        <tr>
+            @* <td>@roomTypeName</td> *@
+            @* <td>@serviceName</td> *@
+            <td>
+                @{
+                var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+                var roomType = roomTypes?.FirstOrDefault(r => r.Id == item.RoomTypeId);
+                }
+                @roomType?.Name
+            </td>
+            <td>
+                @{
+                var services = ViewBag.ServiceList as List<Service>;
+                var serivcee = services?.FirstOrDefault(a => a.Id == item.ServiceId);
+                }
+                @serivcee?.Name
+            </td>
+            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td>
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

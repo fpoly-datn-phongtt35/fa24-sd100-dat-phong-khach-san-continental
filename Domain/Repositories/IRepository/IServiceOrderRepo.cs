@@ -7,7 +7,7 @@ namespace Domain.Repositories.IRepository
 {
     public interface IServiceOrderRepo
     {
-        Task<int> AddServiceOrder(ServiceOrderCreateRequest request);
+        Task<Guid> AddServiceOrder(ServiceOrderCreateRequest request);
         Task<DataTable> GetServiceOrders(ServiceOrderGetRequest request);
         Task<int> UpdateServiceOrder(ServiceOrderUpdateRequest request);
         Task<int> DeleteServiceOrder(ServiceOrderDeleteRequest request);

@@ -21,9 +21,6 @@
 
 <h1>ServiceOrderDetails</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @if (Model != null && Model.data != null && Model.data.Any())
 {
     <table class="table">
@@ -33,8 +30,8 @@
                 <th>Service name</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().Amount)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().Price)</th>
-                <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().CreatedTime)</th>
+                <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
                 <th></th>
             </tr>
         </thead>
@@ -52,8 +49,8 @@
                     </td>
                     <td>@Html.DisplayFor(modelItem => item.Amount)</td>
                     <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
                     <td>@Html.DisplayFor(modelItem => item.CreatedTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                         @Html.ActionLink("Details", "Details", new { id = item.Id }) |

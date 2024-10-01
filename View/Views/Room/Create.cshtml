@@ -1,0 +1,98 @@
+﻿@using Domain.Enums
+@model Domain.DTO.Room.RoomCreateRequest
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>Tạo mới</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">Price</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label">Address</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Description</label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomSize" class="control-label">RoomSize</label>
+                <input asp-for="RoomSize" class="form-control" />
+                <span asp-validation-for="RoomSize" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Status" class="control-label">Trạng thái</label>
+                <select asp-for="Status" class="form-control">
+                    @{
+                        string[] status = (string[])Enum.GetNames(typeof(RoomStatus));
+                    }
+                    @foreach (string item in status)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </div>
+            
+                <!-- Các trường khác -->
+                <div class="form-group">
+                    <label asp-for="Images" class="control-label">Hình ảnh</label>
+                    <input asp-for="Images" type="file" name="imgFiles" class="form-control" multiple />
+                    <span asp-validation-for="Images" class="text-danger"></span>
+                </div>
+
+            <div class="form-group" hidden>
+                <label asp-for="CreatedTime" class="control-label">Thời gian tạo</label>
+                <input asp-for="CreatedTime" class="form-control" />
+                <span asp-validation-for="CreatedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FloorId">Floor</label>
+                <select asp-for="FloorId" class="form-control" asp-items="@(new SelectList(ViewBag.Floors, "Id", "Name"))">
+                    <option value="">-- Select Floor --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomTypeId">Room Type</label>
+                <select asp-for="RoomTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.RoomTypes, "Id", "Name"))">
+                    <option value="">-- Select Room Type --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label">Được tạo bởi</label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Tạo" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

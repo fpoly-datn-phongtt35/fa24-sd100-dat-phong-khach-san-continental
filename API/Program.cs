@@ -16,7 +16,9 @@ using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
 using Domain.Services.IServices.IRoom;
+using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services.Room;
+using Domain.Services.Services.RoomTypeService;
 
 namespace API
 {
@@ -90,6 +92,7 @@ namespace API
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
             builder.Services.AddTransient<IRoomRepo, RoomRepo>();
+            builder.Services.AddTransient<IRoomTypeServiceRepository, RoomTypeServiceRepository>();
             //room
             builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
             builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
@@ -118,6 +121,12 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomDeleteService, AmenityRoomDeleteService>();
             builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
             builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
+            //RoomTypeService_Service
+            builder.Services.AddTransient<IRoomTypeServiceAddService, RoomTypeServiceAddService>();
+            builder.Services.AddTransient<IRoomTypeServiceDeleteService, RoomTypeServiceDeleteService>();
+            builder.Services.AddTransient<IRoomTypeServiceGetService, RoomTypeServiceGetService>();
+            builder.Services.AddTransient<IRoomTypeServiceUpdateService, RoomTypeServiceUpdateService>();
+            
             //Staff
             builder.Services.AddTransient<IStaffService, StaffService>();
 
@@ -125,7 +134,9 @@ namespace API
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
 
             builder.Services.AddTransient<IPostTypeService, PostTypeService>();
+            builder.Services.AddTransient<IPostService, PostService>();
 
+            builder.Services.AddTransient<IRoleService, RoleService>();
 			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
