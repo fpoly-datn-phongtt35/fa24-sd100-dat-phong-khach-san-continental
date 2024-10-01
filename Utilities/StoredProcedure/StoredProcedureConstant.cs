@@ -104,5 +104,12 @@ namespace Utilities.StoredProcedure
         public const string SP_GetPostById = "SP_GetPostById";
         public const string SP_UpdatePost = "SP_UpdatePost";
         public const string SP_DeletePost = "SP_DeletePost";
+
+        //Role 
+        public const string SP_InsertRole = "SP_InsertRole";
+        public const string SP_GetAllRole = "SP_GetAllRole";
+        public const string SP_GetRoleById = "SP_GetRoleById";
+        public const string SP_UpdateRole = "SP_UpdateRole";
+        public const string SP_DeleteRole = "SP_DeleteRole";
     }
 }

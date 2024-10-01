@@ -124,6 +124,8 @@ namespace API
 
             builder.Services.AddTransient<IPostTypeService, PostTypeService>();
             builder.Services.AddTransient<IPostService, PostService>();
+
+            builder.Services.AddTransient<IRoleService, RoleService>();
 			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));

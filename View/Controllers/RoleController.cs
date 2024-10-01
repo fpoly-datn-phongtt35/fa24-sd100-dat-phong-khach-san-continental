@@ -1,5 +1,5 @@
-﻿using Domain.DTO.PostType;
-using Domain.DTO.Paging;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.Role;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,22 +8,22 @@ using System.Text;
 
 namespace View.Controllers
 {
-    public class PostTypeController : Controller
+    public class RoleController : Controller
     {
         private readonly HttpClient _httpClient;
 
-        public PostTypeController()
+        public RoleController()
         {
             _httpClient = new HttpClient();
         }
 
         public async Task<ActionResult> Index()
         {
-            string requestURL = "https://localhost:7130/api/PostType/GetListPostType";
+            string requestURL = "https://localhost:7130/api/Role/GetListRole";
 
-            var PostTypeRequest = new PostTypeGetRequest();
+            var RoleRequest = new RoleGetRequest();
 
-            var jsonRequest = JsonConvert.SerializeObject(PostTypeRequest);
+            var jsonRequest = JsonConvert.SerializeObject(RoleRequest);
 
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
             try
@@ -35,9 +35,9 @@ namespace View.Controllers
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 // chuyển đổi lại thành respondata 
-                var PostTypes = JsonConvert.DeserializeObject<ResponseData<PostType>>(responseString);
+                var Roles = JsonConvert.DeserializeObject<ResponseData<Role>>(responseString);
 
-                return View(PostTypes);
+                return View(Roles);
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace View.Controllers
 
         public async Task<IActionResult> Details(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/PostType/GetPostTypeById?Id={id}";
+            string requestUrl = $"https://localhost:7130/api/Role/GetRoleById?Id={id}";
 
             // Tạo nội dung json cho request
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
@@ -63,9 +63,9 @@ namespace View.Controllers
                 }
 
                 var responseString = await response.Content.ReadAsStringAsync();
-                var PostType = JsonConvert.DeserializeObject<PostType>(responseString);
+                var Role = JsonConvert.DeserializeObject<Role>(responseString);
 
-                return View(PostType);
+                return View(Role);
             }
             catch (Exception ex)
             {
@@ -75,17 +75,17 @@ namespace View.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-            return View(new PostTypeCreateRequest());
+            return View(new RoleCreateRequest());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PostTypeCreateRequest request)
+        public async Task<IActionResult> Create(RoleCreateRequest request)
         {
             if (ModelState.IsValid)
             {
-                string requestURL = "https://localhost:7130/api/PostType/CreatePostType";
-               
+                string requestURL = "https://localhost:7130/api/Role/CreateRole";
+                
                 request.CreatedTime = DateTimeOffset.Now;
                 var response = await _httpClient.PostAsJsonAsync(requestURL, request);
 
@@ -99,7 +99,7 @@ namespace View.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
 
-            string requestUrl = $"https://localhost:7130/api/PostType/GetPostTypeById?Id={id}";
+            string requestUrl = $"https://localhost:7130/api/Role/GetRoleById?Id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
@@ -116,11 +116,11 @@ namespace View.Controllers
                 }
 
                 var responseString = await response.Content.ReadAsStringAsync();
-                var PostType = JsonConvert.DeserializeObject<PostType>(responseString);
+                var Role = JsonConvert.DeserializeObject<Role>(responseString);
 
 
 
-                return View(PostType);
+                return View(Role);
             }
             catch (Exception ex)
             {
@@ -129,19 +129,19 @@ namespace View.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(PostType request)
+        public async Task<IActionResult> Edit(Role request)
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
             request.ModifiedTime = DateTimeOffset.Now;
-            var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/PostType/UpdatePostType", request);
+            var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Role/UpdateRole", request);
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Delete(Guid id)
         {
-            string requestUrl = "https://localhost:7130/api/PostType/DeletePostType";
+            string requestUrl = "https://localhost:7130/api/Role/DeleteRole";
 
-            var request = new PostTypeDeleteRequest
+            var request = new RoleDeleteRequest
             {
                 Id = id,
                 DeletedBy = Guid.NewGuid(),
@@ -157,8 +157,8 @@ namespace View.Controllers
                 return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError("", "Unable to delete the PostType.");
-            return View("Error", new Exception("Unable to delete the PostType."));
+            ModelState.AddModelError("", "Unable to delete the Role.");
+            return View("Error", new Exception("Unable to delete the Role."));
         }
     }
 }
