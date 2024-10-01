@@ -81,6 +81,33 @@ namespace Domain.Services.Services
             return sv;
         }
 
+        public async Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetailByServiceOrderId(Guid id)
+        {
+            var model = new ResponseData<ServiceOrderDetail>();
+            try
+            {
+                DataTable table = await _serviceOrderDetailRepo.GetServiceOrderDetailByServiceOrderId(id);
+
+                model.data = (from row in table.AsEnumerable()
+                              select new ServiceOrderDetail
+                              {
+                                  Id = row.Field<Guid>("Id"),
+                                  ServiceOrderId = row.Field<Guid>("ServiceOrderId"),
+                                  ServiceId = row.Field<Guid>("ServiceId"),
+                                  Amount = row.Field<double>("Amount"),
+                                  Price = row.Field<decimal>("Price"),
+                                  Status = row.Field<EntityStatus>("Status"),
+                                  CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
+                                  CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
+                              }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return model;
+        }
+
         public async Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetails(ServiceOrderDetailGetRequest request)
         {
             var model = new ResponseData<ServiceOrderDetail>();
@@ -115,7 +142,6 @@ namespace Domain.Services.Services
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             return model;
@@ -129,7 +155,6 @@ namespace Domain.Services.Services
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

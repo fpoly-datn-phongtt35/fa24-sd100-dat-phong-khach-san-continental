@@ -35,10 +35,13 @@
                 @Html.DisplayNameFor(model => model.data.First().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().DiscountType)
+                Type
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().DiscountValue)
+                @Html.DisplayNameFor(model => model.data.First().CreatedTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().CreatedTime)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.data.First().Status)
@@ -64,6 +67,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DiscountValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)

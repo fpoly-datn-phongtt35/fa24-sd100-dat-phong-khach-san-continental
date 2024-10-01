@@ -16,7 +16,9 @@ using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
 using Domain.Services.IServices.IRoom;
+using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services.Room;
+using Domain.Services.Services.RoomTypeService;
 
 namespace API
 {
@@ -71,6 +73,8 @@ namespace API
 
             builder.Services.AddTransient<ServiceTypeRepo>();
             //builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+            builder.Services.AddTransient<IVoucherDetailRepo, VoucherDetailRepo>();
+            builder.Services.AddTransient<IVoucherDetailService, VoucherDetailService>();
 
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
@@ -88,6 +92,7 @@ namespace API
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
             builder.Services.AddTransient<IRoomRepo, RoomRepo>();
+            builder.Services.AddTransient<IRoomTypeServiceRepository, RoomTypeServiceRepository>();
             //room
             builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
             builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
@@ -116,7 +121,12 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomDeleteService, AmenityRoomDeleteService>();
             builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
             builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
-
+            //RoomTypeService_Service
+            builder.Services.AddTransient<IRoomTypeServiceAddService, RoomTypeServiceAddService>();
+            builder.Services.AddTransient<IRoomTypeServiceDeleteService, RoomTypeServiceDeleteService>();
+            builder.Services.AddTransient<IRoomTypeServiceGetService, RoomTypeServiceGetService>();
+            builder.Services.AddTransient<IRoomTypeServiceUpdateService, RoomTypeServiceUpdateService>();
+            
             builder.Services.AddTransient<VoucherRepo>();
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
 

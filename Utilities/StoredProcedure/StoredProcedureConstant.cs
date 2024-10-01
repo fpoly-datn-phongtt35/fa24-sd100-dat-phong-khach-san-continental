@@ -87,24 +87,22 @@ namespace Utilities.StoredProcedure
         public const string SP_GetVoucherById = "SP_GetVoucherById";
         public const string SP_UpdateVoucher = "SP_UpdateVoucher";
         public const string SP_DeleteVoucher = "SP_DeleteVoucher";
+        //voucher detail
+        public const string SP_InsertVoucherDetail = "SP_InsertVoucherDetail";
+        public const string SP_GetListVoucherDetail = "SP_GetListVoucherDetail";
+        public const string SP_UpdateVoucherDetail = "SP_UpdateVoucherDetail";
+        public const string SP_DeleteVoucherDetail = "SP_DeleteVoucherDetail";
         // PostType
         public const string SP_InsertPostType = "SP_InsertPostType";
         public const string SP_GetAllPostType = "SP_GetAllPostType";
         public const string SP_GetPostTypeById = "SP_GetPostTypeById";
         public const string SP_UpdatePostType = "SP_UpdatePostType";
         public const string SP_DeletePostType = "SP_DeletePostType";
-        // Post
-        public const string SP_InsertPost = "SP_InsertPost";
-        public const string SP_GetAllPost = "SP_GetAllPost";
-        public const string SP_GetPostById = "SP_GetPostById";
-        public const string SP_UpdatePost = "SP_UpdatePost";
-        public const string SP_DeletePost = "SP_DeletePost";
-
-        //Role 
-        public const string SP_InsertRole = "SP_InsertRole";
-        public const string SP_GetAllRole = "SP_GetAllRole";
-        public const string SP_GetRoleById = "SP_GetRoleById";
-        public const string SP_UpdateRole = "SP_UpdateRole";
-        public const string SP_DeleteRole = "SP_DeleteRole";
+        // RoomTypeService
+        public const string SP_InsertRoomTypeService = "SP_InsertRoomTypeService";
+        public const string SP_GetAllRoomTypeServices = "SP_GetAllRoomTypeServices";
+        public const string SP_GetRoomTypeServiceById = "SP_GetRoomTypeServiceById";
+        public const string SP_UpdateRoomTypeService = "SP_UpdateRoomTypeService";
+        public const string SP_DeleteRoomTypeService = "SP_DeleteRoomTypeService";
     }
 }
