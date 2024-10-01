@@ -1,6 +1,7 @@
 ﻿using Domain.DTO.Paging;
 using Domain.DTO.Service;
 using Domain.DTO.ServiceOrder;
+using Domain.DTO.ServiceOrderDetail;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -24,12 +25,6 @@ namespace View.Controllers
         {
             string requestUrl = "https://localhost:7130/api/ServiceOrder/GetListServiceOrders";
 
-            //var request = new ServiceOrderGetRequest
-            //{
-            //    PageIndex = 1,
-            //    PageSize = 10
-            //    ,RoomBookingId = null
-            //};
             var request = new ServiceOrderGetRequest();
 
             var jsonRequest = JsonConvert.SerializeObject(request);
@@ -113,7 +108,11 @@ namespace View.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var createdServiceOrder = JsonConvert.DeserializeObject<Guid>(responseString);
+
+
+                    return RedirectToAction("Create", "ServiceOrderDetail", new { serviceOrderId = createdServiceOrder });
                 }
             }
 
@@ -123,7 +122,7 @@ namespace View.Controllers
         // GET: ServiceOrderController/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            string requestUrl = $"https://localhost:7130/api/ServiceOrder/GetServiceOrderById?id={id}";
+            string requestUrl = $"api/ServiceOrder/GetServiceOrderById?id={id}";
 
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
@@ -185,6 +184,47 @@ namespace View.Controllers
                 return RedirectToAction("Index");
             }
             return View("Error", new Exception("Unable to delete the service."));
+        }
+
+        // GET: ServiceOrderController/Services/{id}
+        public async Task<IActionResult> Services(Guid id)
+        {
+            string requestUrl = $"api/ServiceOrderDetail/GetServiceOrderDetailByServiceOrderId?id={id}";
+
+            // Lấy danh sách Service
+            string serviceRequestUrl = "api/Service/GetListService";
+            var serviceResponse = await _client.PostAsync(serviceRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var serviceResponseString = await serviceResponse.Content.ReadAsStringAsync();
+            var services = JsonConvert.DeserializeObject<ResponseData<Service>>(serviceResponseString);
+
+            ViewBag.Services = services?.data;
+
+            var request = new ServiceOrderDetailGetRequest
+            {
+                ServiceOrderId = id
+            };
+
+            var jsonRequest = JsonConvert.SerializeObject(request);
+
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var respone = await _client.PostAsync(requestUrl, content);
+
+                var responseString = await respone.Content.ReadAsStringAsync();
+
+                var serviceOrderDetails = JsonConvert.DeserializeObject<ResponseData<ServiceOrderDetail>>(responseString);  
+
+                return View(serviceOrderDetails);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
         }
     }
 }
