@@ -19,7 +19,6 @@ namespace Domain.DTO.Room
         public Guid? FloorId { get; set; }
         public Guid RoomTypeId { get; set; }
         public RoomStatus Status { get; set; } = RoomStatus.Vacant;
-
         public DateTimeOffset ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
 
