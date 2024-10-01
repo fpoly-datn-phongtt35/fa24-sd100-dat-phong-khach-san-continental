@@ -1,0 +1,35 @@
+﻿@model Domain.DTO.VoucherDetail.VoucherDetailCreateRequest
+@{
+    ViewData["Title"] = "Create";
+}
+<h2>Create Voucher Detail</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="RoomBookingId">RoomBookingId</label>
+        <input asp-for="RoomBookingId" class="form-control />
+
+    <div class="form-group">
+        <label asp-for="VoucherId">Voucher</label>
+            <select asp-for="VoucherId" class="form-control" asp-items="@(new SelectList(ViewBag.VoucherList, "Id", "Name"))">
+            <option value="">-- Select Voucher --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Code"></label>
+        <input asp-for="Code" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EndDate"></label>
+        <input asp-for="EndDate" class="form-control" />
+    </div>
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

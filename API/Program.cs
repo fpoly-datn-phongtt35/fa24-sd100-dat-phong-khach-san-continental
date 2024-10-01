@@ -71,6 +71,8 @@ namespace API
 
             builder.Services.AddTransient<ServiceTypeRepo>();
             //builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+            builder.Services.AddTransient<IVoucherDetailRepo, VoucherDetailRepo>();
+            builder.Services.AddTransient<IVoucherDetailService, VoucherDetailService>();
 
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
@@ -119,6 +121,8 @@ namespace API
 
             builder.Services.AddTransient<VoucherRepo>();
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
+
+            builder.Services.AddTransient<IPostTypeService, PostTypeService>();
 
 			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
