@@ -122,6 +122,8 @@ namespace API
             builder.Services.AddTransient<VoucherRepo>();
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
 
+            builder.Services.AddTransient<IPostTypeService, PostTypeService>();
+
 			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));

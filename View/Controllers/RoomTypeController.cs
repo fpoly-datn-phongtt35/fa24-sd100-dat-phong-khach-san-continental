@@ -89,7 +89,8 @@ public class RoomTypeController : Controller
     {
         string requestUrl = $"/api/RoomType/CreateRoomType";
 
-        var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post, roomTypeAddRequest);
+        var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, 
+            HttpMethod.Post, roomTypeAddRequest);
         if (createdRoomType != null)
             return RedirectToAction("Index");
 
@@ -135,7 +136,8 @@ public class RoomTypeController : Controller
     {
         string requestUrl = $"/api/RoomType/DeleteRoomType?roomTypeId={roomTypeDeleteRequest.Id}";
         
-        var deletedRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Put, roomTypeDeleteRequest);
+        var deletedRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, 
+            HttpMethod.Put, roomTypeDeleteRequest);
         if(deletedRoomType != null)
             return RedirectToAction("Index");
         
