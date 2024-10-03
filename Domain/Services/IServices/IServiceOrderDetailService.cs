@@ -17,5 +17,6 @@ namespace Domain.Services.IServices
         Task<int> DeleteServiceOrderDetail(ServiceOrderDetailDeleteRequest request);
         Task<ServiceOrderDetail> GetServiceOrderDetailById(Guid Id);
         Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetails(ServiceOrderDetailGetRequest request);
+        Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetailByServiceOrderId(Guid id);
     }
 }

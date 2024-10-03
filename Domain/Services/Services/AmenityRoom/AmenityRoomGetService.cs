@@ -29,9 +29,8 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         if (amenityRoomId == null) return null;
         
         var amenityRoom = await _amenityRoomRepository.GetAmenityRoomById(amenityRoomId.Value);
-        if(amenityRoom == null) return null;
+        if (amenityRoom == null) return null;
 
         return amenityRoom.ToAmenityRoomResponse();
-
     }
 }

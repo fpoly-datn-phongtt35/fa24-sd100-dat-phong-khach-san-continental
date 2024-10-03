@@ -17,16 +17,13 @@ public class AmenityRoomDeleteService : IAmenityRoomDeleteService
     public async Task<AmenityRoomResponse?> DeleteAmenityRoom(AmenityRoomDeleteRequest amenityRoomDeleteRequest)
     {
         if (amenityRoomDeleteRequest is null)
-        {
             throw new ArgumentNullException(nameof(amenityRoomDeleteRequest));
-        }
 
-        var existingAmenityRoom = await _amenityRoomRepository.GetAmenityRoomById(amenityRoomDeleteRequest.Id);
+        var existingAmenityRoom = await _amenityRoomRepository
+            .GetAmenityRoomById(amenityRoomDeleteRequest.Id);
 
         if (existingAmenityRoom is null)
-        {
             throw new Exception("No amenity room found");
-        }
 
         existingAmenityRoom.Status = (EntityStatus.Deleted);
         existingAmenityRoom.Deleted = true;
@@ -34,7 +31,6 @@ public class AmenityRoomDeleteService : IAmenityRoomDeleteService
         existingAmenityRoom.DeletedBy = amenityRoomDeleteRequest.DeletedBy;
         
         await _amenityRoomRepository.DeleteAmenityRoom(existingAmenityRoom);
-
         return existingAmenityRoom.ToAmenityRoomResponse();
     }
 }

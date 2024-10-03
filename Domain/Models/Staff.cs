@@ -18,15 +18,15 @@ namespace Domain.Models
 
         public DateTimeOffset CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
-        public DateTimeOffset ModifiedTime { get; set; }
+        public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
-        public DateTimeOffset DeletedTime { get; set; }
+        public DateTimeOffset? DeletedTime { get; set; }
 
-        public Role Role { get; set; }
-        public List<RoomBooking> RoomBookings { get; set; }
-        public List<Post> Posts { get; set; }
-        public ICollection<FeedBack> FeedBacks { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual List<RoomBooking> RoomBookings { get; set; }
+        public virtual List<Post> Posts { get; set; }
+        public virtual ICollection<FeedBack> FeedBacks { get; set; }
     }
 }
