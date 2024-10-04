@@ -78,7 +78,18 @@ public class RoomTypeController : Controller
         var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
         if(roomType != null)
             return View(roomType);
+        
+        return View("Error");
+    }
 
+    public async Task<IActionResult> DetailsWithAmenity(Guid roomTypeId)
+    {
+        string requestUrl = $"/api/RoomType/GetRoomTypeWithAmenityRoomById?roomTypeId={roomTypeId}";
+        
+        var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
+        if(roomType != null)
+            return View(roomType);
+        
         return View("Error");
     }
 

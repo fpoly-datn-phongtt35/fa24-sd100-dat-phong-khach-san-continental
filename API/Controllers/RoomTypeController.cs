@@ -67,6 +67,19 @@ public class RoomTypeController : Controller
         }
     }
     
+    [HttpPost(nameof(GetRoomTypeWithAmenityRoomById))]
+    public async Task<RoomTypeResponse?> GetRoomTypeWithAmenityRoomById(Guid roomTypeId)
+    {
+        try
+        {
+            return await _roomTypeGetService.GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(roomTypeId);
+        }
+        catch (Exception e)
+        {
+            throw new NullReferenceException("The list of room types could not be retrieved", e);
+        }
+    }
+    
     [HttpPut(nameof(DeleteRoomType))]
     public async Task<RoomTypeResponse?> DeleteRoomType(RoomTypeDeleteRequest roomTypeDeleteRequest)
     {

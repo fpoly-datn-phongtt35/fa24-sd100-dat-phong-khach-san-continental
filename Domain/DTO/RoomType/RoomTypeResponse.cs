@@ -1,4 +1,8 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Amenity;
+using Domain.DTO.AmenityRoom;
+using Domain.DTO.RoomTypeService;
+using Domain.DTO.Service;
+using Domain.Enums;
 
 namespace Domain.DTO.RoomType;
 
@@ -17,6 +21,9 @@ public class RoomTypeResponse
     public Guid? DeletedBy { get; set; }
     public DateTimeOffset DeletedTime { get; set; }
 
+    public List<AmenityRoomResponse> AmenityRooms { get; set; } = new List<AmenityRoomResponse>();
+    public List<RoomTypeServiceResponse> RoomTypeServices { get; set; } = new List<RoomTypeServiceResponse>();
+    
     public override bool Equals(object? obj)
     {
         if (obj == null) return false;

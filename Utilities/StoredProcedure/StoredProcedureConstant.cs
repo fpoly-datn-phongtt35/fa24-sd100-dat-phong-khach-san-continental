@@ -81,6 +81,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
         public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
         public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
+        public const string SP_GetAmenityRoomsByRoomTypeId = "SP_GetAmenityRoomsByRoomTypeId";
         // Voucher
         public const string SP_InsertVoucher = "SP_InsertVoucher";
         public const string SP_GetListVoucher = "SP_GetListVoucher";
@@ -104,6 +105,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetRoomTypeServiceById = "SP_GetRoomTypeServiceById";
         public const string SP_UpdateRoomTypeService = "SP_UpdateRoomTypeService";
         public const string SP_DeleteRoomTypeService = "SP_DeleteRoomTypeService";
+        public const string SP_GetRoomTypeServicesByRoomTypeId = "SP_GetRoomTypeServicesByRoomTypeId";
         //Staff 
         public const string SP_GetAllStaff = "SP_GetStaffList";
         public const string SP_CreateStaff = "SP_InsertStaff";

@@ -194,7 +194,7 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    private Amenity ConvertDataRowToAmenity(DataRow row)
+    public Amenity ConvertDataRowToAmenity(DataRow row)
     {
         return new Amenity()
         {
