@@ -9,8 +9,16 @@
 
 <h1>Danh sách loại phòng</h1>
 
+<form method="get" asp-action="Index" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm loại phòng..."
+               value="@ViewContext.HttpContext.Request.Query["search"]" />
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+</form>
+
 <p>
-    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+    <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
 </p>
 <table class="table" style="color: whitesmoke">
     <thead>
@@ -33,7 +41,7 @@
             <td>
                 @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = item.Id }, 
     new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "DetailsWithAmenity", new { roomTypeId = item.Id },
+                @Html.ActionLink("Chi tiết", "Details", new { roomTypeId = item.Id },
                 new { @class = "btn btn-info" })
                 @Html.ActionLink("Xóa", "Delete", new { roomTypeId = item.Id }, 
     new { @class = "btn btn-danger" })

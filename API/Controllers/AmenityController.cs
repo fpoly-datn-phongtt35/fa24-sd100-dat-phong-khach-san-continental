@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.Models;
 using Domain.Services.IServices.IAmenity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,13 +37,13 @@ public class AmenityController : ControllerBase
             throw;
         }
     }
-
+    
     [HttpPost(nameof(GetAllAmenities))]
-    public async Task<List<AmenityResponse>> GetAllAmenities()
+    public async Task<List<AmenityResponse>> GetAllAmenities(string? search)
     {
         try
         {
-            return await _amenityGetService.GetAllAmenities();
+            return await _amenityGetService.GetAllAmenities(search);
         }
         catch (Exception ex)
         {

@@ -58,6 +58,7 @@ namespace Utilities.StoredProcedure
         //amenity
         public const string SP_InsertAmenity = "SP_InsertAmenity";
         public const string SP_GetAllAmenities = "SP_GetAllAmenities";
+        public const string SP_GetAllAmenitiesWithSearch = "SP_GetAllAmenitiesWithSearch";
         public const string SP_GetAmenityById = "SP_GetAmenityById";
         public const string SP_UpdateAmenity = "SP_UpdateAmenity";
         public const string SP_DeleteAmenity = "SP_DeleteAmenity";
@@ -65,6 +66,7 @@ namespace Utilities.StoredProcedure
         //roomType
         public const string SP_InsertRoomType = "SP_InsertRoomType";
         public const string SP_GetAllRoomTypes = "SP_GetAllRoomTypes";
+        public const string SP_GetAllRoomTypesWithSearch = "SP_GetAllRoomTypesWithSearch";
         public const string SP_GetRoomTypeById = "SP_GetRoomTypeById";
         public const string SP_UpdateRoomType = "SP_UpdateRoomType";
         public const string SP_DeleteRoomType = "SP_DeleteRoomType";
@@ -78,6 +80,7 @@ namespace Utilities.StoredProcedure
         // amenityRoom
         public const string SP_InsertAmenityRoom = "SP_InsertAmenityRoom";
         public const string SP_GetAllAmenityRooms = "SP_GetAllAmenityRooms";
+        public const string SP_GetAllAmenityRoomsWithSearch = "SP_GetAllAmenityRoomsWithSearch";
         public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
         public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
         public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
@@ -102,6 +105,7 @@ namespace Utilities.StoredProcedure
         // RoomTypeService
         public const string SP_InsertRoomTypeService = "SP_InsertRoomTypeService";
         public const string SP_GetAllRoomTypeServices = "SP_GetAllRoomTypeServices";
+        public const string SP_GetAllRoomTypeServicesWithSearch = "SP_GetAllRoomTypeServicesWithSearch";
         public const string SP_GetRoomTypeServiceById = "SP_GetRoomTypeServiceById";
         public const string SP_UpdateRoomTypeService = "SP_UpdateRoomTypeService";
         public const string SP_DeleteRoomTypeService = "SP_DeleteRoomTypeService";

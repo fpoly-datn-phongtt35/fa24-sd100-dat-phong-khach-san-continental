@@ -60,9 +60,9 @@ public class RoomTypeController : Controller
         }
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? search)
     {
-        const string requestUrl = "/api/RoomType/GetAllRoomTypes";
+        string requestUrl = $"api/RoomType/GetAllRoomTypes?search={search}";
 
         var roomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
         if (roomTypes != null)
@@ -73,18 +73,7 @@ public class RoomTypeController : Controller
 
     public async Task<IActionResult> Details(Guid roomTypeId)
     {
-        string requestUrl = $"/api/RoomType/GetRoomTypeById?roomTypeId={roomTypeId}";
-        
-        var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
-        if(roomType != null)
-            return View(roomType);
-        
-        return View("Error");
-    }
-
-    public async Task<IActionResult> DetailsWithAmenity(Guid roomTypeId)
-    {
-        string requestUrl = $"/api/RoomType/GetRoomTypeWithAmenityRoomById?roomTypeId={roomTypeId}";
+        string requestUrl = $"/api/RoomType/GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById?roomTypeId={roomTypeId}";
         
         var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
         if(roomType != null)

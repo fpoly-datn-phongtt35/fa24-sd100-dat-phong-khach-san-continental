@@ -83,11 +83,11 @@ public class RoomTypeServiceController : Controller
         ViewBag.ServiceList = service?.data;
     }
     
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? search)
     {
         await LoadRoomTypes();
         await LoadServices();
-        const string requestUrl = "RoomTypeService/GetAllRoomTypeServices";
+        string requestUrl = $"RoomTypeService/GetAllRoomTypeServices?search={search}";
         
         var roomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>(requestUrl, HttpMethod.Post);
         if(roomTypeServices != null)

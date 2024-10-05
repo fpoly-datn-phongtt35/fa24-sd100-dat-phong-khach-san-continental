@@ -55,11 +55,11 @@ public class RoomTypeController : Controller
     }
     
     [HttpPost(nameof(GetAllRoomTypes))]
-    public async Task<List<RoomTypeResponse>> GetAllRoomTypes()
+    public async Task<List<RoomTypeResponse>> GetAllRoomTypes(string? search)
     {
         try
         {
-            return await _roomTypeGetService.GetAllRoomTypes();
+            return await _roomTypeGetService.GetAllRoomTypes(search);
         }
         catch (Exception e)
         {
@@ -67,8 +67,8 @@ public class RoomTypeController : Controller
         }
     }
     
-    [HttpPost(nameof(GetRoomTypeWithAmenityRoomById))]
-    public async Task<RoomTypeResponse?> GetRoomTypeWithAmenityRoomById(Guid roomTypeId)
+    [HttpPost(nameof(GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById))]
+    public async Task<RoomTypeResponse?> GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(Guid roomTypeId)
     {
         try
         {

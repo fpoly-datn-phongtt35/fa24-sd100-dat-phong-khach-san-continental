@@ -59,9 +59,9 @@ public class AmenityController : Controller
         }
     }
     
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? search)
     {
-        const string requestUrl = "/api/Amenity/GetAllAmenities";
+        string requestUrl = $"api/Amenity/GetAllAmenities?search={search}";
 
         var amenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
 
@@ -112,7 +112,8 @@ public class AmenityController : Controller
     {
         string requestUrl = $"/api/Amenity/UpdateAmenity?amenityId={amenityUpdateRequest.Id}";
 
-        var updatedAmenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Put, amenityUpdateRequest);
+        var updatedAmenity = await SendHttpRequest<AmenityResponse>
+            (requestUrl, HttpMethod.Put, amenityUpdateRequest);
         
         if(updatedAmenity != null)
             return RedirectToAction("Index");
@@ -134,7 +135,8 @@ public class AmenityController : Controller
     {
         string requestUrl = $"/api/Amenity/DeleteAmenity?amenityId={amenityDeleteRequest.Id}";
 
-        var deletedAmenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Put, amenityDeleteRequest);
+        var deletedAmenity = await SendHttpRequest<AmenityResponse>
+            (requestUrl, HttpMethod.Put, amenityDeleteRequest);
         if(deletedAmenity != null)
             return RedirectToAction("Index");
         return View("Error");
