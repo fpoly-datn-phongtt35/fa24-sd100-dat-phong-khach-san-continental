@@ -87,7 +87,7 @@ namespace View.Controllers
 			if (ModelState.IsValid)
 			{
 				string requestURL = "https://localhost:7130/api/Voucher/CreateVoucher";
-				request.Status = EntityStatus.Active;
+				
 				request.CreatedTime = DateTimeOffset.Now;
 				var response = await _httpClient.PostAsJsonAsync(requestURL, request);
 

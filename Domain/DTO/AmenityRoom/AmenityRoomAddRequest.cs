@@ -12,7 +12,7 @@ public class AmenityRoomAddRequest
     public Guid? CreatedBy { get; set; }
 
     /// <summary>
-    /// Convert the current object of AmenityRoomRequest into a
+    /// Convert the current object of AmenityRoomAddRequest into a
     /// new object of AmenityRoom type
     /// </summary>
     /// <returns>Return AmenityRoom object</returns>

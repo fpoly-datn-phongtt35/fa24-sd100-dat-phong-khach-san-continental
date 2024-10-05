@@ -21,6 +21,6 @@ namespace Domain.Models
         public DateTimeOffset DeletedTime { get; set; }
 
         public RoomType RoomType { get; set; }
-        public Service Service { get; set; }
+        public Service? Service { get; set; }
     }
 }

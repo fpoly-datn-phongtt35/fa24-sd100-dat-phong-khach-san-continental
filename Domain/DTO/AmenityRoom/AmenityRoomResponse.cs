@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Amenity;
+using Domain.Enums;
 
 namespace Domain.DTO.AmenityRoom;
 
@@ -9,7 +10,6 @@ public class AmenityRoomResponse
     public Guid RoomTypeId { get; set; }
     public int Amount { get; set; }
     public EntityStatus Status { get; set; }
-
     public DateTimeOffset CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTimeOffset ModifiedTime { get; set; }
@@ -18,6 +18,8 @@ public class AmenityRoomResponse
     public Guid? DeletedBy { get; set; }
     public DateTimeOffset DeletedTime { get; set; }
 
+    public AmenityResponse Amenity { get; set; } = new AmenityResponse();
+    
     public override bool Equals(object? obj)
     {
         if (obj == null) return false;

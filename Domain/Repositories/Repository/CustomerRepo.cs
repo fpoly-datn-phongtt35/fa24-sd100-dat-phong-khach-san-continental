@@ -33,7 +33,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
                     new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
-                    new SqlParameter("@Status", (int)request.Status),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedTime", request.CreatedTime),
                     new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
                 };
@@ -102,7 +102,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
                     new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
-                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };

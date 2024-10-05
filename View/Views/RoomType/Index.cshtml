@@ -31,9 +31,12 @@
             <td>@Html.DisplayFor(modelItem => item.MaximumOccupancy)</td>
             <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
             <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = item.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { roomTypeId = item.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Delete", "Delete", new { roomTypeId = item.Id }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = item.Id }, 
+    new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "DetailsWithAmenity", new { roomTypeId = item.Id },
+                new { @class = "btn btn-info" })
+                @Html.ActionLink("Xóa", "Delete", new { roomTypeId = item.Id }, 
+    new { @class = "btn btn-danger" })
             </td>
         </tr>
     }

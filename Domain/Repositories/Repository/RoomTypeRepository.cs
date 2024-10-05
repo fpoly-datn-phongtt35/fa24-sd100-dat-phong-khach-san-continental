@@ -68,6 +68,179 @@ public class RoomTypeRepository : IRoomTypeRepository
         }
     }
 
+    public async Task<RoomType?> GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(Guid roomTypeId)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+            };
+            
+            var roomTypeDataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetRoomTypeById, parameters);
+            if (roomTypeDataTable.Rows.Count == 0)
+                return null;
+            
+            var row = roomTypeDataTable.Rows[0];
+            var roomType = ConvertDataRowToRoomType(row);
+            
+            // Get List AmenityRooms to RoomType
+            roomType.AmenityRooms = await GetAmenityRoomsByRoomTypeId(roomTypeId);
+            
+            // Get List RoomTypeServices to RoomType
+            roomType.RoomsTypeServices = await GetRoomTypeServicesByRoomTypeId(roomTypeId);
+            
+            return roomType;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while retrieving the room type with amenity rooms and services", e);
+        }
+    }
+
+    public async Task<List<AmenityRoom>> GetAmenityRoomsByRoomTypeId(Guid roomTypeId)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+            };
+        
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetAmenityRoomsByRoomTypeId, parameters);
+            if (dataTable.Rows.Count == 0)
+            {
+                return new List<AmenityRoom>(); // Không có dữ liệu trả về
+            }
+            var amenityRooms = new List<AmenityRoom>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (dataTable.Columns.Contains("Id"))
+                {
+                    var amenityRoom = new AmenityRoom()
+                    {
+                        Id = (Guid)row["Id"],
+                        RoomTypeId = (Guid)row["RoomTypeId"],
+                        AmenityId = (Guid)row["AmenityId"],
+                        Amount = (int)row["Amount"],
+                        Status = (EntityStatus)row["Status"],
+                        // Gọi thêm GetAmenityById để lấy thông tin về Amenity
+                        Amenity = await GetAmenityById((Guid)row["AmenityId"])
+                    };
+                    amenityRooms.Add(amenityRoom);    
+                }
+                else
+                {
+                    throw new ArgumentException("Column 'Id' does not exist in the result set.");
+                }
+            }
+        
+            return amenityRooms;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while retrieving the list amenity room", e);
+        }
+    }
+
+    public async Task<List<RoomTypeService>> GetRoomTypeServicesByRoomTypeId(Guid roomTypeId)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+            (StoredProcedureConstant.SP_GetRoomTypeServicesByRoomTypeId, parameters);
+            if(dataTable.Rows.Count == 0)
+                return new List<RoomTypeService>(); // No data return
+            
+            var roomTypeServices = new List<RoomTypeService>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var roomTypeService = new RoomTypeService()
+                {
+                    Id = (Guid)row["Id"],
+                    RoomTypeId = (Guid)row["RoomTypeId"],
+                    ServiceId = (Guid)row["ServiceId"],
+                    Amount = (int)row["Amount"],
+                    Status = (EntityStatus)row["Status"],
+                    Service = await GetServiceById((Guid)row["ServiceId"])
+                };
+                roomTypeServices.Add(roomTypeService);
+            }
+
+            return roomTypeServices;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while retrieving the room type services", e);
+        }
+    }
+
+    private async Task<Amenity?> GetAmenityById(Guid amenityId)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityId }
+            };
+
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetAmenityById, parameters);
+
+            if (dataTable.Rows.Count == 0) return null;
+
+            var row = dataTable.Rows[0];
+            var amenity = new Amenity
+            {
+                Id = (Guid)row["Id"],
+                Name = (string)row["Name"]
+            };
+
+            return amenity;
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentNullException("An error occurred while retrieving the amenity", e);
+        }
+    }
+    
+    private async Task<Service?> GetServiceById(Guid serviceId)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = serviceId }
+            };
+
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetServiceById, parameters);
+
+            if (dataTable.Rows.Count == 0) return null;
+
+            var row = dataTable.Rows[0];
+            var service = new Service()
+            {
+                Id = (Guid)row["Id"],
+                Name = (string)row["Name"]
+            };
+
+            return service;
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentNullException("An error occurred while retrieving the service", e);
+        }
+    }
+
     public async Task<RoomType> AddRoomType(RoomType roomType)
     {
         try

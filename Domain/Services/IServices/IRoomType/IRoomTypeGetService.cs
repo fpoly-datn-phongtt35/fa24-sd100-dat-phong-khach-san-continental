@@ -6,4 +6,5 @@ public interface IRoomTypeGetService
 {
     Task<List<RoomTypeResponse>> GetAllRoomTypes();
     Task<RoomTypeResponse?> GetRoomTypeById(Guid? roomTypeId);
+    Task<RoomTypeResponse?> GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(Guid roomTypeId);
 }

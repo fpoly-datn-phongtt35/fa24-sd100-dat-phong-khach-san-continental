@@ -81,6 +81,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
         public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
         public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
+        public const string SP_GetAmenityRoomsByRoomTypeId = "SP_GetAmenityRoomsByRoomTypeId";
         // Voucher
         public const string SP_InsertVoucher = "SP_InsertVoucher";
         public const string SP_GetListVoucher = "SP_GetListVoucher";
@@ -98,5 +99,30 @@ namespace Utilities.StoredProcedure
         public const string SP_GetPostTypeById = "SP_GetPostTypeById";
         public const string SP_UpdatePostType = "SP_UpdatePostType";
         public const string SP_DeletePostType = "SP_DeletePostType";
+        // RoomTypeService
+        public const string SP_InsertRoomTypeService = "SP_InsertRoomTypeService";
+        public const string SP_GetAllRoomTypeServices = "SP_GetAllRoomTypeServices";
+        public const string SP_GetRoomTypeServiceById = "SP_GetRoomTypeServiceById";
+        public const string SP_UpdateRoomTypeService = "SP_UpdateRoomTypeService";
+        public const string SP_DeleteRoomTypeService = "SP_DeleteRoomTypeService";
+        public const string SP_GetRoomTypeServicesByRoomTypeId = "SP_GetRoomTypeServicesByRoomTypeId";
+        //Staff 
+        public const string SP_GetAllStaff = "SP_GetStaffList";
+        public const string SP_CreateStaff = "SP_InsertStaff";
+        public const string SP_DeleteStaff = "SP_DeleteStaff";
+        public const string SP_UpdateStaff = "SP_UpdateStaff";
+        public const string SP_GetStaffById = "SP_GetStaffById";
+        // Role
+        public const string SP_InsertRole = "SP_InsertRole";
+        public const string SP_GetAllRole = "SP_GetAllRole";
+        public const string SP_GetRoleById = "SP_GetRoleById";
+        public const string SP_UpdateRole = "SP_UpdateRole";
+        public const string SP_DeleteRole = "SP_DeleteRole";
+        //Post
+        public const string SP_InsertPost = "SP_InsertPost";
+        public const string SP_GetAllPost = "SP_GetAllPost";
+        public const string SP_GetPostById = "SP_GetPostById";
+        public const string SP_UpdatePost = "SP_UpdatePost";
+        public const string SP_DeletePost = "SP_DeletePost";
     }
 }
