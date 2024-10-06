@@ -19,11 +19,15 @@ namespace View.Controllers
         {
             _httpClient = new HttpClient();
         }
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string? search)
         {
             string requestURL = "https://localhost:7130/api/Staff/GetListStaff";
-
-            var staffRequest = new StaffGetRequest();
+            var staffRequest = new StaffGetRequest()
+            {
+                PageIndex = 1,
+                PageSize = 50,
+                search = search
+            }; ;
 
             var jsonRequest = JsonConvert.SerializeObject(staffRequest);
 
