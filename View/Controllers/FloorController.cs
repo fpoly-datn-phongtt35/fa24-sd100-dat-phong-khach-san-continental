@@ -1,8 +1,6 @@
 ﻿using Domain.DTO.Building;
 using Domain.DTO.Floor;
 using Domain.DTO.Paging;
-using Domain.DTO.Service;
-using Domain.DTO.ServiceType;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,45 +19,40 @@ namespace View.Controllers
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string Name = null, Guid? BuildingId = null, EntityStatus? status = null,int? numberofroom=null)
         {
-            // api url
             string requestUrl = "api/Floor/GetListFloor";
 
-            var request = new FloorGetRequest();
-
-            // comvert request to json
-            var jsonRequest = JsonConvert.SerializeObject(request); //chuyển đối tượng thành json
-
-            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json"); //nội để gửi lên api
+            var request = new FloorGetRequest { 
+                PageIndex= pageIndex,
+                PageSize= pageSize,
+                Name= Name,
+                BuildingId= BuildingId,
+                Status= status,
+                NumberOfRoom= numberofroom
+            };
+            var jsonRequest = JsonConvert.SerializeObject(request);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             try
             {
-                // gửi request lên api
                 var response = await _client.PostAsync(requestUrl, content);
-
-                // đọc nội dung trả về từ api
                 var responseString = await response.Content.ReadAsStringAsync();
+                var floors = JsonConvert.DeserializeObject<ResponseData<Floor>>(responseString);
+                string buildingrequestUrl = "api/Building/GetListBuilding";
+                var buildingRequest = new BuildingGetRequest();
+                var buildingJsonRequest = JsonConvert.SerializeObject(buildingRequest);
+                var buildingContent = new StringContent(buildingJsonRequest, Encoding.UTF8, "application/json");
 
-                // chuyển đổi lại thành respondata 
-                var services = JsonConvert.DeserializeObject<ResponseData<Floor>>(responseString);
+                var buildingResponse = await _client.PostAsync(buildingrequestUrl, buildingContent);
 
-                string serviceTyperequestUrl = "api/Building/GetListBuilding";
+                var buildingResponseString = await buildingResponse.Content.ReadAsStringAsync();
 
-                var serviceTypeRequest = new BuildingGetRequest();
+                var building = JsonConvert.DeserializeObject<ResponseData<Building>>(buildingResponseString);
 
-                var serviceTypeJsonRequest = JsonConvert.SerializeObject(serviceTypeRequest);
-                var serviceTypeContent = new StringContent(serviceTypeJsonRequest, Encoding.UTF8, "application/json");
-
-                var serviceTypeResponse = await _client.PostAsync(serviceTyperequestUrl, serviceTypeContent);
-
-                var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
-
-                var serviceTypes = JsonConvert.DeserializeObject<ResponseData<Building>>(serviceTypeResponseString);
-
-                ViewBag.BuildingList = serviceTypes.data;
-
-                return View(services);
+                ViewBag.BuildingList = building.data;
+                ViewBag.StatusList = Enum.GetValues(typeof(EntityStatus));
+                return View(floors);
             }
             catch (Exception ex)
             {

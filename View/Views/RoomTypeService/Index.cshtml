@@ -8,16 +8,22 @@
 
 @{
     ViewData["Title"] = "Index";
-    // Lấy danh sách Amenities và RoomTypes từ ViewBag
-    // var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
-    // var serviceList = ViewBag.ServiceList as List<Service>;
 }
 
 <h1>Danh sách dịch vụ loại phòng</h1>
 
+<form method="get" asp-action="Index" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="search" class="form-control" placeholder="Nhập dịch vụ hoặc loại phòng"
+               value="@ViewContext.HttpContext.Request.Query["search"]" />
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+</form>
+
 <p>
-    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+    <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
 </p>
+
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
@@ -31,11 +37,7 @@
     <tbody>
     @foreach (var item in Model)
     {
-        // var roomTypeName = roomTypes?.FirstOrDefault(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type";
-        // var serviceName = serviceList?.FirstOrDefault(s => s.Id == item.ServiceId)?.Name ?? "Unknown Service";
         <tr>
-            @* <td>@roomTypeName</td> *@
-            @* <td>@serviceName</td> *@
             <td>
                 @{
                 var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
@@ -46,9 +48,9 @@
             <td>
                 @{
                 var services = ViewBag.ServiceList as List<Service>;
-                var serivcee = services?.FirstOrDefault(a => a.Id == item.ServiceId);
+                var service = services?.FirstOrDefault(a => a.Id == item.ServiceId);
                 }
-                @serivcee?.Name
+                @service?.Name
             </td>
             <td>@Html.DisplayFor(modelItem => item.Amount)</td>
             <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>

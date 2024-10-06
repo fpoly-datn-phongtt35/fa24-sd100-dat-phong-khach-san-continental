@@ -4,7 +4,7 @@ namespace Domain.Repositories.IRepository;
 
 public interface IAmenityRoomRepository
 {
-    Task<List<AmenityRoom>> GetAllAmenityRooms();
+    Task<List<AmenityRoom>> GetAllAmenityRooms(string? search);
     Task<AmenityRoom?> GetAmenityRoomById(Guid amenityRoomId);
     Task<AmenityRoom> AddAmenityRoom(AmenityRoom amenityRoom);
     Task<AmenityRoom?> UpdateAmenityRoom(AmenityRoom amenityRoom);

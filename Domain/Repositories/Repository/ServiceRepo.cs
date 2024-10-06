@@ -79,7 +79,12 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@PageSize", request.PageSize),
-                    new SqlParameter("@PageIndex", request.PageIndex)
+                    new SqlParameter("@PageIndex", request.PageIndex),
+                    new SqlParameter("@Name", request.Name),
+                    new SqlParameter("@ServiceTypeId", request.ServiceTypeId),
+                    new SqlParameter("@MinPrice", request.MinPrice),
+                    new SqlParameter("@MaxPrice", request.MaxPrice),
+                    new SqlParameter("@Status", request.Status)
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListService, sqlParameters);
@@ -99,37 +104,13 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Id", id != null ? id : DBNull.Value ),
                 };
 
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetServiceById, sqlParameters);
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListService, sqlParameters);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-
-        public async Task<DataTable> GetServiceByTypeId(ServiceGetRequest request, Guid serviceTypeId)
-        {
-            try
-            {
-                SqlParameter[] sqlParameters = new SqlParameter[]
-                {
-            new SqlParameter("@ServiceTypeId", serviceTypeId),
-            new SqlParameter("@PageSize", request.PageSize),
-            new SqlParameter("@PageIndex", request.PageIndex)
-                };
-
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetServiceByTypeId, sqlParameters);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-
-
-
 
 
         public async Task<int> UpdateService(ServiceUpdateRequest request)

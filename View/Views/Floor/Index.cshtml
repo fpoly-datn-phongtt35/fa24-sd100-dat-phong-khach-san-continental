@@ -24,6 +24,47 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Name" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
+
+        <select name="BuildingId" id="BuildingId" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Building --</option>
+            @foreach (var building in ViewBag.BuildingList)
+            {
+                <option value="@building.Id"
+                        selected="@(building.Id.ToString() == Context.Request.Query["BuildingId"])">
+                    @building.Name
+                </option>
+            }
+        </select>
+
+
+        <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Status --</option>
+            @foreach (var status in ViewBag.StatusList)
+            {
+                <option value="@((int)status)"
+                        selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @status
+                </option>
+            }
+        </select>
+        <input type="number" name="numberofroom" id="numberofroom" class="form-control" value="@Context.Request.Query["numberofroom"]" placeholder="Number of room" style="max-width: 100px;" />
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('Name').value = '';
+        document.getElementById('BuildingId').selectedIndex = 0;
+        document.getElementById('status').selectedIndex = 0;
+        document.getElementById('numberofroom').value = '';
+    }
+</script>
+
 <table class="table">
     <thead>
         <tr>
@@ -43,10 +84,10 @@
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>
                     @{
-                        var serviceTypeList = ViewBag.BuildingList as List<Domain.Models.Building>;
-                        var serviceType = serviceTypeList?.FirstOrDefault(s => s.Id == item.BuildingId);
+                        var buildingList = ViewBag.BuildingList as List<Domain.Models.Building>;
+                        var building = buildingList?.FirstOrDefault(s => s.Id == item.BuildingId);
                     }
-                    @serviceType.Name
+                    @building.Name
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
@@ -58,15 +99,24 @@
     </tbody>
 </table>
 
+
 <div>
     <nav>
         <ul class="pagination">
             @for (var i = 1; i <= Model.totalPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        numberofroom = Context.Request.Query["numberofroom"].ToString(),
+                        Name = Context.Request.Query["Name"].ToString(),
+                        BuildingId = Context.Request.Query["BuildingId"].ToString(),
+                        status = Context.Request.Query["status"].ToString()
+                    })">@i</a>
                 </li>
             }
         </ul>
     </nav>
 </div>
+

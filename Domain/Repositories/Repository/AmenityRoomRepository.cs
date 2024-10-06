@@ -19,18 +19,32 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         _configuration = configuration;
     }
 
-    public async Task<List<AmenityRoom>> GetAllAmenityRooms()
+    public async Task<List<AmenityRoom>> GetAllAmenityRooms(string? search)
     {
         try
         {
             var amenityRooms = new List<AmenityRoom>();
-            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAllAmenityRooms, null);
+            SqlParameter[] parameters = null;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" }
+                };
+            }
+
+            var dataTable = await _worker.GetDataTableAsync
+            (!string.IsNullOrEmpty(search) ? 
+                    StoredProcedureConstant.SP_GetAllAmenityRoomsWithSearch : 
+                    StoredProcedureConstant.SP_GetAllAmenityRooms, parameters);
 
             foreach (DataRow row in dataTable.Rows)
             {
                 var amenityRoom = ConvertDataRowToAmenityRoom(row);
                 amenityRooms.Add(amenityRoom);
             }
+
             return amenityRooms;
         }
         catch (Exception e)
@@ -47,15 +61,15 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoomId }
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAmenityRoomById, parameters);
 
             if (dataTable.Rows.Count == 0)
                 return null;
-            
+
             var row = dataTable.Rows[0];
             var amenityRoom = ConvertDataRowToAmenityRoom(row);
-            
+
             return amenityRoom;
         }
         catch (Exception e)
@@ -80,7 +94,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.DeletedTime }
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertAmenityRoom, parameters);
 
             return amenityRoom;
@@ -101,7 +115,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 throw new Exception("There is no amenity room with the provided Id.");
             }
-            
+
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
@@ -113,7 +127,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.ModifiedBy }
             };
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateAmenityRoom, parameters);
-            
+
             return await existingAmenityRoom;
         }
         catch (Exception e)
@@ -131,7 +145,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 throw new Exception("There is no amenity room with the provided Id.");
             }
-            
+
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
@@ -140,9 +154,9 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.DeletedBy },
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_DeleteAmenityRoom, parameters);
-            
+
             return await existingAmenityRoom;
         }
         catch (Exception e)
@@ -169,13 +183,14 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             DeletedBy = ConvertGuidToString(row, "DeletedBy")
         };
     }
-    
+
     private static DateTimeOffset ConvertDateTimeOffsetToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)
         {
             return DateTimeOffset.Parse(row[columnName].ToString()!);
         }
+
         return DateTimeOffset.MinValue;
     }
 
@@ -185,6 +200,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         {
             return Guid.Parse(row[columnName].ToString()!);
         }
+
         return null;
     }
 }

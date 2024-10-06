@@ -13,9 +13,9 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         _amenityRoomRepository = amenityRoomRepository;
     }
 
-    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms()
+    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms(string? search)
     {
-        var amenityRooms = await _amenityRoomRepository.GetAllAmenityRooms();
+        var amenityRooms = await _amenityRoomRepository.GetAllAmenityRooms(search);
 
         var amenityRoomsResponse = amenityRooms
             .Select(amenityRoom => amenityRoom.ToAmenityRoomResponse())
@@ -23,7 +23,7 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         
         return amenityRoomsResponse;
     }
-
+    
     public async Task<AmenityRoomResponse?> GetAmenityRoomById(Guid? amenityRoomId)
     {
         if (amenityRoomId == null) return null;
