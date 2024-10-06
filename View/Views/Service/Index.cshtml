@@ -11,11 +11,11 @@
     }
 
     .table th, .table td {
-        color: white; 
+        color: white;
     }
 
     h1 {
-        color: white; 
+        color: white;
     }
 </style>
 
@@ -24,11 +24,58 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="serviceName" name="serviceName" class="form-control me-2" placeholder="Service Name" value="@Context.Request.Query["serviceName"]" style="max-width: 200px;" />
+
+        <select name="serviceTypeId" id="serviceTypeId" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Service Types --</option>
+            @foreach (var serviceType in ViewBag.ServiceTypeList)
+            {
+                <option value="@serviceType.Id"
+                        selected="@(serviceType.Id.ToString() == Context.Request.Query["serviceTypeId"])">
+                    @serviceType.Name
+                </option>
+            }
+        </select>
+
+
+        <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Status --</option>
+            @foreach (var status in ViewBag.StatusList)
+            {
+                <option value="@((int)status)"
+                        selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @status
+                </option>
+            }
+        </select>
+
+        <input type="number" name="minPrice" id="minPrice" class="form-control" value="@Context.Request.Query["minPrice"]" placeholder="Min Price" style="max-width: 100px;" />
+        <input type="number" name="maxPrice" id="maxPrice" class="form-control" value="@Context.Request.Query["maxPrice"]" placeholder="Max Price" style="max-width: 100px;" />
+
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('serviceName').value = '';
+        document.getElementById('serviceTypeId').selectedIndex = 0; 
+        document.getElementById('status').selectedIndex = 0; 
+        document.getElementById('minPrice').value = '';
+        document.getElementById('maxPrice').value = '';
+    }
+</script>
+
+
 <table class="table">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.data.First().Name)</th>
-            <th>ServiceType Name</th>
+            <th>ServiceType</th>
             <th>@Html.DisplayNameFor(model => model.data.First().Description)</th>
             <th>@Html.DisplayNameFor(model => model.data.First().Price)</th>
             <th>@Html.DisplayNameFor(model => model.data.First().Unit)</th>
@@ -68,9 +115,20 @@
             @for (var i = 1; i <= Model.totalPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        serviceName = Context.Request.Query["serviceName"].ToString(),
+                        serviceTypeId = Context.Request.Query["serviceTypeId"].ToString(),
+                        status = Context.Request.Query["status"].ToString(),
+                        minPrice = Context.Request.Query["minPrice"].ToString(),
+                        maxPrice = Context.Request.Query["maxPrice"].ToString()
+                    })">@i</a>
                 </li>
             }
         </ul>
     </nav>
 </div>
+
+
+
