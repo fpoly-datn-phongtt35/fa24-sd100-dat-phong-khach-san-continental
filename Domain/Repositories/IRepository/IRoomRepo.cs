@@ -9,7 +9,7 @@ namespace Domain.Repositories.IRepository
 {
     public interface IRoomRepo
     {
-        Task<List<Room>> GetAllRooms();
+        Task<List<Room>> GetAllRooms(string? search);
         Task<Room?> GetRoomById(Guid RoomId);
         Task<Room> AddRoom(Room Room);
         Task<Room?> UpdateRoom(Room Room);

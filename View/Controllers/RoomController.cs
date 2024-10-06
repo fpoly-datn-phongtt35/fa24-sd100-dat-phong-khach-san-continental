@@ -60,9 +60,9 @@ namespace View.Controllers
             }
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-             string roomsRequestUrl = "/api/Room/GetAllRooms";
+             string roomsRequestUrl = $"/api/Room/GetAllRooms?search={search}";
 
             try
             {
@@ -84,12 +84,7 @@ namespace View.Controllers
                 var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(FloorResponseString);
                 ViewBag.FloorList = floorList.data;
 
-
-                //var roomtypeRequest = new FloorGetRequest();
-                //var roomtypeJsonRequest = JsonConvert.SerializeObject(roomtypeRequest);
-                //var roomtypeContent = new StringContent(roomtypeJsonRequest, Encoding.UTF8, "application/json");
-                //var roomtypeResponse = await _httpClient.PostAsync(roomTypesRequestUrl, roomtypeContent);
-                string roomTypesRequestUrl = "/api/RoomType/GetAllRoomTypes"; // URL để lấy danh sách loại phòng
+                string roomTypesRequestUrl = "/api/RoomType/GetAllRoomTypes";
                 var roomTypeList = await SendHttpRequest<List<RoomTypeResponse>>(roomTypesRequestUrl, HttpMethod.Post);
 
                 if (roomTypeList == null)

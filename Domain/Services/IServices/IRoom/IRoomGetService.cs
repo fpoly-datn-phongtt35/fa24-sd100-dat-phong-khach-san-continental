@@ -10,7 +10,7 @@ namespace Domain.Services.IServices.IRoom
 {
     public interface IRoomGetService
     {
-        Task<List<RoomResponse>> GetAllRooms();
+        Task<List<RoomResponse>> GetAllRooms(string? search);
         Task<RoomResponse?> GetRoomById(Guid? roomId);
     }
 }

@@ -1,9 +1,13 @@
 ﻿@using System.Diagnostics
+@using Domain.DTO.Floor
+@using Domain.DTO.RoomType
 @using Domain.Enums
 @model System.Collections.Generic.List<Domain.DTO.Room.RoomResponse>
 
 @{
     ViewData["Title"] = "Index";
+    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+    var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
 }
 
 <h1>Danh sách Room</h1>
@@ -11,6 +15,13 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
 </p>
+<form method="get" asp-action="Index" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="search" class="form-control" placeholder="Nhập tên..."
+               value="@ViewContext.HttpContext.Request.Query["search"]" />
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+</form>
 <table class="table" style="color: whitesmoke">
     <thead>
         <tr>
@@ -49,19 +60,19 @@
                         }
                     </div>
                 </td>
-                <td>
-                    @{
-                        var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
-                        var floor = floorList?.FirstOrDefault(s => s.Id == item.FloorId);
-                    }
-                    @floor.Name
-                </td>
+                
                 <td>
                     @{
                         var roomtypeList = ViewBag.RoomTypeList as List<Domain.Models.RoomType>;
                         var roomtype = roomtypeList?.FirstOrDefault(s => s.Id == item.RoomTypeId);
                     }
                     @(roomtype != null ? roomtype.Name : "Không có loại phòng")
+                </td>
+                <td>
+                    @{
+                        var floor = floorList?.FirstOrDefault(s => s.Id == item.FloorId);
+                    }
+                    @floor.Name
                 </td>
 
                 <td>@Html.DisplayFor(modelItem=>item.Status)</td>

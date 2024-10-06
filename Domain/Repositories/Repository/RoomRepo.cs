@@ -24,12 +24,23 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
         }
 
-        public async Task<List<Room>> GetAllRooms()
+        public async Task<List<Room>> GetAllRooms(string? search)
         {
             try
             {
                 var rooms = new List<Room>();
-                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetListRoom, null);
+                SqlParameter[] parameters = null;
+                if (!string.IsNullOrEmpty(search))
+                {
+                    parameters = new SqlParameter[]
+                    {
+                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" }
+                    };
+                }
+                var dataTable = await _worker.GetDataTableAsync
+                (!string.IsNullOrEmpty(search) ?
+                        StoredProcedureConstant.SP_GetListRoomWithSearch :
+                        StoredProcedureConstant.SP_GetListRoom, parameters);
 
                 foreach (DataRow row in dataTable.Rows)
                 {
@@ -40,7 +51,7 @@ namespace Domain.Repositories.Repository
             }
             catch (Exception e)
             {
-                throw new ArgumentNullException("An error occurred while getting all room types", e);
+                throw new ArgumentNullException("An error occurred while getting all room", e);
             }
         }
 
