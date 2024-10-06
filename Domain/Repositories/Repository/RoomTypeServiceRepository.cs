@@ -19,12 +19,25 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         _configuration = configuration;
     }
 
-    public async Task<List<RoomTypeService>> GetAllRoomTypeServices()
+    public async Task<List<RoomTypeService>> GetAllRoomTypeServices(string? search)
     {
         try
         {
             var roomTypeServices = new List<RoomTypeService>();
-            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAllRoomTypeServices, null);
+            SqlParameter[] parameters = null;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" }
+                };
+            }
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (!string.IsNullOrEmpty(search) ?
+                    StoredProcedureConstant.SP_GetAllRoomTypeServicesWithSearch :
+                    StoredProcedureConstant.SP_GetAllRoomTypeServices, parameters);
 
             foreach (DataRow row in dataTable.Rows)
             {

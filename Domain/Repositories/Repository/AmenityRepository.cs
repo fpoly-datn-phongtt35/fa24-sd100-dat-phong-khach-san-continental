@@ -108,13 +108,25 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public async Task<List<Amenity>> GetAllAmenities()
+    public async Task<List<Amenity>> GetAllAmenities(string? search)
     {
         try
         {
             var amenities = new List<Amenity>();
-            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAllAmenities, null);
-
+            SqlParameter[] parameters = null;
+            
+            if (!string.IsNullOrEmpty(search))
+            {
+                parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@Search", SqlDbType.NVarChar) { Value = $"%{search}%" },
+                };
+            }
+            var dataTable = await _worker.GetDataTableAsync
+                (!string.IsNullOrEmpty(search) ? 
+                    StoredProcedureConstant.SP_GetAllAmenitiesWithSearch : 
+                    StoredProcedureConstant.SP_GetAllAmenities, parameters);
+            
             foreach (DataRow row in dataTable.Rows)
             {
                 var amenity = ConvertDataRowToAmenity(row);
@@ -129,7 +141,7 @@ public class AmenityRepository : IAmenityRepository
             throw new Exception("An error occurred while getting all amenities", e);
         }
     }
-
+    
     public async Task<Amenity?> GetAmenityById(Guid amenityId)
     {
         try
@@ -194,7 +206,7 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    private Amenity ConvertDataRowToAmenity(DataRow row)
+    public Amenity ConvertDataRowToAmenity(DataRow row)
     {
         return new Amenity()
         {

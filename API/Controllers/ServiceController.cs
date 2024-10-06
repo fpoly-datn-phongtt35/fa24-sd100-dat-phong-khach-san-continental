@@ -58,21 +58,6 @@ namespace API.Controllers
             }
         }
 
-        //[HttpPost("GetServiceByTypeId")]
-        //public async Task<ResponseData<Service>> GetServiceByTypeId([FromBody] ServiceGetRequest request, [FromQuery] Guid serviceTypeId)
-        //{
-        //    try
-        //    {
-        //        return await _serviceSV.GetServiceByTypeId(request, serviceTypeId);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
-
-
 
         [HttpPut("UpdateService")]
         public async Task<int> UpdateService(ServiceUpdateRequest request)
