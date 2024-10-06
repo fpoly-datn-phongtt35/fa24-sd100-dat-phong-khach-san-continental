@@ -19,33 +19,28 @@ namespace View.Controllers
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5,string name=null, EntityStatus? status = null)
         {
             // api url
             string requestUrl = "https://localhost:7130/api/Building/GetListBuilding";
 
             var request = new BuildingGetRequest
             {
-                PageIndex = 1,
-                PageSize = 10
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Name = name,
+                Status = status
             };
 
-            // comvert request to json
             var jsonRequest = JsonConvert.SerializeObject(request);
-
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             try
             {
-                // send request den api
                 var response = await _client.PostAsync(requestUrl, content);
-
-                // doc ket qua tu api
                 var responseString = await response.Content.ReadAsStringAsync();
-
-                // convert json to respondata 
                 var services = JsonConvert.DeserializeObject<ResponseData<Building>>(responseString);
-
+                ViewBag.StatusList = Enum.GetValues(typeof(EntityStatus));
                 return View(services);
             }
             catch (Exception ex)

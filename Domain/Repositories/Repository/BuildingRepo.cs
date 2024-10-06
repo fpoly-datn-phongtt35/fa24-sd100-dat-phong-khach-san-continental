@@ -67,7 +67,8 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Name", !string.IsNullOrEmpty(Search.Name) ? Search.Name : DBNull.Value),
+                    new SqlParameter("@Status", Search.Status),
+                    new SqlParameter("@Name", Search.Name),
                     new SqlParameter("@PageSize", Search.PageSize),
                     new SqlParameter("@PageIndex", Search.PageIndex)
                 };
