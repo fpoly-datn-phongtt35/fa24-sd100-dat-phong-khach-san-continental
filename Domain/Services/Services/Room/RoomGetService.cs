@@ -19,9 +19,9 @@ namespace Domain.Services.Services.Room
             _roomRepository = roomRepository;
         }
 
-        public async Task<List<RoomResponse>> GetAllRooms()
+        public async Task<List<RoomResponse>> GetAllRooms(string? search)
         {
-            var rooms = await _roomRepository.GetAllRooms();
+            var rooms = await _roomRepository.GetAllRooms(search);
 
             var roomsResponse = rooms
                 .Select(room => room.ToRoomResponse())

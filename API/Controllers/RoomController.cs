@@ -56,11 +56,11 @@ namespace API.Controllers
         }
 
         [HttpPost(nameof(GetAllRooms))]
-        public async Task<List<RoomResponse>> GetAllRooms()
+        public async Task<List<RoomResponse>> GetAllRooms(string? search)
         {
             try
             {
-                return await _roomGetService.GetAllRooms();
+                return await _roomGetService.GetAllRooms(search);
             }
             catch (Exception e)
             {
@@ -93,5 +93,6 @@ namespace API.Controllers
                 throw new Exception(e.Message);
             }
         }
+        
     }
 }
