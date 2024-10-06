@@ -13,9 +13,9 @@ public class AmenityGetService : IAmenityGetService
         _amenityRepository = amenityRepository;
     }
     
-    public async Task<List<AmenityResponse>> GetAllAmenities()
+    public async Task<List<AmenityResponse>> GetAllAmenities(string? search)
     {
-        var amenities = await _amenityRepository.GetAllAmenities();
+        var amenities = await _amenityRepository.GetAllAmenities(search);
 
         var amenityResponses = amenities
             .Select(amenity => amenity.ToAmenityResponse())

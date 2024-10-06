@@ -51,11 +51,11 @@ public class AmenityRoomController : Controller
     }
     
     [HttpPost(nameof(GetAllAmenityRooms))]
-    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms()
+    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms(string? search)
     {
         try
         {
-            return await _amenityRoomGetService.GetAllAmenityRooms();
+            return await _amenityRoomGetService.GetAllAmenityRooms(search);
         }
         catch (Exception e)
         {

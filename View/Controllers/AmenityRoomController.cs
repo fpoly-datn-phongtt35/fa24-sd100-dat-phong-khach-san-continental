@@ -78,11 +78,11 @@ public class AmenityRoomController : Controller
         ViewBag.Amenities = await amenitiesTask;
         ViewBag.RoomTypes = await roomTypesTask;
     }
-    
-    public async Task<IActionResult> Index()
+
+    public async Task<IActionResult> Index(string? search)
     {
         await LoadAmenitiesAndRoomTypes();
-        const string requestUrl = "AmenityRoom/GetAllAmenityRooms";
+        string requestUrl = $"AmenityRoom/GetAllAmenityRooms?search={search}";
         
         var amenityRooms = await SendHttpRequest<List<AmenityRoomResponse>>(requestUrl, HttpMethod.Post);
         if(amenityRooms != null)
@@ -90,7 +90,7 @@ public class AmenityRoomController : Controller
         
         return View("Error");
     }
-
+    
     public async Task<IActionResult> Details(Guid amenityRoomId)
     {
         await LoadAmenitiesAndRoomTypes();

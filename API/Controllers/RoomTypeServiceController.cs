@@ -25,7 +25,8 @@ public class RoomTypeServiceController : Controller
     }
 
     [HttpPost(nameof(AddRoomTypeService))]
-    public async Task<RoomTypeServiceResponse> AddRoomTypeService(RoomTypeServiceAddRequest roomTypeServiceAddRequest)
+    public async Task<RoomTypeServiceResponse> AddRoomTypeService
+        (RoomTypeServiceAddRequest roomTypeServiceAddRequest)
     {
         try
         {
@@ -51,11 +52,11 @@ public class RoomTypeServiceController : Controller
     }
     
     [HttpPost(nameof(GetAllRoomTypeServices))]
-    public async Task<List<RoomTypeServiceResponse>> GetAllRoomTypeServices()
+    public async Task<List<RoomTypeServiceResponse>> GetAllRoomTypeServices(string? search)
     {
         try
         {  
-            return await _roomTypeServiceGetService.GetAllRoomTypeServices();
+            return await _roomTypeServiceGetService.GetAllRoomTypeServices(search);
         }
         catch (Exception e)
         {

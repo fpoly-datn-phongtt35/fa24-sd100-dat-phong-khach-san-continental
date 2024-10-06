@@ -1,14 +1,10 @@
-﻿@using View.Views.Shared.Helper
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
 @model Domain.DTO.RoomType.RoomTypeResponse
 
-@{
-    ViewData["Title"] = "Details";
-}
-
-<h4>Chi tiết loại phòng</h4>
-
 <div>
-    <hr/>
+    <h2>Chi tiết Loại @Model.Name</h2>
+    <hr />
     <dl class="row">
         <dt class="col-sm-2">@Html.DisplayName("Tên loại phòng")</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
@@ -34,8 +30,68 @@
         <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
     </dl>
 </div>
+
 <div>
-    @Html.ActionLink("Sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
+    <hr />
+    <h3>Danh sách tiện ích của @Model.Name</h3>
+    @if (Model.AmenityRooms != null && Model.AmenityRooms.Any())
+    {
+        <table class="table table-bordered" style="color: whitesmoke">
+            <thead>
+            <tr>
+                <th>Tên tiện ích </th>
+                <th>Số lượng</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var amenityRoom in Model.AmenityRooms
+                          .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
+            {
+                <tr>
+                    <td>@amenityRoom.Amenity.Name</td>
+                    <td>@amenityRoom.Amount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Phòng này hiện không có tiện ích nào được liên kết.</p>
+    }
+</div>
+
+<div>
+    <hr />
+    <h3>Danh sách dịch vụ của @Model.Name</h3>
+    @if (Model.RoomTypeServices != null && Model.RoomTypeServices.Any())
+    {
+        <table class="table table-bordered" style="color: whitesmoke">
+            <thead>
+            <tr>
+                <th>Tên dịch vụ </th>
+                <th>Số lượng</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var roomTypeService in Model.RoomTypeServices
+                          .Where(roomTypeService => roomTypeService.Status == EntityStatus.Active))
+            {
+                <tr>
+                    <td>@roomTypeService.Service.Name</td>
+                    <td>@roomTypeService.Amount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Phòng này hiện không có dịch vụ nào được liên kết.</p>
+    }
+</div>
+<div>
+    @Html.ActionLink("Sửa", "Edit", new { roomTypeId = Model.Id }, new { @class = "btn btn-warning" })
     <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
 </div>
 
