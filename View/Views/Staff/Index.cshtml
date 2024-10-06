@@ -22,6 +22,13 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form method="post" asp-action="Index" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="search" class="form-control" placeholder="Nhập tên..."
+               value="@ViewContext.HttpContext.Request.Query["search"]" />
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+</form>
 <table class="table">
     <thead>
         <tr>
