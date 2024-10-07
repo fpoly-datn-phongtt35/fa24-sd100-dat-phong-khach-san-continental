@@ -10,7 +10,7 @@ namespace Domain.Repositories.IRepository
         Task<int> AddCustomer(CustomerCreateRequest request);
         Task<int> UpdateCustomer(CustomerUpdateRequest request);
         Task<int> DeleteCustomer(CustomerDeleteRequest request);
-        Task<DataTable> GetAllCustomer(CustomerGetByUserNameRequest customer);
+        Task<DataTable> GetAllCustomer(CustomerGetRequest customer);
         Task<DataTable> GetCustomerById(Guid id);
     }
 }

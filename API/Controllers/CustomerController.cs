@@ -32,7 +32,7 @@ namespace API.Controllers
             }
         }
         [HttpPost("GetListCustomer")]
-        public async Task<ResponseData<Customer>> GetListCustomer(CustomerGetByUserNameRequest request)
+        public async Task<ResponseData<Customer>> GetListCustomer(CustomerGetRequest request)
         {
             try
             {
