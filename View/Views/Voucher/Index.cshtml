@@ -4,6 +4,31 @@
 @{
     ViewData["Title"] = "Index";
 }
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <select name="discountType" id="discountType" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Discount type --</option>
+            @foreach (var discountType in ViewBag.DiscountTypies)
+            {
+                <option value="@((int)discountType)"
+                        selected="@(Context.Request.Query["discountType"].ToString() == ((int)discountType).ToString())">
+                    @discountType
+                </option>
+            }
+        </select>
+
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('discountType').selectedIndex = 0;
+    }
+</script>
+
 <style>
     body {
         color: white;
@@ -90,7 +115,11 @@
             @for (var i = 1; i <= Model.totalPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        status = Context.Request.Query["discountType"].ToString()
+                    })">@i</a>
                 </li>
             }
         </ul>
