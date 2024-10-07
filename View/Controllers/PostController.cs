@@ -17,11 +17,17 @@ namespace View.Controllers
             _httpClient = new HttpClient();
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, string title = null, string contentOfPost = null)
         {
             string requestURL = "https://localhost:7130/api/Post/GetListPost";
 
-            var PostRequest = new PostGetRequest();
+            var PostRequest = new PostGetRequest
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Title = title,
+                Content = contentOfPost
+            };
 
             var jsonRequest = JsonConvert.SerializeObject(PostRequest);
 

@@ -26,7 +26,7 @@
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
         <input type="text" id="userName" name="userName" class="form-control me-2" placeholder="User Name" value="@Context.Request.Query["userName"]" style="max-width: 200px;" />
-        <input type="number" name="phoneNumber" id="phoneNumber" class="form-control me-2" value="@Context.Request.Query["phoneNumber"]" placeholder="Phone Number" style="max-width: 200px;" />
+        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control me-2" value="@Context.Request.Query["phoneNumber"]" placeholder="Phone Number" style="max-width: 200px;" />
         <input type="text" name="email" id="email" class="form-control me-2" value="@Context.Request.Query["email"]" placeholder="Email" style="max-width: 200px;" />
 
         <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
@@ -80,7 +80,7 @@
         }
     </tbody>
 </table>
-<div>
+<div class="d-flex justify-content-center">
     <nav>
         <ul class="pagination">
             @for (var i = 1; i <= Model.totalPage; i++)
