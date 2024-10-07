@@ -117,7 +117,8 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                //new SqlParameter("@Title", !string.IsNullOrEmpty(Post.Title) ? Post.Title : DBNull.Value),
+                new SqlParameter("@Title", Post.Title),
+                new SqlParameter("@Content", Post.Content),
                 new SqlParameter("@PageSize", Post.PageSize),
                 new SqlParameter("@PageIndex", Post.PageIndex)
                 };
