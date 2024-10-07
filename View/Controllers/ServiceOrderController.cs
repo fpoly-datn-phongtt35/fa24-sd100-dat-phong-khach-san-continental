@@ -21,11 +21,16 @@ namespace View.Controllers
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
         // GET: ServiceOrderController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null)
         {
             string requestUrl = "https://localhost:7130/api/ServiceOrder/GetListServiceOrders";
 
             var request = new ServiceOrderGetRequest();
+            //{
+            //    PageIndex = pageIndex,
+            //    PageSize = pageSize,
+            //    RoomBookingId = roomBookingId
+            //};
 
             var jsonRequest = JsonConvert.SerializeObject(request);
             

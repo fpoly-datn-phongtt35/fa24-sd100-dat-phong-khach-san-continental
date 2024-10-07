@@ -18,13 +18,20 @@ namespace View.Controllers
 			_httpClient = new HttpClient();
 		}
 
-		public async Task<ActionResult> Index()
+		public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 5, DiscountType? discountType = null)
 		{
 			string requestURL = "https://localhost:7130/api/Voucher/GetListVoucher";
 
-			var voucher = new VoucherGetRequest();
+			var voucher = new VoucherGetRequest
+			{
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                DiscountType = discountType
+            };
 
-			var jsonRequest = JsonConvert.SerializeObject(voucher);
+            ViewBag.DiscountTypies = Enum.GetValues(typeof(DiscountType));
+
+            var jsonRequest = JsonConvert.SerializeObject(voucher);
 
 			var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 			try
