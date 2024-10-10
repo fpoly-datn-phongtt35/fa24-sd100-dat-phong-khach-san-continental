@@ -10,7 +10,7 @@ namespace Domain.Services.IServices
         Task<int> AddCustomer(CustomerCreateRequest request);
         Task<int> UpdateCustomer(CustomerUpdateRequest request);
         Task<int> DeleteCustomer(CustomerDeleteRequest request);
-        Task<ResponseData<Customer>> GetAllCustomer(CustomerGetByUserNameRequest customer);
+        Task<ResponseData<Customer>> GetAllCustomer(CustomerGetRequest customer);
         Task<Customer> GetCustomerById(Guid Id);
     }
 }

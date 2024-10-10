@@ -5,6 +5,6 @@ namespace Domain.DTO.PostType
 {
     public class PostTypeGetRequest : PagingRequest
     {
-        public string TitleOfType { get; set; } = string.Empty;
+        public string? TitleOfType { get; set; }
     }
 }

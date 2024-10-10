@@ -116,13 +116,15 @@ namespace Domain.Repositories.Repository
         }
 
 
-        public async Task<DataTable> GetAllCustomer(CustomerGetByUserNameRequest customer)
+        public async Task<DataTable> GetAllCustomer(CustomerGetRequest customer)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                //new SqlParameter("@UserName", !string.IsNullOrEmpty(customer.UserName) ? customer.UserName : DBNull.Value),
+                new SqlParameter("@UserName", customer.UserName),
+                new SqlParameter("Email", customer.Email),
+                new SqlParameter("PhoneNumber", customer.PhoneNumber),
                 new SqlParameter("@PageSize", customer.PageSize),
                 new SqlParameter("@PageIndex", customer.PageIndex)
                 };

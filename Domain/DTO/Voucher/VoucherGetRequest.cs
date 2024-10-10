@@ -5,6 +5,6 @@ namespace Domain.DTO.Voucher
 {
 	public class VoucherGetRequest : PagingRequest
 	{
-		public DiscountType DiscountType { get; set; }
+		public DiscountType? DiscountType { get; set; }
 	}
 }

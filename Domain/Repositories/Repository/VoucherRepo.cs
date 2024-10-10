@@ -71,7 +71,7 @@ namespace Domain.Repositories.Repository
 			{
 				SqlParameter[] sqlParameters = new SqlParameter[]
 				{
-				//new SqlParameter("@DiscountType", Voucher.DiscountType != null ? (int)Voucher.DiscountType : (object)DBNull.Value),
+				new SqlParameter("@DiscountType", Voucher.DiscountType != null ? (int)Voucher.DiscountType : (object)DBNull.Value),
 				new SqlParameter("@PageSize", Voucher.PageSize),
 				new SqlParameter("@PageIndex", Voucher.PageIndex)
 				};

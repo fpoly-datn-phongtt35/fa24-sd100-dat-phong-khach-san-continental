@@ -6,6 +6,8 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Protocol;
+using System.Drawing.Printing;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,11 +22,18 @@ namespace View.Controllers
             _httpClient = new HttpClient();
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, string userName = null, string email = null, string phoneNumber = null)
         {
             string requestURL = "https://localhost:7130/api/Customer/GetListCustomer";
 
-            var customerRequest = new CustomerGetByUserNameRequest();
+            var customerRequest = new CustomerGetRequest
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                UserName = userName,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
 
             var jsonRequest = JsonConvert.SerializeObject(customerRequest);
 

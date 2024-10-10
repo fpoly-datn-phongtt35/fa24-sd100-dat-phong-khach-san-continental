@@ -44,7 +44,7 @@ namespace Domain.Services.Services
             }
         }
 
-        public async Task<ResponseData<Customer>> GetAllCustomer(CustomerGetByUserNameRequest customer)
+        public async Task<ResponseData<Customer>> GetAllCustomer(CustomerGetRequest customer)
         {
             var model = new ResponseData<Customer>();
             try
