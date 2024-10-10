@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain.DTO.RoomType;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
@@ -60,9 +61,9 @@ public class RoomTypeController : Controller
         }
     }
 
-    public async Task<IActionResult> Index(string? search)
+    public async Task<IActionResult> Index(string? searchString, EntityStatus? status)
     {
-        string requestUrl = $"api/RoomType/GetAllRoomTypes?search={search}";
+        string requestUrl = $"api/RoomType/GetFilteredRoomTypes?searchString={searchString}&status={status}";
 
         var roomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
         if (roomTypes != null)
@@ -74,11 +75,11 @@ public class RoomTypeController : Controller
     public async Task<IActionResult> Details(Guid roomTypeId)
     {
         string requestUrl = $"/api/RoomType/GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById?roomTypeId={roomTypeId}";
-        
+
         var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
-        if(roomType != null)
+        if (roomType != null)
             return View(roomType);
-        
+
         return View("Error");
     }
 
@@ -89,7 +90,7 @@ public class RoomTypeController : Controller
     {
         string requestUrl = $"/api/RoomType/CreateRoomType";
 
-        var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, 
+        var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl,
             HttpMethod.Post, roomTypeAddRequest);
         if (createdRoomType != null)
             return RedirectToAction("Index");
@@ -100,9 +101,9 @@ public class RoomTypeController : Controller
     public async Task<IActionResult> Edit(Guid roomTypeId)
     {
         string requestUrl = $"/api/RoomType/GetRoomTypeById?roomTypeId={roomTypeId}";
-        
+
         var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
-        if(roomType != null)
+        if (roomType != null)
             return View(roomType);
 
         return View("Error");
@@ -112,22 +113,23 @@ public class RoomTypeController : Controller
     public async Task<IActionResult> Edit(RoomTypeUpdateRequest roomTypeUpdateRequest)
     {
         string requestUrl = $"/api/RoomType/UpdateRoomType?roomTypeId={roomTypeUpdateRequest.Id}";
-        
-        var updatedRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Put, roomTypeUpdateRequest);
-        if(updatedRoomType != null)
+
+        var updatedRoomType =
+            await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Put, roomTypeUpdateRequest);
+        if (updatedRoomType != null)
             return RedirectToAction("Index");
-        
+
         return View("Error");
     }
 
     public async Task<IActionResult> Delete(Guid roomTypeId)
     {
         string requestUrl = $"/api/RoomType/GetRoomTypeById?roomTypeId={roomTypeId}";
-        
+
         var roomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, HttpMethod.Post);
-        if(roomType != null)
+        if (roomType != null)
             return View(roomType);
-        
+
         return View("Error");
     }
 
@@ -135,12 +137,41 @@ public class RoomTypeController : Controller
     public async Task<IActionResult> Delete(RoomTypeDeleteRequest roomTypeDeleteRequest)
     {
         string requestUrl = $"/api/RoomType/DeleteRoomType?roomTypeId={roomTypeDeleteRequest.Id}";
-        
-        var deletedRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl, 
+
+        var deletedRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl,
             HttpMethod.Put, roomTypeDeleteRequest);
-        if(deletedRoomType != null)
+        if (deletedRoomType != null)
             return RedirectToAction("Index");
+
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Trash(string? searchString)
+    {
+        string requestUrl = $"api/RoomType/GetFilteredDeletedRoomTypes?searchString={searchString}";
+        var deletedRoomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
+
+        if (deletedRoomTypes != null)
+            return View(deletedRoomTypes);
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Recover(Guid roomTypeId)
+    {
+        var roomTypeUpdateRequest = new RoomTypeUpdateRequest()
+        {
+            Id = roomTypeId,
+            // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
+            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
+            ModifiedTime = DateTimeOffset.Now
+        };
+        string requestUrl = "api/RoomType/RecoverDeletedRoomType";
         
+        var recoverRoomType = await SendHttpRequest<RoomTypeResponse>
+            (requestUrl, HttpMethod.Put, roomTypeUpdateRequest);
+        if(recoverRoomType != null)
+            return RedirectToAction("Trash");
+
         return View("Error");
     }
 }

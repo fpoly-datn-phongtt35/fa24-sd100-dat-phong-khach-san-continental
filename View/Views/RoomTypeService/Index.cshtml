@@ -22,16 +22,17 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th>@Html.DisplayName("Loại phòng")</th>
-        <th>@Html.DisplayName("Dịch vụ")</th>
-        <th>@Html.DisplayName("Số lượng")</th>
-        <th>@Html.DisplayName("Trạng thái")</th>
-        <th>@Html.DisplayName("Chức năng")</th>
+        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
+        <th style="width: 150px">@Html.DisplayName("Dịch vụ sử dụng")</th>
+        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
+        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
+        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
     </tr>
     </thead>
     <tbody>

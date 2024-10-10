@@ -160,6 +160,33 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         }
     }
 
+    public async Task<List<RoomTypeService>> GetFilteredDeletedRoomTypeServices(string? searchString, Guid? roomTypeId)
+    {
+        try
+        {
+            var deletedRoomTypeServices = new List<RoomTypeService>();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value }
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredDeletedRoomTypeServices, parameters);
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var deletedRoomTypeService = ConvertDataRowToRoomTypeService(row);
+                deletedRoomTypeServices.Add(deletedRoomTypeService);
+            }
+            return deletedRoomTypeServices;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An error occurred while retrieving the amenity room types", e);
+        }
+    }
+
     private RoomTypeService ConvertDataRowToRoomTypeService(DataRow row)
     {
         return new RoomTypeService()

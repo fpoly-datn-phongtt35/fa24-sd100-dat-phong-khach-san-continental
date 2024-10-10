@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenity;
 
@@ -13,17 +14,6 @@ public class AmenityGetService : IAmenityGetService
         _amenityRepository = amenityRepository;
     }
     
-    public async Task<List<AmenityResponse>> GetAllAmenities(string? search)
-    {
-        var amenities = await _amenityRepository.GetAllAmenities(search);
-
-        var amenityResponses = amenities
-            .Select(amenity => amenity.ToAmenityResponse())
-            .ToList();
-        
-        return amenityResponses;
-    }
-    
     public async Task<AmenityResponse?> GetAmenityById(Guid? amenityId)
     {
         if (amenityId == null)
@@ -34,5 +24,25 @@ public class AmenityGetService : IAmenityGetService
             return null;
         
         return amenity.ToAmenityResponse();
+    }
+
+    public async Task<List<AmenityResponse>> GetFilteredDeletedAmenities(string? searchString)
+    {
+        var deletedAmenities = await _amenityRepository.GetFilteredDeletedAmenity(searchString);
+        var amenityResponses = deletedAmenities
+            .Select(deletedAmenity => deletedAmenity.ToAmenityResponse())
+            .ToList();
+
+        return amenityResponses;
+    }
+
+    public async Task<List<AmenityResponse>> GetFilteredAmenities(EntityStatus? status, string? searchString)
+    {
+        var amenities = await _amenityRepository.GetFilteredAmenities(status!, searchString!);
+        var amenityResponses = amenities
+            .Select(a => a.ToAmenityResponse())
+            .ToList();
+
+        return amenityResponses;
     }
 }

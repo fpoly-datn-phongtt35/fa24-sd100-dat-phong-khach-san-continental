@@ -1,0 +1,47 @@
+﻿@using System.Diagnostics
+@using Domain.Enums
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.Amenity.AmenityResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Danh sách tiện nghi đã xóa</h1>
+
+<form method="get" asp-action="Trash" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm tiện nghi..."
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
+
+<p>
+    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
+</p>
+
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th style="width: 150px">@Html.DisplayName("Tên tiện nghi")</th>
+        <th style="width: 250px">@Html.DisplayName("Mô tả")</th>
+        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
+        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td>
+                @Html.ActionLink("Phục hồi", "Recover", new { amenityId = item.Id }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

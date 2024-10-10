@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain.DTO.Amenity;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -59,18 +60,48 @@ public class AmenityController : Controller
         }
     }
     
-    public async Task<IActionResult> Index(string? search)
+    public async Task<IActionResult> Index(EntityStatus? status, string? searchString)
     {
-        string requestUrl = $"api/Amenity/GetAllAmenities?search={search}";
+        string requestUrl = $"api/Amenity/GetFilteredAmenities?status={status}&searchString={searchString}";
 
         var amenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
-
+        
         if (amenities != null)
             return View(amenities);
 
         return View("Error");
     }
 
+    public async Task<IActionResult> Trash(string? searchString)
+    {
+        string requestUrl = $"api/Amenity/GetFilteredDeletedAmenities?searchString={searchString}";
+        var deletedAmenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
+        
+        if(deletedAmenities != null)
+            return View(deletedAmenities);
+
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Recover(Guid amenityId)
+    {
+        var amenityUpdateRequest = new AmenityUpdateRequest
+        {
+            Id = amenityId,
+            // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
+            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
+            ModifiedTime = DateTimeOffset.Now
+        };
+        string requestUrl = "api/Amenity/RecoverDeletedAmenity";
+
+        var recoverAmenity = await SendHttpRequest<AmenityResponse>
+            (requestUrl, HttpMethod.Put, amenityUpdateRequest);
+        
+        if(recoverAmenity != null)
+            return RedirectToAction("Trash");
+        return View("Error");
+    }
+    
     public async Task<IActionResult> Details(Guid amenityId)
     {
         string requestUrl = $"/api/Amenity/GetAmenityById?amenityId={amenityId}";

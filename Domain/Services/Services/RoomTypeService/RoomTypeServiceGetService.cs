@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomTypeService;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomTypeService;
 
@@ -32,5 +33,17 @@ public class RoomTypeServiceGetService : IRoomTypeServiceGetService
             .GetRoomTypeServiceById(roomTypeServiceId.Value);
 
         return roomTypeService?.ToRoomTypeServiceResponse();
+    }
+
+    public async Task<List<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices(string? searchString, 
+        Guid? roomTypeId)
+    {
+        var deletedRoomTypeServices = await _roomTypeServiceRepository
+            .GetFilteredDeletedRoomTypeServices(searchString, roomTypeId);
+
+        var roomTypeServicesResponse = deletedRoomTypeServices
+            .Select(rts => rts.ToRoomTypeServiceResponse())
+            .ToList();
+        return roomTypeServicesResponse;
     }
 }

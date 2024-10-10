@@ -1,5 +1,6 @@
 ﻿@using Domain.DTO.Amenity
 @using Domain.DTO.RoomType
+@using Domain.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using View.Views.Shared.Helper
 @model System.Collections.Generic.List<Domain.DTO.AmenityRoom.AmenityRoomResponse>
@@ -15,23 +16,51 @@
 
 <form method="get" asp-action="Index" class="d-flex align-items-center">
     <div class="form-group me-2">
-        <input type="text" name="search" class="form-control" placeholder="Nhập tiện nghi hoặc phòng..."
-               value="@ViewContext.HttpContext.Request.Query["search"]" />
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <!-- Dropdown chọn RoomType -->
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomType">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.RoomTypes)
+            {
+                <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                    @roomType.Name <!-- Hiển thị tên loại phòng -->
+                </option>
+            }
+        </select>
+    </div>
+    <!-- Dropdown chọn trạng thái -->
+    <div class="form-group me-2">
+        <select name="status" class="form-select" id="status">
+            <option value="">Chọn trạng thái</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+            // Ép kiểu status về EntityStatus
+            var statusEnum = (EntityStatus)status;
+            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+            </option>
+            }
+        </select>
     </div>
     <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
 </form>
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th>@Html.DisplayName("Loại phòng")</th>
-        <th>@Html.DisplayName("Tiên nghi sử dụng")</th>
-        <th>@Html.DisplayName("Số lượng")</th>
-        <th>@Html.DisplayName("Trạng thái")</th>
-        <th>@Html.DisplayName("Chức năng")</th>
+        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
+        <th style="width: 150px">@Html.DisplayName("Tiên nghi sử dụng")</th>
+        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
+        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
+        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
     </tr>
     </thead>
     <tbody>

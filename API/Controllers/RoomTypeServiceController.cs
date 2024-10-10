@@ -93,4 +93,20 @@ public class RoomTypeServiceController : Controller
             throw;
         }
     }
+    
+    [HttpPost(nameof(GetFilteredDeletedRoomTypeServices))]
+    public async Task<List<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices
+        (string? searchString, Guid? roomTypeId)
+    {
+        try
+        {
+            return await _roomTypeServiceGetService
+                .GetFilteredDeletedRoomTypeServices(searchString, roomTypeId);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

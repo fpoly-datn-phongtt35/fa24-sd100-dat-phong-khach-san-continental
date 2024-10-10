@@ -12,33 +12,26 @@ public class RoomTypeRepository : IRoomTypeRepository
 {
     private readonly DbWorker _worker;
     private readonly IConfiguration _configuration;
-    
+
     public RoomTypeRepository(IConfiguration configuration)
     {
         _worker = new DbWorker(StoredProcedureConstant.Continetal);
         _configuration = configuration;
     }
-    
-    public async Task<List<RoomType>> GetAllRoomTypes(string? search)
+
+    public async Task<List<RoomType>> GetFilteredRoomTypes(string? searchString, EntityStatus? status)
     {
         try
         {
             var roomTypes = new List<RoomType>();
-            SqlParameter[] parameters = null;
-
-            if (!string.IsNullOrEmpty(search))
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" },
-                };
-            }
-            
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+            };
+
             var dataTable = await _worker.GetDataTableAsync
-                (!string.IsNullOrEmpty(search) ? 
-                    StoredProcedureConstant.SP_GetAllRoomTypesWithSearch :
-                    StoredProcedureConstant.SP_GetAllRoomTypes,
-                    parameters);
+                (StoredProcedureConstant.SP_GetFilteredRoomTypes, parameters);
 
             foreach (DataRow row in dataTable.Rows)
             {
@@ -61,19 +54,20 @@ public class RoomTypeRepository : IRoomTypeRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetRoomTypeById, parameters);
 
             if (dataTable.Rows.Count == 0)
             {
                 return null;
             }
+
             // Convert data row
             var row = dataTable.Rows[0];
             var roomType = ConvertDataRowToRoomType(row);
-            
+
             return roomType;
         }
         catch (Exception e)
@@ -88,23 +82,23 @@ public class RoomTypeRepository : IRoomTypeRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
             };
-            
+
             var roomTypeDataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetRoomTypeById, parameters);
             if (roomTypeDataTable.Rows.Count == 0)
                 return null;
-            
+
             var row = roomTypeDataTable.Rows[0];
             var roomType = ConvertDataRowToRoomType(row);
-            
+
             // Get List AmenityRooms to RoomType
             roomType.AmenityRooms = await GetAmenityRoomsByRoomTypeId(roomTypeId);
-            
+
             // Get List RoomTypeServices to RoomType
             roomType.RoomsTypeServices = await GetRoomTypeServicesByRoomTypeId(roomTypeId);
-            
+
             return roomType;
         }
         catch (Exception e)
@@ -119,15 +113,16 @@ public class RoomTypeRepository : IRoomTypeRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
             };
-        
+
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetAmenityRoomsByRoomTypeId, parameters);
             if (dataTable.Rows.Count == 0)
             {
                 return new List<AmenityRoom>(); // Không có dữ liệu trả về
             }
+
             var amenityRooms = new List<AmenityRoom>();
 
             foreach (DataRow row in dataTable.Rows)
@@ -144,14 +139,14 @@ public class RoomTypeRepository : IRoomTypeRepository
                         // Gọi thêm GetAmenityById để lấy thông tin về Amenity
                         Amenity = await GetAmenityById((Guid)row["AmenityId"])
                     };
-                    amenityRooms.Add(amenityRoom);    
+                    amenityRooms.Add(amenityRoom);
                 }
                 else
                 {
                     throw new ArgumentException("Column 'Id' does not exist in the result set.");
                 }
             }
-        
+
             return amenityRooms;
         }
         catch (Exception e)
@@ -166,14 +161,14 @@ public class RoomTypeRepository : IRoomTypeRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync
-            (StoredProcedureConstant.SP_GetRoomTypeServicesByRoomTypeId, parameters);
-            if(dataTable.Rows.Count == 0)
+                (StoredProcedureConstant.SP_GetRoomTypeServicesByRoomTypeId, parameters);
+            if (dataTable.Rows.Count == 0)
                 return new List<RoomTypeService>(); // No data return
-            
+
             var roomTypeServices = new List<RoomTypeService>();
             foreach (DataRow row in dataTable.Rows)
             {
@@ -203,7 +198,7 @@ public class RoomTypeRepository : IRoomTypeRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityId }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenityId }
             };
 
             var dataTable = await _worker.GetDataTableAsync
@@ -225,14 +220,14 @@ public class RoomTypeRepository : IRoomTypeRepository
             throw new ArgumentNullException("An error occurred while retrieving the amenity", e);
         }
     }
-    
+
     private async Task<Service?> GetServiceById(Guid serviceId)
     {
         try
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = serviceId }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = serviceId }
             };
 
             var dataTable = await _worker.GetDataTableAsync
@@ -261,15 +256,15 @@ public class RoomTypeRepository : IRoomTypeRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
-                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = roomType.Status },
-                new SqlParameter("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier){ Value = roomType.CreatedBy },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomType.ModifiedTime },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomType.DeletedTime }
+                new("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
+                new("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
+                new("@Status", SqlDbType.Int) { Value = roomType.Status },
+                new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
+                new("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = roomType.CreatedBy },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomType.ModifiedTime },
+                new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomType.DeletedTime }
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomType, parameters);
@@ -295,17 +290,17 @@ public class RoomTypeRepository : IRoomTypeRepository
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
-                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
-                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
-                new SqlParameter("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = roomType.Status },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
+                new("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
+                new("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
+                new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
+                new("@Status", SqlDbType.Int) { Value = roomType.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy }
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoomType, parameters);
-            
+
             return await existingRoomType;
         }
         catch (Exception e)
@@ -323,18 +318,18 @@ public class RoomTypeRepository : IRoomTypeRepository
             {
                 throw new Exception("Room type could not be found");
             }
-            
+
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = roomType.Status },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = roomType.DeletedBy },
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
+                new("@Status", SqlDbType.Int) { Value = roomType.Status },
+                new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = roomType.DeletedBy },
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_DeleteRoomType, parameters);
-            
+
             return await existingRoomType;
         }
         catch (Exception e)
@@ -343,38 +338,59 @@ public class RoomTypeRepository : IRoomTypeRepository
         }
     }
 
-    public async Task<RoomType?> RollBackDeleteRoomType(RoomType roomType)
+    public async Task<List<RoomType>> GetFilteredDeletedRoomTypes(string? searchString)
+    {
+        try
+        {
+            var deletedRoomTypes = new List<RoomType>();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@SearchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value }
+            };
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredDeletedRoomTypes, parameters);
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var deletedRoomType = ConvertDataRowToRoomType(row);
+                deletedRoomTypes.Add(deletedRoomType);
+            }
+
+            return deletedRoomTypes;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine();
+            throw new Exception("Some errors while getting all deleted room types", e);
+        }
+    }
+
+    public async Task<RoomType?> RecoverDeletedRoomType(RoomType roomType)
     {
         try
         {
             var existingRoomType = GetRoomTypeById(roomType.Id);
             if (existingRoomType == null)
-            {
                 throw new Exception("Room type could not be found");
-            }
 
-            roomType.Deleted = false;
-            roomType.DeletedTime = default(DateTimeOffset);
-            roomType.DeletedBy = null;
-            
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = roomType.Status },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = (object)roomType.DeletedTime! ?? DBNull.Value },
-                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = (object)roomType.DeletedBy! ?? DBNull.Value }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
+                new("@Status", SqlDbType.Int) { Value = roomType.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = default },
             };
-            
-            await _worker.GetDataTableAsync(StoredProcedureConstant.SP_RollBackDeletedRoomType, parameters);
-            
+            await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_RecoverDeletedRoomType, parameters);
             return await existingRoomType;
         }
         catch (Exception e)
         {
-            throw new Exception("An error occurred while rolling back deleted amenity", e);
+            Console.WriteLine();
+            throw new Exception("An error occurred while recovering deleted room type", e);
         }
     }
 
@@ -396,7 +412,7 @@ public class RoomTypeRepository : IRoomTypeRepository
             DeletedBy = ConvertGuidToString(row, "DeletedBy")
         };
     }
-    
+
     private static DateTimeOffset ConvertDateTimeOffsetToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)
@@ -406,7 +422,7 @@ public class RoomTypeRepository : IRoomTypeRepository
 
         return DateTimeOffset.MinValue;
     }
-    
+
     private static Guid? ConvertGuidToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)

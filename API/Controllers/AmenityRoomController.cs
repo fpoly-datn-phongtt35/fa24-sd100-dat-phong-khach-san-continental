@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.AmenityRoom;
+using Domain.Enums;
 using Domain.Services.IServices.IAmenityRoom;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,12 +51,13 @@ public class AmenityRoomController : Controller
         }
     }
     
-    [HttpPost(nameof(GetAllAmenityRooms))]
-    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms(string? search)
+    [HttpPost(nameof(GetFilteredAmenityRooms))]
+    public async Task<List<AmenityRoomResponse>> GetFilteredAmenityRooms(string? searchString,
+        Guid? roomTypeId, EntityStatus? status)
     {
         try
         {
-            return await _amenityRoomGetService.GetAllAmenityRooms(search);
+            return await _amenityRoomGetService.GetFilteredAmenityRooms(searchString, roomTypeId, status);
         }
         catch (Exception e)
         {
@@ -82,6 +84,32 @@ public class AmenityRoomController : Controller
         try
         {
             return await _amenityRoomUpdateService.UpdateAmenityRoom(amenityRoomUpdateRequest);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+    
+    [HttpPost(nameof(GetFilteredDeletedAmenityRooms))]
+    public async Task<List<AmenityRoomResponse>> GetFilteredDeletedAmenityRooms(string? searchString, Guid? roomTypeId)
+    {
+        try
+        {
+            return await _amenityRoomGetService.GetFilteredDeletedAmenityRooms(searchString, roomTypeId);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+
+    [HttpPut(nameof(RecoverDeletedAmenityRoom))]
+    public async Task<AmenityRoomResponse?> RecoverDeletedAmenityRoom(AmenityRoomUpdateRequest amenityRoomUpdateRequest)
+    {
+        try
+        {
+            return await _amenityRoomUpdateService.RecoverDeletedAmenityRoom(amenityRoomUpdateRequest);
         }
         catch (Exception e)
         {

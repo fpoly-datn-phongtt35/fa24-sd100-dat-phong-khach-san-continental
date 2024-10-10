@@ -3,6 +3,7 @@ using Domain.DTO.AmenityRoom;
 using Domain.DTO.RoomType;
 using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomType;
@@ -18,9 +19,9 @@ public class RoomTypeGetService : IRoomTypeGetService
         _roomTypeRepository = roomTypeRepository;
     }
 
-    public async Task<List<RoomTypeResponse>> GetAllRoomTypes(string search)
+    public async Task<List<RoomTypeResponse>> GetFilteredRoomTypes(string? searchString, EntityStatus? status)
     {
-        var roomTypes = await _roomTypeRepository.GetAllRoomTypes(search);
+        var roomTypes = await _roomTypeRepository.GetFilteredRoomTypes(searchString, status);
 
         var roomTypesResponse = roomTypes
             .Select(roomType => roomType.ToRoomTypeResponse())
@@ -78,6 +79,15 @@ public class RoomTypeGetService : IRoomTypeGetService
                 }
             }).ToList();
         
+        return roomTypeResponse;
+    }
+
+    public async Task<List<RoomTypeResponse>> GetFilteredDeletedRoomTypes(string? searchString)
+    {
+        var deletedRoomType = await _roomTypeRepository.GetFilteredDeletedRoomTypes(searchString);
+        var roomTypeResponse = deletedRoomType
+            .Select(rt => rt.ToRoomTypeResponse())
+            .ToList();
         return roomTypeResponse;
     }
 }

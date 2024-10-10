@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Linq.Expressions;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
@@ -19,25 +20,21 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         _configuration = configuration;
     }
 
-    public async Task<List<AmenityRoom>> GetAllAmenityRooms(string? search)
+    public async Task<List<AmenityRoom>> GetFilteredAmenityRooms(string? searchString, 
+        Guid? roomTypeId, EntityStatus? status)
     {
         try
         {
             var amenityRooms = new List<AmenityRoom>();
-            SqlParameter[] parameters = null;
-
-            if (!string.IsNullOrEmpty(search))
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" }
-                };
-            }
-
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value },
+                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+            };
+            
             var dataTable = await _worker.GetDataTableAsync
-            (!string.IsNullOrEmpty(search) ? 
-                    StoredProcedureConstant.SP_GetAllAmenityRoomsWithSearch : 
-                    StoredProcedureConstant.SP_GetAllAmenityRooms, parameters);
+                (StoredProcedureConstant.SP_GetFilteredAmenityRooms, parameters);
 
             foreach (DataRow row in dataTable.Rows)
             {
@@ -162,6 +159,65 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         catch (Exception e)
         {
             throw new Exception("Some errors when deleted amenity rooom", e);
+        }
+    }
+
+    public async Task<List<AmenityRoom>> GetFilteredDeletedAmenityRooms(string? searchString, Guid? roomTypeId)
+    {
+        try
+        {
+            var deletedAmenityRooms = new List<AmenityRoom>();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@SearchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value }
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredDeletedAmenityRooms, parameters);
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var deletedAmenityRoom = ConvertDataRowToAmenityRoom(row);
+                deletedAmenityRooms.Add(deletedAmenityRoom);
+            }
+
+            return deletedAmenityRooms;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine();
+            throw new Exception("An error occurred while getting all deleted amenity rooms", e);
+        }
+    }
+
+    public async Task<AmenityRoom?> RecoverDeletedAmenityRoom(AmenityRoom amenityRoom)
+    {
+        try
+        {
+            var existingAmenityRoom = GetAmenityRoomById(amenityRoom.Id);
+            if(existingAmenityRoom == null)
+                throw new Exception("There is no amenity room with the provided Id.");
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
+                new("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = DBNull.Value }
+            };
+            
+            await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_RecoverDeletedAmenityRoom, parameters);
+            return await existingAmenityRoom;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An error occurred while recovering deleted amenity room", e);
         }
     }
 

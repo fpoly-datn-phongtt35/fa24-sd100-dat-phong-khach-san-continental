@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomType;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +13,15 @@ public class RoomTypeController : Controller
     private readonly IRoomTypeAddService _roomTypeAddService;
     private readonly IRoomTypeDeleteService _roomTypeDeleteService;
     private readonly IRoomTypeGetService _roomTypeGetService;
-    private readonly IRoomTypeRollBackService _roomTypeRollBackService;
     private readonly IRoomTypeUpdateService _roomTypeUpdateService;
 
     public RoomTypeController(IRoomTypeAddService roomTypeAddService, 
-        IRoomTypeUpdateService roomTypeUpdateService, 
-        IRoomTypeRollBackService roomTypeRollBackService, 
+        IRoomTypeUpdateService roomTypeUpdateService,
         IRoomTypeGetService roomTypeGetService, 
         IRoomTypeDeleteService roomTypeDeleteService)
     {
         _roomTypeAddService = roomTypeAddService;
         _roomTypeUpdateService = roomTypeUpdateService;
-        _roomTypeRollBackService = roomTypeRollBackService;
         _roomTypeGetService = roomTypeGetService;
         _roomTypeDeleteService = roomTypeDeleteService;
     }
@@ -54,12 +52,12 @@ public class RoomTypeController : Controller
         }
     }
     
-    [HttpPost(nameof(GetAllRoomTypes))]
-    public async Task<List<RoomTypeResponse>> GetAllRoomTypes(string? search)
+    [HttpPost(nameof(GetFilteredRoomTypes))]
+    public async Task<List<RoomTypeResponse>> GetFilteredRoomTypes(string? searchString, EntityStatus? status)
     {
         try
         {
-            return await _roomTypeGetService.GetAllRoomTypes(search);
+            return await _roomTypeGetService.GetFilteredRoomTypes(searchString, status);
         }
         catch (Exception e)
         {
@@ -103,6 +101,33 @@ public class RoomTypeController : Controller
         catch (Exception e)
         {
             throw new Exception(e.Message);
+        }
+    }
+    
+    [HttpPost(nameof(GetFilteredDeletedRoomTypes))]
+    public async Task<List<RoomTypeResponse>> GetFilteredDeletedRoomTypes(string? searchString)
+    {
+        try
+        {
+            return await _roomTypeGetService.GetFilteredDeletedRoomTypes(searchString);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+    
+    [HttpPut(nameof(RecoverDeletedRoomType))]
+    public async Task<RoomTypeResponse?> RecoverDeletedRoomType(RoomTypeUpdateRequest roomTypeUpdateRequest)
+    {
+        try
+        {
+            return await _roomTypeUpdateService.RecoverDeletedRoomType(roomTypeUpdateRequest);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Some errors when recover room type", e);
         }
     }
 }

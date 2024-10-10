@@ -9,4 +9,5 @@ public interface IRoomTypeServiceRepository
     Task<RoomTypeService> CreateRoomTypeService(RoomTypeService roomTypeService);
     Task<RoomTypeService?> UpdateRoomTypeService(RoomTypeService roomTypeService);
     Task<RoomTypeService?> DeleteRoomTypeService(RoomTypeService roomTypeService);
+    Task<List<RoomTypeService>> GetFilteredDeletedRoomTypeServices (string? searchString, Guid? roomTypeId);
 }

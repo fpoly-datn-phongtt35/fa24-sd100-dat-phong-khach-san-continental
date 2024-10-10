@@ -1,9 +1,11 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.Enums;
 
 namespace Domain.Services.IServices.IAmenity;
 
 public interface IAmenityGetService
 {
-    Task<List<AmenityResponse>> GetAllAmenities(string? search);
     Task<AmenityResponse?> GetAmenityById(Guid? amenityId);
+    Task<List<AmenityResponse>> GetFilteredDeletedAmenities(string? searchString);
+    Task<List<AmenityResponse>> GetFilteredAmenities(EntityStatus? status, string? searchString);
 }

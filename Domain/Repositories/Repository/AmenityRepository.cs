@@ -108,40 +108,6 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public async Task<List<Amenity>> GetAllAmenities(string? search)
-    {
-        try
-        {
-            var amenities = new List<Amenity>();
-            SqlParameter[] parameters = null;
-            
-            if (!string.IsNullOrEmpty(search))
-            {
-                parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@Search", SqlDbType.NVarChar) { Value = $"%{search}%" },
-                };
-            }
-            var dataTable = await _worker.GetDataTableAsync
-                (!string.IsNullOrEmpty(search) ? 
-                    StoredProcedureConstant.SP_GetAllAmenitiesWithSearch : 
-                    StoredProcedureConstant.SP_GetAllAmenities, parameters);
-            
-            foreach (DataRow row in dataTable.Rows)
-            {
-                var amenity = ConvertDataRowToAmenity(row);
-                amenities.Add(amenity);
-            }
-
-            return amenities;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine();
-            throw new Exception("An error occurred while getting all amenities", e);
-        }
-    }
-    
     public async Task<Amenity?> GetAmenityById(Guid amenityId)
     {
         try
@@ -171,7 +137,34 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public async Task<Amenity?> RollBackDeletedAmenity(Amenity amenity)
+    public async Task<List<Amenity>> GetFilteredDeletedAmenity(string? searchString)
+    {
+        try
+        {
+            var deletedAmenities = new List<Amenity>();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+            };
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredDeletedAmenities, parameters);
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var deletedAmenity = ConvertDataRowToAmenity(row);
+                deletedAmenities.Add(deletedAmenity);
+            }
+
+            return deletedAmenities;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine();
+            throw new Exception("An error occurred while getting all deleted amenities", e);
+        }
+    }
+
+    public async Task<Amenity?> RecoverDeletedAmenity(Amenity amenity)
     {
         try
         {
@@ -181,28 +174,49 @@ public class AmenityRepository : IAmenityRepository
                 throw new Exception("Amenity not found");
             }
 
-            //Set default value
-            amenity.Deleted = false;
-            amenity.DeletedTime = null;
-            amenity.DeletedBy = null;
-
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenity.Id },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = (int)amenity.Status },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenity.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = (object)amenity.DeletedTime! ?? DBNull.Value },
-                new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = (object)amenity.DeletedBy! ?? DBNull.Value }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenity.Id },
+                new("@Status", SqlDbType.Int) { Value = amenity.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = amenity.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DBNull.Value },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = DBNull.Value },
             };
 
-            await _worker.GetDataTableAsync(StoredProcedureConstant.SP_RollBackDeletedAmenity, parameters);
+            await _worker.GetDataTableAsync(StoredProcedureConstant.SP_RecoverDeletedAmenity, parameters);
             return await existingAmenity;
         }
         catch (Exception e)
         {
-            throw new Exception("An error occurred while rolling back deleted amenity", e);
+            throw new Exception("An error occurred while recovering deleted amenity", e);
+        }
+    }
+
+    public async Task<List<Amenity>> GetFilteredAmenities(EntityStatus? status, string? searchString)
+    {
+        try
+        {
+            var amenities = new List<Amenity>();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredAmenities, parameters);
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var amenity = ConvertDataRowToAmenity(row);
+                amenities.Add(amenity);
+            }
+            return amenities;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while retrieving filtered amenities", e);
         }
     }
 

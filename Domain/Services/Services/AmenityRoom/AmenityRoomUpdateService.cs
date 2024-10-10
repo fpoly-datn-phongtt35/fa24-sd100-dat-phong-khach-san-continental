@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.AmenityRoom;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenityRoom;
 
@@ -35,6 +36,30 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
         existingAmenityRoom.ModifiedBy = amenityRoomUpdateRequest.ModifiedBy;
         
         await _amenityRoomRepository.UpdateAmenityRoom(existingAmenityRoom);
+        return existingAmenityRoom.ToAmenityRoomResponse();
+    }
+
+    public async Task<AmenityRoomResponse?> RecoverDeletedAmenityRoom(AmenityRoomUpdateRequest amenityRoomUpdateRequest)
+    {
+        if(amenityRoomUpdateRequest is null)
+            throw new ArgumentNullException(nameof(amenityRoomUpdateRequest));
+        
+        var existingAmenityRoom = await _amenityRoomRepository
+            .GetAmenityRoomById(amenityRoomUpdateRequest.Id);
+        if(existingAmenityRoom is null)
+            throw new Exception("Id amenity room does not exist");
+        
+        if(!existingAmenityRoom.Deleted)
+            throw new Exception("This amenity room is not deleted, cannot recover it.");
+        
+        existingAmenityRoom.Status = EntityStatus.Active;
+        existingAmenityRoom.ModifiedTime = amenityRoomUpdateRequest.ModifiedTime;
+        existingAmenityRoom.ModifiedBy = amenityRoomUpdateRequest.ModifiedBy;
+        existingAmenityRoom.Deleted = false;
+        existingAmenityRoom.DeletedTime = default;
+        existingAmenityRoom.DeletedBy = default;
+        
+        await _amenityRoomRepository.RecoverDeletedAmenityRoom(existingAmenityRoom);
         return existingAmenityRoom.ToAmenityRoomResponse();
     }
 }

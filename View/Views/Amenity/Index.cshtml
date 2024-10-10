@@ -11,22 +11,39 @@
 
 <form method="get" asp-action="Index" class="d-flex align-items-center">
     <div class="form-group me-2">
-        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm tiện nghi..."
-               value="@ViewContext.HttpContext.Request.Query["search"]" />
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm tiện nghi..."
+               value="@Context.Request.Query["searchString"]" />
     </div>
+    <!-- Dropdown chọn trạng thái -->
+    <div class="form-group me-2">
+        <select name="status" class="form-select" id="status">
+            <option value="">Chọn trạng thái</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+            // Ép kiểu status về EntityStatus
+            var statusEnum = (EntityStatus)status;
+            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+            </option>
+            }
+        </select>
+    </div>
+
     <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
 </form>
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th>@Html.DisplayName("Tên tiện nghi")</th>
-        <th>@Html.DisplayName("Mô tả")</th>
-        <th>@Html.DisplayName("Trạng thái")</th>
-        <th>@Html.DisplayName("Chức năng")</th>
+        <th style="width: 150px">@Html.DisplayName("Tên tiện nghi")</th>
+        <th style="width: 250px">@Html.DisplayName("Mô tả")</th>
+        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
+        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
     </tr>
     </thead>
     <tbody>

@@ -2,6 +2,7 @@
 using Domain.DTO.Amenity;
 using Domain.DTO.AmenityRoom;
 using Domain.DTO.RoomType;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -64,11 +65,11 @@ public class AmenityRoomController : Controller
     private async Task LoadAmenitiesAndRoomTypes()
     {
         // Gọi API để lấy danh sách Amenities
-        string amenityRequestUrl = "Amenity/GetAllAmenities";
+        string amenityRequestUrl = "Amenity/GetFilteredAmenities";
         var amenitiesTask = SendHttpRequest<List<AmenityResponse>>(amenityRequestUrl, HttpMethod.Post);
 
         // Gọi API để lấy danh sách RoomTypes
-        string roomTypeRequestUrl = "RoomType/GetAllRoomTypes";
+        string roomTypeRequestUrl = "RoomType/GetFilteredRoomTypes";
         var roomTypesTask = SendHttpRequest<List<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post);
 
         // Đợi cả hai lời gọi API hoàn tất
@@ -79,14 +80,44 @@ public class AmenityRoomController : Controller
         ViewBag.RoomTypes = await roomTypesTask;
     }
 
-    public async Task<IActionResult> Index(string? search)
+    public async Task<IActionResult> Index(string? searchString, Guid? roomTypeId, EntityStatus? status)
     {
         await LoadAmenitiesAndRoomTypes();
-        string requestUrl = $"AmenityRoom/GetAllAmenityRooms?search={search}";
-        
+        string requestUrl = $"AmenityRoom/GetFilteredAmenityRooms?searchString={searchString}&roomTypeId={roomTypeId}&status={status}";
+
         var amenityRooms = await SendHttpRequest<List<AmenityRoomResponse>>(requestUrl, HttpMethod.Post);
-        if(amenityRooms != null)
+        if (amenityRooms != null)
             return View(amenityRooms);
+
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Trash(string? searchString, Guid? roomTypeId)
+    {
+        await LoadAmenitiesAndRoomTypes();
+        string requestUrl = $"AmenityRoom/GetFilteredDeletedAmenityRooms?searchString={searchString}&roomTypeId={roomTypeId}";
+        
+        var deletedAmenityRooms = await SendHttpRequest<List<AmenityRoomResponse>>(requestUrl, HttpMethod.Post);
+        if(deletedAmenityRooms != null)
+            return View(deletedAmenityRooms);
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Recover(Guid amenityRoomId)
+    {
+        var amenityRoomUpdateRequest = new AmenityRoomUpdateRequest()
+        {
+            Id = amenityRoomId,
+            // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
+            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
+            //ModifiedTime = DateTimeOffset.Now
+        };
+        string requestUrl = "AmenityRoom/RecoverDeletedAmenityRoom";
+        
+        var recoverAmenityRoom = await SendHttpRequest<AmenityRoomResponse>
+            (requestUrl, HttpMethod.Put, amenityRoomUpdateRequest);
+        if(recoverAmenityRoom != null)
+            return RedirectToAction("Trash");
         
         return View("Error");
     }

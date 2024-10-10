@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.AmenityRoom;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenityRoom;
 
@@ -13,9 +14,11 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         _amenityRoomRepository = amenityRoomRepository;
     }
 
-    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms(string? search)
+    public async Task<List<AmenityRoomResponse>> GetFilteredAmenityRooms(string? searchString,
+        Guid? roomTypeId, EntityStatus? status)
     {
-        var amenityRooms = await _amenityRoomRepository.GetAllAmenityRooms(search);
+        var amenityRooms = await _amenityRoomRepository
+            .GetFilteredAmenityRooms(searchString, roomTypeId, status);
 
         var amenityRoomsResponse = amenityRooms
             .Select(amenityRoom => amenityRoom.ToAmenityRoomResponse())
@@ -32,5 +35,16 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         if (amenityRoom == null) return null;
 
         return amenityRoom.ToAmenityRoomResponse();
+    }
+
+    public async Task<List<AmenityRoomResponse>> GetFilteredDeletedAmenityRooms(string? searchString, Guid? roomTypeId)
+    {
+        var deletedAmenityRoom = await _amenityRoomRepository
+            .GetFilteredDeletedAmenityRooms(searchString, roomTypeId);
+        
+        var amenityRoomsResponse = deletedAmenityRoom
+            .Select(ar => ar.ToAmenityRoomResponse())
+            .ToList();
+        return amenityRoomsResponse;
     }
 }

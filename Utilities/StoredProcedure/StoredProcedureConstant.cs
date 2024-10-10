@@ -58,20 +58,20 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateFloor = "SP_UpdateFloor";
         //amenity
         public const string SP_InsertAmenity = "SP_InsertAmenity";
-        public const string SP_GetAllAmenities = "SP_GetAllAmenities";
-        public const string SP_GetAllAmenitiesWithSearch = "SP_GetAllAmenitiesWithSearch";
+        public const string SP_GetFilteredAmenities = "SP_GetFilteredAmenities";
+        public const string SP_GetFilteredDeletedAmenities = "SP_GetFilteredDeletedAmenities";
         public const string SP_GetAmenityById = "SP_GetAmenityById";
         public const string SP_UpdateAmenity = "SP_UpdateAmenity";
         public const string SP_DeleteAmenity = "SP_DeleteAmenity";
-        public const string SP_RollBackDeletedAmenity = "SP_RollBackDeletedAmenity";
+        public const string SP_RecoverDeletedAmenity= "SP_RecoverDeletedAmenity";
         //roomType
         public const string SP_InsertRoomType = "SP_InsertRoomType";
-        public const string SP_GetAllRoomTypes = "SP_GetAllRoomTypes";
-        public const string SP_GetAllRoomTypesWithSearch = "SP_GetAllRoomTypesWithSearch";
+        public const string SP_GetFilteredRoomTypes = "SP_GetFilteredRoomTypes";
+        public const string SP_GetFilteredDeletedRoomTypes = "SP_GetFilteredDeletedRoomTypes";
         public const string SP_GetRoomTypeById = "SP_GetRoomTypeById";
         public const string SP_UpdateRoomType = "SP_UpdateRoomType";
         public const string SP_DeleteRoomType = "SP_DeleteRoomType";
-        public const string SP_RollBackDeletedRoomType = "SP_RollBackDeletedRoomType";
+        public const string SP_RecoverDeletedRoomType = "SP_RecoverDeletedRoomType";
         // Customer
         public const string SP_InsertCustomer = "SP_InsertCustomer";
         public const string SP_GetCustomerById = "SP_GetCustomerById";
@@ -80,12 +80,13 @@ namespace Utilities.StoredProcedure
         public const string SP_GetAllCustomer = "SP_GetAllCustomers";
         // amenityRoom
         public const string SP_InsertAmenityRoom = "SP_InsertAmenityRoom";
-        public const string SP_GetAllAmenityRooms = "SP_GetAllAmenityRooms";
-        public const string SP_GetAllAmenityRoomsWithSearch = "SP_GetAllAmenityRoomsWithSearch";
+        public const string SP_GetFilteredAmenityRooms = "SP_GetFilteredAmenityRooms";
         public const string SP_GetAmenityRoomById = "SP_GetAmenityRoomById";
         public const string SP_UpdateAmenityRoom = "SP_UpdateAmenityRoom";
         public const string SP_DeleteAmenityRoom = "SP_DeleteAmenityRoom";
         public const string SP_GetAmenityRoomsByRoomTypeId = "SP_GetAmenityRoomsByRoomTypeId";
+        public const string SP_GetFilteredDeletedAmenityRooms = "SP_GetFilteredDeletedAmenityRooms";
+        public const string SP_RecoverDeletedAmenityRoom = "SP_RecoverDeletedAmenityRoom";
         // Voucher
         public const string SP_InsertVoucher = "SP_InsertVoucher";
         public const string SP_GetListVoucher = "SP_GetListVoucher";
@@ -111,6 +112,7 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomTypeService = "SP_UpdateRoomTypeService";
         public const string SP_DeleteRoomTypeService = "SP_DeleteRoomTypeService";
         public const string SP_GetRoomTypeServicesByRoomTypeId = "SP_GetRoomTypeServicesByRoomTypeId";
+        public const string SP_GetFilteredDeletedRoomTypeServices = "SP_GetFilteredDeletedRoomTypeServices";
         //Staff 
         public const string SP_GetAllStaff = "SP_GetStaffList";
         public const string SP_CreateStaff = "SP_InsertStaff";

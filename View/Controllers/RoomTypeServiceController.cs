@@ -65,7 +65,7 @@ public class RoomTypeServiceController : Controller
     public async Task LoadRoomTypes()
     {
         // Call API to GET list RoomTypes
-        string roomTypeRequestUrl = "RoomType/GetAllRoomTypes";
+        string roomTypeRequestUrl = "RoomType/GetFilteredRoomTypes";
         var roomTypesTask = SendHttpRequest<List<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post);
         
         ViewBag.RoomTypes = await roomTypesTask;
@@ -96,6 +96,20 @@ public class RoomTypeServiceController : Controller
         return View("Error");
     }
 
+    public async Task<IActionResult> Trash(string? searchString, Guid? roomTypedId)
+    {
+        await LoadRoomTypes();
+        await LoadServices();
+        string requestUrl = $"RoomTypeService/GetFilteredDeletedRoomTypeServices?searchString={searchString}&roomTypeId={roomTypedId}";
+
+        var deletedRoomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>
+            (requestUrl, HttpMethod.Post);
+        if (deletedRoomTypeServices != null)
+            return View(deletedRoomTypeServices);
+
+        return View("Error");
+    }
+    
     public async Task<IActionResult> Details(Guid roomTypeServiceId)
     {
         await LoadRoomTypes();
