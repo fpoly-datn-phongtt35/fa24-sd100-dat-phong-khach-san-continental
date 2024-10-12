@@ -39,7 +39,8 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
         return existingAmenityRoom.ToAmenityRoomResponse();
     }
 
-    public async Task<AmenityRoomResponse?> RecoverDeletedAmenityRoom(AmenityRoomUpdateRequest amenityRoomUpdateRequest)
+    public async Task<AmenityRoomResponse?> RecoverDeletedAmenityRoom
+        (AmenityRoomUpdateRequest amenityRoomUpdateRequest)
     {
         if(amenityRoomUpdateRequest is null)
             throw new ArgumentNullException(nameof(amenityRoomUpdateRequest));

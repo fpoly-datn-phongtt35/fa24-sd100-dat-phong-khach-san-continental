@@ -14,9 +14,11 @@ public class RoomTypeServiceGetService : IRoomTypeServiceGetService
         _roomTypeServiceRepository = roomTypeServiceRepository;
     }
 
-    public async Task<List<RoomTypeServiceResponse>> GetAllRoomTypeServices(string? search)
+    public async Task<List<RoomTypeServiceResponse>> GetFilteredRoomTypeServices
+        (string? searchString, Guid? roomTypeId, EntityStatus? status)
     {
-        var roomTypeServices = await _roomTypeServiceRepository.GetAllRoomTypeServices(search);
+        var roomTypeServices = await _roomTypeServiceRepository
+            .GetFilteredRoomTypeServices(searchString, roomTypeId, status);
 
         var roomTypeServicesResponse = roomTypeServices
             .Select(roomTypeService => roomTypeService.ToRoomTypeServiceResponse())

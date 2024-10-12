@@ -3,6 +3,7 @@ using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
 using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -83,11 +84,11 @@ public class RoomTypeServiceController : Controller
         ViewBag.ServiceList = service?.data;
     }
     
-    public async Task<IActionResult> Index(string? search)
+    public async Task<IActionResult> Index(string? searchString, Guid? roomTypeId, EntityStatus? status)
     {
         await LoadRoomTypes();
         await LoadServices();
-        string requestUrl = $"RoomTypeService/GetAllRoomTypeServices?search={search}";
+        string requestUrl = $"RoomTypeService/GetFilteredRoomTypeServices?searchString={searchString}&roomTypeId={roomTypeId}&status={status}";
         
         var roomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>(requestUrl, HttpMethod.Post);
         if(roomTypeServices != null)
@@ -96,17 +97,33 @@ public class RoomTypeServiceController : Controller
         return View("Error");
     }
 
-    public async Task<IActionResult> Trash(string? searchString, Guid? roomTypedId)
+    public async Task<IActionResult> Trash(string? searchString, Guid? roomTypeId)
     {
         await LoadRoomTypes();
         await LoadServices();
-        string requestUrl = $"RoomTypeService/GetFilteredDeletedRoomTypeServices?searchString={searchString}&roomTypeId={roomTypedId}";
+        string requestUrl = $"RoomTypeService/GetFilteredDeletedRoomTypeServices?searchString={searchString}&roomTypeId={roomTypeId}";
 
         var deletedRoomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>
             (requestUrl, HttpMethod.Post);
         if (deletedRoomTypeServices != null)
             return View(deletedRoomTypeServices);
 
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Recover(Guid roomTypeServiceId)
+    {
+        var roomTypeServiceUpdateRequest = new RoomTypeServiceUpdateRequest()
+        {
+            Id = roomTypeServiceId,
+            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda")
+        };
+        string requestUrl = "RoomTypeService/RecoverDeletedRoomTypeService";
+        
+        var recoverRoomTypeService = await SendHttpRequest<RoomTypeServiceResponse>
+            (requestUrl, HttpMethod.Put, roomTypeServiceUpdateRequest);
+        if (recoverRoomTypeService != null)
+            return RedirectToAction("Trash");
         return View("Error");
     }
     

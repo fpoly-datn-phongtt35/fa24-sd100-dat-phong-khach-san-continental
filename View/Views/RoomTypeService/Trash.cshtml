@@ -60,7 +60,7 @@
             <td>@Html.DisplayFor(modelItem => item.Amount)</td>
             <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
             <td>
-                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeService = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-warning" })
             </td>
         </tr>
     }

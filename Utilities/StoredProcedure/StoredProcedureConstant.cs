@@ -106,13 +106,13 @@ namespace Utilities.StoredProcedure
         public const string SP_DeletePostType = "SP_DeletePostType";
         // RoomTypeService
         public const string SP_InsertRoomTypeService = "SP_InsertRoomTypeService";
-        public const string SP_GetAllRoomTypeServices = "SP_GetAllRoomTypeServices";
-        public const string SP_GetAllRoomTypeServicesWithSearch = "SP_GetAllRoomTypeServicesWithSearch";
+        public const string SP_GetFilteredRoomTypeServices = "SP_GetFilteredRoomTypeServices";
         public const string SP_GetRoomTypeServiceById = "SP_GetRoomTypeServiceById";
         public const string SP_UpdateRoomTypeService = "SP_UpdateRoomTypeService";
         public const string SP_DeleteRoomTypeService = "SP_DeleteRoomTypeService";
         public const string SP_GetRoomTypeServicesByRoomTypeId = "SP_GetRoomTypeServicesByRoomTypeId";
         public const string SP_GetFilteredDeletedRoomTypeServices = "SP_GetFilteredDeletedRoomTypeServices";
+        public const string SP_RecoverDeletedRoomTypeService = "SP_RecoverDeletedRoomTypeService";
         //Staff 
         public const string SP_GetAllStaff = "SP_GetStaffList";
         public const string SP_CreateStaff = "SP_InsertStaff";

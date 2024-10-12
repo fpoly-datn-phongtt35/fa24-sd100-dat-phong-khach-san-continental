@@ -1,6 +1,7 @@
 ﻿@using Domain.DTO.Amenity
 @using Domain.DTO.RoomType
 @using Domain.DTO.Service
+@using Domain.Enums
 @using Domain.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using View.Views.Shared.Helper
@@ -14,10 +15,37 @@
 
 <form method="get" asp-action="Index" class="d-flex align-items-center">
     <div class="form-group me-2">
-        <input type="text" name="search" class="form-control" placeholder="Nhập dịch vụ hoặc loại phòng"
-               value="@ViewContext.HttpContext.Request.Query["search"]" />
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <!-- Dropdown chọn RoomType -->
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomType">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.RoomTypes)
+            {
+            <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                @roomType.Name <!-- Hiển thị tên loại phòng -->
+            </option>
+            }
+        </select>
+    </div>
+    <!-- Dropdown chọn trạng thái -->
+    <div class="form-group me-2">
+        <select name="status" class="form-select" id="status">
+            <option value="">Chọn trạng thái</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+            // Ép kiểu status về EntityStatus
+            var statusEnum = (EntityStatus)status;
+            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+            </option>
+            }
+        </select>
     </div>
     <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
 </form>
 
 <p>

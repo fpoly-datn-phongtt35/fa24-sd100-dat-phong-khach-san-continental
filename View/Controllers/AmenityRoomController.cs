@@ -110,7 +110,6 @@ public class AmenityRoomController : Controller
             Id = amenityRoomId,
             // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
             ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
-            //ModifiedTime = DateTimeOffset.Now
         };
         string requestUrl = "AmenityRoom/RecoverDeletedAmenityRoom";
         

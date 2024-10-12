@@ -19,25 +19,21 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         _configuration = configuration;
     }
 
-    public async Task<List<RoomTypeService>> GetAllRoomTypeServices(string? search)
+    public async Task<List<RoomTypeService>> GetFilteredRoomTypeServices(string? searchString,
+        Guid? roomTypeId, EntityStatus? status)
     {
         try
         {
             var roomTypeServices = new List<RoomTypeService>();
-            SqlParameter[] parameters = null;
-
-            if (!string.IsNullOrEmpty(search))
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" }
-                };
-            }
-            
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value },
+                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+            };
+
             var dataTable = await _worker.GetDataTableAsync
-                (!string.IsNullOrEmpty(search) ?
-                    StoredProcedureConstant.SP_GetAllRoomTypeServicesWithSearch :
-                    StoredProcedureConstant.SP_GetAllRoomTypeServices, parameters);
+                (StoredProcedureConstant.SP_GetFilteredRoomTypeServices, parameters);
 
             foreach (DataRow row in dataTable.Rows)
             {
@@ -184,6 +180,35 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         {
             Console.WriteLine(e);
             throw new Exception("An error occurred while retrieving the amenity room types", e);
+        }
+    }
+
+    public async Task<RoomTypeService?> RecoverDeletedRoomTypeService(RoomTypeService roomTypeService)
+    {
+        try
+        {
+            var existingRoomTypeService = GetRoomTypeServiceById(roomTypeService.Id);
+            if(existingRoomTypeService == null)
+                throw new Exception("There is no room type service with the provided Id.");
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeService.Id },
+                new("@Status", SqlDbType.Int) { Value = roomTypeService.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = DBNull.Value }
+            };
+            
+            await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_RecoverDeletedRoomTypeService, parameters);
+            return await existingRoomTypeService;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while recovering the room type service", e);
         }
     }
 
