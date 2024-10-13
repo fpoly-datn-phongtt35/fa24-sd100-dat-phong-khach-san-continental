@@ -39,8 +39,8 @@ public static class StatusHelper
             EntityStatus.InActive =>  new HtmlString("Không hoạt động"),
             EntityStatus.Deleted =>  new HtmlString("Đã xóa"),
             EntityStatus.Pending => new HtmlString("Hoãn"),
-            EntityStatus.PendingForActivation => new HtmlString("Đang tiến hành kích hoạt"),
-            EntityStatus.PendingForConfirmation => new HtmlString("Đang tiến hành xác nhận"),
+            EntityStatus.PendingForActivation => new HtmlString("Đang chờ kích hoạt"),
+            EntityStatus.PendingForConfirmation => new HtmlString("Đang chờ xác nhận"),
             EntityStatus.PendingForApproval => new HtmlString("Đang chờ phê duyệt"),
             EntityStatus.Locked => new HtmlString("Khóa"),
             _ => new HtmlString("null")

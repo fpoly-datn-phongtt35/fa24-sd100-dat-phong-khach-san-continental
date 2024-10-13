@@ -35,28 +35,29 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="AmenitiesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Tên tiện nghi")</th>
-        <th style="width: 250px">@Html.DisplayName("Mô tả")</th>
-        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th>Tên tiện nghi</th>
+        <th>Mô tả</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var amenity in Model)
     {
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityId = item.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { amenityId = item.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Xóa", "Delete", new { amenityId = item.Id }, new { @class = "btn btn-danger" })
+            <td style="width: 20%">@amenity.Name</td>
+            <td style="width: 20%">@amenity.Description</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityId = amenity.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { amenityId = amenity.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Xóa", "Delete", new { amenityId = amenity.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }

@@ -17,18 +17,6 @@ ViewData["Title"] = "Delete";
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            @* <div class="form-group"> *@
-            @*     <label asp-for="Status" class="control-label">Trạng thái</label> *@
-            @*     <select asp-for="Status" class="form-control"> *@
-            @*         @{ *@
-            @*             string[] status = (string[])Enum.GetNames(typeof(EntityStatus)); *@
-            @*         } *@
-            @*         @foreach (string item in status) *@
-            @*         { *@
-            @*             <option value="@item">@item</option> *@
-            @*         } *@
-            @*     </select> *@
-            @* </div> *@
             <div class="form-group" hidden>
                 <label asp-for="Deleted" class="control-label">Đã xóa</label>
                 <input asp-for="Deleted" class="form-control" />

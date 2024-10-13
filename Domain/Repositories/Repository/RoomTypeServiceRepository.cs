@@ -227,7 +227,17 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
             ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-            DeletedBy = ConvertGuidToString(row, "DeletedBy")
+            DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+            Service = new Service()
+            {
+                Id = (Guid)row["Id"],
+                Name = (string)row["ServiceName"]
+            },
+            RoomType = new RoomType()
+            {
+                Id = (Guid)row["RoomTypeId"],
+                Name = (string)row["RoomTypeName"]
+            }
         };
     }
 

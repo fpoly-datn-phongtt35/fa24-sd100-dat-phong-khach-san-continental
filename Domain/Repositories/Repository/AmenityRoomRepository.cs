@@ -236,7 +236,17 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-            DeletedBy = ConvertGuidToString(row, "DeletedBy")
+            DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+            Amenity = new Amenity 
+            { 
+                Id = (Guid)row["AmenityId"], 
+                Name = (string)row["AmenityName"] 
+            },
+            RoomType = new RoomType 
+            { 
+                Id = (Guid)row["RoomTypeId"], 
+                Name = (string)row["RoomTypeName"] 
+            }
         };
     }
 

@@ -43,11 +43,11 @@
                 <label asp-for="Status" class="control-label">Trạng thái</label>
                 <select asp-for="Status" class="form-control">
                     @{
-                        string[] status = (string[])Enum.GetNames(typeof(EntityStatus));
+                    string[] status = (string[])Enum.GetNames(typeof(EntityStatus));
                     }
                     @foreach (string item in status)
                     {
-                        <option value="@item">@item</option>
+                    <option value="@item">@item</option>
                     }
                 </select>
             </div>

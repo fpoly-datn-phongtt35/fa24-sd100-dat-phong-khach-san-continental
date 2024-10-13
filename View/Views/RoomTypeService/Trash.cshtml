@@ -42,11 +42,11 @@
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
-        <th style="width: 150px">@Html.DisplayName("Dịch vụ sử dụng")</th>
-        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
-        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th>@Html.DisplayName("Loại phòng")</th>
+        <th>@Html.DisplayName("Dịch vụ sử dụng")</th>
+        <th>@Html.DisplayName("Số lượng")</th>
+        <th>@Html.DisplayName("Trạng thái")</th>
+        <th>@Html.DisplayName("Chức năng")</th>
     </tr>
     </thead>
     <tbody>
@@ -55,11 +55,11 @@
         var roomTypeName = roomTypes?.Find(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type"; // Lấy tên RoomType
         var serviceName = services?.Find(s => s.Id == item.ServiceId)?.Name ?? "Unknown Service"; // Lấy tên Amenity
         <tr>
-            <td>@roomTypeName</td>
-            <td>@serviceName</td>
-            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
+            <td style="width: 15%">@roomTypeName</td>
+            <td style="width: 15%">@serviceName</td>
+            <td style="width: 10%">@Html.DisplayFor(modelItem => item.Amount)</td>
+            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td style="width: 30%">
                 @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-warning" })
             </td>
         </tr>

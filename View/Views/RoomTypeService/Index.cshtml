@@ -9,6 +9,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+    var services = ViewBag.ServiceList as List<Service>;
 }
 
 <h1>Danh sách dịch vụ loại phòng</h1>
@@ -50,43 +52,32 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="RoomTypeServicesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
-        <th style="width: 150px">@Html.DisplayName("Dịch vụ sử dụng")</th>
-        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
-        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th >@Html.DisplayName("Loại phòng")</th>
+        <th >@Html.DisplayName("Dịch vụ sử dụng")</th>
+        <th >@Html.DisplayName("Số lượng")</th>
+        <th >@Html.DisplayName("Trạng thái")</th>
+        <th >@Html.DisplayName("Chức năng")</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var roomTypeService in Model)
     {
         <tr>
-            <td>
-                @{
-                var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
-                var roomType = roomTypes?.FirstOrDefault(r => r.Id == item.RoomTypeId);
-                }
-                @roomType?.Name
-            </td>
-            <td>
-                @{
-                var services = ViewBag.ServiceList as List<Service>;
-                var service = services?.FirstOrDefault(a => a.Id == item.ServiceId);
-                }
-                @service?.Name
-            </td>
-            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Delete", "Delete", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-danger" })
+            <td style="width: 15%">@roomTypeService.RoomTypeName</td>
+            <td style="width: 15%">@roomTypeService.ServiceName</td>
+            <td style="width: 10%">@roomTypeService.Amount</td>
+            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }

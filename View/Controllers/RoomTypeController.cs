@@ -1,10 +1,12 @@
 ﻿using System.Text;
+using Domain.DTO.Amenity;
 using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Rotativa.AspNetCore;
 
 namespace View.Controllers;
 
@@ -173,5 +175,22 @@ public class RoomTypeController : Controller
             return RedirectToAction("Trash");
 
         return View("Error");
+    }
+    
+    public async Task<IActionResult> RoomTypesPdf()
+    {
+        //Get list of amenities
+        string requestUrl = "api/RoomType/GetFilteredRoomTypes";
+        var roomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
+
+        if(roomTypes == null)
+            return View("Error");
+        
+        //Return view as pdf
+        return new ViewAsPdf("RoomTypesPdf", roomTypes, ViewData)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 }

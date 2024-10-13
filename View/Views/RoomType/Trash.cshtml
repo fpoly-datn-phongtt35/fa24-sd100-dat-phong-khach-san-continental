@@ -23,22 +23,23 @@
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Tên loại phòng")</th>
-        <th style="width: 250px">@Html.DisplayName("Mô tả")</th>
-        <th style="width: 150px">@Html.DisplayName("Số lượng người ở")</th>
-        <th style="width: 100px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th>Tên loại phòng</th>
+        <th>Mô tả</th>
+        <th>Số lượng người ở</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var roomType in Model)
     {
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
-                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeId = item.Id }, new { @class = "btn btn-warning" })
+            <td style="width: 15%">@roomType.Name</td>
+            <td style="width: 20%">@roomType.Description</td>
+            <td style="width: 10%">@roomType.MaximumOccupancy</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(roomType.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeId = roomType.Id }, new { @class = "btn btn-warning" })
             </td>
         </tr>
     }

@@ -1,7 +1,5 @@
-﻿@using System.Diagnostics
-@using Domain.DTO.Amenity
+﻿@using Domain.DTO.Amenity
 @using Domain.DTO.RoomType
-@using Domain.Enums
 @using View.Views.Shared.Helper
 @model System.Collections.Generic.List<Domain.DTO.AmenityRoom.AmenityRoomResponse>
 
@@ -17,7 +15,7 @@
 <form method="get" asp-action="Trash" class="d-flex align-items-center">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
-               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+               value="@ViewContext.HttpContext.Request.Query["searchString"]"/>
     </div>
     <!-- Dropdown chọn RoomType -->
     <div class="form-group me-2">
@@ -25,9 +23,9 @@
             <option value="">Chọn loại phòng</option>
             @foreach (var roomType in ViewBag.RoomTypes)
             {
-            <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
-                @roomType.Name <!-- Hiển thị tên loại phòng -->
-            </option>
+                <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                    @roomType.Name <!-- Hiển thị tên loại phòng -->
+                </option>
             }
         </select>
     </div>
@@ -51,17 +49,15 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var amenityRoom in Model)
     {
-        var roomTypeName = roomTypes?.Find(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type"; // Lấy tên RoomType
-        var amenityName = amenities?.Find(a => a.Id == item.AmenityId)?.Name ?? "Unknown Amenity"; // Lấy tên Amenity
         <tr>
-            <td>@roomTypeName</td>
-            <td>@amenityName</td>
-            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td>@amenityRoom.RoomTypeName</td>
+            <td>@amenityRoom.AmenityName</td>
+            <td>@amenityRoom.Amount</td>
+            <td>@StatusHelper.DisplayStatusBadge(amenityRoom.Status)</td>
             <td>
-                @Html.ActionLink("Phục hồi", "Recover", new { amenityRoomId = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Phục hồi", "Recover", new { amenityRoomId = amenityRoom.Id }, new { @class = "btn btn-warning" })
             </td>
         </tr>
     }

@@ -3,6 +3,7 @@ using Domain.DTO.Amenity;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Rotativa.AspNetCore;
 
 namespace View.Controllers;
 
@@ -171,5 +172,22 @@ public class AmenityController : Controller
         if(deletedAmenity != null)
             return RedirectToAction("Index");
         return View("Error");
+    }
+
+    public async Task<IActionResult> AmenitiesPdf()
+    {
+        //Get list of amenities
+        string requestUrl = $"api/Amenity/GetFilteredAmenities";
+        var amenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
+
+        if(amenities == null)
+            return View("Error");
+        
+        //Return view as pdf
+        return new ViewAsPdf("AmenitiesPdf", amenities, ViewData)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 }

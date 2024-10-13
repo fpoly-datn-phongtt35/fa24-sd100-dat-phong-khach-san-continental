@@ -1,4 +1,5 @@
 ﻿@using Domain.DTO.Amenity
+@using Domain.DTO.AmenityRoom
 @using Domain.DTO.RoomType
 @using Domain.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -8,8 +9,6 @@
 @{
     ViewData["Title"] = "Index";
     // Lấy danh sách Amenities và RoomTypes từ ViewBag
-    var amenities = ViewBag.Amenities as List<AmenityResponse>;
-    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
 }
 
 <h1>Danh sách tiện nghi thuộc phòng</h1>
@@ -26,7 +25,7 @@
             @foreach (var roomType in ViewBag.RoomTypes)
             {
                 <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
-                    @roomType.Name <!-- Hiển thị tên loại phòng -->
+                    @roomType.Name
                 </option>
             }
         </select>
@@ -40,7 +39,7 @@
             // Ép kiểu status về EntityStatus
             var statusEnum = (EntityStatus)status;
             <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+                @StatusHelper.DisplayNameForEnum(statusEnum)
             </option>
             }
         </select>
@@ -51,33 +50,31 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="AmenityRoomsPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
-        <th style="width: 150px">@Html.DisplayName("Tiên nghi sử dụng")</th>
-        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
-        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th>Loại phòng</th>
+        <th>Tiên nghi sử dụng</th>
+        <th>Số lượng</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var amenityRoom in Model)
     {
-        var roomTypeName = roomTypes?.FirstOrDefault(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type"; // Lấy tên RoomType
-        var amenityName = amenities?.FirstOrDefault(a => a.Id == item.AmenityId)?.Name ?? "Unknown Amenity"; // Lấy tên Amenity
-        
         <tr>
-            <td>@roomTypeName</td>
-            <td>@amenityName</td>
-            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityRoomId = item.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { amenityRoomId = item.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Delete", "Delete", new { amenityRoomId = item.Id }, new { @class = "btn btn-danger" })
+            <td style="width: 15%">@amenityRoom.RoomTypeName</td>
+            <td style="width: 15%">@amenityRoom.AmenityName</td>
+            <td style="width: 10%">@amenityRoom.Amount</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(amenityRoom.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityRoomId = amenityRoom.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { amenityRoomId = amenityRoom.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { amenityRoomId = amenityRoom.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }

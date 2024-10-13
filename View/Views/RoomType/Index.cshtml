@@ -14,7 +14,6 @@
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm loại phòng..."
                value="@ViewContext.HttpContext.Request.Query["searchString"]" />
     </div>
-    <!-- Dropdown chọn trạng thái -->
     <div class="form-group me-2">
         <select name="status" class="form-select" id="status">
             <option value="">Chọn trạng thái</option>
@@ -23,7 +22,7 @@
             // Ép kiểu status về EntityStatus
             var statusEnum = (EntityStatus)status;
             <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+                @StatusHelper.DisplayNameForEnum(statusEnum)
             </option>
             }
         </select>
@@ -34,33 +33,34 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="RoomTypesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Tên loại phòng")</th>
-        <th style="width: 250px">@Html.DisplayName("Mô tả")</th>
-        <th style="width: 150px">@Html.DisplayName("Số lượng người ở")</th>
-        <th style="width: 100px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th>Tên loại phòng</th>
+        <th>Mô tả</th>
+        <th>Số lượng người ở</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var roomType in Model)
     {
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-            <td>@Html.DisplayFor(modelItem => item.MaximumOccupancy)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = item.Id }, 
+            <td style="width: 15%">@roomType.Name</td>
+            <td style="width: 20%">@roomType.Description</td>
+            <td style="width: 10%">@roomType.MaximumOccupancy</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(roomType.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = roomType.Id }, 
     new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { roomTypeId = item.Id },
+                @Html.ActionLink("Chi tiết", "Details", new { roomTypeId = roomType.Id },
                 new { @class = "btn btn-info" })
-                @Html.ActionLink("Xóa", "Delete", new { roomTypeId = item.Id }, 
+                @Html.ActionLink("Xóa", "Delete", new { roomTypeId = roomType.Id }, 
     new { @class = "btn btn-danger" })
             </td>
         </tr>

@@ -6,6 +6,7 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Rotativa.AspNetCore;
 
 namespace View.Controllers;
 
@@ -200,5 +201,20 @@ public class AmenityRoomController : Controller
             return RedirectToAction("Index");
         
         return View("Error");
+    }
+
+    public async Task<IActionResult> AmenityRoomsPdf()
+    {
+        string requestUrl = "AmenityRoom/GetFilteredAmenityRooms";
+        var amenityRooms = await SendHttpRequest<List<AmenityRoomResponse>>(requestUrl, HttpMethod.Post);
+        
+        if (amenityRooms == null)
+            return View("Error");
+        
+        return new ViewAsPdf("AmenityRoomsPdf", amenityRooms, ViewData)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins() {Top = 20, Right = 20, Bottom = 20, Left = 20},
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 } 

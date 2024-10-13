@@ -1,0 +1,42 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.DTO.AmenityRoom
+@using Domain.DTO.RoomType
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.AmenityRoom.AmenityRoomResponse>
+
+@{
+    Layout = null;
+}
+<link href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" rel="stylesheet" />
+<h1>Danh sách tiện nghi</h1>
+
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+        <th style="border: 1px solid black;">Loại phòng</th>
+        <th style="border: 1px solid black;">Tiện nghi</th>
+        <th style="border: 1px solid black;">Số lượng</th>
+        <th style="border: 1px solid black;">Trạng thái</th>
+        <th style="border: 1px solid black;">Thời gian tạo</th>
+        <th style="border: 1px solid black;">Người tạo</th>
+        <th style="border: 1px solid black;">Thời gian sửa</th>
+        <th style="border: 1px solid black;">Người sửa</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (AmenityRoomResponse amenityRoom in Model)
+    {
+        <tr>
+            <td style="border: 1px solid black; width: 10%">@amenityRoom.RoomTypeName</td>
+            <td style="border: 1px solid black; width: 10%">@amenityRoom.AmenityName</td>
+            <td style="border: 1px solid black; width: 8%">@amenityRoom.Amount</td>
+            <td style="border: 1px solid black; width: 8%">@StatusHelper.DisplayStatusBadge(amenityRoom.Status)</td>
+            <td style="border: 1px solid black; width: 15%">@amenityRoom.CreatedTime</td>
+            <td style="border: 1px solid black; width: 15%">@amenityRoom.CreatedBy</td>
+            <td style="border: 1px solid black; width: 15%">@amenityRoom.ModifiedTime</td>
+            <td style="border: 1px solid black; width: 15%">@amenityRoom.ModifiedBy</td>
+        </tr>
+    }
+    </tbody>
+    
+</table>
