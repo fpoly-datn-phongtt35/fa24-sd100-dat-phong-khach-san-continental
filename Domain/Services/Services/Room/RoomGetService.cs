@@ -1,5 +1,6 @@
 ﻿
 using Domain.DTO.Room;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoom;
 using System;
@@ -19,9 +20,9 @@ namespace Domain.Services.Services.Room
             _roomRepository = roomRepository;
         }
 
-        public async Task<List<RoomResponse>> GetAllRooms(string? search)
+        public async Task<List<RoomResponse>> GetAllRooms(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status)
         {
-            var rooms = await _roomRepository.GetAllRooms(search);
+            var rooms = await _roomRepository.GetAllRooms(search, roomTypeId, floorId, status);
 
             var roomsResponse = rooms
                 .Select(room => room.ToRoomResponse())
