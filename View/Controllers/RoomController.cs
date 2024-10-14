@@ -60,9 +60,9 @@ namespace View.Controllers
             }
         }
 
-        public async Task<IActionResult> Index(string? search)
+        public async Task<IActionResult> Index(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status)
         {
-             string roomsRequestUrl = $"/api/Room/GetAllRooms?search={search}";
+            string roomsRequestUrl = $"/api/Room/GetAllRooms?search={search}&roomTypeId={roomTypeId}&floorId={floorId}&status={status}";
 
             try
             {
@@ -83,8 +83,9 @@ namespace View.Controllers
 
                 var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(FloorResponseString);
                 ViewBag.FloorList = floorList.data;
+                ViewBag.StatusList = Enum.GetValues(typeof(RoomStatus));
 
-                string roomTypesRequestUrl = "/api/RoomType/GetAllRoomTypes";
+                string roomTypesRequestUrl = "/api/RoomType/GetFilteredRoomTypes";
                 var roomTypeList = await SendHttpRequest<List<RoomTypeResponse>>(roomTypesRequestUrl, HttpMethod.Post);
 
                 if (roomTypeList == null)
@@ -128,7 +129,7 @@ namespace View.Controllers
             ViewBag.Floors = floor?.data;
 
             // Lấy danh sách loại phòng
-            string roomTypeRequestUrl = "api/RoomType/GetAllRoomTypes";
+            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
             var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
             var roomTypes = JsonConvert.DeserializeObject<List<RoomType>>(roomTypeResponseString);
@@ -195,7 +196,7 @@ namespace View.Controllers
             ViewBag.Floors = floor?.data;
 
             // Lấy danh sách loại phòng
-            string roomTypeRequestUrl = "api/RoomType/GetAllRoomTypes";
+            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
             var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
             var roomTypes = JsonConvert.DeserializeObject<List<RoomType>>(roomTypeResponseString);

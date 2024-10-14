@@ -1,6 +1,7 @@
 ﻿using Domain.DTO.AmenityRoom;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IAmenityRoom;
 using Domain.Services.IServices.IRoom;
@@ -56,11 +57,11 @@ namespace API.Controllers
         }
 
         [HttpPost(nameof(GetAllRooms))]
-        public async Task<List<RoomResponse>> GetAllRooms(string? search)
+        public async Task<List<RoomResponse>> GetAllRooms(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status)
         {
             try
             {
-                return await _roomGetService.GetAllRooms(search);
+                return await _roomGetService.GetAllRooms(search, roomTypeId, floorId, status);
             }
             catch (Exception e)
             {

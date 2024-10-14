@@ -6,8 +6,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
-    var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
 }
 
 <h1>Danh sách Room</h1>
@@ -17,10 +15,47 @@
 </p>
 <form method="get" asp-action="Index" class="d-flex align-items-center">
     <div class="form-group me-2">
-        <input type="text" name="search" class="form-control" placeholder="Nhập tên..."
+        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["search"]" />
     </div>
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomTypeId">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.roomTypeList)
+            {
+                <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                    @roomType.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group me-2">
+        <select name="floorId" class="form-select" id="floorId">
+            <option value="">Chọn tầng</option>
+            @foreach (var floor in ViewBag.FloorList)
+            {
+                <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
+                    @floor.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Status --</option>
+            @foreach (var status in ViewBag.StatusList)
+            {
+                <option value="@((int)status)"
+                        selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @status
+                </option>
+            }
+        </select>
+    </div>
     <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
 </form>
 <table class="table" style="color: whitesmoke">
     <thead>
@@ -60,7 +95,15 @@
                         }
                     </div>
                 </td>
-                
+
+
+                <td>
+                    @{
+                        var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
+                        var floor = floorList?.FirstOrDefault(s => s.Id == item.FloorId);
+                    }
+                    @floor.Name
+                </td>
                 <td>
                     @{
                         var roomtypeList = ViewBag.RoomTypeList as List<Domain.Models.RoomType>;
@@ -68,14 +111,7 @@
                     }
                     @(roomtype != null ? roomtype.Name : "Không có loại phòng")
                 </td>
-                <td>
-                    @{
-                        var floor = floorList?.FirstOrDefault(s => s.Id == item.FloorId);
-                    }
-                    @floor.Name
-                </td>
-
-                <td>@Html.DisplayFor(modelItem=>item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>
                     @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "btn btn-warning" })
                     @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "btn btn-info" })
