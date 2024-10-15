@@ -1,5 +1,9 @@
-﻿using Domain.Enums;
+﻿using System.Data;
+using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
+using Domain.Enums;
 using Domain.Models;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Domain.Repositories.IRepository;
 
@@ -9,8 +13,7 @@ public interface IAmenityRepository
     Task<Amenity?> UpdateAmenity(Amenity amenity);
     Task<Amenity?> DeleteAmenityById(Amenity amenity);
     Task<Amenity?> GetAmenityById(Guid amenityId);
-    Task<List<Amenity>> GetFilteredDeletedAmenity(string? searchString);
     Task<Amenity?> RecoverDeletedAmenity(Amenity amenity);
-    Task<List<Amenity>> GetFilteredAmenities(EntityStatus? status, string? searchString);
-    string GenerateToken();
+    Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenity(AmenityGetRequest amenityGetRequest);
+    Task<ResponseData<AmenityResponse>> GetFilteredAmenities(AmenityGetRequest amenityGetRequest);
 }

@@ -1,4 +1,6 @@
-﻿using Domain.DTO.Amenity;
+﻿using System.Data;
+using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenity;
@@ -13,36 +15,36 @@ public class AmenityGetService : IAmenityGetService
     {
         _amenityRepository = amenityRepository;
     }
-    
+
     public async Task<AmenityResponse?> GetAmenityById(Guid? amenityId)
     {
         if (amenityId == null)
             return null;
-        
+
         var amenity = await _amenityRepository.GetAmenityById(amenityId.Value);
         if (amenity == null)
             return null;
-        
+
         return amenity.ToAmenityResponse();
     }
 
-    public async Task<List<AmenityResponse>> GetFilteredDeletedAmenities(string? searchString)
+    public async Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenities(AmenityGetRequest amenityGetRequest)
     {
-        var deletedAmenities = await _amenityRepository.GetFilteredDeletedAmenity(searchString);
-        var amenityResponses = deletedAmenities
-            .Select(deletedAmenity => deletedAmenity.ToAmenityResponse())
-            .ToList();
-
-        return amenityResponses;
+        return await _amenityRepository.GetFilteredDeletedAmenity(amenityGetRequest);
     }
 
-    public async Task<List<AmenityResponse>> GetFilteredAmenities(EntityStatus? status, string? searchString)
+    public async Task<ResponseData<AmenityResponse>> GetFilteredAmenities(AmenityGetRequest amenityGetRequest)
     {
-        var amenities = await _amenityRepository.GetFilteredAmenities(status!, searchString!);
-        var amenityResponses = amenities
-            .Select(a => a.ToAmenityResponse())
-            .ToList();
-
-        return amenityResponses;
+        // ResponseData<AmenityResponse> model;
+        // try
+        // {
+        //     model = await _amenityRepository.GetFilteredAmenities(amenityGetRequest);
+        // }
+        // catch (Exception e)
+        // {
+        //     throw new Exception("An error occurred while retrieving paginated amenities", e);
+        // }
+        // return model;
+        return await _amenityRepository.GetFilteredAmenities(amenityGetRequest);
     }
 }

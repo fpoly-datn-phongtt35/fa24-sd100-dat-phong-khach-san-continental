@@ -1,6 +1,6 @@
 ﻿@using Domain.DTO.RoomType
 @using View.Views.Shared.Helper
-@model System.Collections.Generic.List<Domain.DTO.RoomType.RoomTypeResponse>
+@model Domain.DTO.Paging.ResponseData<RoomTypeResponse>
 
 @{
     Layout = null;
@@ -22,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (RoomTypeResponse roomType in Model)
+    @foreach (RoomTypeResponse roomType in Model.data)
     {
         <tr>
             <td style="border: 1px solid black; width: 12%">@roomType.Name</td>

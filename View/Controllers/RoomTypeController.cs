@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
@@ -63,13 +64,22 @@ public class RoomTypeController : Controller
         }
     }
 
-    public async Task<IActionResult> Index(string? searchString, EntityStatus? status)
+    public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? searchString = null, 
+        EntityStatus? status = null)
     {
-        string requestUrl = $"api/RoomType/GetFilteredRoomTypes?searchString={searchString}&status={status}";
+        string requestUrl = $"api/RoomType/GetFilteredRoomTypes";
 
-        var roomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
-        if (roomTypes != null)
-            return View(roomTypes);
+        var roomTypeGetRequest = new RoomTypeGetRequest()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SearchString = searchString,
+            Status = status
+        };
+        var roomTypesResponse = await SendHttpRequest<ResponseData<RoomTypeResponse>>
+            (requestUrl, HttpMethod.Post, roomTypeGetRequest);
+        if (roomTypesResponse != null)
+            return View(roomTypesResponse);
 
         return View("Error");
     }
@@ -148,10 +158,20 @@ public class RoomTypeController : Controller
         return View("Error");
     }
 
-    public async Task<IActionResult> Trash(string? searchString)
+    public async Task<IActionResult> Trash(int pageIndex = 1, int pageSize = 5, string? searchString = null,
+        EntityStatus? status = null)
     {
-        string requestUrl = $"api/RoomType/GetFilteredDeletedRoomTypes?searchString={searchString}";
-        var deletedRoomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
+        string requestUrl = "api/RoomType/GetFilteredDeletedRoomTypes";
+        var roomTypeGetRequest = new RoomTypeGetRequest()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SearchString = searchString,
+            Status = status
+        };
+        
+        var deletedRoomTypes = await SendHttpRequest<ResponseData<RoomTypeResponse>>
+            (requestUrl, HttpMethod.Post, roomTypeGetRequest);
 
         if (deletedRoomTypes != null)
             return View(deletedRoomTypes);
@@ -179,9 +199,16 @@ public class RoomTypeController : Controller
     
     public async Task<IActionResult> RoomTypesPdf()
     {
-        //Get list of amenities
+        var roomTypeGetRequest = new RoomTypeGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null
+        };
         string requestUrl = "api/RoomType/GetFilteredRoomTypes";
-        var roomTypes = await SendHttpRequest<List<RoomTypeResponse>>(requestUrl, HttpMethod.Post);
+        var roomTypes = await SendHttpRequest<ResponseData<RoomTypeResponse>>
+            (requestUrl, HttpMethod.Post, roomTypeGetRequest);
 
         if(roomTypes == null)
             return View("Error");

@@ -19,9 +19,9 @@ public static class StatusHelper
             case EntityStatus.Pending:
                 return new HtmlString("<span class='badge bg-secondary'>Hoãn</span>");
             case EntityStatus.PendingForActivation:
-                return new HtmlString("<span class='badge bg-secondary'>Đang tiến hành kích hoạt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ kích hoạt</span>");
             case EntityStatus.PendingForConfirmation:
-                return new HtmlString("<span class='badge bg-secondary'>Đang tiến hành xác nhận</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ xác nhận</span>");
             case EntityStatus.PendingForApproval:
                 return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
             case EntityStatus.Locked:

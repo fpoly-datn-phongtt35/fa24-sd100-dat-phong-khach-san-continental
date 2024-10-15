@@ -1,4 +1,5 @@
-﻿using Domain.DTO.RoomType;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IRoomType;
@@ -53,11 +54,11 @@ public class RoomTypeController : Controller
     }
     
     [HttpPost(nameof(GetFilteredRoomTypes))]
-    public async Task<List<RoomTypeResponse>> GetFilteredRoomTypes(string? searchString, EntityStatus? status)
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
     {
         try
         {
-            return await _roomTypeGetService.GetFilteredRoomTypes(searchString, status);
+            return await _roomTypeGetService.GetFilteredRoomTypes(roomTypeGetRequest);
         }
         catch (Exception e)
         {
@@ -105,11 +106,11 @@ public class RoomTypeController : Controller
     }
     
     [HttpPost(nameof(GetFilteredDeletedRoomTypes))]
-    public async Task<List<RoomTypeResponse>> GetFilteredDeletedRoomTypes(string? searchString)
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredDeletedRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
     {
         try
         {
-            return await _roomTypeGetService.GetFilteredDeletedRoomTypes(searchString);
+            return await _roomTypeGetService.GetFilteredDeletedRoomTypes(roomTypeGetRequest);
         }
         catch (Exception e)
         {

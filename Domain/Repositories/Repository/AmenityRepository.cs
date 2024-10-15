@@ -2,12 +2,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository;
@@ -137,31 +140,54 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public async Task<List<Amenity>> GetFilteredDeletedAmenity(string? searchString)
+    public async Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenity(AmenityGetRequest amenityGetRequest)
     {
+        var model = new ResponseData<AmenityResponse>();
         try
         {
-            var deletedAmenities = new List<Amenity>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@PageIndex", amenityGetRequest.PageIndex),
+                new("@PageSize", amenityGetRequest.PageSize),
+                new("@SearchString", amenityGetRequest.SearchString),
+                new("@Status", amenityGetRequest.Status)
             };
+            
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredDeletedAmenities, parameters);
+            var deletedAmenities = new List<AmenityResponse>();
 
             foreach (DataRow row in dataTable.Rows)
             {
                 var deletedAmenity = ConvertDataRowToAmenity(row);
-                deletedAmenities.Add(deletedAmenity);
+                var deletedAmenityResponse = deletedAmenity.ToAmenityResponse();
+                deletedAmenities.Add(deletedAmenityResponse);
+            }
+            // Gan list amenities vao model
+            model.data = deletedAmenities;
+
+            model.CurrentPage = amenityGetRequest.PageIndex;
+            model.PageSize = amenityGetRequest.PageSize;
+
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
             }
 
-            return deletedAmenities;
+            //tong trang
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityGetRequest.PageSize);
         }
         catch (Exception e)
         {
             Console.WriteLine();
             throw new Exception("An error occurred while getting all deleted amenities", e);
         }
+
+        return model;
     }
 
     public async Task<Amenity?> RecoverDeletedAmenity(Amenity amenity)
@@ -194,30 +220,53 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
-    public async Task<List<Amenity>> GetFilteredAmenities(EntityStatus? status, string? searchString)
+    public async Task<ResponseData<AmenityResponse>> GetFilteredAmenities(AmenityGetRequest amenityGetRequest)
     {
+        var model = new ResponseData<AmenityResponse>();
         try
         {
-            var amenities = new List<Amenity>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
-                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+                new("@PageSize", amenityGetRequest.PageSize),
+                new("@PageIndex", amenityGetRequest.PageIndex),
+                new("@SearchString", amenityGetRequest.SearchString),
+                new("@Status", amenityGetRequest.Status)
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredAmenities, parameters);
+            var amenities = new List<AmenityResponse>();
             foreach (DataRow row in dataTable.Rows)
             {
                 var amenity = ConvertDataRowToAmenity(row);
-                amenities.Add(amenity);
+                var amenityResponse = amenity.ToAmenityResponse();
+                amenities.Add(amenityResponse);
             }
-            return amenities;
+
+            // Gan list amenities vao model
+            model.data = amenities;
+
+            model.CurrentPage = amenityGetRequest.PageIndex;
+            model.PageSize = amenityGetRequest.PageSize;
+
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+
+            //tong trang
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityGetRequest.PageSize);
         }
         catch (Exception e)
         {
             throw new Exception("An error occurred while retrieving filtered amenities", e);
         }
+
+        return model;
     }
 
     public Amenity ConvertDataRowToAmenity(DataRow row)
@@ -256,23 +305,5 @@ public class AmenityRepository : IAmenityRepository
         }
 
         return null;
-    }
-
-    public string GenerateToken()
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:PrivateKey"]);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", "1"), new Claim(ClaimTypes.Role, "User") }),
-            Expires = DateTime.UtcNow.AddMinutes(15),
-            Issuer = _configuration["JwtSettings:JWTIssuer"],
-            Audience = _configuration["JwtSettings:JWTAudience"],
-            SigningCredentials =
-                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
     }
 }

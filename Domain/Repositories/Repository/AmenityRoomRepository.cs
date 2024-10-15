@@ -1,5 +1,7 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
+using Domain.DTO.AmenityRoom;
+using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
@@ -20,34 +22,52 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         _configuration = configuration;
     }
 
-    public async Task<List<AmenityRoom>> GetFilteredAmenityRooms(string? searchString, 
-        Guid? roomTypeId, EntityStatus? status)
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredAmenityRooms(AmenityRoomGetRequest amenityRoomGetRequest)
     {
+        var model = new ResponseData<AmenityRoomResponse>();
         try
         {
-            var amenityRooms = new List<AmenityRoom>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
-                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value },
-                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+                new("@PageIndex", amenityRoomGetRequest.PageIndex),
+                new("@PageSize", amenityRoomGetRequest.PageSize),
+                new("@SearchString", amenityRoomGetRequest.SearchString),
+                new("@Status", amenityRoomGetRequest.Status),
+                new("@RoomTypeId", amenityRoomGetRequest.RoomTypeId)
             };
             
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredAmenityRooms, parameters);
-
+            var amenityRooms = new List<AmenityRoomResponse>();
+            
             foreach (DataRow row in dataTable.Rows)
             {
                 var amenityRoom = ConvertDataRowToAmenityRoom(row);
-                amenityRooms.Add(amenityRoom);
+                var amenityRoomResponse = amenityRoom.ToAmenityRoomResponse();
+                amenityRooms.Add(amenityRoomResponse);
             }
 
-            return amenityRooms;
+            model.data = amenityRooms;
+            model.CurrentPage = amenityRoomGetRequest.PageIndex;
+            model.PageSize = amenityRoomGetRequest.PageSize;
+            
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityRoomGetRequest.PageSize);
         }
         catch (Exception e)
         {
             throw new ArgumentNullException("An error occurred while getting all room types", e);
         }
+
+        return model;
     }
 
     public async Task<AmenityRoom?> GetAmenityRoomById(Guid amenityRoomId)
@@ -162,33 +182,53 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         }
     }
 
-    public async Task<List<AmenityRoom>> GetFilteredDeletedAmenityRooms(string? searchString, Guid? roomTypeId)
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredDeletedAmenityRooms
+        (AmenityRoomGetRequest amenityRoomGetRequest)
     {
+        var model = new ResponseData<AmenityRoomResponse>();
         try
         {
-            var deletedAmenityRooms = new List<AmenityRoom>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@SearchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
-                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value }
+                new("@PageIndex", amenityRoomGetRequest.PageIndex),
+                new("@PageSize", amenityRoomGetRequest.PageSize),
+                new("@SearchString", amenityRoomGetRequest.SearchString),
+                new("@Status", amenityRoomGetRequest.Status),
+                new("@RoomTypeId", amenityRoomGetRequest.RoomTypeId)
             };
             
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredDeletedAmenityRooms, parameters);
-
+            var deletedAmenityRooms = new List<AmenityRoomResponse>();
+            
             foreach (DataRow row in dataTable.Rows)
             {
                 var deletedAmenityRoom = ConvertDataRowToAmenityRoom(row);
-                deletedAmenityRooms.Add(deletedAmenityRoom);
+                var deletedAmenityRoomResponse = deletedAmenityRoom.ToAmenityRoomResponse();
+                deletedAmenityRooms.Add(deletedAmenityRoomResponse);
             }
+            
+            model.data = deletedAmenityRooms;
+            model.CurrentPage = amenityRoomGetRequest.PageIndex;
+            model.PageSize = amenityRoomGetRequest.PageSize;
 
-            return deletedAmenityRooms;
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityRoomGetRequest.PageSize);
         }
         catch (Exception e)
         {
             Console.WriteLine();
             throw new Exception("An error occurred while getting all deleted amenity rooms", e);
         }
+
+        return model;
     }
 
     public async Task<AmenityRoom?> RecoverDeletedAmenityRoom(AmenityRoom amenityRoom)

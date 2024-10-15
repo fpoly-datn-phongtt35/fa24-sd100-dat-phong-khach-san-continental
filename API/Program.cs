@@ -111,7 +111,6 @@ namespace API
             builder.Services.AddTransient<IRoomTypeAddService, RoomTypeAddService>();
             builder.Services.AddTransient<IRoomTypeDeleteService, RoomTypeDeleteService>();
             builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
-            builder.Services.AddTransient<IRoomTypeRollBackService, RoomTypeRollBackService>();
             builder.Services.AddTransient<IRoomTypeUpdateService, RoomTypeUpdateService>();
             
             builder.Services.AddTransient<ICustomerService, CustomerService>(); 
