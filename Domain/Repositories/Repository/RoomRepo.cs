@@ -24,23 +24,21 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
         }
 
-        public async Task<List<Room>> GetAllRooms(string? search)
+        public async Task<List<Room>> GetAllRooms(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status)
         {
             try
             {
                 var rooms = new List<Room>();
-                SqlParameter[] parameters = null;
-                if (!string.IsNullOrEmpty(search))
+                SqlParameter[] parameters = new SqlParameter[]
                 {
-                    parameters = new SqlParameter[]
-                    {
-                    new SqlParameter("@search", SqlDbType.NVarChar) { Value = $"%{search}%" }
-                    };
-                }
-                var dataTable = await _worker.GetDataTableAsync
-                (!string.IsNullOrEmpty(search) ?
-                        StoredProcedureConstant.SP_GetListRoomWithSearch :
-                        StoredProcedureConstant.SP_GetListRoom, parameters);
+            new("@search", SqlDbType.NVarChar) { Value = (object)search ?? DBNull.Value },
+            new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value },
+            new("@floorId", SqlDbType.UniqueIdentifier) { Value = (object)floorId ?? DBNull.Value },
+            new("@Status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : (object)DBNull.Value }
+                };
+
+                // Gọi thủ tục lưu trữ để lấy dữ liệu
+                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetListRoom, parameters);
 
                 foreach (DataRow row in dataTable.Rows)
                 {

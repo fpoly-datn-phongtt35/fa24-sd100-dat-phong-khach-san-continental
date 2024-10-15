@@ -42,7 +42,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteRoom = "SP_DeleteRoom";
         public const string SP_GetRoomById = "SP_GetRoomById";
         public const string SP_UpdateRoom = "SP_UpdateRoom";
-        public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
+        ////public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
 
         //building
         public const string SP_InsertBuilding = "SP_InsertBuilding";
