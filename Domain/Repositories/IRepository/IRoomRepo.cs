@@ -1,4 +1,6 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.Room;
+using Domain.Enums;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace Domain.Repositories.IRepository
 {
     public interface IRoomRepo
     {
-        Task<List<Room>> GetAllRooms(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status);
+        Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomResponse);
         Task<Room?> GetRoomById(Guid RoomId);
         Task<Room> AddRoom(Room Room);
         Task<Room?> UpdateRoom(Room Room);
