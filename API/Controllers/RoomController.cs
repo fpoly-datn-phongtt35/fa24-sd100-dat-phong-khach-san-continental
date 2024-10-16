@@ -57,11 +57,11 @@ namespace API.Controllers
         }
 
         [HttpPost(nameof(GetAllRooms))]
-        public async Task<List<RoomResponse>> GetAllRooms(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status)
+        public async Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomRequest)
         {
             try
             {
-                return await _roomGetService.GetAllRooms(search, roomTypeId, floorId, status);
+                return await _roomGetService.GetAllRooms(roomRequest);
             }
             catch (Exception e)
             {

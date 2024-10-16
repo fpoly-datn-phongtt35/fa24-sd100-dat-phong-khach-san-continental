@@ -1,7 +1,10 @@
 ﻿
+using Domain.DTO.Paging;
 using Domain.DTO.Room;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Repositories.IRepository;
+using Domain.Repositories.Repository;
 using Domain.Services.IServices.IRoom;
 using System;
 using System.Collections.Generic;
@@ -20,15 +23,9 @@ namespace Domain.Services.Services.Room
             _roomRepository = roomRepository;
         }
 
-        public async Task<List<RoomResponse>> GetAllRooms(string? search, Guid? roomTypeId, Guid? floorId, EntityStatus? status)
+        public async Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomRequest)
         {
-            var rooms = await _roomRepository.GetAllRooms(search, roomTypeId, floorId, status);
-
-            var roomsResponse = rooms
-                .Select(room => room.ToRoomResponse())
-                .ToList();
-
-            return roomsResponse;
+            return await _roomRepository.GetAllRooms(roomRequest);
         }
 
         public async Task<RoomResponse?> GetRoomById(Guid? roomId)

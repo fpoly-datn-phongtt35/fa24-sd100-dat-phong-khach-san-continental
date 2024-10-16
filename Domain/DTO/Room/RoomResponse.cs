@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Room;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
 using System;
