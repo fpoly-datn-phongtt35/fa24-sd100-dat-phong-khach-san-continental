@@ -1,4 +1,7 @@
 ﻿using System.Data;
+using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
@@ -19,33 +22,51 @@ public class RoomTypeRepository : IRoomTypeRepository
         _configuration = configuration;
     }
 
-    public async Task<List<RoomType>> GetFilteredRoomTypes(string? searchString, EntityStatus? status)
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
     {
+        var model = new ResponseData<RoomTypeResponse>();
         try
         {
-            var roomTypes = new List<RoomType>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
-                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+                new("@PageIndex", roomTypeGetRequest.PageIndex),
+                new("@PageSize", roomTypeGetRequest.PageSize),
+                new("@SearchString", roomTypeGetRequest.SearchString),
+                new("@Status", roomTypeGetRequest.Status)
             };
-
+            
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredRoomTypes, parameters);
-
+            var roomTypes = new List<RoomTypeResponse>();
+            
             foreach (DataRow row in dataTable.Rows)
             {
                 var roomType = ConvertDataRowToRoomType(row);
-                roomTypes.Add(roomType);
+                var roomTypeResponse = roomType.ToRoomTypeResponse();
+                roomTypes.Add(roomTypeResponse);
             }
 
-            return roomTypes;
+            model.data = roomTypes;
+            model.CurrentPage = roomTypeGetRequest.PageIndex;
+            model.PageSize = roomTypeGetRequest.PageSize;
+
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / roomTypeGetRequest.PageSize);
         }
         catch (Exception e)
         {
             Console.WriteLine();
             throw new Exception("An error occurred while getting all room types", e);
         }
+
+        return model;
     }
 
     public async Task<RoomType?> GetRoomTypeById(Guid roomTypeId)
@@ -338,31 +359,51 @@ public class RoomTypeRepository : IRoomTypeRepository
         }
     }
 
-    public async Task<List<RoomType>> GetFilteredDeletedRoomTypes(string? searchString)
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredDeletedRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
     {
+        var model = new ResponseData<RoomTypeResponse>();
         try
         {
-            var deletedRoomTypes = new List<RoomType>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@SearchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value }
+                new("@PageIndex", roomTypeGetRequest.PageIndex),
+                new("@PageSize", roomTypeGetRequest.PageSize),
+                new("@SearchString", roomTypeGetRequest.SearchString),
+                new("@Status", roomTypeGetRequest.Status)
             };
+            
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredDeletedRoomTypes, parameters);
+            var deletedRoomTypes = new List<RoomTypeResponse>();
 
             foreach (DataRow row in dataTable.Rows)
             {
-                var deletedRoomType = ConvertDataRowToRoomType(row);
-                deletedRoomTypes.Add(deletedRoomType);
+                var roomType = ConvertDataRowToRoomType(row);
+                var deletedRoomTypeResponse = roomType.ToRoomTypeResponse();
+                deletedRoomTypes.Add(deletedRoomTypeResponse);
             }
+            
+            model.data = deletedRoomTypes;
+            model.CurrentPage = roomTypeGetRequest.PageIndex;
+            model.PageSize = roomTypeGetRequest.PageSize;
 
-            return deletedRoomTypes;
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / roomTypeGetRequest.PageSize);
         }
         catch (Exception e)
         {
             Console.WriteLine();
             throw new Exception("Some errors while getting all deleted room types", e);
         }
+
+        return model;
     }
 
     public async Task<RoomType?> RecoverDeletedRoomType(RoomType roomType)

@@ -1,8 +1,10 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IAmenity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace API.Controllers;
 
@@ -37,13 +39,13 @@ public class AmenityController : ControllerBase
             throw;
         }
     }
-
+    
     [HttpPost(nameof(GetFilteredAmenities))]
-    public async Task<List<AmenityResponse>> GetFilteredAmenities(EntityStatus? status, string? searchString)
+    public async Task<ResponseData<AmenityResponse>> GetFilteredAmenities(AmenityGetRequest amenityGetRequest)
     {
         try
         {
-            return await _amenityGetService.GetFilteredAmenities(status, searchString);
+            return await _amenityGetService.GetFilteredAmenities(amenityGetRequest);
         }
         catch (Exception ex)
         {
@@ -106,11 +108,11 @@ public class AmenityController : ControllerBase
     }
 
     [HttpPost(nameof(GetFilteredDeletedAmenities))]
-    public async Task<List<AmenityResponse>> GetFilteredDeletedAmenities(string? searchString)
+    public async Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenities(AmenityGetRequest amenityGetRequest)
     {
         try
         {
-            return await _amenityGetService.GetFilteredDeletedAmenities(searchString);
+            return await _amenityGetService.GetFilteredDeletedAmenities(amenityGetRequest);
         }
         catch (Exception ex)
         {

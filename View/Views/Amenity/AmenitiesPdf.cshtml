@@ -1,7 +1,7 @@
 ﻿@using Domain.DTO.Amenity
 @using Domain.Enums
 @using View.Views.Shared.Helper
-@model System.Collections.Generic.List<Domain.DTO.Amenity.AmenityResponse>
+@model Domain.DTO.Paging.ResponseData<AmenityResponse>
 
 @{
     Layout = null;
@@ -22,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (AmenityResponse amenity in Model)
+    @foreach (AmenityResponse amenity in Model.data)
     {
         <tr>
             <td style="border: 1px solid black; width: 12%">@amenity.Name</td>
@@ -33,6 +33,17 @@
             <td style="border: 1px solid black; width: 15%">@amenity.ModifiedTime</td>
             <td style="border: 1px solid black; width: 15%">@amenity.ModifiedBy</td>
         </tr>
+        @if ((Model.data.IndexOf(amenity) + 1) % 2 == 0) 
+        {
+            <tr style="page-break-after: always;"></tr>
+        }
     }
     </tbody>
 </table>
+
+<style>
+    .pdf-page-break {
+        page-break-after: always;
+    }
+</style>
+

@@ -1,8 +1,10 @@
 ﻿using System.Text;
 using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Rotativa.AspNetCore;
 
 namespace View.Controllers;
@@ -10,7 +12,7 @@ namespace View.Controllers;
 public class AmenityController : Controller
 {
     private readonly HttpClient _httpClient;
-    
+
     // Inject HttpClient từ IHttpClientFactory thay vì trực tiếp qua constructor
     public AmenityController(HttpClient httpClient)
     {
@@ -18,7 +20,7 @@ public class AmenityController : Controller
         _httpClient.BaseAddress = new Uri("https://localhost:7130/");
     }
 
-    private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null) 
+    private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
         where T : class
     {
         try
@@ -60,26 +62,45 @@ public class AmenityController : Controller
             return null;
         }
     }
-    
-    public async Task<IActionResult> Index(EntityStatus? status, string? searchString)
-    {
-        string requestUrl = $"api/Amenity/GetFilteredAmenities?status={status}&searchString={searchString}";
 
-        var amenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
-        
-        if (amenities != null)
-            return View(amenities);
+    public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? searchString = null,
+        EntityStatus? status = null)
+    {
+        string requestUrl = $"api/Amenity/GetFilteredAmenities";
+
+        var amenityGetRequest = new AmenityGetRequest()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SearchString = searchString,
+            Status = status
+        };
+
+        var amenitiesResponse = await SendHttpRequest<ResponseData<AmenityResponse>>
+            (requestUrl, HttpMethod.Post, amenityGetRequest);
+        if (amenitiesResponse != null)
+            return View(amenitiesResponse);
 
         return View("Error");
     }
 
-    public async Task<IActionResult> Trash(string? searchString)
+    public async Task<IActionResult> Trash(int pageIndex = 1, int pageSize = 5, string? searchString = null,
+        EntityStatus? status = null)
     {
-        string requestUrl = $"api/Amenity/GetFilteredDeletedAmenities?searchString={searchString}";
-        var deletedAmenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
-        
-        if(deletedAmenities != null)
-            return View(deletedAmenities);
+        string requestUrl = $"api/Amenity/GetFilteredDeletedAmenities";
+        var amenityGetRequest = new AmenityGetRequest()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SearchString = searchString,
+            Status = status
+        };
+
+        var deletedAmenitiesResponse = await SendHttpRequest<ResponseData<AmenityResponse>>
+            (requestUrl, HttpMethod.Post, amenityGetRequest);
+
+        if (deletedAmenitiesResponse != null)
+            return View(deletedAmenitiesResponse);
 
         return View("Error");
     }
@@ -97,12 +118,12 @@ public class AmenityController : Controller
 
         var recoverAmenity = await SendHttpRequest<AmenityResponse>
             (requestUrl, HttpMethod.Put, amenityUpdateRequest);
-        
-        if(recoverAmenity != null)
+
+        if (recoverAmenity != null)
             return RedirectToAction("Trash");
         return View("Error");
     }
-    
+
     public async Task<IActionResult> Details(Guid amenityId)
     {
         string requestUrl = $"/api/Amenity/GetAmenityById?amenityId={amenityId}";
@@ -110,22 +131,22 @@ public class AmenityController : Controller
         var amenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Post);
         if (amenity != null)
             return View(amenity);
-        
+
         return View("Error");
     }
 
     public async Task<IActionResult> Create() => View();
-    
+
     [HttpPost]
     public async Task<IActionResult> Create(AmenityCreateRequest amenityCreateRequest)
     {
         string requestUrl = "/api/Amenity/CreateAmenity";
 
-        var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl, 
+        var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl,
             HttpMethod.Post, amenityCreateRequest);
         if (createdAmenity != null)
             return RedirectToAction("Index");
-        
+
         return View("Error");
     }
 
@@ -134,7 +155,7 @@ public class AmenityController : Controller
         string requestUrl = $"/api/Amenity/GetAmenityById?amenityId={amenityId}";
 
         var amenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Post);
-        if(amenity != null)
+        if (amenity != null)
             return View(amenity);
         return View("Error");
     }
@@ -146,8 +167,8 @@ public class AmenityController : Controller
 
         var updatedAmenity = await SendHttpRequest<AmenityResponse>
             (requestUrl, HttpMethod.Put, amenityUpdateRequest);
-        
-        if(updatedAmenity != null)
+
+        if (updatedAmenity != null)
             return RedirectToAction("Index");
         return View("Error");
     }
@@ -157,11 +178,11 @@ public class AmenityController : Controller
         string requestUrl = $"/api/Amenity/GetAmenityById?amenityId={amenityId}";
 
         var amenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Post);
-        if(amenity != null)
+        if (amenity != null)
             return View(amenity);
         return View("Error");
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> Delete(AmenityDeleteRequest amenityDeleteRequest)
     {
@@ -169,21 +190,29 @@ public class AmenityController : Controller
 
         var deletedAmenity = await SendHttpRequest<AmenityResponse>
             (requestUrl, HttpMethod.Put, amenityDeleteRequest);
-        if(deletedAmenity != null)
+        if (deletedAmenity != null)
             return RedirectToAction("Index");
         return View("Error");
     }
 
     public async Task<IActionResult> AmenitiesPdf()
     {
-        //Get list of amenities
-        string requestUrl = $"api/Amenity/GetFilteredAmenities";
-        var amenities = await SendHttpRequest<List<AmenityResponse>>(requestUrl, HttpMethod.Post);
+        var roomTypeGetRequest = new AmenityGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null
+        };
 
-        if(amenities == null)
+        string requestUrl = $"api/Amenity/GetFilteredAmenities";
+        var amenities =
+            await SendHttpRequest<ResponseData<AmenityResponse>>(requestUrl, HttpMethod.Post, roomTypeGetRequest);
+
+        if (amenities == null)
             return View("Error");
-        
-        //Return view as pdf
+
+        // Return view as pdf
         return new ViewAsPdf("AmenitiesPdf", amenities, ViewData)
         {
             PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },

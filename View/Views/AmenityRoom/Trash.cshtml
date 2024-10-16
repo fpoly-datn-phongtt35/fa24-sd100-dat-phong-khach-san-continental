@@ -1,7 +1,7 @@
 ﻿@using Domain.DTO.Amenity
 @using Domain.DTO.RoomType
 @using View.Views.Shared.Helper
-@model System.Collections.Generic.List<Domain.DTO.AmenityRoom.AmenityRoomResponse>
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.AmenityRoom.AmenityRoomResponse>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +12,7 @@
 
 <h1>Danh sách tiện nghi thuộc loại phòng đã xóa</h1>
 
-<form method="get" asp-action="Trash" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["searchString"]"/>
@@ -49,7 +49,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var amenityRoom in Model)
+    @foreach (var amenityRoom in Model.data)
     {
         <tr>
             <td>@amenityRoom.RoomTypeName</td>
@@ -63,3 +63,20 @@
     }
     </tbody>
 </table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Trash", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        searchString = Context.Request.Query["searchString"].ToString(),
+                        status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
