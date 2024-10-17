@@ -25,12 +25,12 @@ namespace View.Controllers
         {
             string requestUrl = "https://localhost:7130/api/ServiceOrder/GetListServiceOrders";
 
-            var request = new ServiceOrderGetRequest();
-            //{
-            //    PageIndex = pageIndex,
-            //    PageSize = pageSize,
-            //    RoomBookingId = roomBookingId
-            //};
+            var request = new ServiceOrderGetRequest
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                RoomBookingId = roomBookingId
+            };
 
             var jsonRequest = JsonConvert.SerializeObject(request);
             

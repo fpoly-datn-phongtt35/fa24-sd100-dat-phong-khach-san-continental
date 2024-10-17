@@ -21,11 +21,17 @@ namespace View.Controllers
             _client = client;
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null, Guid? voucherId = null)
         {
             string requestUrl = "api/VoucherDetail/GetListVoucherDetail";
 
-            var request = new VoucherDetailGetRequest();
+            var request = new VoucherDetailGetRequest
+            {
+                PageSize = pageSize,
+                PageIndex = pageIndex,
+                RoomBookingId = roomBookingId,
+                VoucherId = voucherId
+            };
 
             var jsonRequest = JsonConvert.SerializeObject(request);
 
