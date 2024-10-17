@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenity;
 
@@ -37,6 +38,28 @@ public class AmenityUpdateService : IAmenityUpdateService
         
         await _amenityRepository.UpdateAmenity(existingAmenity);
         
+        return existingAmenity.ToAmenityResponse();
+    }
+
+    public async Task<AmenityResponse?> RecoverDeletedAmenity(AmenityUpdateRequest amenityUpdateRequest)
+    {
+        if(amenityUpdateRequest == null)
+            throw new ArgumentNullException(nameof(amenityUpdateRequest));
+        var existingAmenity = await _amenityRepository.GetAmenityById(amenityUpdateRequest.Id);
+        if(existingAmenity == null)
+            throw new ArgumentException("Id amenity does not exist");
+        
+        if(!existingAmenity.Deleted)
+            throw new InvalidOperationException("This amenity is not deleted, cannot recover");
+
+        existingAmenity.Status = EntityStatus.Active;
+        existingAmenity.Deleted = false;
+        existingAmenity.ModifiedTime = amenityUpdateRequest.ModifiedTime;
+        existingAmenity.ModifiedBy = amenityUpdateRequest.ModifiedBy;
+        existingAmenity.DeletedTime = default;
+        existingAmenity.DeletedBy = default;
+        
+        await _amenityRepository.RecoverDeletedAmenity(existingAmenity);
         return existingAmenity.ToAmenityResponse();
     }
 }

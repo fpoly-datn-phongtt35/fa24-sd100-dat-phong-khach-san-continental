@@ -1,4 +1,7 @@
 ﻿using System.Data;
+using System.Linq.Expressions;
+using Domain.DTO.AmenityRoom;
+using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
@@ -19,24 +22,52 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         _configuration = configuration;
     }
 
-    public async Task<List<AmenityRoom>> GetAllAmenityRooms()
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredAmenityRooms(AmenityRoomGetRequest amenityRoomGetRequest)
     {
+        var model = new ResponseData<AmenityRoomResponse>();
         try
         {
-            var amenityRooms = new List<AmenityRoom>();
-            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAllAmenityRooms, null);
-
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@PageIndex", amenityRoomGetRequest.PageIndex),
+                new("@PageSize", amenityRoomGetRequest.PageSize),
+                new("@SearchString", amenityRoomGetRequest.SearchString),
+                new("@Status", amenityRoomGetRequest.Status),
+                new("@RoomTypeId", amenityRoomGetRequest.RoomTypeId)
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredAmenityRooms, parameters);
+            var amenityRooms = new List<AmenityRoomResponse>();
+            
             foreach (DataRow row in dataTable.Rows)
             {
                 var amenityRoom = ConvertDataRowToAmenityRoom(row);
-                amenityRooms.Add(amenityRoom);
+                var amenityRoomResponse = amenityRoom.ToAmenityRoomResponse();
+                amenityRooms.Add(amenityRoomResponse);
             }
-            return amenityRooms;
+
+            model.data = amenityRooms;
+            model.CurrentPage = amenityRoomGetRequest.PageIndex;
+            model.PageSize = amenityRoomGetRequest.PageSize;
+            
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityRoomGetRequest.PageSize);
         }
         catch (Exception e)
         {
             throw new ArgumentNullException("An error occurred while getting all room types", e);
         }
+
+        return model;
     }
 
     public async Task<AmenityRoom?> GetAmenityRoomById(Guid amenityRoomId)
@@ -47,15 +78,15 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoomId }
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAmenityRoomById, parameters);
 
             if (dataTable.Rows.Count == 0)
                 return null;
-            
+
             var row = dataTable.Rows[0];
             var amenityRoom = ConvertDataRowToAmenityRoom(row);
-            
+
             return amenityRoom;
         }
         catch (Exception e)
@@ -80,7 +111,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.DeletedTime }
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertAmenityRoom, parameters);
 
             return amenityRoom;
@@ -101,7 +132,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 throw new Exception("There is no amenity room with the provided Id.");
             }
-            
+
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
@@ -113,7 +144,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.ModifiedBy }
             };
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateAmenityRoom, parameters);
-            
+
             return await existingAmenityRoom;
         }
         catch (Exception e)
@@ -131,7 +162,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 throw new Exception("There is no amenity room with the provided Id.");
             }
-            
+
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
@@ -140,14 +171,93 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.DeletedBy },
             };
-            
+
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_DeleteAmenityRoom, parameters);
-            
+
             return await existingAmenityRoom;
         }
         catch (Exception e)
         {
             throw new Exception("Some errors when deleted amenity rooom", e);
+        }
+    }
+
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredDeletedAmenityRooms
+        (AmenityRoomGetRequest amenityRoomGetRequest)
+    {
+        var model = new ResponseData<AmenityRoomResponse>();
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@PageIndex", amenityRoomGetRequest.PageIndex),
+                new("@PageSize", amenityRoomGetRequest.PageSize),
+                new("@SearchString", amenityRoomGetRequest.SearchString),
+                new("@Status", amenityRoomGetRequest.Status),
+                new("@RoomTypeId", amenityRoomGetRequest.RoomTypeId)
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredDeletedAmenityRooms, parameters);
+            var deletedAmenityRooms = new List<AmenityRoomResponse>();
+            
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var deletedAmenityRoom = ConvertDataRowToAmenityRoom(row);
+                var deletedAmenityRoomResponse = deletedAmenityRoom.ToAmenityRoomResponse();
+                deletedAmenityRooms.Add(deletedAmenityRoomResponse);
+            }
+            
+            model.data = deletedAmenityRooms;
+            model.CurrentPage = amenityRoomGetRequest.PageIndex;
+            model.PageSize = amenityRoomGetRequest.PageSize;
+
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityRoomGetRequest.PageSize);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine();
+            throw new Exception("An error occurred while getting all deleted amenity rooms", e);
+        }
+
+        return model;
+    }
+
+    public async Task<AmenityRoom?> RecoverDeletedAmenityRoom(AmenityRoom amenityRoom)
+    {
+        try
+        {
+            var existingAmenityRoom = GetAmenityRoomById(amenityRoom.Id);
+            if(existingAmenityRoom == null)
+                throw new Exception("There is no amenity room with the provided Id.");
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
+                new("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = DBNull.Value }
+            };
+            
+            await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_RecoverDeletedAmenityRoom, parameters);
+            return await existingAmenityRoom;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An error occurred while recovering deleted amenity room", e);
         }
     }
 
@@ -166,16 +276,27 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-            DeletedBy = ConvertGuidToString(row, "DeletedBy")
+            DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+            Amenity = new Amenity 
+            { 
+                Id = (Guid)row["AmenityId"], 
+                Name = (string)row["AmenityName"] 
+            },
+            RoomType = new RoomType 
+            { 
+                Id = (Guid)row["RoomTypeId"], 
+                Name = (string)row["RoomTypeName"] 
+            }
         };
     }
-    
+
     private static DateTimeOffset ConvertDateTimeOffsetToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)
         {
             return DateTimeOffset.Parse(row[columnName].ToString()!);
         }
+
         return DateTimeOffset.MinValue;
     }
 
@@ -185,6 +306,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         {
             return Guid.Parse(row[columnName].ToString()!);
         }
+
         return null;
     }
 }

@@ -1,10 +1,14 @@
 ﻿using System.Text;
 using Domain.DTO.Amenity;
 using Domain.DTO.AmenityRoom;
+using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Rotativa.AspNetCore;
 
 namespace View.Controllers;
 
@@ -64,33 +68,103 @@ public class AmenityRoomController : Controller
     private async Task LoadAmenitiesAndRoomTypes()
     {
         // Gọi API để lấy danh sách Amenities
-        string amenityRequestUrl = "Amenity/GetAllAmenities";
-        var amenitiesTask = SendHttpRequest<List<AmenityResponse>>(amenityRequestUrl, HttpMethod.Post);
+        var amenityGetRequest = new AmenityGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null
+        };
+        string amenityRequestUrl = "Amenity/GetFilteredAmenities";
+        var amenitiesTask = SendHttpRequest<ResponseData<AmenityResponse>>
+            (amenityRequestUrl, HttpMethod.Post, amenityGetRequest);
 
         // Gọi API để lấy danh sách RoomTypes
-        string roomTypeRequestUrl = "RoomType/GetAllRoomTypes";
-        var roomTypesTask = SendHttpRequest<List<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post);
+        var roomTypeGetRequest = new RoomTypeGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null
+        };
+        string roomTypeRequestUrl = "RoomType/GetFilteredRoomTypes";
+        var roomTypesTask = SendHttpRequest<ResponseData<RoomTypeResponse>>
+            (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
         // Đợi cả hai lời gọi API hoàn tất
         await Task.WhenAll(amenitiesTask, roomTypesTask);
 
         // Lấy kết quả của hai danh sách và lưu vào ViewBag
-        ViewBag.Amenities = await amenitiesTask;
-        ViewBag.RoomTypes = await roomTypesTask;
+        var amenitiesResponse = await amenitiesTask;
+        ViewBag.Amenities = amenitiesResponse?.data ?? new List<AmenityResponse>();
+            
+        // Lưu danh sách RoomTypes vào ViewBag
+        var roomTypesResponse = await roomTypesTask;
+        ViewBag.RoomTypes = roomTypesResponse?.data ?? new List<RoomTypeResponse>();
     }
-    
-    public async Task<IActionResult> Index()
+
+    public async Task<IActionResult> Index(string? searchString = null, Guid? roomTypeId = null, 
+        EntityStatus? status = null, int pageIndex = 1, int pageSize = 5)
     {
         await LoadAmenitiesAndRoomTypes();
-        const string requestUrl = "AmenityRoom/GetAllAmenityRooms";
-        
-        var amenityRooms = await SendHttpRequest<List<AmenityRoomResponse>>(requestUrl, HttpMethod.Post);
-        if(amenityRooms != null)
+        var amenityRoomGetRequest = new AmenityRoomGetRequest()
+        {
+            PageSize = pageSize,
+            PageIndex = pageIndex,
+            SearchString = searchString,
+            Status = status,
+            RoomTypeId = roomTypeId
+        };
+        string requestUrl = "AmenityRoom/GetFilteredAmenityRooms";
+
+        var amenityRooms = await SendHttpRequest<ResponseData<AmenityRoomResponse>>
+            (requestUrl, HttpMethod.Post, amenityRoomGetRequest);
+        if (amenityRooms != null)
             return View(amenityRooms);
-        
+
         return View("Error");
     }
 
+    public async Task<IActionResult> Trash(string? searchString = null, Guid? roomTypeId = null, 
+        EntityStatus? status = null, int pageIndex = 1, int pageSize = 5)
+    {
+        await LoadAmenitiesAndRoomTypes();
+        var amenityRoomGetRequest = new AmenityRoomGetRequest()
+        {
+            PageSize = pageSize,
+            PageIndex = pageIndex,
+            SearchString = searchString,
+            Status = status,
+            RoomTypeId = roomTypeId
+        };
+        await LoadAmenitiesAndRoomTypes();
+        string requestUrl = "AmenityRoom/GetFilteredDeletedAmenityRooms";
+        
+        var deletedAmenityRooms = await SendHttpRequest<ResponseData<AmenityRoomResponse>>
+            (requestUrl, HttpMethod.Post, amenityRoomGetRequest);
+        if(deletedAmenityRooms != null)
+            return View(deletedAmenityRooms);
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Recover(Guid amenityRoomId)
+    {
+        var amenityRoomUpdateRequest = new AmenityRoomUpdateRequest()
+        {
+            Id = amenityRoomId,
+            // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
+            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
+        };
+        string requestUrl = "AmenityRoom/RecoverDeletedAmenityRoom";
+        
+        var recoverAmenityRoom = await SendHttpRequest<AmenityRoomResponse>
+            (requestUrl, HttpMethod.Put, amenityRoomUpdateRequest);
+        if(recoverAmenityRoom != null)
+            return RedirectToAction("Trash");
+        
+        return View("Error");
+    }
+    
     public async Task<IActionResult> Details(Guid amenityRoomId)
     {
         await LoadAmenitiesAndRoomTypes();
@@ -170,5 +244,29 @@ public class AmenityRoomController : Controller
             return RedirectToAction("Index");
         
         return View("Error");
+    }
+
+    public async Task<IActionResult> AmenityRoomsPdf()
+    {
+        var amenityRoomGetRequest = new AmenityRoomGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null
+        };
+
+        string requestUrl = "AmenityRoom/GetFilteredAmenityRooms";
+        var amenityRooms = await SendHttpRequest<ResponseData<AmenityRoomResponse>>
+            (requestUrl, HttpMethod.Post, amenityRoomGetRequest);
+        
+        if (amenityRooms == null)
+            return View("Error");
+        
+        return new ViewAsPdf("AmenityRoomsPdf", amenityRooms, ViewData)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins() {Top = 20, Right = 20, Bottom = 20, Left = 20},
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 } 

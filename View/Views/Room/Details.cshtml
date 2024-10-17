@@ -21,8 +21,27 @@
         <dt class="col-sm-2">@Html.DisplayName("Room Size ")</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomSize)</dd>
         <dt class="col-sm-2">@Html.DisplayName("FloorId ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.FloorId)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("RoomTypeId ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomTypeId)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
+        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
         <dt class="col-sm-2">@Html.DisplayName("Hình ảnh")</dt>
-        <dd class="col-sm-6">
+        <dd class="col-sm-10">
             @if (Model.Images != null && Model.Images.Any())
             {
                 <div class="d-flex justify-content-center">
@@ -45,25 +64,8 @@
         </dd>
 
 
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.FloorId)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("RoomTypeId ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomTypeId)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
-        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
+        
+        
     </dl>
 </div>
 <div>

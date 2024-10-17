@@ -1,4 +1,7 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.Room;
+using Domain.DTO.RoomType;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
@@ -24,24 +27,49 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
         }
 
-        public async Task<List<Room>> GetAllRooms()
+        public async Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomRequest)
         {
+            var rooms = new ResponseData<RoomResponse>();
             try
             {
-                var rooms = new List<Room>();
-                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetListRoom, null);
 
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new("@PageIndex", roomRequest.PageIndex),
+                    new("@PageSize", roomRequest.PageSize),
+                    new("@Name", roomRequest.Name),
+                    new("@Status", roomRequest.Status),
+                    new("@FloorId", roomRequest.FloorId),
+                    new("@RoomTypeID", roomRequest.RoomTypeId)
+                };
+
+                // Gọi thủ tục lưu trữ để lấy dữ liệu
+                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetListRoom, parameters);
+                var roomlist = new List<RoomResponse>();
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    var room = RowToRoom(row);
-                    rooms.Add(room);
+                    var room =RowToRoom(row);
+                    var roomResponse = room.ToRoomResponse();
+                    roomlist.Add(roomResponse);
                 }
-                return rooms;
+                try
+                {
+                    rooms.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+                }
+                catch (Exception e)
+                {
+                    rooms.totalRecord = 0;
+                }
+                rooms.totalPage = (int)Math.Ceiling((double)rooms.totalRecord / roomRequest.PageSize);
+                rooms.data = roomlist;
+                rooms.CurrentPage = roomRequest.PageIndex;
+                rooms.PageSize = roomRequest.PageSize;
             }
             catch (Exception e)
             {
-                throw new ArgumentNullException("An error occurred while getting all room types", e);
+                throw new ArgumentNullException("An error occurred while getting all room", e);
             }
+            return rooms;
         }
 
         public async Task<Room?> GetRoomById(Guid roomId)

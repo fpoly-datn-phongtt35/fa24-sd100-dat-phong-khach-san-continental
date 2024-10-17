@@ -1,4 +1,5 @@
 ﻿@using Domain.Enums
+@using View.Views.Shared.Helper
 @model Domain.DTO.RoomType.RoomTypeAddRequest
 
 @{
@@ -29,13 +30,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label">Trạng thái</label>
-                <select asp-for="Status" class="form-control">
-                    @{
-                        string[] status = (string[])Enum.GetNames(typeof(EntityStatus));
-                    }
-                    @foreach (string item in status)
+                <select name="status" class="form-select" id="status">
+                    <option disabled selected>Chọn trạng thái</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
-                        <option value="@item">@item</option>
+                    // Ép kiểu status về EntityStatus
+                    var statusEnum = (EntityStatus)status;
+                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                        @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+                    </option>
                     }
                 </select>
             </div><div class="form-group" hidden>

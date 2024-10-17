@@ -1,7 +1,7 @@
 ﻿@using System.Diagnostics
 @using Domain.Enums
 @using View.Views.Shared.Helper
-@model System.Collections.Generic.List<Domain.DTO.RoomType.RoomTypeResponse>
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.RoomType.RoomTypeResponse>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,36 +9,78 @@
 
 <h1>Danh sách loại phòng</h1>
 
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm loại phòng..."
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <div class="form-group me-2">
+        <select name="status" class="form-select" id="status">
+            <option value="">Chọn trạng thái</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+            // Ép kiểu status về EntityStatus
+            var statusEnum = (EntityStatus)status;
+            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                @StatusHelper.DisplayNameForEnum(statusEnum)
+            </option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
+
 <p>
-    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+    <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+    <a asp-action="RoomTypesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
+    <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
+
 <table class="table" style="color: whitesmoke">
     <thead>
     <tr>
-        <th>@Html.DisplayName("Tên loại phòng")</th>
-        <th>@Html.DisplayName("Mô tả")</th>
-        <th>@Html.DisplayName("Số lượng tối đa người ở")</th>
-        <th>@Html.DisplayName("Trạng thái")</th>
-        <th>@Html.DisplayName("Chức năng")</th>
+        <th>Tên loại phòng</th>
+        <th>Mô tả</th>
+        <th>Số lượng người ở</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var roomType in Model.data)
     {
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-            <td>@Html.DisplayFor(modelItem => item.MaximumOccupancy)</td>
-            <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
-            <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = item.Id }, 
-    new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "DetailsWithAmenity", new { roomTypeId = item.Id },
-                new { @class = "btn btn-info" })
-                @Html.ActionLink("Xóa", "Delete", new { roomTypeId = item.Id }, 
-    new { @class = "btn btn-danger" })
+            <td style="width: 15%">@roomType.Name</td>
+            <td style="width: 20%">@roomType.Description</td>
+            <td style="width: 10%">@roomType.MaximumOccupancy</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(roomType.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = roomType.Id }, 
+                    new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { roomTypeId = roomType.Id },
+                    new { @class = "btn btn-info" })
+                @Html.ActionLink("Xóa", "Delete", new { roomTypeId = roomType.Id }, 
+                    new { @class = "btn btn-danger" })
             </td>
         </tr>
     }
     </tbody>
 </table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                       pageIndex = i,
+                       pageSize = Model.PageSize,
+                       searchString = Context.Request.Query["searchString"].ToString(),
+                       status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

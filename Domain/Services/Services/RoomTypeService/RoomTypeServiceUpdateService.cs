@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomTypeService;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomTypeService;
 
@@ -37,5 +38,30 @@ public class RoomTypeServiceUpdateService : IRoomTypeServiceUpdateService
 
         await _roomTypeServiceRepository.UpdateRoomTypeService(exisingRoomTypeService);
         return exisingRoomTypeService.ToRoomTypeServiceResponse();
+    }
+
+    public async Task<RoomTypeServiceResponse?> RecoverDeletedRoomTypeService
+        (RoomTypeServiceUpdateRequest roomTypeServiceUpdateRequest)
+    {
+        if(roomTypeServiceUpdateRequest is null)
+            throw new ArgumentNullException(nameof(roomTypeServiceUpdateRequest));
+        
+        var existingRoomTypeService = await _roomTypeServiceRepository
+            .GetRoomTypeServiceById(roomTypeServiceUpdateRequest.Id);
+        if(existingRoomTypeService is null)
+            throw new Exception("Id room type service does not exist");
+        
+        if(!existingRoomTypeService.Deleted)
+            throw new InvalidOperationException("This room type service is not deleted, cannot recover it.");
+
+        existingRoomTypeService.Status = EntityStatus.Active;
+        existingRoomTypeService.ModifiedTime = roomTypeServiceUpdateRequest.ModifiedTime;
+        existingRoomTypeService.ModifiedBy = roomTypeServiceUpdateRequest.ModifiedBy;
+        existingRoomTypeService.Deleted = false;
+        existingRoomTypeService.DeletedTime = default;
+        existingRoomTypeService.DeletedBy = default;
+        
+        await _roomTypeServiceRepository.RecoverDeletedRoomTypeService(existingRoomTypeService);
+        return existingRoomTypeService.ToRoomTypeServiceResponse();
     }
 }

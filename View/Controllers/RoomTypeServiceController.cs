@@ -3,9 +3,11 @@ using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
 using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Rotativa.AspNetCore;
 
 namespace View.Controllers;
 
@@ -65,7 +67,7 @@ public class RoomTypeServiceController : Controller
     public async Task LoadRoomTypes()
     {
         // Call API to GET list RoomTypes
-        string roomTypeRequestUrl = "RoomType/GetAllRoomTypes";
+        string roomTypeRequestUrl = "RoomType/GetFilteredRoomTypes";
         var roomTypesTask = SendHttpRequest<List<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post);
         
         ViewBag.RoomTypes = await roomTypesTask;
@@ -83,11 +85,11 @@ public class RoomTypeServiceController : Controller
         ViewBag.ServiceList = service?.data;
     }
     
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? searchString, Guid? roomTypeId, EntityStatus? status)
     {
         await LoadRoomTypes();
         await LoadServices();
-        const string requestUrl = "RoomTypeService/GetAllRoomTypeServices";
+        string requestUrl = $"RoomTypeService/GetFilteredRoomTypeServices?searchString={searchString}&roomTypeId={roomTypeId}&status={status}";
         
         var roomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>(requestUrl, HttpMethod.Post);
         if(roomTypeServices != null)
@@ -96,6 +98,36 @@ public class RoomTypeServiceController : Controller
         return View("Error");
     }
 
+    public async Task<IActionResult> Trash(string? searchString, Guid? roomTypeId)
+    {
+        await LoadRoomTypes();
+        await LoadServices();
+        string requestUrl = $"RoomTypeService/GetFilteredDeletedRoomTypeServices?searchString={searchString}&roomTypeId={roomTypeId}";
+
+        var deletedRoomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>
+            (requestUrl, HttpMethod.Post);
+        if (deletedRoomTypeServices != null)
+            return View(deletedRoomTypeServices);
+
+        return View("Error");
+    }
+
+    public async Task<IActionResult> Recover(Guid roomTypeServiceId)
+    {
+        var roomTypeServiceUpdateRequest = new RoomTypeServiceUpdateRequest()
+        {
+            Id = roomTypeServiceId,
+            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda")
+        };
+        string requestUrl = "RoomTypeService/RecoverDeletedRoomTypeService";
+        
+        var recoverRoomTypeService = await SendHttpRequest<RoomTypeServiceResponse>
+            (requestUrl, HttpMethod.Put, roomTypeServiceUpdateRequest);
+        if (recoverRoomTypeService != null)
+            return RedirectToAction("Trash");
+        return View("Error");
+    }
+    
     public async Task<IActionResult> Details(Guid roomTypeServiceId)
     {
         await LoadRoomTypes();
@@ -179,5 +211,20 @@ public class RoomTypeServiceController : Controller
             return RedirectToAction("Index");
         
         return View("Error");
+    }
+
+    public async Task<IActionResult> RoomTypeServicesPdf()
+    {
+        string requestUrl = "RoomTypeService/GetFilteredRoomTypeServices";
+        var roomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>(requestUrl, HttpMethod.Post);
+        
+        if(roomTypeServices == null)
+            return View("Error");
+        
+        return new ViewAsPdf("RoomTypeServicesPdf", roomTypeServices, ViewData)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins() {Top = 20, Right = 20, Bottom = 20, Left = 20},
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 }

@@ -1,17 +1,76 @@
 ﻿@using System.Diagnostics
+@using Domain.DTO.Floor
+@using Domain.DTO.RoomType
 @using Domain.Enums
-@model System.Collections.Generic.List<Domain.DTO.Room.RoomResponse>
+@using Domain.DTO.Paging
+@model ResponseData<Domain.DTO.Room.RoomResponse>
+
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách Room";
 }
+<style>
+    body {
+        color: white;
+    }
 
+    .table th, .table td {
+        color: white;
+    }
+
+</style>
 <h1>Danh sách Room</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
 </p>
-<table class="table" style="color: whitesmoke">
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+        <div class="form-group me-2">
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+                   value="@ViewContext.HttpContext.Request.Query["search"]" />
+        </div>
+        <div class="form-group me-2">
+            <select name="roomTypeId" class="form-select" id="roomTypeId">
+                <option value="">Chọn loại phòng</option>
+                @foreach (var roomType in ViewBag.roomTypeList)
+                {
+                    <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                        @roomType.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group me-2">
+            <select name="floorId" class="form-select" id="floorId">
+                <option value="">Chọn tầng</option>
+                @foreach (var floor in ViewBag.FloorList)
+                {
+                    <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
+                        @floor.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
+                <option value="">-- Status --</option>
+                @foreach (var status in ViewBag.StatusList)
+                {
+                    <option value="@((int)status)"
+                            selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                        @status
+                    </option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-light">Tìm kiếm</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+    </form>
+
+<table class="table table-striped" style="color: whitesmoke">
     <thead>
         <tr>
             <th>@Html.DisplayName("Name")</th>
@@ -27,7 +86,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.data)
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
@@ -54,17 +113,16 @@
                         var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
                         var floor = floorList?.FirstOrDefault(s => s.Id == item.FloorId);
                     }
-                    @floor.Name
+                    @floor?.Name
                 </td>
                 <td>
                     @{
-                        var roomtypeList = ViewBag.RoomTypeList as List<Domain.Models.RoomType>;
-                        var roomtype = roomtypeList?.FirstOrDefault(s => s.Id == item.RoomTypeId);
+                        var roomTypeList = ViewBag.RoomTypeList as List<Domain.Models.RoomType>;
+                        var roomType = roomTypeList?.FirstOrDefault(s => s.Id == item.RoomTypeId);
                     }
-                    @(roomtype != null ? roomtype.Name : "Không có loại phòng")
+                    @(roomType != null ? roomType.Name : "Không có loại phòng")
                 </td>
-
-                <td>@Html.DisplayFor(modelItem=>item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>
                     @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "btn btn-warning" })
                     @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "btn btn-info" })
@@ -74,3 +132,22 @@
         }
     </tbody>
 </table>
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        search = Context.Request.Query["search"].ToString(),
+                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
+                        floorId = Context.Request.Query["floorId"].ToString(),
+                        status = Context.Request.Query["status"].ToString()
+                    })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

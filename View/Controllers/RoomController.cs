@@ -9,9 +9,11 @@ using Domain.DTO.ServiceType;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace View.Controllers
 {
@@ -60,55 +62,66 @@ namespace View.Controllers
             }
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? name= null, Guid? roomTypeId=null, Guid? floorId = null, RoomStatus? status=null, int pageIndex = 1, int pageSize = 5)
         {
-             string roomsRequestUrl = "/api/Room/GetAllRooms";
+            // Tạo PagingRequest
+            var roomRequest = new RoomRequest()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                RoomTypeId=roomTypeId,
+                FloorId=floorId,
+                Name = name,
+                Status = status
+            };
+
+            // Tạo URL yêu cầu cho danh sách phòng
+            string roomsRequestUrl = $"/api/Room/GetAllRooms";
 
             try
             {
                 // Gửi yêu cầu để lấy danh sách phòng
-                var rooms = await SendHttpRequest<List<RoomResponse>>(roomsRequestUrl, HttpMethod.Post);
+                var roomsResponse = await SendHttpRequest<ResponseData<RoomResponse>>(roomsRequestUrl, HttpMethod.Post, roomRequest);
 
-                if (rooms == null)
+                if (roomsResponse == null)
                 {
                     return View("Error", new Exception("Không thể lấy danh sách phòng."));
                 }
-                string floorsRequestUrl = "/api/Floor/GetListFloor";
+                        // Gửi yêu cầu lấy danh sách tầng
+                        string floorsRequestUrl = "/api/Floor/GetListFloor";
                 var floorsRequest = new FloorGetRequest();
                 var floorJsonRequest = JsonConvert.SerializeObject(floorsRequest);
                 var floorContent = new StringContent(floorJsonRequest, Encoding.UTF8, "application/json");
                 var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, floorContent);
 
-                var FloorResponseString = await floorResponse.Content.ReadAsStringAsync();
-
-                var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(FloorResponseString);
+                var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
+                var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
                 ViewBag.FloorList = floorList.data;
+                // Lấy danh sách trạng thái
+                ViewBag.StatusList = Enum.GetValues(typeof(RoomStatus));
 
-
-                //var roomtypeRequest = new FloorGetRequest();
-                //var roomtypeJsonRequest = JsonConvert.SerializeObject(roomtypeRequest);
-                //var roomtypeContent = new StringContent(roomtypeJsonRequest, Encoding.UTF8, "application/json");
-                //var roomtypeResponse = await _httpClient.PostAsync(roomTypesRequestUrl, roomtypeContent);
-                string roomTypesRequestUrl = "/api/RoomType/GetAllRoomTypes"; // URL để lấy danh sách loại phòng
+                // Lấy danh sách loại phòng
+                string roomTypesRequestUrl = "/api/RoomType/GetFilteredRoomTypes";
                 var roomTypeList = await SendHttpRequest<List<RoomTypeResponse>>(roomTypesRequestUrl, HttpMethod.Post);
 
                 if (roomTypeList == null)
                 {
                     return View("Error", new Exception("Không thể lấy danh sách loại phòng."));
                 }
+
                 ViewBag.RoomTypeList = roomTypeList.Select(rt => new Domain.Models.RoomType
                 {
                     Id = rt.Id,
                     Name = rt.Name
                 }).ToList();
-
-                return View(rooms); // Trả về danh sách phòng
+                return View(roomsResponse); // Trả về danh sách phòng
             }
             catch (Exception ex)
             {
                 return View("Error", ex);
             }
         }
+
 
 
         public async Task<IActionResult> Details(Guid roomId)
@@ -133,7 +146,7 @@ namespace View.Controllers
             ViewBag.Floors = floor?.data;
 
             // Lấy danh sách loại phòng
-            string roomTypeRequestUrl = "api/RoomType/GetAllRoomTypes";
+            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
             var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
             var roomTypes = JsonConvert.DeserializeObject<List<RoomType>>(roomTypeResponseString);
@@ -200,7 +213,7 @@ namespace View.Controllers
             ViewBag.Floors = floor?.data;
 
             // Lấy danh sách loại phòng
-            string roomTypeRequestUrl = "api/RoomType/GetAllRoomTypes";
+            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
             var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
             var roomTypes = JsonConvert.DeserializeObject<List<RoomType>>(roomTypeResponseString);

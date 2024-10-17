@@ -8,6 +8,8 @@ public class AmenityRoomResponse
     public Guid Id { get; set; }
     public Guid AmenityId { get; set; }
     public Guid RoomTypeId { get; set; }
+    public string? AmenityName { get; set; }
+    public string? RoomTypeName { get; set; }
     public int Amount { get; set; }
     public EntityStatus Status { get; set; }
     public DateTimeOffset CreatedTime { get; set; }
@@ -40,6 +42,14 @@ public class AmenityRoomResponse
     {
         // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
         return base.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return $"AmenityRoomId: {Id}, AmenityId: {AmenityId}, Amenity: {AmenityName} ,RoomTypeId: {RoomTypeId}, " +
+               $"RoomType: {RoomTypeName}, Amount: {Amount}, Status: {Status}, CreatedTime: {CreatedTime}," +
+               $"CreatedBy: {CreatedBy}, ModifiedTime: {ModifiedTime}, " + $"ModifiedBy: {ModifiedBy}, " +
+               $"DeletedTime: {DeletedTime}, DeletedBy: {DeletedBy},"; 
     }
 
     public AmenityRoomUpdateRequest ToAmenityRoomUpdateRequest()
@@ -87,7 +97,9 @@ public static class AmenityRoomResponseExtensions
             ModifiedBy = amenityRoom.ModifiedBy,
             Deleted = amenityRoom.Deleted,
             DeletedTime = amenityRoom.DeletedTime,
-            DeletedBy = amenityRoom.DeletedBy
+            DeletedBy = amenityRoom.DeletedBy,
+            AmenityName = amenityRoom.Amenity?.Name,
+            RoomTypeName = amenityRoom.RoomType?.Name
         };
     }
 }

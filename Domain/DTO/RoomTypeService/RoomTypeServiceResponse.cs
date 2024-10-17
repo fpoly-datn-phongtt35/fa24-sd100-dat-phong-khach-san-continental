@@ -8,6 +8,8 @@ public class RoomTypeServiceResponse
     public Guid Id { get; set; }
     public Guid RoomTypeId { get; set; }
     public Guid ServiceId { get; set; }
+    public string? RoomTypeName { get; set; }
+    public string? ServiceName { get; set; }
     public int Amount { get; set; }
     public EntityStatus Status { get; set; }
     public DateTimeOffset CreatedTime { get; set; }
@@ -87,7 +89,9 @@ public static class RoomTypeServiceExtensions
             ModifiedBy = roomTypeService.ModifiedBy,
             Deleted = roomTypeService.Deleted,
             DeletedTime = roomTypeService.DeletedTime,
-            DeletedBy = roomTypeService.DeletedBy
+            DeletedBy = roomTypeService.DeletedBy,
+            RoomTypeName = roomTypeService.RoomType?.Name,
+            ServiceName = roomTypeService.Service?.Name
         };
     }
 }

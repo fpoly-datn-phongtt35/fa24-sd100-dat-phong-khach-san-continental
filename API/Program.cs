@@ -106,13 +106,11 @@ namespace API
             builder.Services.AddTransient<IAmenityAddService, AmenityAddService>();
             builder.Services.AddTransient<IAmenityDeleteService, AmenityDeleteService>();
             builder.Services.AddTransient<IAmenityGetService, AmenityGetService>();
-            builder.Services.AddTransient<IAmenityRollBackService, AmenityRollBackService>();
             builder.Services.AddTransient<IAmenityUpdateService, AmenityUpdateService>();
             //RoomTypeService
             builder.Services.AddTransient<IRoomTypeAddService, RoomTypeAddService>();
             builder.Services.AddTransient<IRoomTypeDeleteService, RoomTypeDeleteService>();
             builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
-            builder.Services.AddTransient<IRoomTypeRollBackService, RoomTypeRollBackService>();
             builder.Services.AddTransient<IRoomTypeUpdateService, RoomTypeUpdateService>();
             
             builder.Services.AddTransient<ICustomerService, CustomerService>(); 

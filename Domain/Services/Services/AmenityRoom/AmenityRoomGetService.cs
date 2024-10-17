@@ -1,4 +1,6 @@
 ﻿using Domain.DTO.AmenityRoom;
+using Domain.DTO.Paging;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenityRoom;
 
@@ -13,17 +15,12 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         _amenityRoomRepository = amenityRoomRepository;
     }
 
-    public async Task<List<AmenityRoomResponse>> GetAllAmenityRooms()
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredAmenityRooms
+        (AmenityRoomGetRequest amenityRoomGetRequest)
     {
-        var amenityRooms = await _amenityRoomRepository.GetAllAmenityRooms();
-
-        var amenityRoomsResponse = amenityRooms
-            .Select(amenityRoom => amenityRoom.ToAmenityRoomResponse())
-            .ToList();
-        
-        return amenityRoomsResponse;
+        return await _amenityRoomRepository.GetFilteredAmenityRooms(amenityRoomGetRequest);
     }
-
+    
     public async Task<AmenityRoomResponse?> GetAmenityRoomById(Guid? amenityRoomId)
     {
         if (amenityRoomId == null) return null;
@@ -32,5 +29,11 @@ public class AmenityRoomGetService : IAmenityRoomGetService
         if (amenityRoom == null) return null;
 
         return amenityRoom.ToAmenityRoomResponse();
+    }
+
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredDeletedAmenityRooms
+        (AmenityRoomGetRequest amenityRoomGetRequest)
+    {
+        return await _amenityRoomRepository.GetFilteredDeletedAmenityRooms(amenityRoomGetRequest);
     }
 }

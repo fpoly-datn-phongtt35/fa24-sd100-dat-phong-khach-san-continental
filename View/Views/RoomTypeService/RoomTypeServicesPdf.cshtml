@@ -1,0 +1,42 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.DTO.AmenityRoom
+@using Domain.DTO.RoomType
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
+
+@{
+    Layout = null;
+}
+<link href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" rel="stylesheet" />
+<h1>Danh sách dịch vụ thuộc loại phòng </h1>
+
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+        <th style="border: 1px solid black;">Loại phòng</th>
+        <th style="border: 1px solid black;">Dịch vụ</th>
+        <th style="border: 1px solid black;">Số lượng</th>
+        <th style="border: 1px solid black;">Trạng thái</th>
+        <th style="border: 1px solid black;">Thời gian tạo</th>
+        <th style="border: 1px solid black;">Người tạo</th>
+        <th style="border: 1px solid black;">Thời gian sửa</th>
+        <th style="border: 1px solid black;">Người sửa</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var roomTypeService in Model)
+    {
+        <tr>
+            <td style="border: 1px solid black; width: 10%">@roomTypeService.RoomTypeName</td>
+            <td style="border: 1px solid black; width: 10%">@roomTypeService.ServiceName</td>
+            <td style="border: 1px solid black; width: 8%">@roomTypeService.Amount</td>
+            <td style="border: 1px solid black; width: 8%">@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
+            <td style="border: 1px solid black; width: 15%">@roomTypeService.CreatedTime</td>
+            <td style="border: 1px solid black; width: 15%">@roomTypeService.CreatedBy</td>
+            <td style="border: 1px solid black; width: 15%">@roomTypeService.ModifiedTime</td>
+            <td style="border: 1px solid black; width: 15%">@roomTypeService.ModifiedBy</td>
+        </tr>
+    }
+    </tbody>
+    
+</table>

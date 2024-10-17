@@ -19,12 +19,21 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         _configuration = configuration;
     }
 
-    public async Task<List<RoomTypeService>> GetAllRoomTypeServices()
+    public async Task<List<RoomTypeService>> GetFilteredRoomTypeServices(string? searchString,
+        Guid? roomTypeId, EntityStatus? status)
     {
         try
         {
             var roomTypeServices = new List<RoomTypeService>();
-            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAllRoomTypeServices, null);
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value },
+                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+            };
+
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredRoomTypeServices, parameters);
 
             foreach (DataRow row in dataTable.Rows)
             {
@@ -147,6 +156,62 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         }
     }
 
+    public async Task<List<RoomTypeService>> GetFilteredDeletedRoomTypeServices(string? searchString, Guid? roomTypeId)
+    {
+        try
+        {
+            var deletedRoomTypeServices = new List<RoomTypeService>();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
+                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value }
+            };
+            
+            var dataTable = await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_GetFilteredDeletedRoomTypeServices, parameters);
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var deletedRoomTypeService = ConvertDataRowToRoomTypeService(row);
+                deletedRoomTypeServices.Add(deletedRoomTypeService);
+            }
+            return deletedRoomTypeServices;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An error occurred while retrieving the amenity room types", e);
+        }
+    }
+
+    public async Task<RoomTypeService?> RecoverDeletedRoomTypeService(RoomTypeService roomTypeService)
+    {
+        try
+        {
+            var existingRoomTypeService = GetRoomTypeServiceById(roomTypeService.Id);
+            if(existingRoomTypeService == null)
+                throw new Exception("There is no room type service with the provided Id.");
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeService.Id },
+                new("@Status", SqlDbType.Int) { Value = roomTypeService.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
+                new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = DBNull.Value }
+            };
+            
+            await _worker.GetDataTableAsync
+                (StoredProcedureConstant.SP_RecoverDeletedRoomTypeService, parameters);
+            return await existingRoomTypeService;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while recovering the room type service", e);
+        }
+    }
+
     private RoomTypeService ConvertDataRowToRoomTypeService(DataRow row)
     {
         return new RoomTypeService()
@@ -162,7 +227,17 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
             ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-            DeletedBy = ConvertGuidToString(row, "DeletedBy")
+            DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+            Service = new Service()
+            {
+                Id = (Guid)row["Id"],
+                Name = (string)row["ServiceName"]
+            },
+            RoomType = new RoomType()
+            {
+                Id = (Guid)row["RoomTypeId"],
+                Name = (string)row["RoomTypeName"]
+            }
         };
     }
 

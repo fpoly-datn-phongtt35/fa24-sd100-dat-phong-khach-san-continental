@@ -1,8 +1,11 @@
 ﻿using Domain.DTO.Amenity;
 using Domain.DTO.AmenityRoom;
+using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
 using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
+using Domain.Enums;
+using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomType;
 
@@ -17,15 +20,9 @@ public class RoomTypeGetService : IRoomTypeGetService
         _roomTypeRepository = roomTypeRepository;
     }
 
-    public async Task<List<RoomTypeResponse>> GetAllRoomTypes()
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
     {
-        var roomTypes = await _roomTypeRepository.GetAllRoomTypes();
-
-        var roomTypesResponse = roomTypes
-            .Select(roomType => roomType.ToRoomTypeResponse())
-            .ToList();
-
-        return roomTypesResponse;
+        return await _roomTypeRepository.GetFilteredRoomTypes(roomTypeGetRequest);
     }
 
     public async Task<RoomTypeResponse?> GetRoomTypeById(Guid? roomTypeId)
@@ -78,5 +75,10 @@ public class RoomTypeGetService : IRoomTypeGetService
             }).ToList();
         
         return roomTypeResponse;
+    }
+
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredDeletedRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
+    {
+        return await _roomTypeRepository.GetFilteredDeletedRoomTypes(roomTypeGetRequest);
     }
 }

@@ -79,6 +79,10 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
+                    new SqlParameter("@Name", request.Name),
+                    new SqlParameter("@BuildingId", request.BuildingId),
+                    new SqlParameter("@NumberOfRoom", request.NumberOfRoom),
+                    new SqlParameter("@Status", request.Status),
                     new SqlParameter("@PageSize", request.PageSize),
                     new SqlParameter("@PageIndex", request.PageIndex)
                 };

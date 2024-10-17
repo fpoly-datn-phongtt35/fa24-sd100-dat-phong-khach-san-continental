@@ -1,0 +1,82 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.DTO.RoomType
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.AmenityRoom.AmenityRoomResponse>
+
+@{
+    ViewData["Title"] = "Index";
+    // Lấy danh sách Amenities và RoomTypes từ ViewBag
+    var amenities = ViewBag.Amenities as List<AmenityResponse>;
+    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+}
+
+<h1>Danh sách tiện nghi thuộc loại phòng đã xóa</h1>
+
+<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["searchString"]"/>
+    </div>
+    <!-- Dropdown chọn RoomType -->
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomType">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.RoomTypes)
+            {
+                <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                    @roomType.Name <!-- Hiển thị tên loại phòng -->
+                </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
+
+<p>
+    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
+</p>
+
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
+        <th style="width: 150px">@Html.DisplayName("Tiện nghi sử dụng")</th>
+        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
+        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
+        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var amenityRoom in Model.data)
+    {
+        <tr>
+            <td>@amenityRoom.RoomTypeName</td>
+            <td>@amenityRoom.AmenityName</td>
+            <td>@amenityRoom.Amount</td>
+            <td>@StatusHelper.DisplayStatusBadge(amenityRoom.Status)</td>
+            <td>
+                @Html.ActionLink("Phục hồi", "Recover", new { amenityRoomId = amenityRoom.Id }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Trash", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        searchString = Context.Request.Query["searchString"].ToString(),
+                        status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

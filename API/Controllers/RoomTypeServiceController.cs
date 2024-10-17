@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomTypeService;
+using Domain.Enums;
 using Domain.Services.IServices.IRoomTypeService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,8 @@ public class RoomTypeServiceController : Controller
     }
 
     [HttpPost(nameof(AddRoomTypeService))]
-    public async Task<RoomTypeServiceResponse> AddRoomTypeService(RoomTypeServiceAddRequest roomTypeServiceAddRequest)
+    public async Task<RoomTypeServiceResponse> AddRoomTypeService
+        (RoomTypeServiceAddRequest roomTypeServiceAddRequest)
     {
         try
         {
@@ -50,12 +52,14 @@ public class RoomTypeServiceController : Controller
         }
     }
     
-    [HttpPost(nameof(GetAllRoomTypeServices))]
-    public async Task<List<RoomTypeServiceResponse>> GetAllRoomTypeServices()
+    [HttpPost(nameof(GetFilteredRoomTypeServices))]
+    public async Task<List<RoomTypeServiceResponse>> GetFilteredRoomTypeServices(string? searchString,
+        Guid? roomTypeId, EntityStatus? status)
     {
         try
         {  
-            return await _roomTypeServiceGetService.GetAllRoomTypeServices();
+            return await _roomTypeServiceGetService
+                .GetFilteredRoomTypeServices(searchString, roomTypeId, status);
         }
         catch (Exception e)
         {
@@ -85,6 +89,38 @@ public class RoomTypeServiceController : Controller
         try
         {
             return await _roomTypeServiceUpdateService.UpdateRoomTypeService(roomTypeServiceUpdateRequest);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    [HttpPost(nameof(GetFilteredDeletedRoomTypeServices))]
+    public async Task<List<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices
+        (string? searchString, Guid? roomTypeId)
+    {
+        try
+        {
+            return await _roomTypeServiceGetService
+                .GetFilteredDeletedRoomTypeServices(searchString, roomTypeId);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpPut(nameof(RecoverDeletedRoomTypeService))]
+    public async Task<RoomTypeServiceResponse?> RecoverDeletedRoomTypeService
+        (RoomTypeServiceUpdateRequest roomTypeServiceUpdateRequest)
+    {
+        try
+        {
+            return await _roomTypeServiceUpdateService
+                .RecoverDeletedRoomTypeService(roomTypeServiceUpdateRequest);
         }
         catch (Exception e)
         {

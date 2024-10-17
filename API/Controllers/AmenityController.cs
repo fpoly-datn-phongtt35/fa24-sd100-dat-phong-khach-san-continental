@@ -1,6 +1,10 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
+using Domain.Enums;
+using Domain.Models;
 using Domain.Services.IServices.IAmenity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace API.Controllers;
 
@@ -11,15 +15,14 @@ public class AmenityController : ControllerBase
     private readonly IAmenityAddService _amenityAddService;
     private readonly IAmenityDeleteService _amenityDeleteService;
     private readonly IAmenityGetService _amenityGetService;
-    private readonly IAmenityRollBackService _amenityRollBackService;
     private readonly IAmenityUpdateService _amenityUpdateService;
-    
-    public AmenityController(IAmenityAddService amenityAddService, IAmenityDeleteService amenityDeleteService, IAmenityGetService amenityGetService, IAmenityRollBackService amenityRollBackService, IAmenityUpdateService amenityUpdateService)
+
+    public AmenityController(IAmenityAddService amenityAddService, IAmenityDeleteService amenityDeleteService,
+        IAmenityGetService amenityGetService, IAmenityUpdateService amenityUpdateService)
     {
         _amenityAddService = amenityAddService;
         _amenityDeleteService = amenityDeleteService;
         _amenityGetService = amenityGetService;
-        _amenityRollBackService = amenityRollBackService;
         _amenityUpdateService = amenityUpdateService;
     }
 
@@ -36,20 +39,20 @@ public class AmenityController : ControllerBase
             throw;
         }
     }
-
-    [HttpPost(nameof(GetAllAmenities))]
-    public async Task<List<AmenityResponse>> GetAllAmenities()
+    
+    [HttpPost(nameof(GetFilteredAmenities))]
+    public async Task<ResponseData<AmenityResponse>> GetFilteredAmenities(AmenityGetRequest amenityGetRequest)
     {
         try
         {
-            return await _amenityGetService.GetAllAmenities();
+            return await _amenityGetService.GetFilteredAmenities(amenityGetRequest);
         }
         catch (Exception ex)
         {
             throw new NullReferenceException("The list of amenities could not be retrieved", ex);
         }
     }
-
+    
     [HttpPost(nameof(GetAmenityById))]
     public async Task<AmenityResponse?> GetAmenityById(Guid amenityId)
     {
@@ -90,24 +93,30 @@ public class AmenityController : ControllerBase
         }
     }
 
-    [HttpPut(nameof(RollBackDeletedAmenity))]
-    public async Task<AmenityResponse?> RollBackDeletedAmenity(AmenityUpdateRequest amenityUpdateRequest)
+    [HttpPut(nameof(RecoverDeletedAmenity))]
+    public async Task<AmenityResponse?> RecoverDeletedAmenity(AmenityUpdateRequest amenityUpdateRequest)
     {
         try
         {
-            return await _amenityRollBackService.RollBackDeletedAmenity(amenityUpdateRequest);
+            return await _amenityUpdateService.RecoverDeletedAmenity(amenityUpdateRequest);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Some errors when rollback amenity", e);
+            throw new Exception("Some errors when recover amenity", e);
         }
     }
 
-    // [HttpGet("GenerateToken")]
-    // public IActionResult GenerateToken()
-    // {
-    //     var token = _amenityService.GenerateToken();
-    //     return Ok(new { token });
-    // }
+    [HttpPost(nameof(GetFilteredDeletedAmenities))]
+    public async Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenities(AmenityGetRequest amenityGetRequest)
+    {
+        try
+        {
+            return await _amenityGetService.GetFilteredDeletedAmenities(amenityGetRequest);
+        }
+        catch (Exception ex)
+        {
+            throw new NullReferenceException("The list of deleted amenities could not be retrieved", ex);
+        }
+    }
 }
