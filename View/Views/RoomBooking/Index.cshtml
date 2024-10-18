@@ -1,0 +1,77 @@
+﻿@using Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.RoomBooking.RoomBookingResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Danh sách Đặt phòng</h1>
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <div class="form-group me-2">
+        <select name="status" class="form-select" id="status">
+            <option value="">Chọn trạng thái</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+            // Ép kiểu status về EntityStatus
+            var statusEnum = (EntityStatus)status;
+            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                @StatusHelper.DisplayNameForEnum(statusEnum)
+            </option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
+
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th>Khách hàng</th>
+        <th>Nhân viên</th>
+        <th>Loại đặt phòng</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var roomBooking in Model.data)
+    {
+        <tr>
+            <td style="width: 15%">@roomBooking.CustomerFullName</td>
+            <td style="width: 15%">@roomBooking.StaffFullName</td>
+            <td style="width: 10%">@roomBooking.BookingType</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(roomBooking.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomBookingId = roomBooking.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Chi tiết", "Details", new { roomBookingId = roomBooking.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { roomBookingId = roomBooking.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        searchString = Context.Request.Query["searchString"].ToString(),
+                        status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
