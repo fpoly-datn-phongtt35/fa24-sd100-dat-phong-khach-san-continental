@@ -126,7 +126,7 @@ namespace Domain.Repositories.Repository
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw new Exception("An error occurred while adding the amenity", e);
+                throw new Exception("An error occurred while adding the room", e);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Domain.Repositories.Repository
             }
             catch (Exception e)
             {
-                throw new Exception("Some errors when deleted amenity rooom", e);
+                throw new Exception("Some errors when deleted rooom", e);
             }
         }
 

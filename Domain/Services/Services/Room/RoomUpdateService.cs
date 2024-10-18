@@ -31,23 +31,17 @@ namespace Domain.Services.Services.Room
             {
                 throw new Exception("Id  room does not exist");
             }
-
-            if (existingRoom.Deleted)
-            {
-                throw new InvalidOperationException("This  room type already deleted, cannot update it.");
-            }
-
-            existingRoom.FloorId = roomUpdateRequest.FloorId;
-            existingRoom.RoomTypeId = roomUpdateRequest.RoomTypeId;
-            existingRoom.Name = roomUpdateRequest.Name;
-            existingRoom.Price = roomUpdateRequest.Price;
-            existingRoom.Address = roomUpdateRequest.Address;
             existingRoom.RoomSize = roomUpdateRequest.RoomSize;
-            existingRoom.Images = roomUpdateRequest.Images;
+            existingRoom.FloorId = roomUpdateRequest.FloorId;
+            existingRoom.Name = roomUpdateRequest.Name;
             existingRoom.Description = roomUpdateRequest.Description;
-            existingRoom.Status = roomUpdateRequest.Status;
+            existingRoom.Price = roomUpdateRequest.Price;
+            existingRoom.Images = roomUpdateRequest.Images;
+            existingRoom.Address = roomUpdateRequest.Address;
+            existingRoom.RoomTypeId = roomUpdateRequest.RoomTypeId;
             existingRoom.ModifiedTime = roomUpdateRequest.ModifiedTime;
             existingRoom.ModifiedBy = roomUpdateRequest.ModifiedBy;
+            existingRoom.Status = roomUpdateRequest.Status;
 
             await _roomRepository.UpdateRoom(existingRoom);
 
