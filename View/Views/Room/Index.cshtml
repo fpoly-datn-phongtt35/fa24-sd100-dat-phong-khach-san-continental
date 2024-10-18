@@ -33,7 +33,7 @@
         <div class="form-group me-2">
             <select name="roomTypeId" class="form-select" id="roomTypeId">
                 <option value="">Chọn loại phòng</option>
-                @foreach (var roomType in ViewBag.roomTypeList)
+                @foreach (var roomType in ViewBag.RoomTypes)
                 {
                     <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
                         @roomType.Name
@@ -117,10 +117,10 @@
                 </td>
                 <td>
                     @{
-                        var roomTypeList = ViewBag.RoomTypeList as List<Domain.Models.RoomType>;
-                        var roomType = roomTypeList?.FirstOrDefault(s => s.Id == item.RoomTypeId);
+                        var roomtype = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
+                        var roomtype1 = roomtype?.FirstOrDefault(s => s.Id == item.RoomTypeId);
                     }
-                    @(roomType != null ? roomType.Name : "Không có loại phòng")
+                    @roomtype1?.Name
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>
