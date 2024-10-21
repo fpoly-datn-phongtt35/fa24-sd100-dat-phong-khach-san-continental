@@ -16,8 +16,10 @@ using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
 using Domain.Services.IServices.IRoom;
+using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services.Room;
+using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomTypeService;
 
 namespace API
@@ -93,6 +95,7 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
             builder.Services.AddTransient<IRoomRepo, RoomRepo>();
             builder.Services.AddTransient<IRoomTypeServiceRepository, RoomTypeServiceRepository>();
+            builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>();
             //room
             builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
             builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
@@ -124,7 +127,9 @@ namespace API
             builder.Services.AddTransient<IRoomTypeServiceDeleteService, RoomTypeServiceDeleteService>();
             builder.Services.AddTransient<IRoomTypeServiceGetService, RoomTypeServiceGetService>();
             builder.Services.AddTransient<IRoomTypeServiceUpdateService, RoomTypeServiceUpdateService>();
-            
+            //RoomBooking
+            builder.Services.AddTransient<IRoomBookingGetService, RoomBookingGetService>();
+            builder.Services.AddTransient<IRoomBookingUpdateService, RoomBookingUpdateService>();
             //Staff
             builder.Services.AddTransient<IStaffService, StaffService>();
 

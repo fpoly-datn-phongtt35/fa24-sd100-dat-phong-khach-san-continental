@@ -22,7 +22,8 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         _configuration = configuration;
     }
 
-    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredAmenityRooms(AmenityRoomGetRequest amenityRoomGetRequest)
+    public async Task<ResponseData<AmenityRoomResponse>> GetFilteredAmenityRooms
+        (AmenityRoomGetRequest amenityRoomGetRequest)
     {
         var model = new ResponseData<AmenityRoomResponse>();
         try

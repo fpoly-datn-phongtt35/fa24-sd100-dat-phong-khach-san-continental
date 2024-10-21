@@ -83,7 +83,7 @@ public static class AmenityRoomResponseExtensions
 {
     public static AmenityRoomResponse ToAmenityRoomResponse(this Models.AmenityRoom amenityRoom)
     {
-        // amenityRoom => convert => 
+        // amenityRoom => convert => AmenityRoomResponse
         return new AmenityRoomResponse()
         {
             Id = amenityRoom.Id,

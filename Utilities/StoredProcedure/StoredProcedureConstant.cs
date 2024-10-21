@@ -131,5 +131,9 @@ namespace Utilities.StoredProcedure
         public const string SP_GetPostById = "SP_GetPostById";
         public const string SP_UpdatePost = "SP_UpdatePost";
         public const string SP_DeletePost = "SP_DeletePost";
+        //RoomBooking
+        public const string SP_GetFilteredRoomBookings = "SP_GetFilteredRoomBookings";
+        public const string SP_GetRoomBookingById = "SP_GetRoomBookingById";
+        public const string SP_UpdateRoomBooking = "SP_UpdateRoomBooking";
     }
 }
