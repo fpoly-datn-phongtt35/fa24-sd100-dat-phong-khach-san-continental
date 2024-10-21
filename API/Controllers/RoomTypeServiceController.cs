@@ -1,7 +1,10 @@
-﻿using Domain.DTO.RoomTypeService;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomType;
+using Domain.DTO.RoomTypeService;
 using Domain.Enums;
 using Domain.Services.IServices.IRoomTypeService;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace API.Controllers;
 
@@ -53,18 +56,10 @@ public class RoomTypeServiceController : Controller
     }
     
     [HttpPost(nameof(GetFilteredRoomTypeServices))]
-    public async Task<List<RoomTypeServiceResponse>> GetFilteredRoomTypeServices(string? searchString,
-        Guid? roomTypeId, EntityStatus? status)
+    public async Task<ResponseData<RoomTypeServiceResponse>> GetFilteredRoomTypeServices
+        (RoomTypeServiceGetRequest roomTypeServiceGetRequest)
     {
-        try
-        {  
-            return await _roomTypeServiceGetService
-                .GetFilteredRoomTypeServices(searchString, roomTypeId, status);
-        }
-        catch (Exception e)
-        {
-            throw new NullReferenceException("The list of room type services could not be retrieved", e);
-        }
+        return await _roomTypeServiceGetService.GetFilteredRoomTypeServices(roomTypeServiceGetRequest);
     }
     
     [HttpPut(nameof(DeleteRoomTypeService))]
@@ -98,19 +93,10 @@ public class RoomTypeServiceController : Controller
     }
     
     [HttpPost(nameof(GetFilteredDeletedRoomTypeServices))]
-    public async Task<List<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices
-        (string? searchString, Guid? roomTypeId)
+    public async Task<ResponseData<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices
+        (RoomTypeServiceGetRequest roomTypeServiceGetRequest)
     {
-        try
-        {
-            return await _roomTypeServiceGetService
-                .GetFilteredDeletedRoomTypeServices(searchString, roomTypeId);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        return await _roomTypeServiceGetService.GetFilteredDeletedRoomTypeServices(roomTypeServiceGetRequest);
     }
 
     [HttpPut(nameof(RecoverDeletedRoomTypeService))]

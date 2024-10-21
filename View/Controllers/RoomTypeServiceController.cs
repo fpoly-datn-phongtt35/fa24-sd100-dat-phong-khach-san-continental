@@ -67,15 +67,31 @@ public class RoomTypeServiceController : Controller
     public async Task LoadRoomTypes()
     {
         // Call API to GET list RoomTypes
+        var roomTypeGetRequest = new RoomTypeGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null
+        };
         string roomTypeRequestUrl = "RoomType/GetFilteredRoomTypes";
-        var roomTypesTask = SendHttpRequest<List<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post);
+        var roomTypesTask = SendHttpRequest<ResponseData<RoomTypeResponse>>
+            (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
         
-        ViewBag.RoomTypes = await roomTypesTask;
+        var roomTypesResponse = await roomTypesTask;
+        ViewBag.RoomTypes = roomTypesResponse?.data ?? new List<RoomTypeResponse>();
     }
 
     private async Task LoadServices()
     {
         // Call API to GET list services
+        // var serviceRequest = new ServiceGetRequest()
+        // {
+        //     PageIndex = 1,
+        //     PageSize = int.MinValue,
+        //     Name = null,
+        //     Status = null
+        // };
         string serviceRequestUrl = "Service/GetListService";
         var serviceResponse = await _httpClient.PostAsync(serviceRequestUrl, 
             new StringContent("{}", Encoding.UTF8, "application/json"));
@@ -85,27 +101,48 @@ public class RoomTypeServiceController : Controller
         ViewBag.ServiceList = service?.data;
     }
     
-    public async Task<IActionResult> Index(string? searchString, Guid? roomTypeId, EntityStatus? status)
+    public async Task<IActionResult> Index(string? searchString = null, Guid? roomTypeId = null,
+        EntityStatus? status = null, int pageIndex = 1, int pageSize = 5)
     {
         await LoadRoomTypes();
         await LoadServices();
-        string requestUrl = $"RoomTypeService/GetFilteredRoomTypeServices?searchString={searchString}&roomTypeId={roomTypeId}&status={status}";
+        var roomTypeServiceRequest = new RoomTypeServiceGetRequest()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SearchString = searchString,
+            Status = status,
+            RoomTypeId = roomTypeId
+        };
         
-        var roomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>(requestUrl, HttpMethod.Post);
+        string requestUrl = $"RoomTypeService/GetFilteredRoomTypeServices";
+        
+        var roomTypeServices = await SendHttpRequest<ResponseData<RoomTypeServiceResponse>>
+            (requestUrl, HttpMethod.Post, roomTypeServiceRequest);
         if(roomTypeServices != null)
             return View (roomTypeServices);
 
         return View("Error");
     }
 
-    public async Task<IActionResult> Trash(string? searchString, Guid? roomTypeId)
+    public async Task<IActionResult> Trash(string? searchString = null, Guid? roomTypeId = null,
+        EntityStatus? status = null, int pageIndex = 1, int pageSize = 5)
     {
         await LoadRoomTypes();
         await LoadServices();
-        string requestUrl = $"RoomTypeService/GetFilteredDeletedRoomTypeServices?searchString={searchString}&roomTypeId={roomTypeId}";
+        
+        var roomTypeServiceRequest = new RoomTypeServiceGetRequest()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SearchString = searchString,
+            Status = status,
+            RoomTypeId = roomTypeId
+        };
+        string requestUrl = $"RoomTypeService/GetFilteredDeletedRoomTypeServices";
 
-        var deletedRoomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>
-            (requestUrl, HttpMethod.Post);
+        var deletedRoomTypeServices = await SendHttpRequest<ResponseData<RoomTypeServiceResponse>>
+            (requestUrl, HttpMethod.Post, roomTypeServiceRequest);
         if (deletedRoomTypeServices != null)
             return View(deletedRoomTypeServices);
 
@@ -215,8 +252,18 @@ public class RoomTypeServiceController : Controller
 
     public async Task<IActionResult> RoomTypeServicesPdf()
     {
+        var roomTypeServiceGetRequest = new RoomTypeServiceGetRequest()
+        {
+            PageIndex = 1,
+            PageSize = int.MaxValue,
+            SearchString = null,
+            Status = null,
+            RoomTypeId = null
+        };
+        
         string requestUrl = "RoomTypeService/GetFilteredRoomTypeServices";
-        var roomTypeServices = await SendHttpRequest<List<RoomTypeServiceResponse>>(requestUrl, HttpMethod.Post);
+        var roomTypeServices = await SendHttpRequest<ResponseData<RoomTypeServiceResponse>>
+            (requestUrl, HttpMethod.Post, roomTypeServiceGetRequest);
         
         if(roomTypeServices == null)
             return View("Error");

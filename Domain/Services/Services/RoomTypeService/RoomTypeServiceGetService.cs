@@ -1,4 +1,5 @@
-﻿using Domain.DTO.RoomTypeService;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomTypeService;
 using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomTypeService;
@@ -14,17 +15,10 @@ public class RoomTypeServiceGetService : IRoomTypeServiceGetService
         _roomTypeServiceRepository = roomTypeServiceRepository;
     }
 
-    public async Task<List<RoomTypeServiceResponse>> GetFilteredRoomTypeServices
-        (string? searchString, Guid? roomTypeId, EntityStatus? status)
+    public async Task<ResponseData<RoomTypeServiceResponse>> GetFilteredRoomTypeServices
+        (RoomTypeServiceGetRequest roomTypeServiceGetRequest)
     {
-        var roomTypeServices = await _roomTypeServiceRepository
-            .GetFilteredRoomTypeServices(searchString, roomTypeId, status);
-
-        var roomTypeServicesResponse = roomTypeServices
-            .Select(roomTypeService => roomTypeService.ToRoomTypeServiceResponse())
-            .ToList();
-
-        return roomTypeServicesResponse;
+        return await _roomTypeServiceRepository.GetFilteredRoomTypeServices(roomTypeServiceGetRequest);
     }
 
     public async Task<RoomTypeServiceResponse?> GetRoomTypeServiceById(Guid? roomTypeServiceId)
@@ -37,15 +31,9 @@ public class RoomTypeServiceGetService : IRoomTypeServiceGetService
         return roomTypeService?.ToRoomTypeServiceResponse();
     }
 
-    public async Task<List<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices(string? searchString, 
-        Guid? roomTypeId)
+    public async Task<ResponseData<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices
+        (RoomTypeServiceGetRequest roomTypeServiceGetRequest)
     {
-        var deletedRoomTypeServices = await _roomTypeServiceRepository
-            .GetFilteredDeletedRoomTypeServices(searchString, roomTypeId);
-
-        var roomTypeServicesResponse = deletedRoomTypeServices
-            .Select(rts => rts.ToRoomTypeServiceResponse())
-            .ToList();
-        return roomTypeServicesResponse;
+        return await _roomTypeServiceRepository.GetFilteredDeletedRoomTypeServices(roomTypeServiceGetRequest);
     }
 }

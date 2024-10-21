@@ -2,7 +2,7 @@
 @using Domain.DTO.AmenityRoom
 @using Domain.DTO.RoomType
 @using View.Views.Shared.Helper
-@model System.Collections.Generic.List<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
 
 @{
     Layout = null;
@@ -24,7 +24,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var roomTypeService in Model)
+    @foreach (var roomTypeService in Model.data)
     {
         <tr>
             <td style="border: 1px solid black; width: 10%">@roomTypeService.RoomTypeName</td>
