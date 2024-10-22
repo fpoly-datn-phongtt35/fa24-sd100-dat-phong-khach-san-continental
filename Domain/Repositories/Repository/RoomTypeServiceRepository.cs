@@ -112,15 +112,18 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.ModifiedTime },
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted },
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.DeletedTime },
+                new("@NewRoomTypeServiceId", SqlDbType.UniqueIdentifier) {Direction = ParameterDirection.Output}
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomTypeService, parameters);
+            roomTypeService.Id = (Guid)parameters[9].Value;
+            
             return roomTypeService;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("An error occurred while adding the amenity", e);
+            throw new Exception("An error occurred while adding the room type service", e);
         }
     }
 

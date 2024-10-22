@@ -37,11 +37,14 @@ public class AmenityRepository : IAmenityRepository
                 new SqlParameter("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
                 new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenity.CreatedBy }
+                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenity.CreatedBy },
+                new SqlParameter("@NewAmenityId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
 
             // Executing the stored procedure to insert data
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertAmenity, parameters);
+            
+            amenity.Id = (Guid)parameters[5].Value;
         }
         catch (Exception ex)
         {

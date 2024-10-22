@@ -20,7 +20,6 @@ public class RoomTypeServiceAddService : IRoomTypeServiceAddService
         
         var roomTypeService = roomTypeServiceAddRequest.ToRoomTypeService();
         
-        roomTypeService.Id = Guid.NewGuid();
         roomTypeService.Deleted = false;
         roomTypeService.ModifiedTime = default;
         roomTypeService.DeletedTime = default;
