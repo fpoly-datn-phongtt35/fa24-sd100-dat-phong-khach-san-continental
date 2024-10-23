@@ -6,10 +6,12 @@ using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
-	public class VoucherController : Controller
+    [CustomAuthorize]
+    public class VoucherController : Controller
 	{
 		private readonly HttpClient _httpClient;
 

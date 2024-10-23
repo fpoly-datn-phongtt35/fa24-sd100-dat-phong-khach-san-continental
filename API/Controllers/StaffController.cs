@@ -32,7 +32,7 @@ namespace API.Controllers
             }
         }
         [HttpPost("GetStaffById")]
-        public async Task<StaffUpdateRequest> GetStaffById(Guid request)
+        public async Task<Staff> GetStaffById(Guid request)
         {
             try
             {

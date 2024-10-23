@@ -285,10 +285,12 @@ public class RoomTypeRepository : IRoomTypeRepository
                 new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = roomType.CreatedBy },
                 new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomType.ModifiedTime },
                 new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
-                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomType.DeletedTime }
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomType.DeletedTime },
+                new("@NewRoomTypeId", SqlDbType.UniqueIdentifier) {Direction = ParameterDirection.Output}
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomType, parameters);
+            roomType.Id = (Guid)parameters[9].Value;
         }
         catch (Exception e)
         {

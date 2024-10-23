@@ -13,10 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Text;
+using WEB.CMS.Customize;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class RoomController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -99,21 +101,14 @@ namespace View.Controllers
                 ViewBag.FloorList = floorList.data;
                 // Lấy danh sách trạng thái
                 ViewBag.StatusList = Enum.GetValues(typeof(RoomStatus));
+                var roomTypeGetRequest = new RoomTypeGetRequest();
+                string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
+                var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
+                    (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
-                // Lấy danh sách loại phòng
-                string roomTypesRequestUrl = "/api/RoomType/GetFilteredRoomTypes";
-                var roomTypeList = await SendHttpRequest<List<RoomTypeResponse>>(roomTypesRequestUrl, HttpMethod.Post);
 
-                if (roomTypeList == null)
-                {
-                    return View("Error", new Exception("Không thể lấy danh sách loại phòng."));
-                }
+                ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
 
-                ViewBag.RoomTypeList = roomTypeList.Select(rt => new Domain.Models.RoomType
-                {
-                    Id = rt.Id,
-                    Name = rt.Name
-                }).ToList();
                 return View(roomsResponse); // Trả về danh sách phòng
             }
             catch (Exception ex)
@@ -149,8 +144,9 @@ namespace View.Controllers
             string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
             var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
-            var roomTypes = JsonConvert.DeserializeObject<List<RoomType>>(roomTypeResponseString);
-            ViewBag.RoomTypes = roomTypes;
+            var roomTypes = JsonConvert.DeserializeObject<ResponseData<RoomType>>(roomTypeResponseString);
+            ViewBag.RoomTypes = roomTypes?.data; // Chỉ lấy dữ liệu
+
 
 
             return View(new RoomCreateRequest());
@@ -216,8 +212,8 @@ namespace View.Controllers
             string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
             var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
-            var roomTypes = JsonConvert.DeserializeObject<List<RoomType>>(roomTypeResponseString);
-            ViewBag.RoomTypes = roomTypes;
+            var roomTypes = JsonConvert.DeserializeObject<ResponseData<RoomType>>(roomTypeResponseString);
+            ViewBag.RoomTypes = roomTypes?.data; // Chỉ lấy dữ liệu
 
             string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
 

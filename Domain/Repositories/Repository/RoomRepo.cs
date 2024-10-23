@@ -126,7 +126,7 @@ namespace Domain.Repositories.Repository
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw new Exception("An error occurred while adding the amenity", e);
+                throw new Exception("An error occurred while adding the room", e);
             }
         }
 
@@ -152,6 +152,7 @@ namespace Domain.Repositories.Repository
                 new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
                 new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
+                new SqlParameter("@Deleted",SqlDbType.Int) { Value = room.Deleted },
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = room.ModifiedBy }
                 };
@@ -178,8 +179,6 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                 new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = room.Id },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted },
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new SqlParameter("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = room.DeletedBy },
                 };
@@ -190,7 +189,7 @@ namespace Domain.Repositories.Repository
             }
             catch (Exception e)
             {
-                throw new Exception("Some errors when deleted amenity rooom", e);
+                throw new Exception("Some errors when deleted rooom", e);
             }
         }
 

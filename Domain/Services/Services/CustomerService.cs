@@ -57,6 +57,7 @@ namespace Domain.Services.Services
                                   UserName = row.Field<string>("UserName"),
                                   FirstName = row.Field<string>("FirstName"),
                                   LastName = row.Field<string>("LastName"),
+                                  Password = row.Field<string>("Password"),
                                   Email = row.Field<string>("Email"),
                                   PhoneNumber = row.Field<string>("PhoneNumber"),
                                   Gender = row.Field<int>("Gender"),

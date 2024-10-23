@@ -119,6 +119,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteStaff = "SP_DeleteStaff";
         public const string SP_UpdateStaff = "SP_UpdateStaff";
         public const string SP_GetStaffById = "SP_GetStaffById";
+        public const string SP_Login = "SP_Login";
         // Role
         public const string SP_InsertRole = "SP_InsertRole";
         public const string SP_GetAllRole = "SP_GetAllRole";
@@ -131,5 +132,9 @@ namespace Utilities.StoredProcedure
         public const string SP_GetPostById = "SP_GetPostById";
         public const string SP_UpdatePost = "SP_UpdatePost";
         public const string SP_DeletePost = "SP_DeletePost";
+        //RoomBooking
+        public const string SP_GetFilteredRoomBookings = "SP_GetFilteredRoomBookings";
+        public const string SP_GetRoomBookingById = "SP_GetRoomBookingById";
+        public const string SP_UpdateRoomBooking = "SP_UpdateRoomBooking";
     }
 }
