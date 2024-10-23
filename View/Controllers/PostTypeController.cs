@@ -5,9 +5,11 @@ using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class PostTypeController : Controller
     {
         private readonly HttpClient _httpClient;

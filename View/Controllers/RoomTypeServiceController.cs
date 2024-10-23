@@ -8,9 +8,10 @@ using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Rotativa.AspNetCore;
+using WEB.CMS.Customize;
 
 namespace View.Controllers;
-
+[CustomAuthorize]
 public class RoomTypeServiceController : Controller
 {
     private readonly HttpClient _httpClient;

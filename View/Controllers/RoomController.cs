@@ -13,10 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Text;
+using WEB.CMS.Customize;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class RoomController : Controller
     {
         private readonly HttpClient _httpClient;

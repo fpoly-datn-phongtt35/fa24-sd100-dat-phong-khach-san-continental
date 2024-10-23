@@ -1,4 +1,5 @@
-﻿using Domain.DTO.ServiceType;
+﻿using Domain.DTO.Athorization;
+using Domain.DTO.ServiceType;
 using Domain.DTO.Staff;
 using Domain.Models;
 using System;
@@ -16,6 +17,7 @@ namespace Domain.Repositories.IRepository
         Task<int> UpdateStaff(StaffUpdateRequest request);
         Task<int> DeleteStaff(StaffDeleteRequest request);
         Task<DataTable> GetStaffId(Guid id);
+        Task<DataTable> Login(LoginSubmitModel request);
         Task<DataTable> GetStaff(StaffGetRequest Search);
     }
 }

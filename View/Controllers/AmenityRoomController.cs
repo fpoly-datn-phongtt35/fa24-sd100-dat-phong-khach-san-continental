@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Rotativa.AspNetCore;
+using WEB.CMS.Customize;
 
 namespace View.Controllers;
-
+[CustomAuthorize]
 public class AmenityRoomController : Controller
 {
     private readonly HttpClient _httpClient;
