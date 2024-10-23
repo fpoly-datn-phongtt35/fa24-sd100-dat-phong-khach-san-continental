@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
-	public class LiveCamerasController : Controller
+    [CustomAuthorize]
+    public class LiveCamerasController : Controller
 	{
 		public IActionResult Index()
 		{

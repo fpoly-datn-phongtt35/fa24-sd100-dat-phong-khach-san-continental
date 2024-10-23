@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class VoucherDetailController : Controller
     {
         HttpClient _client;

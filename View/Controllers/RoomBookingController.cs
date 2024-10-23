@@ -5,9 +5,10 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using WEB.CMS.Customize;
 
 namespace View.Controllers;
-
+/*[CustomAuthorize]*/
 public class RoomBookingController : Controller
 {
     private readonly HttpClient _httpClient;

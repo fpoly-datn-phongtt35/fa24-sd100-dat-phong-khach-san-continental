@@ -11,9 +11,11 @@ using System.Drawing;
 using System.Net.Http;
 using System.Text;
 using View.Models;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class ServiceController : Controller
     {
         HttpClient _client;

@@ -1,7 +1,6 @@
 ﻿@using View.Models.Paging
 @model Paging
-@if (Model.TotalRecord > Model.PageSize)
-{
+<div class="d-flex flex-nowrap justify-content-between mt-3">
     <ul id="pagination" class="pagination">
 
         <li class="page-item">
@@ -75,6 +74,30 @@
                 <i class="fa fa-step-forward"></i>
             </a>
         </li>
-        <span>Hiển thị @((Model.CurrentPage - 1) * Model.PageSize + 1) - @(Model.CurrentPage * Model.PageSize) trên tổng số @Model.TotalRecord @Model.RecordName.</span>
     </ul>
-}
+    @if (Model.PageAction1 != null)
+    {
+        <div class="flex flex-nowrap">
+            @*         <button class="btn btn-default white" style="padding: 0 10px;">
+        <i class="icofont-gear"></i>
+        <span>Tùy chỉnh</span>
+        </button> *@
+            <div class="select-number" style="margin-left:5px">
+                <select class="form-control" id="selectPaggingOptions" onchange="@Model.PageAction1" style="width:180px">
+                    <option id="10" value="10">10 kết quả/trang</option>
+                    <option id="20" value="20">20 kết quả/trang</option>
+                    <option id="30" value="30">30 kết quả/trang</option>
+                    <option id="50" value="50">50 kết quả/trang</option>
+                    <option id="100" value="100">100 kết quả/trang</option>
+                    <option id="200" value="200">200 kết quả/trang</option>
+                </select>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        // Set the selected option based on the current page size
+        $('#selectPaggingOptions').val('@Model.PageSize');
+    });
+</script>

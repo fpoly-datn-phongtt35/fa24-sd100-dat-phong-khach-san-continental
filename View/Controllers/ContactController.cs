@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
-	public class ContactController : Controller
+    [CustomAuthorize]
+    public class ContactController : Controller
 	{
 		public IActionResult Index()
 		{
