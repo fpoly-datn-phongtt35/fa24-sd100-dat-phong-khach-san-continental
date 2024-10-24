@@ -22,7 +22,6 @@ public class RoomTypeAddService : IRoomTypeAddService
         // convert roomTypeAddRequest into RoomType type
         var roomType = roomTypeAddRequest.ToRoomType();
         
-        roomType.Id = Guid.NewGuid();
         roomType.Deleted = false;
         roomType.DeletedTime = default(DateTimeOffset);
         

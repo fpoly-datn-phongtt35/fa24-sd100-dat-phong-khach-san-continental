@@ -10,9 +10,11 @@ using NuGet.Protocol;
 using System.Drawing.Printing;
 using System.Text;
 using System.Threading.Tasks;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class CustomerController : Controller
     {
         private readonly HttpClient _httpClient;

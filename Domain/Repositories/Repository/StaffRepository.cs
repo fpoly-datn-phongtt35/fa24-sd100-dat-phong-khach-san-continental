@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Staff;
+﻿using Domain.DTO.Athorization;
+using Domain.DTO.Staff;
 using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
@@ -9,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository
@@ -29,13 +31,13 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@UserName",!string.IsNullOrEmpty(request.UserName) ? request.UserName : DBNull.Value),
-                    new SqlParameter("@Password",! string.IsNullOrEmpty(request.Password) ? request.Password : DBNull.Value),
+                    new SqlParameter("@UserName",!string.IsNullOrEmpty(request.UserName) ? request.UserName : request.Email),
+                    new SqlParameter("@Password",! string.IsNullOrEmpty(request.Password) ? PasswordHashingHelper.HashPassword(request.Password) : PasswordHashingHelper.HashPassword("123456")),
                     new SqlParameter("@FirstName",! string.IsNullOrEmpty(request.FirstName) ? request.FirstName : DBNull.Value),
                     new SqlParameter("@LastName",! string.IsNullOrEmpty(request.LastName) ? request.LastName : DBNull.Value),
                     new SqlParameter("@Email", ! string.IsNullOrEmpty(request.Email) ? request.Email : DBNull.Value),
                     new SqlParameter("@PhoneNumber", ! string.IsNullOrEmpty(request.PhoneNumber) ? request.PhoneNumber : DBNull.Value),
-                    new SqlParameter("@RoleId", request.RoleId != Guid.Empty ? request.RoleId : DBNull.Value),
+                    new SqlParameter("@RoleId", "D03790D6-E8AA-489B-AF3D-FD450FC0696B"),
                     new SqlParameter("@Status", EntityStatus.Active),
                     new SqlParameter("@CreatedTime", DateTime.Now),
                     new SqlParameter("@Deleted", false)
@@ -95,6 +97,24 @@ namespace Domain.Repositories.Repository
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetStaffById, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<DataTable> Login(LoginSubmitModel request)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@UserName", request.UserName),
+                    new SqlParameter("@Password", PasswordHashingHelper.HashPassword(request.Password))
+                };
+
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_Login, sqlParameters);
             }
             catch (Exception ex)
             {

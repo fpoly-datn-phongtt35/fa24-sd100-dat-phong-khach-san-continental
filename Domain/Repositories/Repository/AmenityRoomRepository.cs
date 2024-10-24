@@ -36,11 +36,11 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new("@Status", amenityRoomGetRequest.Status),
                 new("@RoomTypeId", amenityRoomGetRequest.RoomTypeId)
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredAmenityRooms, parameters);
             var amenityRooms = new List<AmenityRoomResponse>();
-            
+
             foreach (DataRow row in dataTable.Rows)
             {
                 var amenityRoom = ConvertDataRowToAmenityRoom(row);
@@ -51,7 +51,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             model.data = amenityRooms;
             model.CurrentPage = amenityRoomGetRequest.PageIndex;
             model.PageSize = amenityRoomGetRequest.PageSize;
-            
+
             try
             {
                 model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
@@ -110,11 +110,12 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.CreatedBy },
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.ModifiedTime },
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.DeletedTime }
+                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.DeletedTime },
+                new("@NewAmenityRoomId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertAmenityRoom, parameters);
-
+            amenityRoom.Id = (Guid)parameters[9].Value;
             return amenityRoom;
         }
         catch (Exception e)
@@ -197,18 +198,18 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new("@Status", amenityRoomGetRequest.Status),
                 new("@RoomTypeId", amenityRoomGetRequest.RoomTypeId)
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredDeletedAmenityRooms, parameters);
             var deletedAmenityRooms = new List<AmenityRoomResponse>();
-            
+
             foreach (DataRow row in dataTable.Rows)
             {
                 var deletedAmenityRoom = ConvertDataRowToAmenityRoom(row);
                 var deletedAmenityRoomResponse = deletedAmenityRoom.ToAmenityRoomResponse();
                 deletedAmenityRooms.Add(deletedAmenityRoomResponse);
             }
-            
+
             model.data = deletedAmenityRooms;
             model.CurrentPage = amenityRoomGetRequest.PageIndex;
             model.PageSize = amenityRoomGetRequest.PageSize;
@@ -221,6 +222,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             {
                 model.totalRecord = 0;
             }
+
             model.totalPage = (int)Math.Ceiling((double)model.totalRecord / amenityRoomGetRequest.PageSize);
         }
         catch (Exception e)
@@ -237,7 +239,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         try
         {
             var existingAmenityRoom = GetAmenityRoomById(amenityRoom.Id);
-            if(existingAmenityRoom == null)
+            if (existingAmenityRoom == null)
                 throw new Exception("There is no amenity room with the provided Id.");
 
             SqlParameter[] parameters = new SqlParameter[]
@@ -250,7 +252,7 @@ public class AmenityRoomRepository : IAmenityRoomRepository
                 new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
                 new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = DBNull.Value }
             };
-            
+
             await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_RecoverDeletedAmenityRoom, parameters);
             return await existingAmenityRoom;
@@ -278,15 +280,15 @@ public class AmenityRoomRepository : IAmenityRoomRepository
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
             DeletedBy = ConvertGuidToString(row, "DeletedBy"),
-            Amenity = new Amenity 
-            { 
-                Id = (Guid)row["AmenityId"], 
-                Name = (string)row["AmenityName"] 
+            Amenity = new Amenity
+            {
+                Id = (Guid)row["AmenityId"],
+                Name = (string)row["AmenityName"]
             },
-            RoomType = new RoomType 
-            { 
-                Id = (Guid)row["RoomTypeId"], 
-                Name = (string)row["RoomTypeName"] 
+            RoomType = new RoomType
+            {
+                Id = (Guid)row["RoomTypeId"],
+                Name = (string)row["RoomTypeName"]
             }
         };
     }

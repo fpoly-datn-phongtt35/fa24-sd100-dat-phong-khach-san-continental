@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Paging;
+﻿using Domain.DTO.Athorization;
+using Domain.DTO.Paging;
 using Domain.DTO.Staff;
 using Domain.Models;
 using System;
@@ -16,6 +17,7 @@ namespace Domain.Services.IServices
         Task<int> UpdateStaff(StaffUpdateRequest request);
         Task<int> DeleteStaff(StaffDeleteRequest request);
         Task<ResponseData<Staff>> GetStaffs(StaffGetRequest Search);
-        Task<StaffUpdateRequest> GetStaffbyId(Guid id);
+        Task<AuthorizationViewModel> Login(LoginSubmitModel request);
+        Task<Staff> GetStaffbyId(Guid id);
     }
 }

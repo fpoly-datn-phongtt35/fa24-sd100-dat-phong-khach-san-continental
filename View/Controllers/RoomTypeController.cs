@@ -8,9 +8,10 @@ using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Rotativa.AspNetCore;
+using WEB.CMS.Customize;
 
 namespace View.Controllers;
-
+[CustomAuthorize]
 public class RoomTypeController : Controller
 {
     private readonly HttpClient _httpClient;
