@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
+using Utilities.Contants;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository
@@ -37,7 +38,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@LastName",! string.IsNullOrEmpty(request.LastName) ? request.LastName : DBNull.Value),
                     new SqlParameter("@Email", ! string.IsNullOrEmpty(request.Email) ? request.Email : DBNull.Value),
                     new SqlParameter("@PhoneNumber", ! string.IsNullOrEmpty(request.PhoneNumber) ? request.PhoneNumber : DBNull.Value),
-                    new SqlParameter("@RoleId", "D03790D6-E8AA-489B-AF3D-FD450FC0696B"),
+                    new SqlParameter("@RoleId", RoleConfig.Id_Staff),
                     new SqlParameter("@Status", EntityStatus.Active),
                     new SqlParameter("@CreatedTime", DateTime.Now),
                     new SqlParameter("@Deleted", false)
@@ -58,6 +59,7 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id),
+                    new SqlParameter("@DeletedBy",request.DeletedBy)
                 };
 
                 return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_DeleteStaff, sqlParameters);
@@ -130,7 +132,7 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Id", request.Id),
                     new SqlParameter("@UserName",!string.IsNullOrEmpty(request.UserName) ? request.UserName : DBNull.Value),
-                    new SqlParameter("@Password",! string.IsNullOrEmpty(request.Password) ? request.Password : DBNull.Value),
+                    new SqlParameter("@Password",! string.IsNullOrEmpty(request.Password) ? PasswordHashingHelper.HashPassword(request.Password) : DBNull.Value),
                     new SqlParameter("@FirstName",! string.IsNullOrEmpty(request.FirstName) ? request.FirstName : DBNull.Value),
                     new SqlParameter("@LastName",! string.IsNullOrEmpty(request.LastName) ? request.LastName : DBNull.Value),
                     new SqlParameter("@Email", ! string.IsNullOrEmpty(request.Email) ? request.Email : DBNull.Value),

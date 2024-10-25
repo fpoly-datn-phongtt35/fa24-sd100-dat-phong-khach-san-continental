@@ -16,15 +16,15 @@ var _staff =
     Submit: function () {
         var obj =
         {
-            Id : $("#Id").val(),
-            FirstName : $("#firstname").val(),
-            Lastname : $("#lastname").val(),
-            PhoneNumber : $("#phonenumber").val(),
+            Id: $("#Id").val(),
+            FirstName: $("#firstname").val(),
+            Lastname: $("#lastname").val(),
+            PhoneNumber: $("#phonenumber").val(),
             Email: $("#email").val(),
-            UserName: $("#username").val(),
-            Password: $("#password").val(),
+            UserName: $("#email").val(),
+            Password: '',
             RoleId: '',
-            Status : 1
+            Status: 1
         }
         var form = $("#staff-form");
         form.validate({
@@ -43,18 +43,18 @@ var _staff =
                     required: true,
                     number: true
                 },
-                "username":
-                {
-                    required: true,
-                    minlength: 8,
-                    maxlength: 30
-                },
-                "password":
-                {
-                    required: true,
-                    minlength: 8,
-                    maxlength: 30
-                }
+                /* "username":
+                 {
+                     required: true,
+                     minlength: 8,
+                     maxlength: 30
+                 },
+                 "password":
+                 {
+                     required: true,
+                     minlength: 8,
+                     maxlength: 30
+                 }*/
             },
             messages: {
                 "firstname": {
@@ -71,30 +71,33 @@ var _staff =
                     required: "Vui lòng nhập số điện số thoại",
                     number: "Số điện thoại không hợp lệ"
                 },
-                "username":
-                {
-                    required: "Vui lòng nhập username",
-                    minlength: "username không được ít hơn 8 kí tự",
-                    maxlength: "username không được nhiều hơn 15 kí tự"
-                },
-                "password":
-                {
-                    required: "Vui lòng nhập username",
-                    minlength: "password không được ít hơn 8 kí tự",
-                    maxlength: "password không được nhiều hơn 15 kí tự"
-                },
+                /* "username":
+                 {
+                     required: "Vui lòng nhập username",
+                     minlength: "username không được ít hơn 8 kí tự",
+                     maxlength: "username không được nhiều hơn 15 kí tự"
+                 },
+                 "password":
+                 {
+                     required: "Vui lòng nhập password",
+                     minlength: "password không được ít hơn 8 kí tự",
+                     maxlength: "password không được nhiều hơn 15 kí tự"
+                 },*/
             },
 
         });
 
-        if (form.valid())
-        {
+        if (form.valid()) {
             $.ajax({
                 type: 'POST',
                 url: '/Staff/UpdateOrCreate',
-                data: { request : obj },
-                success: function () {
-                    window.location.reload();
+                data: { request: obj },
+                success: function (data) {
+                    if (data.status == 200) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.log("Error: " + error);
@@ -102,7 +105,13 @@ var _staff =
             });
         }
     },
-    LoadData: function () {
+    LoadData: function (pageIndex, pageSize, search) {
+        $('#ListStaff').html(`     
+        <div class="d-flex justify-content-center pt-5">
+        <div id="loading-spinner" style="width: 5rem; height: 5rem;" class="spinner-border text-success pt-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        </div>`);
         var request =
         {
             PageIndex: pageIndex,
@@ -122,18 +131,41 @@ var _staff =
             }
         });
     },
+    Delete: function (id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/Delete',
+            data: { id: id },
+            success: function (data) {
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    },
+    OnchangeSearchText: function ()
+    {
+        PageIndex = 1;
+        PageSize = 10;
+        search = $("#txt_search").val();
+        this.LoadData(1, 10, search);
+    },
     OnPanging: function (value) {
         pageIndex = value;
-        this.LoadData();
+        this.LoadData(pageIndex, pageSize, search);
     },
     OnChangePageSize: function () {
         pageSize = $("#selectPaggingOptions").val();
-        this.LoadData();
+        this.LoadData(pageIndex, pageSize, search);
     },
-    LoadForm: function () {
+    LoadForm: function (Id) {
         $.ajax({
             type: 'POST',
             url: '/Staff/AddOrUpdateStaffForm',
+            data: {Id : Id},
             success: function (data) {
                 $('body').append(data);
             },

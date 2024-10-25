@@ -1,20 +1,20 @@
 ﻿using Domain.DTO.Staff;
+using Domain.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
-using View.Controllers.Staff.Service;
 
 namespace View.ViewComponents.Staff
 {
     public class ListDataViewComponent : ViewComponent
     {
-        private readonly StaffServices _staffService;
-        public ListDataViewComponent()
+        private readonly IStaffService _staffService;
+        public ListDataViewComponent(IStaffService staffService)
         {
-            _staffService = new StaffServices();
+            _staffService = staffService;
         }
         public async Task<IViewComponentResult> InvokeAsync(StaffGetRequest request)
         {
-            var lstData = await _staffService.GetListData(request);
-            return View("~/Views/Shared/Components/Staff/ListData.cshtml",lstData);
+            var Data = await _staffService.GetStaffs(request);
+            return View("~/Views/Shared/Components/Staff/ListData.cshtml",Data);
         }
     }
 }
