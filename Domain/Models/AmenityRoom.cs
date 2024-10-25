@@ -20,7 +20,7 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
-        public Amenity Amenity { get; set; }
+        public Amenity? Amenity { get; set; }
         public RoomType RoomType { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Domain.DTO.RoomType;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomType;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +14,15 @@ public class RoomTypeController : Controller
     private readonly IRoomTypeAddService _roomTypeAddService;
     private readonly IRoomTypeDeleteService _roomTypeDeleteService;
     private readonly IRoomTypeGetService _roomTypeGetService;
-    private readonly IRoomTypeRollBackService _roomTypeRollBackService;
     private readonly IRoomTypeUpdateService _roomTypeUpdateService;
 
     public RoomTypeController(IRoomTypeAddService roomTypeAddService, 
-        IRoomTypeUpdateService roomTypeUpdateService, 
-        IRoomTypeRollBackService roomTypeRollBackService, 
+        IRoomTypeUpdateService roomTypeUpdateService,
         IRoomTypeGetService roomTypeGetService, 
         IRoomTypeDeleteService roomTypeDeleteService)
     {
         _roomTypeAddService = roomTypeAddService;
         _roomTypeUpdateService = roomTypeUpdateService;
-        _roomTypeRollBackService = roomTypeRollBackService;
         _roomTypeGetService = roomTypeGetService;
         _roomTypeDeleteService = roomTypeDeleteService;
     }
@@ -54,12 +53,25 @@ public class RoomTypeController : Controller
         }
     }
     
-    [HttpPost(nameof(GetAllRoomTypes))]
-    public async Task<List<RoomTypeResponse>> GetAllRoomTypes()
+    [HttpPost(nameof(GetFilteredRoomTypes))]
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
     {
         try
         {
-            return await _roomTypeGetService.GetAllRoomTypes();
+            return await _roomTypeGetService.GetFilteredRoomTypes(roomTypeGetRequest);
+        }
+        catch (Exception e)
+        {
+            throw new NullReferenceException("The list of room types could not be retrieved", e);
+        }
+    }
+    
+    [HttpPost(nameof(GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById))]
+    public async Task<RoomTypeResponse?> GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(Guid roomTypeId)
+    {
+        try
+        {
+            return await _roomTypeGetService.GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(roomTypeId);
         }
         catch (Exception e)
         {
@@ -90,6 +102,33 @@ public class RoomTypeController : Controller
         catch (Exception e)
         {
             throw new Exception(e.Message);
+        }
+    }
+    
+    [HttpPost(nameof(GetFilteredDeletedRoomTypes))]
+    public async Task<ResponseData<RoomTypeResponse>> GetFilteredDeletedRoomTypes(RoomTypeGetRequest roomTypeGetRequest)
+    {
+        try
+        {
+            return await _roomTypeGetService.GetFilteredDeletedRoomTypes(roomTypeGetRequest);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+    
+    [HttpPut(nameof(RecoverDeletedRoomType))]
+    public async Task<RoomTypeResponse?> RecoverDeletedRoomType(RoomTypeUpdateRequest roomTypeUpdateRequest)
+    {
+        try
+        {
+            return await _roomTypeUpdateService.RecoverDeletedRoomType(roomTypeUpdateRequest);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Some errors when recover room type", e);
         }
     }
 }

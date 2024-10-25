@@ -15,6 +15,12 @@ using Domain.Services.Services.AmenityRoom;
 using Domain.Services.Services.RoomType;
 using Utilities.JWTSettings;
 using Utilities.StoredProcedure;
+using Domain.Services.IServices.IRoom;
+using Domain.Services.IServices.IRoomBooking;
+using Domain.Services.IServices.IRoomTypeService;
+using Domain.Services.Services.Room;
+using Domain.Services.Services.RoomBooking;
+using Domain.Services.Services.RoomTypeService;
 
 namespace API
 {
@@ -69,6 +75,8 @@ namespace API
 
             builder.Services.AddTransient<ServiceTypeRepo>();
             //builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+            builder.Services.AddTransient<IVoucherDetailRepo, VoucherDetailRepo>();
+            builder.Services.AddTransient<IVoucherDetailService, VoucherDetailService>();
 
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
@@ -85,7 +93,15 @@ namespace API
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             builder.Services.AddTransient<IAmenityRoomRepository, AmenityRoomRepository>();
-            
+            builder.Services.AddTransient<IRoomRepo, RoomRepo>();
+            builder.Services.AddTransient<IRoomTypeServiceRepository, RoomTypeServiceRepository>();
+            builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>();
+            //room
+            builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
+            builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
+            builder.Services.AddTransient<IRoomGetService, RoomGetService>();
+            builder.Services.AddTransient<IRoomUpdateService, RoomUpdateService>();
+
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
@@ -93,13 +109,11 @@ namespace API
             builder.Services.AddTransient<IAmenityAddService, AmenityAddService>();
             builder.Services.AddTransient<IAmenityDeleteService, AmenityDeleteService>();
             builder.Services.AddTransient<IAmenityGetService, AmenityGetService>();
-            builder.Services.AddTransient<IAmenityRollBackService, AmenityRollBackService>();
             builder.Services.AddTransient<IAmenityUpdateService, AmenityUpdateService>();
             //RoomTypeService
             builder.Services.AddTransient<IRoomTypeAddService, RoomTypeAddService>();
             builder.Services.AddTransient<IRoomTypeDeleteService, RoomTypeDeleteService>();
             builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
-            builder.Services.AddTransient<IRoomTypeRollBackService, RoomTypeRollBackService>();
             builder.Services.AddTransient<IRoomTypeUpdateService, RoomTypeUpdateService>();
             
             builder.Services.AddTransient<ICustomerService, CustomerService>(); 
@@ -108,8 +122,25 @@ namespace API
             builder.Services.AddTransient<IAmenityRoomDeleteService, AmenityRoomDeleteService>();
             builder.Services.AddTransient<IAmenityRoomGetService, AmenityRoomGetService>();
             builder.Services.AddTransient<IAmenityRoomUpdateService, AmenityRoomUpdateService>();
+            //RoomTypeService_Service
+            builder.Services.AddTransient<IRoomTypeServiceAddService, RoomTypeServiceAddService>();
+            builder.Services.AddTransient<IRoomTypeServiceDeleteService, RoomTypeServiceDeleteService>();
+            builder.Services.AddTransient<IRoomTypeServiceGetService, RoomTypeServiceGetService>();
+            builder.Services.AddTransient<IRoomTypeServiceUpdateService, RoomTypeServiceUpdateService>();
+            //RoomBooking
+            builder.Services.AddTransient<IRoomBookingGetService, RoomBookingGetService>();
+            builder.Services.AddTransient<IRoomBookingUpdateService, RoomBookingUpdateService>();
+            //Staff
+            builder.Services.AddTransient<IStaffService, StaffService>();
 
-            builder.Services.AddDbContext<ContinentalDbContext>(options =>
+            builder.Services.AddTransient<VoucherRepo>();
+			builder.Services.AddTransient<IVoucherService, VoucherService>();
+
+            builder.Services.AddTransient<IPostTypeService, PostTypeService>();
+            builder.Services.AddTransient<IPostService, PostService>();
+
+            builder.Services.AddTransient<IRoleService, RoleService>();
+			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
             });

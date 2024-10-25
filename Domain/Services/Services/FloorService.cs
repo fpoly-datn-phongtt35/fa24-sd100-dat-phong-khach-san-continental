@@ -1,7 +1,9 @@
 ﻿using Domain.DTO.Floor;
 using Domain.DTO.Paging;
+using Domain.DTO.Service;
 using Domain.Enums;
 using Domain.Models;
+using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Microsoft.Extensions.Configuration;
@@ -18,10 +20,10 @@ namespace Domain.Services.Services
     {
         private readonly FloorRepo _floorRepo;
         private readonly IConfiguration _configuration;
-        public FloorService(IConfiguration configuration, BuildingRepo buildingRepo)
+        public FloorService(IConfiguration configuration, BuildingRepo building)
         {
             _configuration = configuration;
-            _floorRepo = new FloorRepo(_configuration, buildingRepo);
+            _floorRepo = new FloorRepo(_configuration, building);
         }
         public Task<int> AddFloor(FloorCreateRequest request)
         {
@@ -60,12 +62,11 @@ namespace Domain.Services.Services
                               {
                                   Id = row.Field<Guid>("Id"),
                                   Name = row.Field<string>("Name"),
-                                  NumberOfRoom = row.Field<int>("Number"),
                                   Status = row.Field<EntityStatus>("Status"),
+                                  NumberOfRoom= row.Field<int>("NumberOfRoom"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                   BuildingId = row.Field<Guid>("BuildingId"),
-
                               }).ToList();
 
                 //phân trang
@@ -107,6 +108,8 @@ namespace Domain.Services.Services
                                Id = row.Field<Guid>("Id"),
                                Name = row.Field<string>("Name"),
                                Status = row.Field<EntityStatus>("Status"),
+                               NumberOfRoom = row.Field<int>("NumberOfRoom"),
+                               BuildingId = row.Field<Guid>("BuildingId"),
                                CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty
                                ,
@@ -123,59 +126,6 @@ namespace Domain.Services.Services
             }
             return floor;
         }
-
-        public async Task<ResponseData<Floor>> GetFloorBybuildingId(FloorGetRequest request, Guid buildingId)
-        {
-            var model = new ResponseData<Floor>();
-            try
-            {
-                // Gọi repo để lấy DataTable
-                DataTable table = await _floorRepo.GetFloorByBuildingId(request, buildingId);
-
-                model.data = (from row in table.AsEnumerable()
-                              select new Floor
-                              {
-                                  Id = row.Field<Guid>("Id"),
-                                  Name = row.Field<string>("Name"),
-                                  NumberOfRoom = row.Field<int>("NumberOfRoom"),
-                                  Status = row.Field<EntityStatus>("Status"),
-                                  CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
-                                  CreatedBy = row.Field<Guid?>("CreatedBy") ?? Guid.Empty,
-                                  ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
-                                  ModifiedBy = row.Field<Guid?>("ModifiedBy") ?? Guid.Empty,
-                                  Deleted = row.Field<bool>("Deleted"),
-                                  DeletedBy = row.Field<Guid?>("DeletedBy") ?? Guid.Empty,
-                                  DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
-                              }).ToList();
-
-                // Phân trang
-                model.CurrentPage = request.PageIndex;
-                model.PageSize = request.PageSize;
-
-                try
-                {
-                    // Gán giá trị tổng số bản ghi
-                    model.totalRecord = table.AsEnumerable().FirstOrDefault()?.Field<int>("TotalRows") ?? 0;
-                }
-                catch (Exception ex)
-                {
-                    // Nếu có lỗi, gán totalRecord = 0
-                    model.totalRecord = 0;
-                }
-
-                // Tổng số trang
-                model.totalPage = (int)Math.Ceiling((double)model.totalRecord / request.PageSize);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return model;
-        }
-
-
-
 
         public Task<int> UpdateFloor(FloorUpdateRequest request)
         {

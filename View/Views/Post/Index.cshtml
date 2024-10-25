@@ -1,0 +1,113 @@
+﻿@using Domain.DTO.Paging
+@model ResponseData<Domain.Models.Post>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    body {
+        color: white;
+    }
+
+    .table th, .table td {
+        color: white;
+    }
+
+    h1 {
+        color: white;
+    }
+</style>
+<h1>Index</h1>
+
+
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="title" name="title" class="form-control me-2" placeholder="Title" value="@Context.Request.Query["title"]" style="max-width: 200px;" />
+        <input type="text" id="contentOfPost" name="contentOfPost" class="form-control me-2" placeholder="Content" value="@Context.Request.Query["contentOfPost"]" style="max-width: 200px;" />
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('title').value = '';
+        document.getElementById('contentOfPost').value = '';
+    }
+</script>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().PostTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().StaffId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.data.First().Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.data) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StaffId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center">
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { 
+                        pageIndex = i, 
+                        pageSize = Model.PageSize,
+                        title = Context.Request.Query["title"].ToString(),
+                        contentOfPost = Context.Request.Query["contentOfPost"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

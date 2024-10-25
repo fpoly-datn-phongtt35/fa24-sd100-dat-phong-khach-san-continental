@@ -1,125 +1,99 @@
-﻿@model IEnumerable<View.Models.Customer.Customer>
+﻿@using Domain.DTO.Paging;
+@model ResponseData<Domain.Models.Customer>
 
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+        body {
+            color: white;
+        }
 
+        .table th, .table td {
+            color: white;
+        }
+
+        h1 {
+            color: white;
+        }
+</style>
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="userName" name="userName" class="form-control me-2" placeholder="User Name" value="@Context.Request.Query["userName"]" style="max-width: 200px;" />
+        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control me-2" value="@Context.Request.Query["phoneNumber"]" placeholder="Phone Number" style="max-width: 200px;" />
+        <input type="text" name="email" id="email" class="form-control me-2" value="@Context.Request.Query["email"]" placeholder="Email" style="max-width: 200px;" />
+
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('userName').value = '';
+        document.getElementById('phoneNumber').value = '';
+        document.getElementById('email').value = '';
+    }
+</script>
+
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedTime)
-            </th>
+            <th> @Html.DisplayNameFor(model => model.data.First().Id)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().UserName)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().FirstName)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().LastName)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().Email)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().PhoneNumber)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().Gender)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().DateOfBirth)</th>
+            <th> @Html.DisplayNameFor(model => model.data.First().Status)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedTime)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.data)
+        {
+            <tr>
+                <td> @Html.DisplayFor(modelItem => item.Id)</td>
+                <td> @Html.DisplayFor(modelItem => item.UserName)</td>
+                <td> @Html.DisplayFor(modelItem => item.FirstName)</td>
+                <td> @Html.DisplayFor(modelItem => item.LastName)</td>
+                <td> @Html.DisplayFor(modelItem => item.Email)</td>
+                <td> @Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                <td> @Html.DisplayFor(modelItem => item.Gender)</td>
+                <td> @Html.DisplayFor(modelItem => item.DateOfBirth)</td>
+                <td> @Html.DisplayFor(modelItem => item.Status) </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div class="d-flex justify-content-center">
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { 
+                        pageIndex = i, 
+                        pageSize = Model.PageSize,
+                        serviceName = Context.Request.Query["userName"].ToString(),
+                        serviceTypeId = Context.Request.Query["phoneNumber"].ToString(),
+                        status = Context.Request.Query["email"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

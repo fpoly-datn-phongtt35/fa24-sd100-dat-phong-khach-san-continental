@@ -1,0 +1,68 @@
+﻿@using Domain.DTO.RoomType
+@using Domain.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model System.Collections.Generic.List<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
+
+@{
+    ViewData["Title"] = "Index";
+    // Lấy danh sách Amenities và RoomTypes từ ViewBag
+    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+    var services = ViewBag.ServiceList as List<Service>;
+}
+
+<h1>Danh sách dịch vụ thuộc loại phòng đã xóa</h1>
+
+<form method="get" asp-action="Trash" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <!-- Dropdown chọn RoomType -->
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomType">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.RoomTypes)
+            {
+            <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                @roomType.Name <!-- Hiển thị tên loại phòng -->
+            </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
+
+<p>
+    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
+</p>
+
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th>@Html.DisplayName("Loại phòng")</th>
+        <th>@Html.DisplayName("Dịch vụ sử dụng")</th>
+        <th>@Html.DisplayName("Số lượng")</th>
+        <th>@Html.DisplayName("Trạng thái")</th>
+        <th>@Html.DisplayName("Chức năng")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        var roomTypeName = roomTypes?.Find(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type"; // Lấy tên RoomType
+        var serviceName = services?.Find(s => s.Id == item.ServiceId)?.Name ?? "Unknown Service"; // Lấy tên Amenity
+        <tr>
+            <td style="width: 15%">@roomTypeName</td>
+            <td style="width: 15%">@serviceName</td>
+            <td style="width: 10%">@Html.DisplayFor(modelItem => item.Amount)</td>
+            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

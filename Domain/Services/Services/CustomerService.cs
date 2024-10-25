@@ -44,7 +44,7 @@ namespace Domain.Services.Services
             }
         }
 
-        public async Task<ResponseData<Customer>> GetAllCustomer(CustomerGetByUserNameRequest customer)
+        public async Task<ResponseData<Customer>> GetAllCustomer(CustomerGetRequest customer)
         {
             var model = new ResponseData<Customer>();
             try
@@ -57,6 +57,7 @@ namespace Domain.Services.Services
                                   UserName = row.Field<string>("UserName"),
                                   FirstName = row.Field<string>("FirstName"),
                                   LastName = row.Field<string>("LastName"),
+                                  Password = row.Field<string>("Password"),
                                   Email = row.Field<string>("Email"),
                                   PhoneNumber = row.Field<string>("PhoneNumber"),
                                   Gender = row.Field<int>("Gender"),

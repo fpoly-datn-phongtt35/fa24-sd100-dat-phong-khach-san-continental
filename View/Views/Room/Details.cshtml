@@ -1,0 +1,84 @@
+﻿@using View.Views.Shared.Helper
+@model Domain.DTO.Room.RoomResponse
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4>Chi tiết Phong</h4>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayName("Tên ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("giá ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Price)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Địa chỉ ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Address)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Mô tả")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Room Size ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomSize)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("FloorId ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.FloorId)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("RoomTypeId ")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomTypeId)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
+        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
+        <dt class="col-sm-2">@Html.DisplayName("Hình ảnh")</dt>
+        <dd class="col-sm-10">
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div class="d-flex justify-content-center">
+                    @foreach (var img in Model.Images) // Lặp qua danh sách hình ảnh trong Model
+                    {
+                        var extension = System.IO.Path.GetExtension(img);
+                        if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                        {
+                            <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
+                                <img class="responsive-img" src="~/images/@img" alt="Hình ảnh" style="object-fit: cover; width: 100%; height: 100%;">
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Không có hình ảnh</p>
+            }
+        </dd>
+
+
+        
+        
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Sửa", "Edit", new { roomId = Model.Id }, new { @class = "btn btn-warning" })
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+
+<style>
+    dt {
+        margin-bottom: 10px;
+    }
+
+    dd {
+        margin-bottom: 20px;
+    }
+</style>

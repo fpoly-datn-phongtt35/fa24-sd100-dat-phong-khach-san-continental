@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Floor;
+using Domain.DTO.Service;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
@@ -18,11 +19,11 @@ namespace Domain.Repositories.Repository
         private readonly BuildingRepo _floorRepo;
         private static DbWorker _DbWorker;
         private readonly IConfiguration _configuration;
-        public FloorRepo(IConfiguration configuration, BuildingRepo floorRepo)
+        public FloorRepo(IConfiguration configuration, BuildingRepo building)
         {
             _configuration = configuration;
             _DbWorker = new DbWorker(StoredProcedureConstant.Continetal);
-            _floorRepo = floorRepo;
+            _floorRepo = building;
         }
         public async Task<int> AddFloor(FloorCreateRequest request)
         {
@@ -78,7 +79,10 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
+                    new SqlParameter("@Name", request.Name),
+                    new SqlParameter("@BuildingId", request.BuildingId),
+                    new SqlParameter("@NumberOfRoom", request.NumberOfRoom),
+                    new SqlParameter("@Status", request.Status),
                     new SqlParameter("@PageSize", request.PageSize),
                     new SqlParameter("@PageIndex", request.PageIndex)
                 };
@@ -108,28 +112,10 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<DataTable> GetFloorByBuildingId(FloorGetRequest request, Guid buildingId)
-        {
-            try
-            {
-                SqlParameter[] sqlParameters = new SqlParameter[]
-                {
-            new SqlParameter("@BuildingId", buildingId),
-            new SqlParameter("@PageSize", request.PageSize),
-            new SqlParameter("@PageIndex", request.PageIndex)
-                };
-
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetFloorByBuildingId, sqlParameters);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         public async Task<int> UpdateFloor(FloorUpdateRequest request)
         {
-            var building = await _floorRepo.GetBuildingById(request.BuildingId);
-            if (building is null)
+            var buildings = await _floorRepo.GetBuildingById(request.BuildingId);
+            if (buildings is null)
             {
                 throw new ArgumentException("Building not found");
             }
@@ -139,14 +125,15 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
                     new SqlParameter("@BuildingId", request.BuildingId),
-                    new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
+                    new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@NumberOfRoom", request.NumberOfRoom),
-                    new SqlParameter("@Status",1),
+                    new SqlParameter("@Status",request.Status),
+                    new SqlParameter("@Deleted",request.Deleted),
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
 
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateBuilding, sqlParameters);
+                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateFloor, sqlParameters);
             }
             catch (Exception ex)
             {

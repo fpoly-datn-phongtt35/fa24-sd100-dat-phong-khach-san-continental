@@ -33,7 +33,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
                     new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
-                    new SqlParameter("@Status", (int)request.Status),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedTime", request.CreatedTime),
                     new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
                 };
@@ -84,6 +84,11 @@ namespace Domain.Repositories.Repository
 
         public async Task<int> UpdateCustomer(CustomerUpdateRequest request)
         {
+            var existingCustomer = GetCustomerById(request.Id);
+            if (existingCustomer == null)
+            {
+                throw new Exception("Customer could not be found");
+            }
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
@@ -97,7 +102,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
                     new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
-                    new SqlParameter("@Status", 1),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
@@ -111,13 +116,15 @@ namespace Domain.Repositories.Repository
         }
 
 
-        public async Task<DataTable> GetAllCustomer(CustomerGetByUserNameRequest customer)
+        public async Task<DataTable> GetAllCustomer(CustomerGetRequest customer)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                new SqlParameter("@UserName", !string.IsNullOrEmpty(customer.UserName) ? customer.UserName : DBNull.Value),
+                new SqlParameter("@UserName", customer.UserName),
+                new SqlParameter("Email", customer.Email),
+                new SqlParameter("PhoneNumber", customer.PhoneNumber),
                 new SqlParameter("@PageSize", customer.PageSize),
                 new SqlParameter("@PageIndex", customer.PageIndex)
                 };

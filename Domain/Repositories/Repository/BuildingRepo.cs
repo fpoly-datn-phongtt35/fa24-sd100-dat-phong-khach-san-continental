@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Building;
+using Domain.DTO.Floor;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,7 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
-                    new SqlParameter("@Status",1),
+                    new SqlParameter("@Status",(int)request.Status),
                     new SqlParameter("@CreatedTime",DateTime.Now),
                     new SqlParameter("@CreatedBy", request.CreatedBy!= null ? request.CreatedBy : DBNull.Value)
                 };
@@ -47,9 +48,9 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
+                    new SqlParameter("@Id", request.Id != null ? (object)request.Id : DBNull.Value),
                     new SqlParameter("@DeletedTime", DateTime.Now),
-                    new SqlParameter("@DeletedBy", request.DeletedBy != null ? request.DeletedBy : DBNull.Value)
+                    new SqlParameter("@DeletedBy", request.DeletedBy != Guid.Empty ? (object)request.DeletedBy : DBNull.Value)
                 };
 
                 return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_DeleteBuilding, sqlParameters);
@@ -66,7 +67,8 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Name", !string.IsNullOrEmpty(Search.Name) ? Search.Name : DBNull.Value),
+                    new SqlParameter("@Status", Search.Status),
+                    new SqlParameter("@Name", Search.Name),
                     new SqlParameter("@PageSize", Search.PageSize),
                     new SqlParameter("@PageIndex", Search.PageIndex)
                 };
@@ -104,7 +106,8 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
                     new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
-                    new SqlParameter("@Status",1),
+                    new SqlParameter("@Status",request.Status),
+                    new SqlParameter("@Deleted",request.Deleted),
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };

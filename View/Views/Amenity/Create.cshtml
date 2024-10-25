@@ -1,0 +1,65 @@
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.DTO.Amenity.AmenityCreateRequest
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>Tạo mới</h3>
+
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Tên tiện nghi</label>
+                <input asp-for="Name" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Mô Tả</label>
+                <input asp-for="Description" class="form-control"/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label">Trạng thái</label>
+                <select name="status" class="form-select" id="status">
+                    <option disabled>Chọn trạng thái</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                    {
+                        var statusEnum = (EntityStatus)status;
+                        <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                            @StatusHelper.DisplayNameForEnum(statusEnum)
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="CreatedTime" class="control-label">Thời gian tạo</label>
+                <input asp-for="CreatedTime" class="form-control"/>
+                <span asp-validation-for="CreatedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label">Được tạo bởi</label>
+                <input asp-for="CreatedBy" class="form-control"/>
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Tạo" class="btn btn-success"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

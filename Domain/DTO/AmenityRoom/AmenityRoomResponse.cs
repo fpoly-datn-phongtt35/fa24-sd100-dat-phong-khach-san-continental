@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Amenity;
+using Domain.Enums;
 
 namespace Domain.DTO.AmenityRoom;
 
@@ -7,9 +8,10 @@ public class AmenityRoomResponse
     public Guid Id { get; set; }
     public Guid AmenityId { get; set; }
     public Guid RoomTypeId { get; set; }
+    public string? AmenityName { get; set; }
+    public string? RoomTypeName { get; set; }
     public int Amount { get; set; }
     public EntityStatus Status { get; set; }
-
     public DateTimeOffset CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTimeOffset ModifiedTime { get; set; }
@@ -18,6 +20,8 @@ public class AmenityRoomResponse
     public Guid? DeletedBy { get; set; }
     public DateTimeOffset DeletedTime { get; set; }
 
+    public AmenityResponse Amenity { get; set; } = new AmenityResponse();
+    
     public override bool Equals(object? obj)
     {
         if (obj == null) return false;
@@ -38,6 +42,14 @@ public class AmenityRoomResponse
     {
         // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
         return base.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return $"AmenityRoomId: {Id}, AmenityId: {AmenityId}, Amenity: {AmenityName} ,RoomTypeId: {RoomTypeId}, " +
+               $"RoomType: {RoomTypeName}, Amount: {Amount}, Status: {Status}, CreatedTime: {CreatedTime}," +
+               $"CreatedBy: {CreatedBy}, ModifiedTime: {ModifiedTime}, " + $"ModifiedBy: {ModifiedBy}, " +
+               $"DeletedTime: {DeletedTime}, DeletedBy: {DeletedBy},"; 
     }
 
     public AmenityRoomUpdateRequest ToAmenityRoomUpdateRequest()
@@ -71,7 +83,7 @@ public static class AmenityRoomResponseExtensions
 {
     public static AmenityRoomResponse ToAmenityRoomResponse(this Models.AmenityRoom amenityRoom)
     {
-        // amenityRoom => convert => 
+        // amenityRoom => convert => AmenityRoomResponse
         return new AmenityRoomResponse()
         {
             Id = amenityRoom.Id,
@@ -85,7 +97,9 @@ public static class AmenityRoomResponseExtensions
             ModifiedBy = amenityRoom.ModifiedBy,
             Deleted = amenityRoom.Deleted,
             DeletedTime = amenityRoom.DeletedTime,
-            DeletedBy = amenityRoom.DeletedBy
+            DeletedBy = amenityRoom.DeletedBy,
+            AmenityName = amenityRoom.Amenity?.Name,
+            RoomTypeName = amenityRoom.RoomType?.Name
         };
     }
 }

@@ -1,32 +1,28 @@
 ﻿@{
     Layout = null;
 }
-<!-- Header Start -->
-<div class="site-header">
-	<div class="container">
-		<a href="/" class="branding">
-			<img src="images/logo.png" alt="" class="logo">
-			<div class="logo-type">
-				<h1 class="site-title">Company name</h1>
-				<small class="site-description">tagline goes here</small>
-			</div>
-		</a>
-
-		<!-- Default snippet for navigation -->
-		<div class="main-navigation">
-			<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-			<ul class="menu">
-				<li class="menu-item current-menu-item"><a href="/">Home</a></li>
-				<li class="menu-item"><a href="/new">News</a></li>
-				<li class="menu-item"><a href="/livecameras">Live cameras</a></li>
-				<li class="menu-item"><a href="/photo">Photos</a></li>
-				<li class="menu-item"><a href="/contact">Contact</a></li>
-			</ul> <!-- .menu -->
-		</div> <!-- .main-navigation -->
-
-		<div class="mobile-navigation"></div>
-
-	</div>
+<style>
+    .menu-option
+    {
+        color:#FFF;
+    }
+    .menu-option:hover
+    {
+        color: #009ad8;
+    }
+</style>
+<div class="" style="width:270px;background-color:#262936">
+    <ul class="p-4 list-unstyled">
+        <li class="">
+            <a class="fs-5" href="/">
+                <h2>
+                    Continetal
+                </h2>
+            </a>
+        </li>
+        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/Staff">Quản lí khách hàng</a></li>
+        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/livecameras">Quản lí quyền</a></li>
+        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/photo">Photos</a></li>
+        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/contact">Contact</a></li>
+    </ul>
 </div>
-
-<!-- Header End -->

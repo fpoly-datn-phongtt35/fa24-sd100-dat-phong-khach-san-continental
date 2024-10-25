@@ -1,0 +1,41 @@
+﻿@model Domain.Models.Floor
+
+<h2>Edit Service</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NumberOfRoom"></label>
+        <input asp-for="NumberOfRoom" class="form-control" />
+        <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow" />
+    <div class="form-group">
+        <label asp-for="BuildingId">Building</label>
+        <select asp-for="BuildingId" class="form-control" asp-items="@(new SelectList(ViewBag.Buildings, "Id", "Name", Model.BuildingId))">
+            <option value="">-- Select Building --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses, Model.Status))"></select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Deleted"></label>
+        <input asp-for="Deleted" type="checkbox" />
+        <span asp-validation-for="Deleted" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

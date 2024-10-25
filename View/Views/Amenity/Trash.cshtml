@@ -1,0 +1,62 @@
+﻿@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.Amenity.AmenityResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Danh sách tiện nghi đã xóa</h1>
+
+<form method="get" asp-action="Trash" class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm tiện nghi..."
+               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+    </div>
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
+
+<p>
+    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
+</p>
+
+<table class="table" style="color: whitesmoke">
+    <thead>
+    <tr>
+        <th>Tên tiện nghi</th>
+        <th>Mô tả</th>
+        <th>Trạng thái</th>
+        <th>Chức năng</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var amenity in Model.data)
+    {
+        <tr>
+            <td style="width: 20%">@amenity.Name</td>
+            <td style="width: 20%">@amenity.Description</td>
+            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
+            <td style="width: 30%">
+                @Html.ActionLink("Phục hồi", "Recover", new { amenityId = amenity.Id }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Trash", new {
+                       pageIndex = i,
+                       pageSize = Model.PageSize,
+                       searchString = Context.Request.Query["searchString"].ToString(),
+                       status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -13,7 +13,7 @@ namespace Domain.Services.IServices
 {
     public interface IServiceOrderService
     {
-        Task<int> AddServiceOrder(ServiceOrderCreateRequest request);
+        Task<Guid> AddServiceOrder(ServiceOrderCreateRequest request);
         Task<ResponseData<ServiceOrder>> GetServiceOrders(ServiceOrderGetRequest request);
         Task<int> UpdateServiceOrder(ServiceOrderUpdateRequest request);
         Task<int> DeleteServiceOrder(ServiceOrderDeleteRequest request);

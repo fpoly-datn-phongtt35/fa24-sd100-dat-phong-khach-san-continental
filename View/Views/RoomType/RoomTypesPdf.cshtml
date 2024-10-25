@@ -1,0 +1,39 @@
+﻿@using Domain.DTO.RoomType
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<RoomTypeResponse>
+
+@{
+    Layout = null;
+}
+<link href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" rel="stylesheet" />
+<h1>Danh sách tiện nghi</h1>
+
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+        <th style="border: 1px solid black;">Loại phòng</th>
+        <th style="border: 1px solid black;">Mô tả</th>
+        <th style="border: 1px solid black;">Số người / phòng</th>
+        <th style="border: 1px solid black;">Trạng thái</th>
+        <th style="border: 1px solid black;">Thời gian tạo</th>
+        <th style="border: 1px solid black;">Người tạo</th>
+        <th style="border: 1px solid black;">Thời gian sửa</th>
+        <th style="border: 1px solid black;">Người sửa</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (RoomTypeResponse roomType in Model.data)
+    {
+        <tr>
+            <td style="border: 1px solid black; width: 12%">@roomType.Name</td>
+            <td style="border: 1px solid black; width: 20%">@roomType.Description</td>
+            <td style="border: 1px solid black; width: 10%">@roomType.MaximumOccupancy</td>
+            <td style="border: 1px solid black; width: 10%">@StatusHelper.DisplayStatusBadge(roomType.Status)</td>
+            <td style="border: 1px solid black; width: 15%">@roomType.CreatedTime</td>
+            <td style="border: 1px solid black; width: 15%">@roomType.CreatedBy</td>
+            <td style="border: 1px solid black; width: 15%">@roomType.ModifiedTime</td>
+            <td style="border: 1px solid black; width: 15%">@roomType.ModifiedBy</td>
+        </tr>
+    }
+    </tbody>
+</table>

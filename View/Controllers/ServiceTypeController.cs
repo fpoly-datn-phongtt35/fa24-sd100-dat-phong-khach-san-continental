@@ -6,9 +6,11 @@ using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class ServiceTypeController : Controller
     {
         HttpClient _client;
@@ -18,11 +20,16 @@ namespace View.Controllers
             _client = client;
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string name = null)
         {
             string requestUrl = "api/ServiceType/GetListServiceType";
 
-            var request = new ServiceTypeGetRequest();
+            var request = new ServiceTypeGetRequest
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Name = name
+            };
 
             var jsonRequest = JsonConvert.SerializeObject(request);
 

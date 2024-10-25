@@ -1,0 +1,49 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<AmenityResponse>
+
+@{
+    Layout = null;
+}
+<link href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" rel="stylesheet" />
+<h1>Danh sách tiện nghi</h1>
+
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+        <th style="border: 1px solid black;">Tên tiện nghi</th>
+        <th style="border: 1px solid black;">Mô tả</th>
+        <th style="border: 1px solid black;">Trạng thái</th>
+        <th style="border: 1px solid black;">Thời gian tạo</th>
+        <th style="border: 1px solid black;">Người tạo</th>
+        <th style="border: 1px solid black;">Thời gian sửa</th>
+        <th style="border: 1px solid black;">Người sửa</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (AmenityResponse amenity in Model.data)
+    {
+        <tr>
+            <td style="border: 1px solid black; width: 12%">@amenity.Name</td>
+            <td style="border: 1px solid black; width: 20%">@amenity.Description</td>
+            <td style="border: 1px solid black; width: 10%">@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
+            <td style="border: 1px solid black; width: 15%">@amenity.CreatedTime</td>
+            <td style="border: 1px solid black; width: 15%">@amenity.CreatedBy</td>
+            <td style="border: 1px solid black; width: 15%">@amenity.ModifiedTime</td>
+            <td style="border: 1px solid black; width: 15%">@amenity.ModifiedBy</td>
+        </tr>
+        @if ((Model.data.IndexOf(amenity) + 1) % 2 == 0) 
+        {
+            <tr style="page-break-after: always;"></tr>
+        }
+    }
+    </tbody>
+</table>
+
+<style>
+    .pdf-page-break {
+        page-break-after: always;
+    }
+</style>
+

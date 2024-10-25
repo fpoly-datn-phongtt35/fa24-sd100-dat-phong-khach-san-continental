@@ -11,9 +11,11 @@ using System.Drawing;
 using System.Net.Http;
 using System.Text;
 using View.Models;
+using WEB.CMS.Customize;
 
 namespace View.Controllers
 {
+    [CustomAuthorize]
     public class ServiceController : Controller
     {
         HttpClient _client;
@@ -25,12 +27,21 @@ namespace View.Controllers
         }
 
         // GET: ServiceController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string serviceName = null, Guid? serviceTypeId = null, decimal? minPrice = null, decimal? maxPrice = null, EntityStatus? status = null)
         {
             // api url
             string requestUrl = "api/Service/GetListService";
 
-            var request = new ServiceGetRequest();
+            var request = new ServiceGetRequest
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Name = serviceName,
+                ServiceTypeId = serviceTypeId,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                Status = status
+            };
 
             // comvert request to json
             var jsonRequest = JsonConvert.SerializeObject(request); //chuyển đối tượng thành json
@@ -64,6 +75,8 @@ namespace View.Controllers
 
                 ViewBag.ServiceTypeList = serviceTypes.data;
                 #endregion
+
+                ViewBag.StatusList = Enum.GetValues(typeof(EntityStatus));
 
                 return View(services);
             }

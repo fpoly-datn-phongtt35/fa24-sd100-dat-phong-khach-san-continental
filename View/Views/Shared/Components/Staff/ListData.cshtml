@@ -1,0 +1,59 @@
+﻿@using Domain.DTO.Paging
+@using View.Models.Paging
+@model ResponseData<Domain.Models.Staff>
+<table class="table table-bordered mt-3 rounded-3">
+    <thead>
+        <tr class="text-white">
+            <th scope="col">#</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Created Time</th>
+            <th scope="col" style="width:150px">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            int STT = 0;
+            if (Model.CurrentPage == 1)
+            {
+                STT = 1;
+            }
+            else
+            {
+                STT = ((Model.CurrentPage - 1) * Model.PageSize) + 1;
+            }
+            foreach (var i in Model.data)
+            {
+                <tr class="text-white">
+                    <th scope="row">@STT</th>
+                    <td>@i.FirstName</td>
+                    <td>@i.LastName</td>
+                    <td>@i.Email</td>
+                    <td>@i.PhoneNumber</td>
+                    <td>@i.CreatedTime.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <button class="btn btn-outline-warning" onclick="_staff.LoadForm('@i.Id')">Update</button>
+                        <button class="btn btn-outline-danger ps-1" onclick="_staff.Delete('@i.Id')">Delete</button>
+                    </td>
+                </tr>
+                STT += 1;
+            }
+        }
+    </tbody>
+</table>
+@await Component.InvokeAsync("Paging", new
+    {
+        pageModel = new Paging()
+    {
+        TotalRecord = Model.totalRecord,
+        TotalPage = Model.totalPage,
+        CurrentPage = Model.CurrentPage,
+        PageSize = Model.PageSize,
+        RecordName = "Góp ý",
+        PageAction = "_staff.OnPanging({0})",
+        PageAction1 = "_staff.OnChangePageSize()"
+    }
+    })

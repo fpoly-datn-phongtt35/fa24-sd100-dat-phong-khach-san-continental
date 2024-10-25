@@ -1,0 +1,91 @@
+﻿﻿@using Domain.DTO.Paging
+@model ResponseData<Domain.Models.Building>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    body {
+        color: white;
+    }
+
+    .table th, .table td {
+        color: white;
+    }
+
+    h1 {
+        color: white;
+    }
+</style>
+
+<h1>List of Buildings</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Name" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
+
+        <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Status --</option>
+            @foreach (var status in ViewBag.StatusList)
+            {
+                    <option value="@((int)status)"
+                            selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @status
+                    </option>
+            }
+        </select>
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('Name').value = '';
+        document.getElementById('status').selectedIndex = 0; 
+    }
+</script>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.data.First().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        Name = Context.Request.Query["Name"].ToString(),
+                        status = Context.Request.Query["status"].ToString(),
+                    })">@i</a>
+                    </li>
+            }
+        </ul>
+    </nav>
+</div>

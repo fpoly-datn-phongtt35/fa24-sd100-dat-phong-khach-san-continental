@@ -21,7 +21,7 @@ namespace Domain.Services.Services
             _serviceOrderRepo = new ServiceOrderRepo(_configuration);
         }
 
-        public Task<int> AddServiceOrder(ServiceOrderCreateRequest request)
+        public Task<Guid> AddServiceOrder(ServiceOrderCreateRequest request)
         {
             try
             {
