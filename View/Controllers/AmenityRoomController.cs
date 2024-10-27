@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Domain.DTO.Amenity;
 using Domain.DTO.AmenityRoom;
 using Domain.DTO.Paging;
@@ -153,8 +154,7 @@ public class AmenityRoomController : Controller
         var amenityRoomUpdateRequest = new AmenityRoomUpdateRequest()
         {
             Id = amenityRoomId,
-            // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
-            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
+            ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value), // Lấy Guid của người dùng hiện tại
         };
         string requestUrl = "AmenityRoom/RecoverDeletedAmenityRoom";
         
@@ -187,6 +187,8 @@ public class AmenityRoomController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(AmenityRoomAddRequest amenityRoomAddRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        amenityRoomAddRequest.CreatedBy = userId;
         const string requestUrl = "AmenityRoom/CreateAmenityRoom";
         
         var createdAmenityRoom = await SendHttpRequest<AmenityRoomResponse>(requestUrl, 
@@ -212,6 +214,8 @@ public class AmenityRoomController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(AmenityRoomUpdateRequest amenityRoomUpdateRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        amenityRoomUpdateRequest.ModifiedBy = userId;
         string requestUrl = $"AmenityRoom/UpdateAmenityRoom?amenityRoomId={amenityRoomUpdateRequest.Id}";
         
         var updatedAmenityRoom = await SendHttpRequest<AmenityRoomResponse>(requestUrl, 
@@ -237,6 +241,8 @@ public class AmenityRoomController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(AmenityRoomDeleteRequest amenityRoomDeleteRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        amenityRoomDeleteRequest.DeletedBy = userId;
         string requestUrl = $"AmenityRoom/DeleteAmenityRoom?amenityRoomId={amenityRoomDeleteRequest.Id}";
         
         var deletedAmenityRoom = await SendHttpRequest<AmenityRoomResponse>(requestUrl, 

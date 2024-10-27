@@ -37,7 +37,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@LastName",! string.IsNullOrEmpty(request.LastName) ? request.LastName : DBNull.Value),
                     new SqlParameter("@Email", ! string.IsNullOrEmpty(request.Email) ? request.Email : DBNull.Value),
                     new SqlParameter("@PhoneNumber", ! string.IsNullOrEmpty(request.PhoneNumber) ? request.PhoneNumber : DBNull.Value),
-                    new SqlParameter("@RoleId", "D03790D6-E8AA-489B-AF3D-FD450FC0696B"),
+                    new SqlParameter("@RoleId", request.RoleId),
                     new SqlParameter("@Status", EntityStatus.Active),
                     new SqlParameter("@CreatedTime", DateTime.Now),
                     new SqlParameter("@Deleted", false)
