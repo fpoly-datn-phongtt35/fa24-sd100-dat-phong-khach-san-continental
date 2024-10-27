@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
 using Domain.DTO.RoomTypeService;
@@ -85,14 +86,6 @@ public class RoomTypeServiceController : Controller
 
     private async Task LoadServices()
     {
-        // Call API to GET list services
-        // var serviceRequest = new ServiceGetRequest()
-        // {
-        //     PageIndex = 1,
-        //     PageSize = int.MinValue,
-        //     Name = null,
-        //     Status = null
-        // };
         string serviceRequestUrl = "Service/GetListService";
         var serviceResponse = await _httpClient.PostAsync(serviceRequestUrl, 
             new StringContent("{}", Encoding.UTF8, "application/json"));
@@ -155,7 +148,7 @@ public class RoomTypeServiceController : Controller
         var roomTypeServiceUpdateRequest = new RoomTypeServiceUpdateRequest()
         {
             Id = roomTypeServiceId,
-            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda")
+            ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value)
         };
         string requestUrl = "RoomTypeService/RecoverDeletedRoomTypeService";
         
@@ -189,6 +182,9 @@ public class RoomTypeServiceController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(RoomTypeServiceAddRequest roomTypeServiceAddRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        roomTypeServiceAddRequest.CreatedBy = userId;
+        
         const string requestUrl = "RoomTypeService/AddRoomTypeService";
         var createdRoomTypeService = await SendHttpRequest<RoomTypeServiceResponse>(requestUrl,
             HttpMethod.Post, roomTypeServiceAddRequest);
@@ -215,6 +211,8 @@ public class RoomTypeServiceController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(RoomTypeServiceUpdateRequest roomTypeServiceUpdateRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        roomTypeServiceUpdateRequest.ModifiedBy = userId;
         string requestUrl = $"RoomTypeService/UpdateRoomTypeService?roomTypeServiceId={roomTypeServiceUpdateRequest.Id}";
         
         var updatedRoomTypeService = await SendHttpRequest<RoomTypeServiceResponse>(requestUrl, 
@@ -241,6 +239,8 @@ public class RoomTypeServiceController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(RoomTypeServiceDeleteRequest roomTypeServiceDeleteRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        roomTypeServiceDeleteRequest.DeletedBy = userId;
         string requestUrl = $"RoomTypeService/DeleteRoomTypeService?roomTypeServiceId={roomTypeServiceDeleteRequest.Id}";
         
         var deletedRoomTypeService = await SendHttpRequest<RoomTypeServiceResponse>(requestUrl, 

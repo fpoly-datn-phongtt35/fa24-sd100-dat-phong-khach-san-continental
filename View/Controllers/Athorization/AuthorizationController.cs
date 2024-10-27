@@ -56,7 +56,7 @@ namespace View.Controllers.Athorization
                 throw ex;
             }
         }
-        public async Task<IActionResult> Logout() 
+        public async Task<IActionResult> Logout()
         {
             try
             {
