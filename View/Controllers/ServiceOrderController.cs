@@ -2,6 +2,7 @@
 using Domain.DTO.Service;
 using Domain.DTO.ServiceOrder;
 using Domain.DTO.ServiceOrderDetail;
+using Domain.DTO.Voucher;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -230,8 +231,24 @@ namespace View.Controllers
 
                 throw;
             }
+        }
 
+        private async Task<List<Voucher>> GetRoomBookingList()
+        {
+            string voucherRequestURL = "api/Voucher/GetListVoucher";
 
+            var voucherRequest = new VoucherGetRequest();
+
+            var voucherJsonRequest = JsonConvert.SerializeObject(voucherRequest);
+
+            var voucherContent = new StringContent(voucherJsonRequest, Encoding.UTF8, "application/json");
+
+            var voucherResponse = await _client.PostAsync(voucherRequestURL, voucherContent);
+            var voucherResponseString = await voucherResponse.Content.ReadAsStringAsync();
+
+            var vouchers = JsonConvert.DeserializeObject<ResponseData<Voucher>>(voucherResponseString);
+
+            return vouchers.data;
         }
     }
 }

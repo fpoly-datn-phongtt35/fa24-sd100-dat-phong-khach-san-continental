@@ -7,7 +7,7 @@ using WEB.CMS.Customize;
 
 namespace View.Controllers.Staff
 {
-    [CustomAuthorize]
+    //[CustomAuthorize]
     public class StaffController : Controller
     {
         private readonly HttpClient _httpClient;
