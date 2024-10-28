@@ -125,6 +125,14 @@ public class RoomBookingRepository : IRoomBookingRepository
 
     private RoomBooking ConvertToRoomBookingRow(DataRow row)
     {
+        // Tach ten customer
+        var customerNameParts = row["CustomerName"].ToString().Split(' ');
+        var customerLastName = string.Join(" ", customerNameParts.Take(customerNameParts.Length - 1));
+        var customerFirstName = customerNameParts.Last();
+        
+        var staffNameParts = row["StaffName"].ToString().Split(' ');
+        var staffLastName = string.Join(" ", staffNameParts.Take(staffNameParts.Length - 1));
+        var staffFirstName = staffNameParts.Last();
         return new RoomBooking()
         {
             Id = Guid.Parse(row["Id"].ToString()!),
@@ -142,14 +150,14 @@ public class RoomBookingRepository : IRoomBookingRepository
             Customer = new Customer()
             {
                 Id = Guid.Parse(row["CustomerId"].ToString()!),
-                FirstName = row["CustomerName"].ToString().Split(' ')[1],
-                LastName = row["CustomerName"].ToString().Split(' ')[0],
+                FirstName = customerFirstName,
+                LastName = customerLastName
             },
             Staff = new Staff()
             {
                 Id = Guid.Parse(row["StaffId"].ToString()!),
-                FirstName = row["StaffName"].ToString().Split(' ')[1],
-                LastName = row["StaffName"].ToString().Split(' ')[0],
+                FirstName = staffFirstName,
+                LastName = staffLastName
             }
         };
     }
