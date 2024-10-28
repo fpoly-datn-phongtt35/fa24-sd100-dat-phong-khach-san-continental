@@ -194,8 +194,8 @@ namespace Domain.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
