@@ -1,7 +1,10 @@
 ﻿using Domain.DTO.Staff;
 using Domain.Enums;
+using Domain.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.ComponentModel;
+using System.Security.Claims;
 using System.Text;
 using WEB.CMS.Customize;
 
@@ -11,10 +14,12 @@ namespace View.Controllers.Staff
     public class StaffController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly IStaffService _staffService;
 
-        public StaffController()
+        public StaffController(IStaffService staffService)
         {
             _httpClient = new HttpClient();
+            _staffService = staffService;
         }
         public async Task<ActionResult> Index()
         {
@@ -26,37 +31,10 @@ namespace View.Controllers.Staff
             return ViewComponent("ListData", request);
         }
 
-        public async Task<IActionResult> Details(Guid id)
-        {
-            string requestUrl = $"https://localhost:7130/api/Staff/GetStaffById?request={id}";
-
-            // Tạo nội dung json cho request
-            var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
-            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var response = await _httpClient.PostAsync(requestUrl, content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return View("Error");
-                }
-
-                var responseString = await response.Content.ReadAsStringAsync();
-                var PostType = JsonConvert.DeserializeObject<Domain.Models.Staff>(responseString);
-
-                return View(PostType);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-        public async Task<IActionResult> AddOrUpdateStaffForm()
+        public async Task<IActionResult> AddOrUpdateStaffForm(Guid Id)
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-            return View();
+            return ViewComponent("AddOrUpdate", Id);
         }
 
         [HttpPost]
@@ -64,7 +42,7 @@ namespace View.Controllers.Staff
         {
             if (request.Id == Guid.Empty)
             {
-                var obj = new StaffCreateRequest() 
+                var obj = new StaffCreateRequest()
                 {
                     UserName = request.UserName,
                     Password = request.Password,
@@ -73,30 +51,63 @@ namespace View.Controllers.Staff
                     Email = request.Email,
                     PhoneNumber = request.PhoneNumber,
                 };
-                var response = await _httpClient.PostAsJsonAsync("https://localhost:7130/api/Staff/CreateStaff", request);
-                if (response.IsSuccessStatusCode) 
+                var response = await _staffService.AddStaff(obj);
+                if (response > 0)
                 {
                     return Ok(new
                     {
+                        msg = "Thêm mới thành công",
                         status = 200
                     });
                 }
             }
-            else 
+            else
             {
-                var response = await _httpClient.PostAsJsonAsync("https://localhost:7130/api/Staff/UpdateStaff", request);
-                if (response.IsSuccessStatusCode)
+                var response = await _staffService.UpdateStaff(request);
+                if (response > 0)
                 {
                     return Ok(new
                     {
+                        msg = "Cập nhật thành công",
                         status = 200
                     });
                 }
             }
-            return Ok(new 
+            return Ok(new
             {
                 status = 500
             });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id) 
+        {
+            try
+            {
+                var deleteRq = new StaffDeleteRequest()
+                {
+                    Id = id,
+                    DeletedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                };
+                var rs = await _staffService.DeleteStaff(deleteRq);
+                if (rs > 0) 
+                {
+                    return Ok(new
+                    {
+                        msg = "Xóa thành công",
+                        status = 200
+                    });
+                }
+                return Ok(new
+                {
+                    msg = "Xóa thất bại",
+                    status = 200
+                });
+            }
+            catch (Exception ex) 
+            {
+                throw ex;
+            }
         }
     }
 }

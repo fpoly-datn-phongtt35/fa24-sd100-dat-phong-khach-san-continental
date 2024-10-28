@@ -1,0 +1,104 @@
+﻿@model Domain.Models.Staff
+
+<style>
+    .form-label
+    {
+        width: 100px;
+    }
+    .error
+    {
+        color:red;
+    }
+
+    .input-field
+    {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 600px;
+    }
+</style>
+<div class="modal fade show" id="AddOrUpdateStaffForm" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" style="color:#0d6efd">Form Staff</h1>
+                <button type="button" class="btn-close close-form"></button>
+            </div>
+            <form class="p-4 d-flex m-0" id="staff-form">
+                @if (Model != null && Model.Id != Guid.Empty)
+                {
+                    <input id="Id" value="@Model.Id" style="display:none" />
+                    <div style="width:50%">
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">First name :</label>
+                            <div class="input-field">
+                                <input class="form-control" value="@Model.FirstName" type="text" id="firstname" name="firstname">
+                            </div>
+                        </div>
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">Last name :</label>
+                            <div class="input-field">
+                                <input class="form-control" value="@Model.LastName" type="text" id="lastname" name="lastname">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:50%" class="ms-4">
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">Phone :</label>
+                            <div class="input-field">
+                                <input class="form-control" value="@Model.PhoneNumber" type="text" id="phonenumber" name="phonenumber">
+                            </div>
+                        </div>
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">Email :</label>
+                            <div class="input-field">
+                                <input class="form-control" value="@Model.Email" type="text" id="email" name="email">
+                            </div>
+                        </div>
+                    </div>
+                }
+                else 
+                {
+                    <div style="width:50%">
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">First name :</label>
+                            <div class="input-field">
+                                <input class="form-control" type="text" id="firstname" name="firstname">
+                            </div>
+                        </div>
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">Last name :</label>
+                            <div class="input-field">
+                                <input class="form-control" type="text" id="lastname" name="lastname">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:50%" class="ms-4">
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">Phone :</label>
+                            <div class="input-field">
+                                <input class="form-control" type="text" id="phonenumber" name="phonenumber">
+                            </div>
+                        </div>
+                        <div class="mb-3 align-items-center input-field">
+                            <label for="formFileMultiple" class="form-label pe-1">Email :</label>
+                            <div class="input-field">
+                                <input class="form-control" type="text" id="email" name="email">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-form">Bỏ qua</button>
+                <button type="button" class="btn btn-primary" onclick="_staff.Submit()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
