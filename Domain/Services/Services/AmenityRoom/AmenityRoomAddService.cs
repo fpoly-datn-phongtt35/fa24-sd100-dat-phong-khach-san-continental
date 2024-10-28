@@ -23,7 +23,6 @@ public class AmenityRoomAddService : IAmenityRoomAddService
         // convert amenityRoomAddRequest into AmenityRoom type
         var amenityRoom = amenityRoomAddRequest.ToAmenityRoom();
         
-        amenityRoom.Id = Guid.NewGuid();
         amenityRoom.Deleted = false;
         amenityRoom.DeletedTime = default;
         amenityRoom.ModifiedTime = default;

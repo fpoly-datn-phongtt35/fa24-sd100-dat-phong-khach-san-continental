@@ -26,8 +26,8 @@ namespace View
                 options.AccessDeniedPath = new PathString("/Authorization/LoginForm");
                 options.LoginPath = new PathString("/Authorization/LoginForm");
                 options.ReturnUrlParameter = "url";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // n?u dùng ExpireTimeSpan thì  SlidingExpiration ph?i set là false. Nh? v?y cho dù t??ng tác hay k t??ng tác thì ??u timeout theo th?i gian ?ã set
-                options.SlidingExpiration = true; //???c s? d?ng ?? thi?t l?p th?i gian s?ng c?a cookie d?a trên th?i gian cu?i cùng mà ng??i dùng ?ã t??ng tác v?i ?ng d?ng . N?u ng??i dùng ti?p t?c t??ng tác v?i ?ng d?ng tr??c khi cookie h?t h?n, th?i gian s?ng c?a cookie s? ???c gia h?n thêm.
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
 
                 options.Cookie = new CookieBuilder
                 {

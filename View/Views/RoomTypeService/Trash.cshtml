@@ -2,18 +2,15 @@
 @using Domain.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using View.Views.Shared.Helper
-@model System.Collections.Generic.List<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.RoomTypeService.RoomTypeServiceResponse>
 
 @{
     ViewData["Title"] = "Index";
-    // Lấy danh sách Amenities và RoomTypes từ ViewBag
-    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
-    var services = ViewBag.ServiceList as List<Service>;
 }
 
 <h1>Danh sách dịch vụ thuộc loại phòng đã xóa</h1>
 
-<form method="get" asp-action="Trash" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["searchString"]" />
@@ -25,7 +22,7 @@
             @foreach (var roomType in ViewBag.RoomTypes)
             {
             <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
-                @roomType.Name <!-- Hiển thị tên loại phòng -->
+                @roomType.Name
             </option>
             }
         </select>
@@ -50,19 +47,34 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var roomTypeService in Model.data)
     {
-        var roomTypeName = roomTypes?.Find(r => r.Id == item.RoomTypeId)?.Name ?? "Unknown Room Type"; // Lấy tên RoomType
-        var serviceName = services?.Find(s => s.Id == item.ServiceId)?.Name ?? "Unknown Service"; // Lấy tên Amenity
         <tr>
-            <td style="width: 15%">@roomTypeName</td>
-            <td style="width: 15%">@serviceName</td>
-            <td style="width: 10%">@Html.DisplayFor(modelItem => item.Amount)</td>
-            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td style="width: 15%">@roomTypeService.RoomTypeName</td>
+            <td style="width: 15%">@roomTypeService.ServiceName</td>
+            <td style="width: 10%">@roomTypeService.Amount</td>
+            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
             <td style="width: 30%">
-                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-warning" })
             </td>
         </tr>
     }
     </tbody>
 </table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        searchString = Context.Request.Query["searchString"].ToString(),
+                        status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

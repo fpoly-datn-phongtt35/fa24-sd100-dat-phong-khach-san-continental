@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Domain.DTO.Amenity;
 using Domain.DTO.Paging;
 using Domain.DTO.RoomType;
@@ -101,6 +102,8 @@ public class RoomTypeController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(RoomTypeAddRequest roomTypeAddRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        roomTypeAddRequest.CreatedBy = userId;
         string requestUrl = $"/api/RoomType/CreateRoomType";
 
         var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl,
@@ -125,6 +128,8 @@ public class RoomTypeController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(RoomTypeUpdateRequest roomTypeUpdateRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        roomTypeUpdateRequest.ModifiedBy = userId;
         string requestUrl = $"/api/RoomType/UpdateRoomType?roomTypeId={roomTypeUpdateRequest.Id}";
 
         var updatedRoomType =
@@ -149,6 +154,8 @@ public class RoomTypeController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(RoomTypeDeleteRequest roomTypeDeleteRequest)
     {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        roomTypeDeleteRequest.DeletedBy = userId;
         string requestUrl = $"/api/RoomType/DeleteRoomType?roomTypeId={roomTypeDeleteRequest.Id}";
 
         var deletedRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl,
@@ -184,9 +191,7 @@ public class RoomTypeController : Controller
         var roomTypeUpdateRequest = new RoomTypeUpdateRequest()
         {
             Id = roomTypeId,
-            // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
-            ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
-            ModifiedTime = DateTimeOffset.Now
+            ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value), // Lấy Guid của người dùng hiện tại
         };
         string requestUrl = "api/RoomType/RecoverDeletedRoomType";
         

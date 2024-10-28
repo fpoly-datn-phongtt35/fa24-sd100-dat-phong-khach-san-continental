@@ -23,8 +23,6 @@ public class AmenityAddService : IAmenityAddService
         // Convert amenityCreateRequest into Amenity type
         var amenity = amenityCreateRequest.ToAmenity();
         
-        amenity.Id = Guid.NewGuid();
-        
         // Add amenity object to AmenityResponse type
         await _amenityRepository.AddAmenity(amenity);
 

@@ -1,9 +1,12 @@
 ﻿using System.Data;
+using Domain.DTO.Paging;
+using Domain.DTO.RoomTypeService;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository;
@@ -19,34 +22,53 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         _configuration = configuration;
     }
 
-    public async Task<List<RoomTypeService>> GetFilteredRoomTypeServices(string? searchString,
-        Guid? roomTypeId, EntityStatus? status)
+    public async Task<ResponseData<RoomTypeServiceResponse>> GetFilteredRoomTypeServices
+        (RoomTypeServiceGetRequest roomTypeServiceGetRequest)
     {
+        var model = new ResponseData<RoomTypeServiceResponse>();
         try
         {
-            var roomTypeServices = new List<RoomTypeService>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
-                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value },
-                new("@status", SqlDbType.Int) { Value = status.HasValue ? (int)status.Value : DBNull.Value }
+                new("@PageIndex", roomTypeServiceGetRequest.PageIndex),
+                new("@PageSize", roomTypeServiceGetRequest.PageSize),
+                new("@SearchString", roomTypeServiceGetRequest.SearchString),
+                new("@RoomTypeId", roomTypeServiceGetRequest.RoomTypeId),
+                new("@Status", roomTypeServiceGetRequest.Status)
             };
 
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredRoomTypeServices, parameters);
 
+            var roomTypeServices = new List<RoomTypeServiceResponse>();
+            
             foreach (DataRow row in dataTable.Rows)
             {
                 var roomTypeService = ConvertDataRowToRoomTypeService(row);
-                roomTypeServices.Add(roomTypeService);
+                var roomTypeServiceResponse = roomTypeService.ToRoomTypeServiceResponse();
+                roomTypeServices.Add(roomTypeServiceResponse);
             }
 
-            return roomTypeServices;
+            model.data = roomTypeServices;
+            model.CurrentPage = roomTypeServiceGetRequest.PageIndex;
+            model.PageSize = roomTypeServiceGetRequest.PageSize;
+
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                model.totalRecord = 0;
+            }
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / roomTypeServiceGetRequest.PageSize);
         }
         catch (Exception e)
         {
             throw new ArgumentNullException("An error occurred while getting all room types", e);
         }
+
+        return model;
     }
 
     public async Task<RoomTypeService?> GetRoomTypeServiceById(Guid roomTypeServiceId)
@@ -90,15 +112,18 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
                 new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.ModifiedTime },
                 new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted },
                 new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.DeletedTime },
+                new("@NewRoomTypeServiceId", SqlDbType.UniqueIdentifier) {Direction = ParameterDirection.Output}
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomTypeService, parameters);
+            roomTypeService.Id = (Guid)parameters[9].Value;
+            
             return roomTypeService;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("An error occurred while adding the amenity", e);
+            throw new Exception("An error occurred while adding the room type service", e);
         }
     }
 
@@ -156,31 +181,54 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         }
     }
 
-    public async Task<List<RoomTypeService>> GetFilteredDeletedRoomTypeServices(string? searchString, Guid? roomTypeId)
+    public async Task<ResponseData<RoomTypeServiceResponse>> GetFilteredDeletedRoomTypeServices
+        (RoomTypeServiceGetRequest roomTypeServiceGetRequest)
     {
+        var model = new ResponseData<RoomTypeServiceResponse>();
         try
         {
-            var deletedRoomTypeServices = new List<RoomTypeService>();
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@searchString", SqlDbType.NVarChar) { Value = (object)searchString ?? DBNull.Value },
-                new("@roomTypeId", SqlDbType.UniqueIdentifier) { Value = (object)roomTypeId ?? DBNull.Value }
+                new("@PageIndex", roomTypeServiceGetRequest.PageIndex),
+                new("@PageSize", roomTypeServiceGetRequest.PageSize),
+                new("@SearchString", roomTypeServiceGetRequest.SearchString),
+                new("@RoomTypeId", roomTypeServiceGetRequest.RoomTypeId),
+                new("@Status", roomTypeServiceGetRequest.Status)
             };
             
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredDeletedRoomTypeServices, parameters);
+            var deletedRoomTypeServices = new List<RoomTypeServiceResponse>();
+                
             foreach (DataRow row in dataTable.Rows)
             {
                 var deletedRoomTypeService = ConvertDataRowToRoomTypeService(row);
-                deletedRoomTypeServices.Add(deletedRoomTypeService);
+                var deletedRoomTypeServiceResponse = deletedRoomTypeService.ToRoomTypeServiceResponse();
+                deletedRoomTypeServices.Add(deletedRoomTypeServiceResponse);
             }
-            return deletedRoomTypeServices;
+
+            model.data = deletedRoomTypeServices;
+            model.CurrentPage = roomTypeServiceGetRequest.PageIndex;
+            model.PageSize = roomTypeServiceGetRequest.PageSize;
+            
+            try
+            {
+                model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
+            }
+            catch
+            {
+                model.totalRecord = 0;
+            }
+            model.totalPage = (int)Math.Ceiling((double)model.totalRecord / roomTypeServiceGetRequest.PageSize);
+
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw new Exception("An error occurred while retrieving the amenity room types", e);
         }
+
+        return model;
     }
 
     public async Task<RoomTypeService?> RecoverDeletedRoomTypeService(RoomTypeService roomTypeService)
