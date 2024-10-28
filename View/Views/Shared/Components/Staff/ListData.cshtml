@@ -1,7 +1,7 @@
 ﻿@using Domain.DTO.Paging
 @using View.Models.Paging
 @model ResponseData<Domain.Models.Staff>
-<table class="table bg-secondary mt-3 rounded-3">
+<table class="table table-bordered mt-3 rounded-3">
     <thead>
         <tr class="text-white">
             <th scope="col">#</th>
@@ -10,7 +10,7 @@
             <th scope="col">Email</th>
             <th scope="col">Phone Number</th>
             <th scope="col">Created Time</th>
-            <th scope="col">Action</th>
+            <th scope="col" style="width:150px">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -35,8 +35,8 @@
                     <td>@i.PhoneNumber</td>
                     <td>@i.CreatedTime.ToString("dd/MM/yyyy")</td>
                     <td>
-                        <button class="btn btn-outline-warning">Update</button>
-                        <button class="btn btn-outline-warning ps-1">Delete</button>
+                        <button class="btn btn-outline-warning" onclick="_staff.LoadForm('@i.Id')">Update</button>
+                        <button class="btn btn-outline-danger ps-1" onclick="_staff.Delete('@i.Id')">Delete</button>
                     </td>
                 </tr>
                 STT += 1;

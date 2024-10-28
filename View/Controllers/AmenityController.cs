@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Domain.DTO.Amenity;
 using Domain.DTO.Paging;
 using Domain.Enums;
@@ -111,8 +112,8 @@ namespace View.Controllers
             var amenityUpdateRequest = new AmenityUpdateRequest
             {
                 Id = amenityId,
-                // ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier).Value), // Lấy Guid của người dùng hiện tại
-                ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
+                ModifiedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value), // Lấy Guid của người dùng hiện tại
+                //ModifiedBy = new Guid("b48bd523-956a-4e67-a605-708e812a8eda"),
                 ModifiedTime = DateTimeOffset.Now
             };
             string requestUrl = "api/Amenity/RecoverDeletedAmenity";
@@ -128,7 +129,6 @@ namespace View.Controllers
         public async Task<IActionResult> Details(Guid amenityId)
         {
             string requestUrl = $"/api/Amenity/GetAmenityById?amenityId={amenityId}";
-
             var amenity = await SendHttpRequest<AmenityResponse>(requestUrl, HttpMethod.Post);
             if (amenity != null)
                 return View(amenity);
@@ -141,6 +141,8 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AmenityCreateRequest amenityCreateRequest)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            amenityCreateRequest.CreatedBy = userId;
             string requestUrl = "/api/Amenity/CreateAmenity";
 
             var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl,
@@ -164,6 +166,8 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(AmenityUpdateRequest amenityUpdateRequest)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            amenityUpdateRequest.ModifiedBy = userId;
             string requestUrl = $"/api/Amenity/UpdateAmenity?amenityId={amenityUpdateRequest.Id}";
 
             var updatedAmenity = await SendHttpRequest<AmenityResponse>
@@ -187,6 +191,8 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(AmenityDeleteRequest amenityDeleteRequest)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            amenityDeleteRequest.DeletedBy = userId;
             string requestUrl = $"/api/Amenity/DeleteAmenity?amenityId={amenityDeleteRequest.Id}";
 
             var deletedAmenity = await SendHttpRequest<AmenityResponse>

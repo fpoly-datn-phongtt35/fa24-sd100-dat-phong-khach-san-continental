@@ -10,6 +10,5 @@ namespace Domain.DTO.Staff
     {
         public Guid Id { get; set; }
         public Guid? DeletedBy { get; set; }
-        public DateTimeOffset? DeletedTime { get; set; }
     }
 }
