@@ -78,9 +78,15 @@ else
             @for (var i = 1; i <= Model.totalPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        roomBookingId = Context.Request.Query["roomBookingId"].ToString(),
+                        voucherId = Context.Request.Query["voucherId"].ToString()
+                    })">@i</a>
                 </li>
             }
         </ul>
     </nav>
 </div>
+

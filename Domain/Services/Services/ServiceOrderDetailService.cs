@@ -139,6 +139,8 @@ namespace Domain.Services.Services
                 {
                     model.totalRecord = 0;
                 }
+
+                model.totalPage = (int)Math.Ceiling((double)model.totalRecord / request.PageSize);
             }
             catch (Exception ex)
             {
