@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomBooking;
 using Domain.DTO.Service;
 using Domain.DTO.ServiceOrder;
 using Domain.DTO.ServiceOrderDetail;
@@ -98,8 +99,15 @@ namespace View.Controllers
         }
 
         // GET: ServiceOrderController/Create
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            // Lấy danh sách ServiceOrder
+            string rbRequestUrl = "api/RoomBooking/GetFilteredRoomBookings";
+            var rbResponse = await _client.PostAsync(rbRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var rbResponseString = await rbResponse.Content.ReadAsStringAsync();
+            var rbs = JsonConvert.DeserializeObject<ResponseData<RoomBooking>>(rbResponseString);
+
+            ViewBag.RoomBookings = rbs?.data;
             return View(new ServiceOrderCreateRequest());
         }
 
@@ -231,24 +239,6 @@ namespace View.Controllers
 
                 throw;
             }
-        }
-
-        private async Task<List<Voucher>> GetRoomBookingList()
-        {
-            string voucherRequestURL = "api/Voucher/GetListVoucher";
-
-            var voucherRequest = new VoucherGetRequest();
-
-            var voucherJsonRequest = JsonConvert.SerializeObject(voucherRequest);
-
-            var voucherContent = new StringContent(voucherJsonRequest, Encoding.UTF8, "application/json");
-
-            var voucherResponse = await _client.PostAsync(voucherRequestURL, voucherContent);
-            var voucherResponseString = await voucherResponse.Content.ReadAsStringAsync();
-
-            var vouchers = JsonConvert.DeserializeObject<ResponseData<Voucher>>(voucherResponseString);
-
-            return vouchers.data;
         }
     }
 }

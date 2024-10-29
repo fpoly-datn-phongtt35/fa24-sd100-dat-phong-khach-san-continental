@@ -7,11 +7,12 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="RoomBookingId">RoomBookingId</label>
-        <input asp-for="RoomBookingId" class="form-control" placeholder="Nhập RoomBooking Id" />
-        <span asp-validation-for="RoomBookingId" class="text-danger"></span>
+        <label asp-for="RoomBookingId">RoomBooking</label>
+        <select asp-for="RoomBookingId" class="form-control" asp-items="@(new SelectList(ViewBag.RoomBookings, "Id", "Id"))">
+            <option value="">-- Select RoomBooking --</option>
+        </select>
     </div>
-    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.Now" />
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
 
     <button type="submit" class="btn btn-primary">Create</button>
