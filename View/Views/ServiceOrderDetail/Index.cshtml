@@ -72,7 +72,11 @@ else
             @for (var i = 1; i <= Model.totalPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        serviceOrderId = Context.Request.Query["serviceOrderId"].ToString()
+                    })">@i</a>
                 </li>
             }
         </ul>

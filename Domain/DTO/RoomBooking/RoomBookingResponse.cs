@@ -88,8 +88,9 @@ public static class RoomBookingResponseExtensions
             Deleted = roomBooking.Deleted,
             DeletedTime = roomBooking.DeletedTime,
             DeletedBy = roomBooking.DeletedBy,
-            StaffFullName = roomBooking.Staff?.LastName + " " + roomBooking.Staff?.FirstName,
-            CustomerFullName = roomBooking.Customer?.LastName + " " + roomBooking.Customer?.FirstName
+            // Kiểm tra null trước khi ghép
+            StaffFullName = roomBooking.Staff.LastName + " " + roomBooking.Staff.FirstName,
+            CustomerFullName = roomBooking.Customer.LastName + " " + roomBooking.Customer.FirstName,
         };
     }
 }
