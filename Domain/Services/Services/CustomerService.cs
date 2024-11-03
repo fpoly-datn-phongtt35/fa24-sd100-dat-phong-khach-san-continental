@@ -1,4 +1,6 @@
-﻿using Domain.DTO.Customer;
+﻿using Domain.DTO.Athorization;
+using Domain.DTO.Client;
+using Domain.DTO.Customer;
 using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
@@ -27,6 +29,31 @@ namespace Domain.Services.Services
                 return await _customerRepo.AddCustomer(request);
             }
             catch (Exception ex) 
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ClientAuthenicationViewModel> ClientLogin(LoginSubmitModel request)
+        {
+            var model = new ClientAuthenicationViewModel();
+            try
+            {
+                DataTable table = await _customerRepo.ClientLogin(request);
+                if (table != null && table.Rows.Count > 0)
+                {
+                    model = (from row in table.AsEnumerable()
+                             select
+                             new ClientAuthenicationViewModel
+                             {
+                                 Id = row.Field<Guid>("Id"),
+                                 UserName = row.Field<string>("UserName"),
+                                 Status = row.Field<EntityStatus>("Status"),
+                             }).FirstOrDefault();
+                }
+                return model;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
