@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using WEB.CMS.Customize;
 
 namespace View.Controllers;
-/*[CustomAuthorize]*/
+[CustomAuthorize]
 public class RoomBookingController : Controller
 {
     private readonly HttpClient _httpClient;
