@@ -1,3 +1,6 @@
+using ViewClient.Repositories.IRepository;
+using ViewClient.Repositories.Repository;
+
 namespace ViewClient
 {
     public class Program
@@ -5,9 +8,20 @@ namespace ViewClient
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(6);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpClient<ILogin, Login>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7130");
+            });
+            builder.Services.AddTransient<ILogin, Login>();
 
             var app = builder.Build();
 
@@ -18,7 +32,7 @@ namespace ViewClient
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -29,7 +43,10 @@ namespace ViewClient
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
+            app.MapControllerRoute(
+                name: "login",
+                pattern: "login",
+                defaults: new { controller = "Authoration", action = "Login" });
             app.Run();
         }
     }
