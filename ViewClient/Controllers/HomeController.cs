@@ -15,7 +15,8 @@ namespace ViewClient.Controllers
 
         public IActionResult Index()
         {
-            return View();
+           var userName = HttpContext.Session.GetString("UserName");
+            return View(userName);
         }
 
         public IActionResult Privacy()

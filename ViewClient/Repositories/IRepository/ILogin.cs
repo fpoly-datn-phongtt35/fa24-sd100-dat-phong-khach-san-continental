@@ -4,6 +4,6 @@ namespace ViewClient.Repositories.IRepository
 {
     public interface ILogin
     {
-        Task<ViewLoginInput> Login(LoginInputRequest request);
+        Task<ViewLoginInput> LoginAsync(LoginInputRequest request);
     }
 }

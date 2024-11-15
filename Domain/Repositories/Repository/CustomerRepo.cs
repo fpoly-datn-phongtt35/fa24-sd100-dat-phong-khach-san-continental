@@ -145,8 +145,6 @@ namespace Domain.Repositories.Repository
             {
                 string hashedPassword = PasswordHashingHelper.HashPassword(request.Password);
 
-                // Log the hashed password (only for debugging in a secure environment)
-                Console.WriteLine($"Hashed Password: {hashedPassword}");
 
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
@@ -158,8 +156,6 @@ namespace Domain.Repositories.Repository
             }
             catch (Exception ex)
             {
-                // Consider logging the exception and not rethrowing it directly
-                // LogException(ex);
                 throw;
             }
         }
