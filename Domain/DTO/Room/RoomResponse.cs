@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Paging;
+﻿using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
@@ -16,6 +17,7 @@ namespace Domain.DTO.Room
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string Address { get; set; }
+        public string? RoomTypeName { get; set; }
         public string Description { get; set; } = string.Empty;
         public double RoomSize { get; set; }
         public List<string> Images { get; set; } = new List<string>();
@@ -31,6 +33,7 @@ namespace Domain.DTO.Room
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset DeletedTime { get; set; }
 
+        public RoomTypeResponse RoomType { get; set; } = new RoomTypeResponse();
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
@@ -113,7 +116,8 @@ namespace Domain.DTO.Room
                 ModifiedBy = room.ModifiedBy,
                 Deleted = room.Deleted,
                 DeletedTime = room.DeletedTime,
-                DeletedBy = room.DeletedBy
+                DeletedBy = room.DeletedBy,
+                RoomTypeName = room.RoomType?.Name,
             };
         }
     }

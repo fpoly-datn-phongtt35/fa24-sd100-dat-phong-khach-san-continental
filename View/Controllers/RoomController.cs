@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NuGet.Protocol;
+using System.Security.Claims;
 using System.Text;
 using WEB.CMS.Customize;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -181,7 +182,8 @@ namespace View.Controllers
                     ModelState.AddModelError(string.Empty, "Không có tệp nào được chọn.");
                 }
 
-
+                var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                request.CreatedBy = userId;
                 // Gửi request đến API
                 var response = await _httpClient.PostAsJsonAsync("api/Room/CreateRoom", request);
 
@@ -247,7 +249,8 @@ namespace View.Controllers
             {
                 ModelState.AddModelError(string.Empty, "Không có tệp nào được chọn.");
             }
-
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            roomUpdateRequest.ModifiedBy = userId;
 
             string requestUrl = $"api/Room/UpdateRoom?roomId={roomUpdateRequest.Id}";
 
@@ -272,7 +275,8 @@ namespace View.Controllers
         public async Task<IActionResult> Delete(RoomDeleteRequest DeleteRequest)
         {
             string requestUrl = $"/api/Room/DeleteRoom?roomId={DeleteRequest.Id}";
-
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            DeleteRequest.DeletedBy = userId;
             var deleted = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Put, DeleteRequest);
             if (deleted != null)
                 return RedirectToAction("Index");
