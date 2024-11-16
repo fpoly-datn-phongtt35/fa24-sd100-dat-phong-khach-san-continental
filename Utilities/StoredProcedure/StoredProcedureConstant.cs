@@ -141,5 +141,6 @@ namespace Utilities.StoredProcedure
         public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
         //Client 
         public const string SP_ClientLogin = "SP_ClientLogin";
+        public const string SP_ClientRegister = "SP_ClientRegister";
     }
 }

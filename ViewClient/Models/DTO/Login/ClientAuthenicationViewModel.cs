@@ -2,7 +2,7 @@
 
 namespace ViewClient.Models.DTO.Login
 {
-    public class ViewLoginInput
+    public class ClientAuthenicationViewModel
     {
         public Guid Id { get; set; }
         public string UserName { get; set; } = string.Empty;
