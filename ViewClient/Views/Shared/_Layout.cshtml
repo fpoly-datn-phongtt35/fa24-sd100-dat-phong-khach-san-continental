@@ -11,9 +11,31 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            
-        </nav>
+        <div class="navbar">
+            <div class="navbar-left">
+                <div class="navbar-left">
+                    <img src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
+                    <h1 style="font-size: 24px; margin: 0; color: white;">Trang Chủ Continental</h1>
+                </div>
+           
+            </div>
+            <div class="navbar-right">
+                @if (Context.Session.GetString("UserName") == null)
+                {
+                    <button class="nav-button" ><a href="/login">Đăng Nhập</a></button>
+                    <button class="nav-button" ><a href="/register">Đăng ký</a></button>
+                }
+                else
+                {
+                    <span>Xin chào, @Context.Session.GetString("UserName")!</span>
+                    <form asp-controller="Authoration" asp-action="Logout" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-button">Đăng Xuất</button>
+                    </form>
+                }
+            </div>
+        </div>
+
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
