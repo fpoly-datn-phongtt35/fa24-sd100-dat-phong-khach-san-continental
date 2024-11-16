@@ -16,5 +16,6 @@ namespace Domain.Services.IServices
         Task<ResponseData<Customer>> GetAllCustomer(CustomerGetRequest customer);
         Task<Customer> GetCustomerById(Guid Id);
         Task<ClientAuthenicationViewModel> ClientLogin(LoginSubmitModel request);
+        Task<ClientAuthenicationViewModel> ClientRegister(RegisterSubmitModel register);
     }
 }

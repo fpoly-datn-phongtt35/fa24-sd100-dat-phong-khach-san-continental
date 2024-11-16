@@ -1,164 +1,35 @@
-﻿@page "/home"
+﻿
 @{
-    ViewBag.Title = "Trang chủ Continental";
-    Layout = null;
+    ViewBag.Title = "Continental";
 }
 
-<style>
-    /* Đặt phông chữ và lề, padding mặc định */
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f8f9fa;
-    }
-
-    /* Thanh điều hướng */
-    .navbar {
-        background-color: #333;
-        display: flex;
-        align-items: center;
-        color: white;
-        padding: 10px 20px;
-    }
-    .navbar img {
-        margin-right: 20px;
-    }
-
-    /* Banner */
-    .banner {
-        background-image: url('../../wwwroot/img/2.png');
-        background-size: cover;
-        background-position: center;
-        height: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-        position: relative;
-    }
-    .banner::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* Overlay màu tối */
-    }
-    .banner img {
-        position: relative;
-        z-index: 1;
-        max-width: 90%;
-        height: auto;
-    }
-
-    /* Thanh menu */
-    .nav-menu {
-        background-color: #2E7D32;
-        display: flex;
-        justify-content: center;
-        padding: 15px 0;
-    }
-    .nav-item {
-        margin: 0 15px;
-    }
-    .nav-item a {
-        text-decoration: none;
-        color: #fff;
-        font-weight: bold;
-        transition: color 0.3s;
-    }
-    .nav-item a:hover {
-        color: #f8f9fa;
-    }
-
-    /* Ô tìm kiếm */
-    .search-box {
-        margin: 20px auto;
-        max-width: 600px;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .search-box input[type="text"] {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
-    .search-box button {
-        padding: 12px;
-        width: 100%;
-        background-color: #2E7D32;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    .search-box button:hover {
-        background-color: #1b5e20;
-    }
-
-    /* Các dịch vụ */
-    .services {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        padding: 20px;
-    }
-    .service {
-        text-align: center;
-        width: 200px;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s;
-    }
-    .service:hover {
-        transform: translateY(-5px);
-    }
-    .service img {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 10px;
-    }
-
-    /* Footer */
-    footer {
-        background-color: #2E7D32;
-        color: white;
-        padding: 20px;
-        text-align: center;
-    }
-    footer p {
-        margin: 0;
-        font-size: 14px;
-    }
-</style>
-
 <div class="navbar">
-    <img src="~/img/2.png" style="width: 100px; height:100px;" alt="Logo" />
-    <h1 style="font-size: 24px; margin: 0; color: white;">Trang Chủ Continental</h1>
+    <div class="navbar-left">
+        <img src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
+        <h1 style="font-size: 24px; margin: 0; color: white;">Trang Chủ Continental</h1>
+    </div>
+    <div class="navbar-right">
+        @if (Context.Session.GetString("UserName") == null)
+        {
+            <button class="nav-button"><a href="/login">Đăng Nhập</a></button>
+            <button class="nav-button"><a href="/register">Đăng ký</a></button>
+        }
+        else
+        {
+            <span>Xin chào, @Context.Session.GetString("UserName")!</span>
+            <button class="nav-button"><a href="/logout">Đăng Xuất</a></button>
+        }
+    </div>
 </div>
-
+<div class="nav-menu">
+    <div class="nav-item"><a href="#">Khách Sạn</a></div>
+    <div class="nav-item"><a href="#">Dịch vụ</a></div>
+</div>
 <div class="banner">
     <img src="~/img/2.png" alt="Alternate Text" style="width: 300px; height: 250px;" />
 </div>
 
-<div class="nav-menu">
-    <div class="nav-item"><a href="#">Khách Sạn</a></div>
-    <div class="nav-item"><a href="#">Dịch vụ</a></div>
-    <div class="nav-item"><a href="/login">Đăng Nhập</a></div>
-</div>
+
 
 <div class="search-box">
     <h3 style="text-align: center;">Tìm Kiếm Khách Sạn</h3>

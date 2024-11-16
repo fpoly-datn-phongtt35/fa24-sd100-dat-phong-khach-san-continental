@@ -59,6 +59,31 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<ClientAuthenicationViewModel> ClientRegister(RegisterSubmitModel register)
+        {
+            var model = new ClientAuthenicationViewModel();
+            try
+            {
+                DataTable table = await _customerRepo.ClientRegister(register);
+                if (table != null && table.Rows.Count > 0)
+                {
+                    model = (from row in table.AsEnumerable()
+                             select
+                             new ClientAuthenicationViewModel
+                             {
+                                 Id = row.Field<Guid>("Id"),
+                                 UserName = row.Field<string>("UserName"),
+                                 Status = row.Field<EntityStatus>("Status"),
+                             }).FirstOrDefault();
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<int> DeleteCustomer(CustomerDeleteRequest request)
         {
             try
