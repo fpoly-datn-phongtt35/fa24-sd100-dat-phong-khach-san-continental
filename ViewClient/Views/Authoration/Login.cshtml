@@ -3,30 +3,42 @@
     ViewData["Title"] = "Login";
 }
 
-<style>
-    body {
-        background-color: #f8f9fa;
-    }
-
-    .login-container {
-        max-width: 400px;
-        margin: auto;
-        padding-top: 100px;
-    }
-</style>
-
-<div class="login-container">
-    <h2 class="text-center">Login</h2>
-    <div id="alert" class="alert alert-danger d-none" role="alert"></div>
-    <form id="loginForm" method="post" asp-action="Login" asp-controller="Authoration">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="Username" placeholder="Enter your username" required />
+<div class="page-content">
+    <div class="form-v7-content">
+        <div class="form-left">
+            <img src="~/img/register.jpeg" alt="form">
+            <p class="text-1">Đăng nhập</p>
+            <p class="text-2">Privaci policy & Term of service</p>
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="Password" placeholder="Enter your password" required />
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Login</button>
-    </form>
+        <form class="form-detail" id="loginForm" method="post" asp-action="Login" asp-controller="Authoration">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @Html.ValidationSummary(true, "", new { @class = "mb-0" })
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            <div class="form-row">
+                <label for="username">Tài khoản</label>
+                <input type="text" class="form-control" id="username" name="Username" placeholder="Nhập vào tài khoản..." required />
+            </div>
+            @Html.ValidationMessage("Username")
+            <div class="form-row">
+                <label for="password">Mật khẩu</label>
+                <input type="password" class="form-control" id="password" name="Password" placeholder="Nhập vào mật khẩu..." required />
+            </div>
+            @Html.ValidationMessage("Password")
+            <div class="form-row-last">
+                <button type="submit" class="btn btn-primary btn-block register">Đăng nhập</button>
+                <p>Or<a href="/Register">Đăng ký</a></p>
+            </div>
+        </form>
+    </div>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -138,6 +138,7 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+
        
         public async Task<DataTable> ClientLogin(LoginSubmitModel request)
         {
@@ -153,6 +154,30 @@ namespace Domain.Repositories.Repository
                 };
 
                 return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_ClientLogin, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<DataTable> ClientRegister(RegisterSubmitModel register)
+        {
+            try
+            {
+                string hashedPassword = PasswordHashingHelper.HashPassword(register.Password);
+
+
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {   
+                    new SqlParameter("@UserName", register.UserName),
+                    new SqlParameter("@Password", hashedPassword),
+                    new SqlParameter("@Email", register.Email),
+                    new SqlParameter("@PhoneNumber", register.PhoneNumber),
+                   new SqlParameter("@CreatedTime", DateTimeOffset.Now),
+                };
+
+                return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_ClientRegister, sqlParameters);
             }
             catch (Exception ex)
             {

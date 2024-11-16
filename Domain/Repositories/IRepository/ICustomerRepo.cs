@@ -13,6 +13,7 @@ namespace Domain.Repositories.IRepository
         Task<int> DeleteCustomer(CustomerDeleteRequest request);
         Task<DataTable> GetAllCustomer(CustomerGetRequest customer);
         Task<DataTable> GetCustomerById(Guid id);
+        Task<DataTable> ClientRegister(RegisterSubmitModel register);
         Task<DataTable> ClientLogin(LoginSubmitModel request);
     }
 }
