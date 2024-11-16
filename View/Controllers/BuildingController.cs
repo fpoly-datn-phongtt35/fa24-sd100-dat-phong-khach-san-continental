@@ -1,10 +1,12 @@
 ﻿using Domain.DTO.Building;
 using Domain.DTO.Floor;
 using Domain.DTO.Paging;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Text;
 using WEB.CMS.Customize;
 
@@ -95,6 +97,8 @@ namespace View.Controllers
             {
                 request.Status = EntityStatus.Active;
                 request.CreatedTime = DateTimeOffset.Now;
+                var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                request.CreatedBy = userId;
                 var response = await _client.PostAsJsonAsync("api/Building/CreateBuilding", request);
 
                 if (response.IsSuccessStatusCode)
@@ -136,10 +140,11 @@ namespace View.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(Floor request)
+        public async Task<IActionResult> Edit(Building request)
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            request.ModifiedBy = userId;
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _client.PutAsJsonAsync("api/Building/UpdateBuilding", request);
             return RedirectToAction("Index");
@@ -148,11 +153,10 @@ namespace View.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             string requestUrl = "https://localhost:7130/api/Building/DeleteBuilding";
-
             var request = new BuildingDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),
+                DeletedBy = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value),
                 DeletedTime = DateTimeOffset.Now
             };
 

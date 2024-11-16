@@ -27,7 +27,7 @@
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
         <div class="form-group me-2">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
+            <input type="text" name="name" class="form-control" placeholder="Tìm kiếm"
                    value="@ViewContext.HttpContext.Request.Query["search"]" />
         </div>
         <div class="form-group me-2">
@@ -96,13 +96,14 @@
                 <td>@Html.DisplayFor(modelItem => item.RoomSize)</td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        @foreach (var img in item.Images)
+                        @if (item.Images != null && item.Images.Count > 0)
                         {
-                            var extension = System.IO.Path.GetExtension(img);
+                            var firstImage = item.Images.FirstOrDefault();
+                            var extension = System.IO.Path.GetExtension(firstImage);
                             if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
                             {
                                 <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
-                                    <img class="responsive-img" src="~/images/@img" alt="@item.Name" style="object-fit: cover; width: 100%; height: 100%;">
+                                    <img class="responsive-img" src="~/images/@firstImage" alt="@item.Name" style="object-fit: cover; width: 100%; height: 100%;">
                                 </div>
                             }
                         }
