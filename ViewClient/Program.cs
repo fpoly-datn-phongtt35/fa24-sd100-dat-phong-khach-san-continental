@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using ViewClient.Repositories.IRepository;
 using ViewClient.Repositories.Repository;
 
@@ -15,7 +16,7 @@ namespace ViewClient
                 options.Cookie.HttpOnly = false;
                 options.Cookie.IsEssential = true;
             });
-
+          
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient<ILogin, Login>(client =>
@@ -24,6 +25,7 @@ namespace ViewClient
             });
             builder.Services.AddTransient<ILogin, Login>();
             builder.Services.AddTransient<IRegister, Register>();
+            builder.Services.AddTransient<IRoom, Room>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -36,6 +38,13 @@ namespace ViewClient
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), @"..\View\wwwroot\images")),
+                RequestPath = "/View/wwwroot/images"
+            });
+
 
             app.UseRouting();
 
