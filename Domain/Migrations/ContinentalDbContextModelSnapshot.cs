@@ -185,7 +185,6 @@ namespace Domain.Migrations
                         .HasColumnType("varchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
@@ -193,7 +192,6 @@ namespace Domain.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 

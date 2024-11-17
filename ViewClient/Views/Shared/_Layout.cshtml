@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ViewClient</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ViewClient.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="navbar-left">
+                <div class="navbar-left">
+                    <img src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
+                    <h1 style="font-size: 24px; margin: 0; color: white;">Trang Chủ Continental</h1>
+                </div>
+           
+            </div>
+            <div class="navbar-right">
+                @if (Context.Session.GetString("UserName") == null)
+                {
+                    <button class="nav-button" ><a href="/login">Đăng Nhập</a></button>
+                    <button class="nav-button" ><a href="/register">Đăng ký</a></button>
+                }
+                else
+                {
+                    <span>Xin chào, @Context.Session.GetString("UserName")!</span>
+                    <form asp-controller="Authoration" asp-action="Logout" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-button">Đăng Xuất</button>
+                    </form>
+                }
+            </div>
+        </div>
+
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - Continental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Paging;
+﻿using Domain.DTO.Customer;
+using Domain.DTO.Paging;
 using Domain.DTO.RoomBooking;
 using Domain.Models;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -11,4 +12,5 @@ public interface IRoomBookingRepository
         (RoomBookingGetRequest roomBookingGetRequest);
     Task<RoomBooking?> GetRoomBookingById(Guid roomBookingId);
     Task<RoomBooking?> UpdateRoomBooking(RoomBooking roomBooking);
+    Task<int> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request);
 }

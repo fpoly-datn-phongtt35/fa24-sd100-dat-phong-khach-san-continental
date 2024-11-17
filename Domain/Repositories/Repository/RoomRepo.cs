@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Paging;
+﻿using Domain.DTO.AmenityRoom;
+using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
@@ -37,7 +38,7 @@ namespace Domain.Repositories.Repository
                 {
                     new("@PageIndex", roomRequest.PageIndex),
                     new("@PageSize", roomRequest.PageSize),
-                    new("@Name", roomRequest.Name),
+                    new("@name", roomRequest.Name),
                     new("@Status", roomRequest.Status),
                     new("@FloorId", roomRequest.FloorId),
                     new("@RoomTypeID", roomRequest.RoomTypeId)
@@ -72,13 +73,15 @@ namespace Domain.Repositories.Repository
             return rooms;
         }
 
+
+
         public async Task<Room?> GetRoomById(Guid roomId)
         {
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value =roomId }
+                    new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomId }
                 };
 
                 var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetRoomById, parameters);
@@ -87,13 +90,93 @@ namespace Domain.Repositories.Repository
                     return null;
 
                 var row = dataTable.Rows[0];
-                var room = RowToRoom(row);
+                var room = RowToRoom(row); // Ánh xạ từ DataRow sang Room
+
+                // Lấy danh sách tiện ích liên quan đến RoomType
+                room.RoomType.AmenityRooms = await GetAmenityRoomsByRoomTypeId(room.RoomTypeId);
 
                 return room;
             }
             catch (Exception e)
             {
                 throw new ArgumentNullException("An error occurred while retrieving the room", e);
+            }
+        }
+
+
+        public async Task<List<AmenityRoom>> GetAmenityRoomsByRoomTypeId(Guid roomTypeId)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeId }
+                };
+
+                var dataTable = await _worker.GetDataTableAsync
+                    (StoredProcedureConstant.SP_GetAmenityRoomsByRoomTypeId, parameters);
+                if (dataTable.Rows.Count == 0)
+                {
+                    return new List<AmenityRoom>(); // Không có dữ liệu trả về
+                }
+
+                var amenityRooms = new List<AmenityRoom>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    if (dataTable.Columns.Contains("Id"))
+                    {
+                        var amenityRoom = new AmenityRoom()
+                        {
+                            Id = (Guid)row["Id"],
+                            RoomTypeId = (Guid)row["RoomTypeId"],
+                            AmenityId = (Guid)row["AmenityId"],
+                            Amount = (int)row["Amount"],
+                            Status = (EntityStatus)row["Status"],
+                            // Gọi thêm GetAmenityById để lấy thông tin về Amenity
+                            Amenity = await GetAmenityById((Guid)row["AmenityId"])
+                        };
+                        amenityRooms.Add(amenityRoom);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Column 'Id' does not exist in the result set.");
+                    }
+                }
+
+                return amenityRooms;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("An error occurred while retrieving the list amenity room", e);
+            }
+        }
+        private async Task<Amenity?> GetAmenityById(Guid amenityId)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenityId }
+                };
+
+                var dataTable = await _worker.GetDataTableAsync
+                    (StoredProcedureConstant.SP_GetAmenityById, parameters);
+
+                if (dataTable.Rows.Count == 0) return null;
+
+                var row = dataTable.Rows[0];
+                var amenity = new Amenity
+                {
+                    Id = (Guid)row["Id"],
+                    Name = (string)row["Name"]
+                };
+
+                return amenity;
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentNullException("An error occurred while retrieving the amenity", e);
             }
         }
 
@@ -213,7 +296,8 @@ namespace Domain.Repositories.Repository
                 ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
                 Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
                 DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-                DeletedBy = ConvertGuidToString(row, "DeletedBy")
+                DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+                RoomType = new RoomType()
             };
         }
 

@@ -1,7 +1,11 @@
 ﻿
+using Domain.DTO.Amenity;
+using Domain.DTO.AmenityRoom;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
+using Domain.DTO.RoomTypeService;
+using Domain.DTO.Service;
 using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
@@ -28,15 +32,68 @@ namespace Domain.Services.Services.Room
             return await _roomRepository.GetAllRooms(roomRequest);
         }
 
-        public async Task<RoomResponse?> GetRoomById(Guid? roomId)
+        public async Task<RoomResponse?> GetRoomById(Guid roomId)
         {
-            if (roomId == null) return null;
+            var room = await _roomRepository.GetRoomById(roomId); // Lấy Room từ repository
+                                                                                     //    if (room == null) return null;
 
-            var room = await _roomRepository.GetRoomById(roomId.Value);
-            if (room == null) return null;
+            // Chuyển đổi Room thành RoomResponse
+            var roomResponse = room.ToRoomResponse(); // Cần sử dụng room, không phải roomType
 
-            return room.ToRoomResponse();
+            // Kiểm tra và chuyển đổi danh sách AmenityRooms
+            if (room.RoomType != null && room.RoomType.AmenityRooms != null)
+            {
+
+                roomResponse.RoomType.AmenityRooms = room.RoomType.AmenityRooms
+                    .Select(amenityRoom => new AmenityRoomResponse
+                    {
+                        Id = amenityRoom.Id,
+                        RoomTypeId = amenityRoom.RoomTypeId,
+                        AmenityId = amenityRoom.AmenityId,
+                        Amount = amenityRoom.Amount,
+                        Status = amenityRoom.Status,
+                        Amenity = new AmenityResponse
+                        {
+                            Id = amenityRoom.Amenity.Id,
+                            Name = amenityRoom.Amenity.Name, // Nếu có Description cho Amenity
+                        }
+                    }).ToList();
+            }
+
+            return roomResponse;
 
         }
+        //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
+        //{
+        //    var room = await _roomRepository.GetRoomTypeWithAmenityRoomById(roomId); // Lấy Room từ repository
+        //    if (room == null) return null;
+
+        //    // Chuyển đổi Room thành RoomResponse
+        //    var roomResponse = room.ToRoomResponse(); // Cần sử dụng room, không phải roomType
+
+        //    // Kiểm tra và chuyển đổi danh sách AmenityRooms
+        //    if (room.RoomType != null && room.RoomType.AmenityRooms != null)
+        //    {
+
+        //        roomResponse.RoomType.AmenityRooms = room.RoomType.AmenityRooms
+        //            .Select(amenityRoom => new AmenityRoomResponse
+        //            {
+        //                Id = amenityRoom.Id,
+        //                RoomTypeId = amenityRoom.RoomTypeId,
+        //                AmenityId = amenityRoom.AmenityId,
+        //                Amount = amenityRoom.Amount,
+        //                Status = amenityRoom.Status,
+        //                Amenity = new AmenityResponse
+        //                {
+        //                    Id = amenityRoom.Amenity.Id,
+        //                    Name = amenityRoom.Amenity.Name, // Nếu có Description cho Amenity
+        //                }
+        //            }).ToList();
+        //    }
+
+        //    return roomResponse;
+        //}
+
+
     }
 }

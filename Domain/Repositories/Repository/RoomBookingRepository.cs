@@ -7,6 +7,7 @@ using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Utilities;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository;
@@ -180,5 +181,26 @@ public class RoomBookingRepository : IRoomBookingRepository
         }
 
         return null;
+    }
+
+    public async Task<int> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request)
+    {
+        try
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                    new SqlParameter("@CustomerId", request.CustomerId),
+                    new SqlParameter("@StaffId", request.StaffId),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                    new SqlParameter("@CreatedTime", request.CreatedTime),
+                    new SqlParameter("@CreatedBy",request.CustomerId)
+            };
+
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_BookRoomForCustomer, sqlParameters);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }
