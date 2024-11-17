@@ -8,6 +8,7 @@ namespace Domain.Models
         [Key]
         public Guid Id { get; set; }
         public decimal Price { get; set; }
+        public int Quantity { get; set; }
         public double Amount { get; set; }
         public Guid ServiceId { get; set; }
         public Guid ServiceOrderId { get; set; }

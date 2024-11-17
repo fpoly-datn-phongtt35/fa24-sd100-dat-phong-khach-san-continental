@@ -58,7 +58,7 @@ namespace ViewClient.Controllers
             }
         }
 
-        public async Task<IActionResult> Index(string? name = null, Guid? roomTypeId = null, Guid? floorId = null, RoomStatus? status = null, int pageIndex = 1, int pageSize = 12)
+        public async Task<IActionResult> Index(string? name = null, Guid? roomTypeId = null, Guid? floorId = null, RoomStatus? status = RoomStatus.Vacant, int pageIndex = 1, int pageSize = 12)
         {
             // Tạo PagingRequest
             var roomRequest = new RoomRequest()
@@ -85,7 +85,10 @@ namespace ViewClient.Controllers
                 }
                 // Gửi yêu cầu lấy danh sách tầng
                 string floorsRequestUrl = "/api/Floor/GetListFloor";
-                var floorsRequest = new FloorGetRequest();
+                var floorsRequest = new FloorGetRequest
+                {
+                    Status = EntityStatus.Active
+                };
                 var floorJsonRequest = JsonConvert.SerializeObject(floorsRequest);
                 var floorContent = new StringContent(floorJsonRequest, Encoding.UTF8, "application/json");
                 var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, floorContent);
@@ -113,13 +116,26 @@ namespace ViewClient.Controllers
         public async Task<IActionResult> Details(Guid roomId)
         {
             string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
+            string floorsRequestUrl = "/api/Floor/GetListFloor";
+            var floorsRequest = new FloorGetRequest();
+            var floorJsonRequest = JsonConvert.SerializeObject(floorsRequest);
+            var floorContent = new StringContent(floorJsonRequest, Encoding.UTF8, "application/json");
+            var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, floorContent);
 
-
+            var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
+            var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
+            ViewBag.FloorList = floorList.data;
+            var roomTypeGetRequest = new RoomTypeGetRequest();
+            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
+            var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
+                (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
+            ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
             var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
             if (room != null)
                 return View(room);
 
             return View("Error");
         }
+
     }
 }

@@ -17,7 +17,7 @@ namespace Domain.DTO.Customer
         public string? LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; } = string.Empty;
-        public int? Gender { get; set; }
+        public GenderType? Gender { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
     }

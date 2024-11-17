@@ -119,7 +119,7 @@ namespace View.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            ViewBag.Genders = Enum.GetValues(typeof(GenderType));
             try
             {
                 var response = await _httpClient.PostAsync(requestUrl, content);
@@ -146,7 +146,7 @@ namespace View.Controllers
         public async Task<IActionResult> Edit(Customer request)
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            ViewBag.Genders = Enum.GetValues(typeof(GenderType));
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Customer/UpdateCustomer", request);
             return RedirectToAction("Index");
