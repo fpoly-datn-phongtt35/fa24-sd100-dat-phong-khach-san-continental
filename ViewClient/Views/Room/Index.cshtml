@@ -9,6 +9,7 @@
 
 @{
     ViewData["Title"] = "Danh sách Room";
+    var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
 }
 
 <h1>Danh sách Phòng</h1>
@@ -16,8 +17,8 @@
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
         <div class="form-group me-2">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm"
-                   value="@ViewContext.HttpContext.Request.Query["search"]" />
+            <input type="text" name="name" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["name"]" />
         </div>
         <div class="form-group me-2">
             <select name="roomTypeId" class="form-select" id="roomTypeId">
@@ -43,18 +44,7 @@
             </select>
         </div>
 
-        <div>
-            <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
-                <option value="">-- Status --</option>
-                @foreach (var status in ViewBag.StatusList)
-                {
-                    <option value="@((int)status)"
-                            selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                        @status
-                    </option>
-                }
-            </select>
-        </div>
+      
         <button type="submit" class="btn btn-light">Tìm kiếm</button>
         <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
     </form>
@@ -66,7 +56,9 @@
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <a href="@Url.Action("Details", new { roomId = Model.data[i].Id })" class="card-link">
                     <div class="card">
-                        <h5 class="card-title" style="color:black;">@Html.DisplayFor(modelItem => Model.data[i].Name)</h5>
+
+                        <h5 class ="card-title" style="color:black;">@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.data[i].RoomTypeId)?.Name</h5>
+                        @* <h5 class="card-title" style="color:black;">@Html.DisplayFor(modelItem => Model.data[i].Name)</h5> *@
 
                         <div class="d-flex justify-content-center">
                             @foreach (var img in Model.data[i].Images)

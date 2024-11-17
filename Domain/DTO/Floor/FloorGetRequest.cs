@@ -13,6 +13,6 @@ namespace Domain.DTO.Floor
         public string? Name { get; set; }
         public Guid? BuildingId { get; set; }
         public int? NumberOfRoom { get; set; }
-        public EntityStatus? Status { get; set; }
+        public EntityStatus? Status { get; set; } 
     }
 }
