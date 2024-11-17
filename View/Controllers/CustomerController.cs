@@ -143,13 +143,18 @@ namespace View.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Customer request)
+        public async Task<IActionResult> Edit(CustomerUpdateRequest request)
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
             ViewBag.Genders = Enum.GetValues(typeof(GenderType));
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Customer/UpdateCustomer", request);
-            return RedirectToAction("Index");
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            ModelState.AddModelError("", "Không thể sửa khách hàng.");
+            return View("Error", new Exception("Không thể sửa khách hàng."));
         }
         public async Task<IActionResult> Delete(Guid id)
         {

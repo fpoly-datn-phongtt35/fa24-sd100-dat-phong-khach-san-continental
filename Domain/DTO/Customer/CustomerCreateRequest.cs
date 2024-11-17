@@ -6,7 +6,7 @@ namespace Domain.DTO.Customer
     public class CustomerCreateRequest
     {
         [Required]
-        [RegularExpression(@"^[a-zA-Z0-9]{6,12}$", ErrorMessage = "Tên người dùng phải từ 6-12 kí tự, không bao gồm kí tự đặc biệt!")]
+        [RegularExpression(@"^[a-zA-Z0-9]{3,12}$", ErrorMessage = "Tên người dùng phải từ 3-12 kí tự, không bao gồm kí tự đặc biệt!")]
         public string UserName { get; set; } = string.Empty;
         [Required]
         //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Mật khẩu gồm chữ viết hoa, chữ viết thường, chữ số và chỉ từ 8-15 kí tự!")]
@@ -18,7 +18,7 @@ namespace Domain.DTO.Customer
         public string Email { get; set; } = string.Empty;
 
         public string? PhoneNumber { get; set; } = string.Empty;
-        public int? Gender { get; set; } = GenderType.Unknown;
+        public GenderType? Gender { get; set; } = GenderType.Unknown;
         public DateTime? DateOfBirth { get; set; }
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
 
