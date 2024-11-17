@@ -25,7 +25,7 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
         if (existingAmenityRoom is null)
             throw new Exception("Id amenity room does not exist");
 
-        if (existingAmenityRoom.Deleted)
+        if ((bool)existingAmenityRoom.Deleted)
             throw new InvalidOperationException("This amenity room type already deleted, cannot update it.");
         
         existingAmenityRoom.AmenityId = amenityRoomUpdateRequest.AmenityId;
@@ -50,7 +50,7 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
         if(existingAmenityRoom is null)
             throw new Exception("Id amenity room does not exist");
         
-        if(!existingAmenityRoom.Deleted)
+        if((bool)!existingAmenityRoom.Deleted)
             throw new Exception("This amenity room is not deleted, cannot recover it.");
         
         existingAmenityRoom.Status = EntityStatus.Active;

@@ -7,9 +7,9 @@ public class RoomTypeServiceUpdateRequest
     public Guid Id { get; set; }
     public Guid RoomTypeId { get; set; }
     public Guid ServiceId { get; set; }
-    public int Amount { get; set; }
+    public int? Amount { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset ModifiedTime { get; set; }
+    public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
 
     /// <summary>

@@ -12,7 +12,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public BookingType BookingType { get; set; } = BookingType.Online;
+        public BookingType? BookingType { get; set; } 
         public Guid CustomerId { get; set; }
         public Guid? StaffId { get; set; }
         public decimal TotalPrice { get; set; }
@@ -20,19 +20,19 @@ namespace Domain.Models
         public decimal TotalServicePrice { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
-        public DateTimeOffset CreatedTime { get; set; }
+        public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
-        public DateTimeOffset ModifiedTime { get; set; }
+        public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
-        public DateTimeOffset DeletedTime { get; set; }
+        public DateTimeOffset? DeletedTime { get; set; }
 
         public Customer Customer { get; set; }
         public Staff Staff { get; set; }
         public List<RoomBookingDetail> RoomBookingDetails { get; set; }
         public ICollection<FeedBack> FeedBacks { get; set; }
         public List<VoucherDetail> VoucherDetails { get; set; }
-        public List<ServiceOrder> ServiceOrders { get; set; }
+        public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
     }
 }

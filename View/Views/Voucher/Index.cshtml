@@ -1,4 +1,5 @@
 ﻿@using Domain.DTO.Paging
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.Models.Voucher>
 
 @{
@@ -51,9 +52,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().Id)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.data.First().Name)
             </th>
             <th>
@@ -63,10 +61,7 @@
                 Type
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().CreatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().CreatedTime)
+                @Html.DisplayNameFor(model => model.data.First().DiscountValue)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.data.First().Status)
@@ -78,9 +73,6 @@
     <tbody>
 @foreach (var item in Model.data) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -94,16 +86,17 @@
                 @Html.DisplayFor(modelItem => item.DiscountValue)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @if (item.Status != null)
+                    {
+                        @StatusHelper.DisplayStatusBadge(item.Status)
+                    }
+                N/A
             </td>
            
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) 
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) 
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
 }

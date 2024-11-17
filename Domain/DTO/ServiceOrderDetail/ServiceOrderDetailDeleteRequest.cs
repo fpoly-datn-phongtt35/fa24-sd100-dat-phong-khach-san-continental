@@ -9,7 +9,7 @@ namespace Domain.DTO.ServiceOrderDetail
     public class ServiceOrderDetailDeleteRequest
     {
         public Guid Id { get; set; }
-        public DateTimeOffset DeletedTime { get; set; }
+        public DateTimeOffset? DeletedTime { get; set; }
         public Guid? DeletedBy { get; set; }
     }
 }

@@ -6,11 +6,11 @@ namespace Domain.DTO.RoomBooking;
 public class RoomBookingUpdateRequest
 {
     public Guid Id { get; set; }
-    public BookingType BookingType { get; set; }
+    public BookingType? BookingType { get; set; }
     public Guid CustomerId { get; set; }
     public Guid? StaffId { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset ModifiedTime { get; set; }
+    public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
 
     /// <summary>

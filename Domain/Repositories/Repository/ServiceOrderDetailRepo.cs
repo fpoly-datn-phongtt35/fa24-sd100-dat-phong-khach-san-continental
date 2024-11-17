@@ -28,7 +28,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@ServiceOrderId", request.ServiceOrderId),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Price", request.Price),
@@ -61,13 +61,13 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
-        public async Task<DataTable> GetServiceOrderDetailByServiceOrderId(Guid id)
+        public async Task<DataTable> GetServiceOrderDetailByRoomBookingId(Guid id)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@ServiceOrderId", id != null ? id : DBNull.Value ),
+                    new SqlParameter("@RoomBookingId", id != null ? id : DBNull.Value ),
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetail, sqlParameters);
@@ -122,7 +122,7 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
-                    new SqlParameter("@ServiceOrderId", request.ServiceOrderId),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Price", request.Price),
