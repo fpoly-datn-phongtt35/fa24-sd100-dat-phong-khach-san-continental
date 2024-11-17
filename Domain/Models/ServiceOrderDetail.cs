@@ -10,6 +10,7 @@ namespace Domain.Models
         public Guid RoomBookingId { get; set; } 
         public decimal Price { get; set; }
         public double? Amount { get; set; }
+        public int Quantity { get; set; }
         public Guid ServiceId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 

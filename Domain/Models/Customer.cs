@@ -21,6 +21,7 @@ namespace Domain.Models
         [RegularExpression(@"^(\+?\d{1,2}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$", ErrorMessage = "Vui lòng nhập số điện thoại hợp lệ!")]
         public string PhoneNumber { get; set; } = string.Empty;
         public int? Gender { get; set; }
+
         public DateTime? DateOfBirth { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 

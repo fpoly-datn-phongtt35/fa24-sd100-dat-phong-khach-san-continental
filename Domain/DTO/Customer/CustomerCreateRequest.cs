@@ -16,8 +16,9 @@ namespace Domain.DTO.Customer
         [Required]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Vui lòng nhập đúng định dạng: example@domain.com")]
         public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public int? Gender { get; set; }
+
+        public string? PhoneNumber { get; set; } = string.Empty;
+        public int? Gender { get; set; } = GenderType.Unknown;
         public DateTime? DateOfBirth { get; set; }
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
 
