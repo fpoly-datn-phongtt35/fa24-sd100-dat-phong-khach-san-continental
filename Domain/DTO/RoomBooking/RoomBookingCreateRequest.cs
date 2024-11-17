@@ -8,7 +8,7 @@ public class RoomBookingCreateRequest
     public Guid CustomerId { get; set; }
     public Guid? StaffId { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset CreatedTime { get; set; }
+    public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
 
     /// <summary>

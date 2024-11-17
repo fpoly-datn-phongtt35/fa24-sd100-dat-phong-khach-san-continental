@@ -10,7 +10,7 @@ public class RoomBookingDeleteRequest
     public Guid? StaffId { get; set; }
     public EntityStatus Status { get; set; }
     public bool Deleted { get; set; }
-    public DateTimeOffset DeletedTime { get; set; }
+    public DateTimeOffset? DeletedTime { get; set; }
     public Guid? DeletedBy { get; set; }
 
     public Models.RoomBooking ToRoomBooking()

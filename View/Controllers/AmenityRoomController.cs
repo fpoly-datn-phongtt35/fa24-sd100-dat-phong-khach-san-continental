@@ -75,7 +75,7 @@ public class AmenityRoomController : Controller
             PageIndex = 1,
             PageSize = int.MaxValue,
             SearchString = null,
-            Status = null
+            Status = EntityStatus.Active
         };
         string amenityRequestUrl = "Amenity/GetFilteredAmenities";
         var amenitiesTask = SendHttpRequest<ResponseData<AmenityResponse>>
@@ -114,7 +114,7 @@ public class AmenityRoomController : Controller
             PageSize = pageSize,
             PageIndex = pageIndex,
             SearchString = searchString,
-            Status = status,
+            Status = null,
             RoomTypeId = roomTypeId
         };
         string requestUrl = "AmenityRoom/GetFilteredAmenityRooms";
@@ -136,7 +136,7 @@ public class AmenityRoomController : Controller
             PageSize = pageSize,
             PageIndex = pageIndex,
             SearchString = searchString,
-            Status = status,
+            Status = null,
             RoomTypeId = roomTypeId
         };
         await LoadAmenitiesAndRoomTypes();

@@ -9,7 +9,7 @@ namespace Domain.DTO.VoucherDetail
     public class VoucherDetailDeleteRequest
     {
         public Guid Id { get; set; }
-        public Guid DeletedBy { get; set; }
-        public DateTimeOffset DeletedTime { get; set; }
+        public Guid? DeletedBy { get; set; }
+        public DateTimeOffset? DeletedTime { get; set; }
     }
 }

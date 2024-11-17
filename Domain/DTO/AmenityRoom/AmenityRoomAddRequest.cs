@@ -6,9 +6,9 @@ public class AmenityRoomAddRequest
 {
     public Guid AmenityId { get; set; }
     public Guid RoomTypeId { get; set; }
-    public int Amount { get; set; }
+    public int? Amount { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset CreatedTime { get; set; }
+    public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
 
     /// <summary>

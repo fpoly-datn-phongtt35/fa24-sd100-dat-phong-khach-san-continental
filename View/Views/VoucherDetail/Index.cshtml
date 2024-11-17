@@ -1,5 +1,6 @@
 ﻿@using Domain.DTO.Paging
 @using Domain.Models
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.Models.VoucherDetail>
 
 @{
@@ -35,7 +36,6 @@
                 <th>@Html.DisplayNameFor(model => model.data.First().Code)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().StartDate)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().EndDate)</th>
-                <th>@Html.DisplayNameFor(model => model.data.First().CreatedTime)</th>
                 <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
                 <th></th>
             </tr>
@@ -55,12 +55,13 @@
                     <td>@Html.DisplayFor(modelItem => item.Code)</td>
                     <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.CreatedTime)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        @StatusHelper.DisplayStatusBadge(item.Status)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) 
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) 
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
                     </td>
                 </tr>
             }

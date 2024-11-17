@@ -10,14 +10,14 @@ namespace Domain.DTO.ServiceOrderDetail
     public class ServiceOrderDetailUpdateRequest
     {
         public Guid Id { get; set; }
-        public Guid ServiceOrderId { get; set; }
+        public Guid RoomBookingId { get; set; }
         public Guid ServiceId { get; set; }
-        public int Amount { get; set; }
-        public decimal Price { get; set; }
+        public int? Amount { get; set; }
+        public decimal? Price { get; set; }
         public string? Description { get; set; }
-        public EntityStatus Status { get; set; }
-        public bool Deleted { get; set; }   
-        public DateTimeOffset ModifiedTime { get; set; }
+        public EntityStatus? Status { get; set; }
+        public bool? Deleted { get; set; }   
+        public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
     }
 }

@@ -8,7 +8,7 @@ public class RoomTypeDeleteRequest
     public EntityStatus Status { get; set; }
     public bool Deleted { get; set; }
     public Guid? DeletedBy { get; set; }
-    public DateTimeOffset DeletedTime { get; set; }
+    public DateTimeOffset? DeletedTime { get; set; }
 
     public Models.RoomType ToRoomType()
     {
