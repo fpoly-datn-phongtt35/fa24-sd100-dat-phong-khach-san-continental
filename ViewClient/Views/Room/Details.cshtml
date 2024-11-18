@@ -1,0 +1,153 @@
+﻿@using ViewClient.Views.Shared
+
+@model Domain.DTO.Room.RoomResponse
+
+@{
+    ViewData["Title"] = "Details";
+}
+@{
+    var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
+    var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
+}
+<h4 style="margin-top:30px;">Đặt phòng của bạn</h4>
+
+<div class="d-flex">
+    <div class="d-flex justify-content-start">
+        <hr />
+        <div class="img-column">
+            @Html.DisplayName("Hình ảnh")
+
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                @foreach (var img in Model.Images)
+                {
+                    var extension = System.IO.Path.GetExtension(img);
+                    if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                    {
+                        var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+
+                        <div class="img-container-details">
+                            <img src="@imagePath" alt="" />
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <p>Không có hình ảnh</p>
+            }
+
+        </div>
+        <div class="d-flex align-items-start">
+            <div class="info-column">
+                <dl>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Tên phòng")</dt>
+                        <dd>@Html.DisplayFor(model => model.Name)</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Giá phòng(VNĐ/đêm)")</dt>
+                        <dd>@Html.DisplayFor(model => model.Price)</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Địa chỉ của khách sạn/phòng")</dt>
+                        <dd>@Html.DisplayFor(model => model.Address)</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Mô tả chi tiết phòng")</dt>
+                        <dd>@Html.DisplayFor(model => model.Description)</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Diện tích phòng")</dt>
+                        <dd>@Html.DisplayFor(model => model.RoomSize) m2</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Tầng của phòng")</dt>
+                        <dd>@floorList?.FirstOrDefault(f => f.Id == Model.FloorId)?.Name</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>@Html.DisplayName("Loại phòng")</dt>
+                        <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.Name</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+ </div>
+
+</div>
+<div>
+    <a asp-action="Index" asp-controller="Room" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+
+<style>
+    h4 {
+        color: #0056b3;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    hr {
+        border: 1px solid #0056b3;
+        margin: 20px 0;
+    }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .img-column {
+        flex: 1; /* Chiếm không gian còn lại */
+        margin-right: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
+    }
+
+    dt {
+        font-weight: bold;
+        color: #0056b3;
+        margin-bottom: 5px;
+    }
+
+    dd {
+        margin-bottom: 20px;
+        padding-left: 10px;
+        border-left: 3px solid #0056b3;
+    }
+
+    .img-dd {
+        flex: 1; /* Chiếm không gian chiều rộng tối đa */
+        max-width: 600px; /* Giới hạn chiều rộng tối đa nếu cần */
+    }
+
+    .img-container-details {
+        width: 50%;
+        height: 350px; /* Chiều cao cố định cho hình ảnh */
+        overflow: hidden;
+        margin: 5px;
+        flex: 1 1 auto; /* Cho phép hình ảnh tự động điều chỉnh kích thước */
+    }
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #0056b3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #004494;
+        }
+</style>

@@ -1,0 +1,139 @@
+﻿@using System.Diagnostics
+@using Domain.DTO.Floor
+@using Domain.DTO.RoomType
+@using Domain.Enums
+@using Domain.DTO.Paging
+@using ViewClient.Views.Shared
+@model ResponseData<Domain.DTO.Room.RoomResponse>
+
+
+@{
+    ViewData["Title"] = "Danh sách Room";
+    var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
+    var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
+}
+
+<h1>Danh sách Phòng</h1>
+
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+        <div class="form-group me-2">
+            <input type="text" name="name" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["name"]" />
+        </div>
+        <div class="form-group me-2">
+            <select name="roomTypeId" class="form-select" id="roomTypeId">
+                <option value="">Chọn loại phòng</option>
+                @foreach (var roomType in ViewBag.RoomTypes)
+                {
+                    <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                        @roomType.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group me-2">
+            <select name="floorId" class="form-select" id="floorId">
+                <option value="">Chọn tầng</option>
+                @foreach (var floor in ViewBag.FloorList)
+                {
+                    <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
+                        @floor.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+      
+        <button type="submit" class="btn btn-light">Tìm kiếm</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+    </form>
+razor
+
+
+<div class="container">
+    @foreach (var group in groupedData)
+    {
+        // Get the room type information for the current group
+        var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == group.Key);
+        if (roomType != null)
+        {
+            <h2 class="room-type-title" style="color:black;">@roomType.Name</h2>
+            <div class="row">
+                @foreach (var room in group)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <a href="@Url.Action("Details", new { roomId = room.Id })" class="card-link">
+                            <div class="card">
+                                <h5 class="card-title" style="color:black;">@room.Name</h5>
+                                <div class="d-flex justify-content-center">
+                                    @foreach (var img in room.Images)
+                                    {
+                                        var extension = System.IO.Path.GetExtension(img);
+                                        if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                                        {
+                                            var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+                                            <div class="img-container" style="margin: 5px;">
+                                                <img src="@imagePath" alt="@room.Name" style="object-fit: cover; width: 100%; height: 150px;" />
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                <p>Giá: @Html.DisplayFor(modelItem => room.Price)</p>
+                                <p class="status-badge">@StatusHelper.DisplayRoomStatusBadge(room.Status)</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+<div>
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = Model.CurrentPage - 1,
+                        pageSize = Model.PageSize,
+                        search = Context.Request.Query["search"].ToString(),
+                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
+                        floorId = Context.Request.Query["floorId"].ToString(),
+                        status = Context.Request.Query["status"].ToString()
+                    })">Previous</a>
+                </li>
+            }
+
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        search = Context.Request.Query["search"].ToString(),
+                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
+                        floorId = Context.Request.Query["floorId"].ToString(),
+                        status = Context.Request.Query["status"].ToString()
+                    })">@i</a>
+                </li>
+            }
+
+            @if (Model.CurrentPage < Model.totalPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = Model.CurrentPage + 1,
+                        pageSize = Model.PageSize,
+                        search = Context.Request.Query["search"].ToString(),
+                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
+                        floorId = Context.Request.Query["floorId"].ToString(),
+                        status = Context.Request.Query["status"].ToString()
+                    })">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

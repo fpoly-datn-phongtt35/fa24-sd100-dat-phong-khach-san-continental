@@ -3,26 +3,9 @@
     ViewBag.Title = "Continental";
 }
 
-<div class="navbar">
-    <div class="navbar-left">
-        <img src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
-        <h1 style="font-size: 24px; margin: 0; color: white;">Trang Chủ Continental</h1>
-    </div>
-    <div class="navbar-right">
-        @if (Context.Session.GetString("UserName") == null)
-        {
-            <button class="nav-button"><a href="/login">Đăng Nhập</a></button>
-            <button class="nav-button"><a href="/register">Đăng ký</a></button>
-        }
-        else
-        {
-            <span>Xin chào, @Context.Session.GetString("UserName")!</span>
-            <button class="nav-button"><a href="/logout">Đăng Xuất</a></button>
-        }
-    </div>
-</div>
+
 <div class="nav-menu">
-    <div class="nav-item"><a href="#">Khách Sạn</a></div>
+    <div class="nav-item"><a href="/room/index">Khách Sạn</a></div>
     <div class="nav-item"><a href="#">Dịch vụ</a></div>
 </div>
 <div class="banner">
@@ -47,6 +30,6 @@
     <!-- Bạn có thể thêm các dịch vụ khác vào đây -->
 </div>
 
-<footer>
+<footer style="margin-top:inherit;">
     <p>© 2024 Continental. Bảo lưu mọi quyền.</p>
 </footer>

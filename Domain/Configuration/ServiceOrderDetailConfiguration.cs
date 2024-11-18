@@ -14,7 +14,7 @@ namespace Domain.Configuration
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.Amount).IsRequired();
             builder.HasOne(x => x.Service).WithMany(x => x.ServiceOrderDetails).HasForeignKey(x => x.ServiceId);
-            builder.HasOne(x => x.ServiceOrder).WithMany(x => x.ServiceOrderDetails).HasForeignKey(x => x.ServiceOrderId);
+            builder.HasOne(x => x.RoomBooking).WithMany(x => x.ServiceOrderDetails).HasForeignKey(x => x.RoomBookingId);
         }
     }
 }

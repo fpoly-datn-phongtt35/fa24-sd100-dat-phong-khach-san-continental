@@ -12,10 +12,10 @@ namespace Domain.DTO.VoucherDetail
         public Guid RoomBookingId { get; set; }
         public Guid VoucherId { get; set; }
         public string? Code { get; set; }
-        public DateTimeOffset StartDate { get; set; }
-        public DateTimeOffset EndDate { get; set; }
-        public EntityStatus Status { get; set; }
-        public DateTimeOffset CreatedTime { get; set; }
+        public DateTimeOffset? StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
+        public EntityStatus? Status { get; set; }
+        public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
     }
 }

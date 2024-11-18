@@ -81,9 +81,6 @@ namespace API
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
 
-            builder.Services.AddTransient<IServiceOrderRepo, ServiceOrderRepo>();
-            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
-
             builder.Services.AddTransient<IServiceOrderDetailRepo, ServiceOrderDetailRepo>();
             builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
 

@@ -9,9 +9,9 @@ namespace Domain.DTO.Building
 {
     public class BuildingCreateRequest
     {
-        public string Name { get; set; } = string.Empty;
-        public EntityStatus Status { get; set; } = EntityStatus.Active;
-        public DateTimeOffset CreatedTime { get; set; }
+        public string? Name { get; set; } = string.Empty;
+        public EntityStatus? Status { get; set; } = EntityStatus.Active;
+        public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
     }
 }

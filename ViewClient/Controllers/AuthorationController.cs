@@ -67,6 +67,7 @@ namespace ViewClient.Controllers
             // Return the registration view with the current model to display validation errors
             return View(registerInput);
         }
+
         [HttpPost("logout")]
         public IActionResult Logout()
         {

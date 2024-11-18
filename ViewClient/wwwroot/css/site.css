@@ -21,19 +21,24 @@ body {
     margin-bottom: 60px;
     margin: 0;
 }
+.unifrakturmaguntia-regular {
+    font-family: "UnifrakturMaguntia", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
+    background-color: #000000;
     color: white;
     padding: 10px 20px;
 }
 
 .navbar-left {
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .navbar img {
@@ -43,29 +48,29 @@ body {
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 15px; 
+    gap: 15px;
 }
 
 .nav-button {
-    background-color: #007bff; 
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px; 
-    padding: 10px 15px; 
-    text-align: center; 
-    text-decoration: none; 
+    border-radius: 5px;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
     font-size: 16px;
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
 }
 
     .nav-button:hover {
         background-color: #0056b3;
-        cursor: pointer; 
+        cursor: pointer;
     }
 
     .nav-button a {
         color: white;
-        text-decoration:none;
+        text-decoration: none;
     }
 
 
@@ -499,3 +504,84 @@ footer {
     .alert-custom .close {
         color: #721c24; /* Màu cho nút đóng */
     }
+
+//room
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cột dọc */
+    grid-gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+    .card:hover {
+        transform: scale(1.2);
+    }
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.img-container {
+    width: 100%;
+    height: 150px; /* Chiều cao cố định cho hình ảnh */
+    overflow: hidden;
+}
+
+    .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+    }
+
+.card p {
+    margin: 10px;
+    font-weight: bold;
+    font-size: 1.1rem; /* Tăng kích thước chữ */
+    color: #333; /* Màu chữ tối hơn để nổi bật hơn */
+    padding: 5px; /* Thêm khoảng cách bên trong */
+    border-radius: 3px; /* Bo viền cho nền */
+}
+
+    .card p:hover {
+        font-weight: bolder;
+        color: red;
+    }
+
+        .status-badge {
+            display: inline-block; /* Đảm bảo phần tử có thể phóng to */
+            transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển tiếp */
+        }
+
+    .status-badge:hover {
+        transform: scale(1.2); 
+    }
+
+.card .btn {
+    margin: 10px;
+}
+
+@media (max-width: 1199px) {
+    .card-container {
+        grid-template-columns: repeat(3, 1fr); /* 3 cột cho màn hình trung bình */
+    }
+}
+
+@media (max-width: 991px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 cột cho màn hình nhỏ */
+    }
+}
+
+@media (max-width: 767px) {
+    .card-container {
+        grid-template-columns: 1fr; /* 1 cột cho màn hình rất nhỏ */
+    }
+}

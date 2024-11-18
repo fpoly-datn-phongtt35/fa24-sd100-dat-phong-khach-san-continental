@@ -6,11 +6,11 @@ namespace Domain.DTO.Post
     {
         public Guid PostTypeId { get; set; }
         public Guid StaffId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public EntityStatus Status { get; set; } = EntityStatus.Active;
+        public string? Title { get; set; }
+        public string? Content { get; set; }
+        public EntityStatus? Status { get; set; } = EntityStatus.Active;
 
-        public DateTimeOffset CreatedTime { get; set; }
+        public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
     }
 }

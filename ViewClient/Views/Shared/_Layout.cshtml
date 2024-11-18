@@ -3,17 +3,43 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ViewClient</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ViewClient.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            
-        </nav>
+        <div class="navbar">
+            <div class="navbar-left">
+                <div class="navbar-left">
+                    <img href="/index" src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
+                    <h1 href="/index" class="unifrakturmaguntia-regular">Continental</h1>
+
+                </div>
+           
+            </div>
+            <div class="navbar-right">
+                @if (Context.Session.GetString("UserName") == null)
+                {
+                    <button class="nav-button" ><a href="/login">Đăng Nhập</a></button>
+                    <button class="nav-button" ><a href="/register">Đăng ký</a></button>
+                }
+                else
+                {
+                    <span>Xin chào, @Context.Session.GetString("UserName")!</span>
+                    <form asp-controller="Authoration" asp-action="Logout" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-button">Đăng Xuất</button>
+                    </form>
+                }
+            </div>
+        </div>
+
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">

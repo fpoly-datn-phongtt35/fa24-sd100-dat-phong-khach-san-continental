@@ -94,8 +94,6 @@ namespace View.Controllers
             if (ModelState.IsValid)
             {
                 string requestURL = "https://localhost:7130/api/Post/CreatePost";
-                request.StaffId = Guid.Parse("978bd76d-4731-4f4a-b1a3-be945dc47b87");
-                request.PostTypeId = Guid.Parse("89206D0D-B18D-4C25-8F50-AE552675B58E");
                 request.CreatedTime = DateTimeOffset.Now;
                 var response = await _httpClient.PostAsJsonAsync(requestURL, request);
 
