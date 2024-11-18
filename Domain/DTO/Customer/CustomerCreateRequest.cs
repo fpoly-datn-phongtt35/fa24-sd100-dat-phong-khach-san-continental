@@ -23,6 +23,6 @@ namespace Domain.DTO.Customer
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset? CreatedTime { get; set; }
-        public Guid? CreatedBy { get; set; }
+        public Guid CreatedBy { get; set; }
     }
 }

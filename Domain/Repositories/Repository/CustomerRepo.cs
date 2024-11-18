@@ -37,7 +37,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedTime", request.CreatedTime),
-                    new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
+                    new SqlParameter("@CreatedBy", request.CreatedBy)
                 };
 
                 return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertCustomer, sqlParameters);

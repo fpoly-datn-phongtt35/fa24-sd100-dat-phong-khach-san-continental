@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Drawing.Printing;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WEB.CMS.Customize;
@@ -98,9 +99,15 @@ namespace View.Controllers
         {
             if (ModelState.IsValid)
             {
+                var _UserLogin = Guid.Empty;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
                 string requestURL = "https://localhost:7130/api/Customer/CreateCustomer";
                 request.Status = EntityStatus.Active;
                 request.CreatedTime = DateTimeOffset.Now;
+                request.CreatedBy = _UserLogin;
                 var response = await _httpClient.PostAsJsonAsync(requestURL, request);
 
                 if (response.IsSuccessStatusCode)
@@ -145,8 +152,14 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CustomerUpdateRequest request)
         {
+            var _UserLogin = Guid.Empty;
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
             ViewBag.Genders = Enum.GetValues(typeof(GenderType));
+            request.ModifiedBy = _UserLogin;
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Customer/UpdateCustomer", request);
             if (response.IsSuccessStatusCode)
@@ -159,11 +172,15 @@ namespace View.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
 			string requestUrl = "https://localhost:7130/api/Customer/DeleteCustomer";
-
-			var request = new CustomerDeleteRequest
+            var _UserLogin = Guid.Empty;
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+            var request = new CustomerDeleteRequest
 			{
 				Id = id,
-				DeletedBy = Guid.NewGuid(),
+				DeletedBy = _UserLogin,
 				DeletedTime = DateTimeOffset.Now
 			};
 

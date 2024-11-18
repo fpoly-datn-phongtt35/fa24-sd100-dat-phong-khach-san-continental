@@ -105,19 +105,20 @@ namespace Domain.Repositories.Repository
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
-                {
+               {
                     new SqlParameter("@Id", request.Id),
-                    new SqlParameter("@CheckInBooking", request.CheckInBooking),
-                    new SqlParameter("@CheckOutBooking", request.CheckOutBooking),
-                    new SqlParameter("@CheckInReality", request.CheckInReality),
-                    new SqlParameter("@CheckOutReality", request.CheckOutReality),
-                    new SqlParameter("@Status", request.Status != null ? request.Status : DBNull.Value),
-                    new SqlParameter("@ModifiedTime",DateTimeOffset.Now != null ? DateTimeOffset.Now : DBNull.Value),
-                    new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value),
-                    new SqlParameter("@Deleted",request.Deleted != null ? request : false),
-                    new SqlParameter("@DeletedTime",DateTime.Now),
-                    new SqlParameter("@DeletedBy", request.DeletedBy!= null ? request.DeletedBy : DBNull.Value)
-                };
+                    new SqlParameter("@CheckInBooking", (object)request.CheckInBooking ?? DBNull.Value),
+                    new SqlParameter("@CheckOutBooking", (object)request.CheckOutBooking ?? DBNull.Value),
+                    new SqlParameter("@CheckInReality", (object)request.CheckInReality ?? DBNull.Value),
+                    new SqlParameter("@CheckOutReality", (object)request.CheckOutReality ?? DBNull.Value),
+                    new SqlParameter("@Status", (int)request.Status), // Chuyển đổi enum sang int
+                    new SqlParameter("@ModifiedTime", (object)DateTimeOffset.Now ?? DBNull.Value),
+                    new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value),
+                    new SqlParameter("@Deleted", request.Deleted),
+                    new SqlParameter("@DeletedTime", (object)(request.Deleted ? DateTimeOffset.Now : DBNull.Value)),
+                    new SqlParameter("@DeletedBy", (object)request.DeletedBy ?? DBNull.Value)
+               };
+
 
                 return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);
             }
