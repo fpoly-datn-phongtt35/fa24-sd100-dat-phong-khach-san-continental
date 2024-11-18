@@ -4,11 +4,13 @@ namespace Domain.DTO.RoomBooking;
 
 public class RoomBookingCreateRequest
 {
-    public BookingType BookingType { get; set; }
+    public BookingType BookingType { get; set; } = BookingType.Offline;
     public Guid CustomerId { get; set; }
     public Guid? StaffId { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset? CreatedTime { get; set; }
+    public decimal TotalPrice { get; set; }
+    public decimal TotalRoomPrice { get; set; }
+    public decimal TotalServicePrice { get; set; }
     public Guid? CreatedBy { get; set; }
 
     /// <summary>
@@ -24,7 +26,9 @@ public class RoomBookingCreateRequest
             CustomerId = CustomerId,
             StaffId = StaffId,
             Status = Status,
-            CreatedTime = CreatedTime,
+            TotalPrice = TotalPrice,
+            TotalRoomPrice = TotalRoomPrice,
+            TotalServicePrice = TotalServicePrice,
             CreatedBy = CreatedBy
         };
     }

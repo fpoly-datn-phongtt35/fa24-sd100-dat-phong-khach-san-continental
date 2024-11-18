@@ -1,59 +1,55 @@
-﻿using System.Text;
+﻿using System.Text.RegularExpressions;
+using Domain.DTO.Customer;
 using Domain.DTO.Paging;
+using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
-using Domain.Enums;
 using Domain.Models;
+using Domain.Services.IServices;
+using Domain.Services.IServices.IRoom;
+using Domain.Services.IServices.IRoomBooking;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using WEB.CMS.Customize;
 
 namespace View.Controllers;
 [CustomAuthorize]
 public class RoomBookingController : Controller
 {
-    private readonly HttpClient _httpClient;
+    private readonly ICustomerService _customerService;
+    private readonly IRoomGetService _roomGetService;
+    private readonly IRoomBookingGetService _roomBookingService;
 
-    public RoomBookingController(HttpClient httpClient)
+    public RoomBookingController(ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService)
     {
-        _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri("https://localhost:7130/api/");
+        _customerService = customerService;
+        _roomBookingService = roomBookingGetService;
+        _roomGetService = roomGetService;
     }
-    
-    private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null) 
-        where T : class
+
+    [Route("/BookingRoom/Id={IdRoomBooking}&&Client={IdClient}")]
+    public async Task<IActionResult> BookingForm(Guid IdRoomBooking,Guid IdClient) 
+    {
+        ViewBag.IdRoomBooking = null;
+        ViewBag.IdClient = null;
+        ViewBag.Client = null;
+        if (IdRoomBooking != Guid.Empty) 
+        {
+            ViewBag.IdRoomBooking = IdRoomBooking;
+        }
+        if(IdClient != Guid.Empty) 
+        {
+            ViewBag.IdClient = IdClient;
+            var Client = await _customerService.GetCustomerById(IdClient);
+            ViewBag.Client = Client;
+        }
+        return View();
+    }
+
+    public async Task<RoomResponse> GetRoomById(Guid Id) 
     {
         try
         {
-            HttpRequestMessage request = new HttpRequestMessage(method, requestUrl);
-
-            // Nếu có body thì serialize nó thành JSON
-            if (body != null)
-            {
-                var json = JsonConvert.SerializeObject(body);
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-
-            // Gửi request
-            var response = await _httpClient.SendAsync(request);
-
-            if (response == null)
-            {
-                throw new NullReferenceException("Response is null");
-            }
-
-            if (response.IsSuccessStatusCode)
-            {
-                // Đọc nội dung phản hồi
-                var responseString = await response.Content.ReadAsStringAsync();
-
-                // Deserialize thành đối tượng T
-                return JsonConvert.DeserializeObject<T>(responseString);
-            }
-            else
-            {
-                Console.WriteLine($"Request failed with status code: {response.StatusCode}");
-                return null;
-            }
+            var response = await _roomGetService.GetRoomById(Id);
+            return response;
         }
         catch (Exception ex)
         {
@@ -62,60 +58,88 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<IActionResult> Index(string? searchString = null, Guid? staffId = null,
-        EntityStatus? status = null, BookingType? bookingType = null, int pageIndex = 1, int pageSize = 5)
+    public async Task<ResponseData<RoomResponse>> GetRoomSuggestion(string txt_search) 
     {
-        var roomBookingGetRequest = new RoomBookingGetRequest()
+        var response = new ResponseData<RoomResponse>();
+        try
         {
-            PageIndex = pageIndex,
-            PageSize = pageSize,
-            SearchString = searchString,
-            Status = status,
-            StaffId = staffId,
-            BookingType = bookingType
-        };
-        string requestUrl = "RoomBooking/GetFilteredRoomBookings";
-        
-        var roomBookings = await SendHttpRequest<ResponseData<RoomBookingResponse>>
-            (requestUrl, HttpMethod.Post, roomBookingGetRequest);
-        if (roomBookings != null)
-            return View(roomBookings);
-        
-        return View("Error");
+            var request = new RoomRequest();
+            request.Name = txt_search;
+            request.Status = Domain.Enums.RoomStatus.Vacant;
+            response = await _roomGetService.GetAllRooms(request);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return response;
+        }
     }
 
-    public async Task<IActionResult> Details(Guid roomBookingId)
+    [HttpPost]
+    public async Task<Customer> GetCustomerById(Guid Id) 
     {
-        string requestUrl = $"RoomBooking/GetRoomBookingById?roomBookingId={roomBookingId}";
-        
-        var roomBooking = await SendHttpRequest<RoomBooking>(requestUrl, HttpMethod.Post);
-        if(roomBooking != null)
-            return View(roomBooking);
-        
-        return View("Error");
+        try
+        {
+            var response = await _customerService.GetCustomerById(Id);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
     }
 
-    public async Task<IActionResult> Edit(Guid roomBookingId)
+    public async Task<ResponseData<Customer>> GetCustomerSuggestion(string txt_search) 
+    {   var response = new ResponseData<Customer>();
+        try 
+        {
+            var request = new CustomerGetRequest();
+            if (Regex.IsMatch(txt_search, @"^\d+$")) 
+            {
+                request.PhoneNumber = txt_search;
+                request.UserName = null;
+                request.Email = null;
+            }
+            else if(Regex.IsMatch(txt_search, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))    
+            {
+                request.PhoneNumber = null;
+                request.UserName = null;
+                request.Email = txt_search;
+            }
+            else 
+            {
+                request.PhoneNumber = null;
+                request.UserName = txt_search;
+                request.Email = null;
+            }
+            response = await _customerService.GetAllCustomer(request);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return response;
+        }
+    }
+
+    public async Task<IActionResult> Index()
     {
-        string requestUrl = $"RoomBooking/GetRoomBookingById?roomBookingId={roomBookingId}";
-        
-        var roomBooking = await SendHttpRequest<RoomBookingResponse>(requestUrl, HttpMethod.Post);
-        if(roomBooking != null)
-            return View(roomBooking);
-        
-        return View("Error");
+        return View();
     }
     
-    [HttpPost]
-    public async Task<IActionResult> Edit(RoomBookingUpdateRequest roomBookingUpdateRequest)
+    public async Task<IActionResult> ListRoomBooking(RoomBookingGetRequest Request) 
     {
-        string requestUrl = $"RoomBooking/UpdateRoomBooking?roomBookingId={roomBookingUpdateRequest.Id}";
-        
-        var roomBooking = await SendHttpRequest<RoomBookingResponse>
-            (requestUrl, HttpMethod.Put, roomBookingUpdateRequest);
-        if(roomBooking != null)
-            return RedirectToAction("Index");
-        
-        return View("Error");
+        try
+        {
+            var response = await _roomBookingService.GetFilteredRoomBooking(Request);
+            return View(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
     }
 }

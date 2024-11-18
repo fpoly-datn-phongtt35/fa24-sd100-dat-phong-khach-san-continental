@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 using WEB.CMS.Customize;
+using System.Security.Claims;
 
 namespace View.Controllers
 {
@@ -91,8 +92,13 @@ namespace View.Controllers
         {
             if (ModelState.IsValid)
             {
+                var _UserLogin = Guid.Empty;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
                 string requestURL = "https://localhost:7130/api/PostType/CreatePostType";
-               
+                request.CreatedBy = _UserLogin;
                 request.CreatedTime = DateTimeOffset.Now;
                 var response = await _httpClient.PostAsJsonAsync(requestURL, request);
 
@@ -138,20 +144,30 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostType request)
         {
+            var _UserLogin = Guid.Empty;
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            request.ModifiedBy = _UserLogin;
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/PostType/UpdatePostType", request);
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Delete(Guid id)
         {
+            var _UserLogin = Guid.Empty;
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
             string requestUrl = "https://localhost:7130/api/PostType/DeletePostType";
 
             var request = new PostTypeDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),
+                DeletedBy = _UserLogin,
                 DeletedTime = DateTimeOffset.Now
             };
 

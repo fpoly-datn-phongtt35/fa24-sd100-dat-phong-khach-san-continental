@@ -4,6 +4,7 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Text;
 using WEB.CMS.Customize;
 
@@ -93,7 +94,13 @@ namespace View.Controllers
         {
             if (ModelState.IsValid)
             {
+                var _UserLogin = Guid.Empty;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
                 string requestURL = "https://localhost:7130/api/Post/CreatePost";
+                request.CreatedBy = _UserLogin;
                 request.CreatedTime = DateTimeOffset.Now;
                 var response = await _httpClient.PostAsJsonAsync(requestURL, request);
 
@@ -139,20 +146,30 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Post request)
         {
+            var _UserLogin = Guid.Empty;
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            request.ModifiedBy = _UserLogin;
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Post/UpdatePost", request);
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Delete(Guid id)
         {
+            var _UserLogin = Guid.Empty;
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
             string requestUrl = "https://localhost:7130/api/Post/DeletePost";
 
             var request = new PostDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),
+                DeletedBy =_UserLogin,
                 DeletedTime = DateTimeOffset.Now
             };
 

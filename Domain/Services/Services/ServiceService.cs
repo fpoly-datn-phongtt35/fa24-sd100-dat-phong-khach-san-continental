@@ -97,6 +97,19 @@ namespace Domain.Services.Services
             return model;
         }
 
+        public async Task<List<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType()
+        {
+            try
+            {
+                return await _serviceRepo.GetAllServiceNamesGroupedByServiceType();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error", ex);
+            }
+        }
+
+
 
         public async Task<Service> GetServiceById(Guid Id)
         {

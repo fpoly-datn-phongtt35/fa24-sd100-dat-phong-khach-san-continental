@@ -3,6 +3,7 @@ using Domain.DTO.Service;
 using Domain.DTO.ServiceType;
 using Domain.Models;
 using Domain.Services.IServices;
+using Domain.Services.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +26,21 @@ namespace API.Controllers
             try
             {
                 return await _serviceSV.AddService(request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetAllServiceNamesGroupedByServiceType")]
+        public async Task<IActionResult> GetAllServiceNamesGroupedByServiceType()
+        {
+            try
+            {
+                var groupedServices = await _serviceSV.GetAllServiceNamesGroupedByServiceType();
+                return Ok(groupedServices
+                );
             }
             catch (Exception ex)
             {
