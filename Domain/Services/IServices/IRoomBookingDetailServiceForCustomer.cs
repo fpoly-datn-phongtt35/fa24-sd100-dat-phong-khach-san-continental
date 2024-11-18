@@ -11,6 +11,7 @@ namespace Domain.Services.IServices
 {
     public interface IRoomBookingDetailServiceForCustomer
     {
+        Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id);
         Task<RoomBookingDetail> GetById(Guid id);
         Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);

@@ -4,6 +4,7 @@ using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
+using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenityRoom;
 using Domain.Services.IServices.IRoom;
 using Microsoft.AspNetCore.Http;
@@ -19,16 +20,18 @@ namespace API.Controllers
         private readonly IRoomDeleteService _roomDeleteService;
         private readonly IRoomUpdateService _roomUpdateService;
         private readonly IRoomGetService _roomGetService;
-
+        private readonly IRoomRepo _roomRepo;
         public RoomController(IRoomCreateService roomAddService,
             IRoomDeleteService roomDeleteService,
             IRoomUpdateService roomUpdateService,
-            IRoomGetService roomGetService)
+            IRoomGetService roomGetService,
+            IRoomRepo roomRepo)
         {
             _roomAddService = roomAddService;
             _roomDeleteService = roomDeleteService;
             _roomUpdateService = roomUpdateService;
             _roomGetService = roomGetService;
+            _roomRepo = roomRepo;
         }
 
         [HttpPost(nameof(CreateRoom))]
@@ -106,6 +109,17 @@ namespace API.Controllers
                 throw new Exception(e.Message);
             }
         }
-        
+        [HttpPut(nameof(UpdateRoomStatus))]
+        public async Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request)
+        {
+            try
+            {
+                return await _roomRepo.UpdateRoomStatus(request);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
