@@ -26,6 +26,7 @@ namespace ViewClient
             builder.Services.AddTransient<ILogin, Login>();
             builder.Services.AddTransient<IRegister, Register>();
             builder.Services.AddTransient<IRoom, Room>();
+            builder.Services.AddTransient<ICustomer, Customer>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

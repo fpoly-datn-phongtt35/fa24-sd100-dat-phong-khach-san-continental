@@ -1,6 +1,8 @@
 ﻿using Domain.DTO.Paging;
 using Domain.DTO.RoomBooking;
+using Domain.DTO.RoomBookingDetail;
 using Domain.Services.IServices.IRoomBooking;
+using Domain.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
 
@@ -12,14 +14,28 @@ public class RoomBookingController : Controller
 {
     private readonly IRoomBookingGetService _roomBookingGetService;
     private readonly IRoomBookingUpdateService _roomBookingUpdateService;
+    private readonly IRoomBookingCreateService _roomBookingCreateService;
 
     public RoomBookingController(IRoomBookingGetService roomBookingGetService, 
-        IRoomBookingUpdateService roomBookingUpdateService)
+        IRoomBookingUpdateService roomBookingUpdateService,
+         IRoomBookingCreateService roomBookingCreateService)
     {
         _roomBookingGetService = roomBookingGetService;
         _roomBookingUpdateService = roomBookingUpdateService;
+        _roomBookingCreateService = roomBookingCreateService;
     }
-
+    [HttpPost("CreateRoomBooking")]
+    public async Task<int> CreateRoomBooking(RoomBookingCreateRequest request)
+    {
+        try
+        {
+            return await _roomBookingCreateService.CreateRoomBooking(request);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
     [HttpPost(nameof(GetFilteredRoomBookings))]
     public async Task<ResponseData<RoomBookingResponse>> GetFilteredRoomBookings
         (RoomBookingGetRequest roomBookingGetRequest)

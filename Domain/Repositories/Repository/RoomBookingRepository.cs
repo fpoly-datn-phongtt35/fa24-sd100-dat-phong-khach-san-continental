@@ -203,4 +203,28 @@ public class RoomBookingRepository : IRoomBookingRepository
             throw ex;
         }
     }
+
+    public async Task<int> CreateRoomBooking(RoomBookingCreateRequest request)
+    {
+        try
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                    new SqlParameter("@BookingType", SqlDbType.Int) { Value = request.BookingType },
+                    new SqlParameter("@CustomerId", request.CustomerId),
+                    new SqlParameter("@StaffId", request.StaffId),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                    new SqlParameter("@TotalPrice", request.TotalPrice),
+                    new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice),
+                    new SqlParameter("@TotalServicePrice", request.TotalServicePrice),
+                    new SqlParameter("@CreatedBy",request.CreatedBy)
+            };
+
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertRoomBooking, sqlParameters);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
 }
