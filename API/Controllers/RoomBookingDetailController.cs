@@ -36,6 +36,18 @@ namespace API.Controllers
                 throw new NullReferenceException("Not found the room booking detail", e);
             }
         }
+        [HttpPost(nameof(GetRoomBookingDetailByRoomBookingId))]
+        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRoomBookingDetailByRoomBookingId(Guid id)
+        {
+            try
+            {
+                return await _roomBookingDetailService.GetListRoomBookingDetailByRoomBookingId(id);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("Not found the room booking detail", e);
+            }
+        }
         [HttpPost("CreateRoomBookingDetail")]
         public async Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request)
         {
