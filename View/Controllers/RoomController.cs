@@ -122,6 +122,23 @@ namespace View.Controllers
 
         public async Task<IActionResult> Details(Guid roomId)
         {
+            string floorsRequestUrl = "/api/Floor/GetListFloor";
+
+            var floorsRequest = new FloorGetRequest();
+            var floorJsonRequest = JsonConvert.SerializeObject(floorsRequest);
+            var floorContent = new StringContent(floorJsonRequest, Encoding.UTF8, "application/json");
+            var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, floorContent);
+
+            var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
+            var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
+            ViewBag.FloorList = floorList.data;
+            var roomTypeGetRequest = new RoomTypeGetRequest();
+            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
+            var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
+                (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
+
+
+            ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
             string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
 
 
