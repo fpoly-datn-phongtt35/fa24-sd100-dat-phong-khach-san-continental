@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders;
 using ViewClient.Repositories.IRepository;
 using ViewClient.Repositories.Repository;
@@ -27,6 +28,24 @@ namespace ViewClient
             builder.Services.AddTransient<IRegister, Register>();
             builder.Services.AddTransient<IRoom, Room>();
             builder.Services.AddTransient<ICustomer, Customer>();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/Authoration/Login");
+                options.LoginPath = new PathString("/Authoration/Login");
+                options.ReturnUrlParameter = "url";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
+
+                options.Cookie = new CookieBuilder
+                {
+                    HttpOnly = true,
+                    Name = "Net.Security.Cookie",
+                    Path = "/",
+                    SameSite = SameSiteMode.Lax,
+                    SecurePolicy = CookieSecurePolicy.SameAsRequest
+                };
+
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
