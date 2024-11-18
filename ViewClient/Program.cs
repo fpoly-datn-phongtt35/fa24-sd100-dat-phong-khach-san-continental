@@ -28,6 +28,8 @@ namespace ViewClient
             builder.Services.AddTransient<IRegister, Register>();
             builder.Services.AddTransient<IRoom, Room>();
             builder.Services.AddTransient<ICustomer, Customer>();
+            builder.Services.AddTransient<IRoomBookingDetail, RoomBookingDetail>();
+            builder.Services.AddTransient<IRoombooking, RoomBooking>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/Authoration/Login");
