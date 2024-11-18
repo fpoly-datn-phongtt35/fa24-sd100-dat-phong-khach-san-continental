@@ -1,12 +1,10 @@
-﻿using Domain.DTO.Staff;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.Staff;
+using Domain.Models;
 using Domain.Enums;
 using Domain.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.ComponentModel;
 using System.Security.Claims;
-using System.Text;
-using WEB.CMS.Customize;
 
 namespace View.Controllers.Staff
 {
@@ -24,6 +22,21 @@ namespace View.Controllers.Staff
         public async Task<ActionResult> Index()
         {
             return View();
+        }
+
+        public async Task<ResponseData<Domain.Models.Staff>> GetListStaff() 
+        {
+            try 
+            {
+                StaffGetRequest request = new StaffGetRequest();
+                var Data = await _staffService.GetStaffs(request);
+                return Data;
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         public async Task<IActionResult> GetListData(StaffGetRequest request)

@@ -6,7 +6,7 @@
     ViewData["Title"] = "Index";
 }
 <div class="p-3">
-    <form class="form-inline d-flex justify-content-between mt-5">
+    <form class="form-inline d-flex justify-content-between mt-5" onsubmit="return false">
         <input class="form-control" type="text" id="txt_search" oninput="_staff.OnchangeSearchText()" style="max-width:87%" placeholder="Tìm kiếm" aria-label="Search">
         <button class="btn btn-outline-success" onclick="_staff.LoadForm()">Thêm nhân viên +</button>
     </form>
