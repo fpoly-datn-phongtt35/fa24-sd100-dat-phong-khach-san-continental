@@ -1,4 +1,5 @@
-﻿@using ViewClient.Views.Shared
+﻿@using Domain.Enums
+@using ViewClient.Views.Shared
 
 @model Domain.DTO.Room.RoomResponse
 
@@ -12,71 +13,88 @@
 <h4 style="margin-top:30px;">Đặt phòng của bạn</h4>
 
 <div class="d-flex">
-    <div class="d-flex justify-content-start">
-        <hr />
-        <div class="img-column">
-            @Html.DisplayName("Hình ảnh")
-
-            @if (Model.Images != null && Model.Images.Any())
+    <div class="img-column me-3">
+        @if (Model.Images != null && Model.Images.Any())
+        {
+            @foreach (var img in Model.Images)
             {
-                @foreach (var img in Model.Images)
+                var extension = System.IO.Path.GetExtension(img);
+                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
                 {
-                    var extension = System.IO.Path.GetExtension(img);
-                    if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
-                    {
-                        var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+                    var imagePath = Url.Content($"/View/wwwroot/images/{img}");
 
-                        <div class="img-container-details">
-                            <img src="@imagePath" alt="" />
+                    <div class="img-container-details">
+                        <img src="@imagePath" alt="" />
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <p>Không có hình ảnh</p>
+        }
+        <div class="amenities-column mt-3">
+            <h5>Diện tích phòng: <span style="font-weight: normal;">@Html.DisplayFor(model => model.RoomSize) m²</span></h5>
+            <h5>
+                Tiện ích phòng của phòng:
+                <span style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight:bold;">@Html.DisplayFor(model => model.Name)</span>
+            </h5>
+            @if (Model.RoomType.AmenityRooms != null && Model.RoomType.AmenityRooms.Any())
+            {
+                <div class="row">
+                    @foreach (var amenityRoom in Model.RoomType.AmenityRooms
+                   .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
+                    {
+                        <div class="col-4 mb-2">
+                            <div class="amenity-item">
+                                <strong>@amenityRoom.Amenity.Name</strong>
+                                <span style="font-weight: normal;">: @amenityRoom.Amount</span>
+                            </div>
                         </div>
                     }
-                }
+                </div>
             }
             else
             {
-                <p>Không có hình ảnh</p>
+                <p>Phòng này hiện không có tiện ích nào được liên kết.</p>
             }
-
-        </div>
-        <div class="d-flex align-items-start">
-            <div class="info-column">
-                <dl>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Tên phòng")</dt>
-                        <dd>@Html.DisplayFor(model => model.Name)</dd>
-                    </div>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Giá phòng(VNĐ/đêm)")</dt>
-                        <dd>@Html.DisplayFor(model => model.Price)</dd>
-                    </div>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Địa chỉ của khách sạn/phòng")</dt>
-                        <dd>@Html.DisplayFor(model => model.Address)</dd>
-                    </div>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Mô tả chi tiết phòng")</dt>
-                        <dd>@Html.DisplayFor(model => model.Description)</dd>
-                    </div>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Diện tích phòng")</dt>
-                        <dd>@Html.DisplayFor(model => model.RoomSize) m2</dd>
-                    </div>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Tầng của phòng")</dt>
-                        <dd>@floorList?.FirstOrDefault(f => f.Id == Model.FloorId)?.Name</dd>
-                    </div>
-                    <div class="info-row">
-                        <dt>@Html.DisplayName("Loại phòng")</dt>
-                        <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.Name</dd>
-                    </div>
-                </dl>
-            </div>
         </div>
     </div>
-    <div class="d-flex justify-content-end">
- </div>
 
+    <div class="info-column flex-grow-1">
+        <dl>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Tên phòng")</dt>
+                <dd>@Html.DisplayFor(model => model.Name)</dd>
+            </div>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Giá phòng(VNĐ/đêm)")</dt>
+                <dd>@Html.DisplayFor(model => model.Price)</dd>
+            </div>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Địa chỉ của khách sạn/phòng")</dt>
+                <dd>@Html.DisplayFor(model => model.Address)</dd>
+            </div>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Mô tả chi tiết phòng")</dt>
+                <dd>@Html.DisplayFor(model => model.Description)</dd>
+            </div>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Diện tích phòng")</dt>
+                <dd>@Html.DisplayFor(model => model.RoomSize) m²</dd>
+            </div>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Tầng của phòng")</dt>
+                <dd>@floorList?.FirstOrDefault(f => f.Id == Model.FloorId)?.Name</dd>
+            </div>
+            <div class="info-row">
+                <dt>@Html.DisplayName("Loại phòng")</dt>
+                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.Name</dd>
+            </div>
+        </dl>
+    </div>
 </div>
+
 <div>
     <a asp-action="Index" asp-controller="Room" class="btn btn-outline-secondary">Quay lại</a>
 </div>
@@ -95,6 +113,7 @@
 
     .d-flex {
         display: flex;
+        align-items: flex-start; /* Căn chỉnh các phần tử theo chiều dọc */
     }
 
     .img-column {
@@ -112,19 +131,19 @@
         margin-bottom: 20px;
         padding-left: 10px;
         border-left: 3px solid #0056b3;
+        transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
     }
 
-    .img-dd {
-        flex: 1; /* Chiếm không gian chiều rộng tối đa */
-        max-width: 600px; /* Giới hạn chiều rộng tối đa nếu cần */
-    }
+        div.info-row:hover {
+            background-color: #e7f1ff; /* Màu nền khi hover */
+        transform: scaleY(0.85);
+        }
 
     .img-container-details {
-        width: 50%;
+        width: 100%; /* Chiếm toàn bộ chiều rộng */
         height: 350px; /* Chiều cao cố định cho hình ảnh */
         overflow: hidden;
-        margin: 5px;
-        flex: 1 1 auto; /* Cho phép hình ảnh tự động điều chỉnh kích thước */
+        margin: 5px 0; /* Khoảng cách giữa các hình ảnh */
     }
 
     img {
@@ -149,5 +168,26 @@
 
         .btn:hover {
             background-color: #004494;
+        }
+
+    .amenities-column {
+        margin-top: 20px; /* Khoảng cách giữa ảnh và tiện ích */
+    }
+
+    .amenity-item {
+        padding: 5px;
+        border: 1px solid #0056b3; /* Đường viền cho tiện ích */
+        border-radius: 5px; /* Bo góc */
+        background-color: #f8f9fa; /* Màu nền nhẹ */
+        transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
+    }
+
+        .amenity-item:hover {
+            background-color: #e7f1ff; /* Màu nền khi hover */
+            transform: scale(1.1);
+        }
+
+        .amenity-item strong {
+            color: #0056b3; /* Màu chữ cho tên tiện ích */
         }
 </style>
