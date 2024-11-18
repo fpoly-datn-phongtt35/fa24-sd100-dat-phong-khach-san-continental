@@ -46,4 +46,36 @@ public static class StatusHelper
             _ => new HtmlString("null")
         };
     }
+    public static IHtmlContent DisplayStatusBadge1(RoomStatus status)
+    {
+        switch (status)
+        {
+            case RoomStatus.Vacant:
+                return new HtmlString("<span class='badge bg-success'>Hoạt động</span>");
+            case RoomStatus.OutOfOrder:
+                return new HtmlString("<span class='badge bg-secondary'>Không hoạt động</span>");
+            case RoomStatus.Deleted:
+                return new HtmlString("<span class='badge bg-danger'>Đã xóa</span>");
+            case RoomStatus.Occupied:
+                return new HtmlString("<span class='badge bg-secondary'>Hoãn</span>");
+            case RoomStatus.Reserved:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ kích hoạt</span>");
+            case RoomStatus.Cleaned:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ xác nhận</span>");
+            case RoomStatus.Dirty:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+            case RoomStatus.Inspected:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+            case RoomStatus.DoNotDisturb:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+            case RoomStatus.CheckIn:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+            case RoomStatus.CheckOut:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+            case RoomStatus.AwaitingConfirmation:
+                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+            default:
+                return HtmlString.Empty;
+        }
+    }
 }

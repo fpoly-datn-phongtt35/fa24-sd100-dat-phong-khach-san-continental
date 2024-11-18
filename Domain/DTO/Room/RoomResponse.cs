@@ -1,8 +1,10 @@
 ﻿using Domain.DTO.Amenity;
+using Domain.DTO.Floor;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
+using Domain.Repositories.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +36,7 @@ namespace Domain.DTO.Room
         public DateTimeOffset? DeletedTime { get; set; }
 
         public RoomTypeResponse RoomType { get; set; } = new RoomTypeResponse();
+        public FloorGetRequest Floor { get; set; } = new FloorGetRequest();
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;

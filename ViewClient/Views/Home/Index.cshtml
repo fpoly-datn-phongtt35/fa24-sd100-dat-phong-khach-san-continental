@@ -1,19 +1,20 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Continental";
 }
 
-
-<div class="nav-menu">
-    <div class="nav-item"><a href="/room/index">Khách Sạn</a></div>
-    <div class="nav-item">
-        <a href="@Url.Action("GroupedServices", "Service")">Dịch vụ</a>
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="500">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/img/banner1.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="~/img/banner4.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="~/img/banner3.jpg" class="d-block w-100" alt="...">
+        </div>
     </div>
 </div>
-<div class="banner">
-    <img src="~/img/2.png" alt="Alternate Text" style="width: 300px; height: 250px;" />
-</div>
-
 
 
 <div class="search-box">
@@ -32,6 +33,3 @@
     <!-- Bạn có thể thêm các dịch vụ khác vào đây -->
 </div>
 
-<footer style="margin-top:inherit;">
-    <p>© 2024 Continental. Bảo lưu mọi quyền.</p>
-</footer>
