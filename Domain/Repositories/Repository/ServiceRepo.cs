@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Service;
+using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -94,6 +95,33 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+
+        public async Task<List<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType()
+        {
+            try
+            {
+                var dataTable = await _DbWorker.GetDataTableAsync(
+                    StoredProcedureConstant.SP_GetAllServiceNamesGroupedByServiceType,
+                    Array.Empty<SqlParameter>() 
+                );
+
+                var groupedData = dataTable.AsEnumerable()
+                    .GroupBy(row => row.Field<string>("ServiceTypeName"))
+                    .Select(group => new ServiceTypeGroupDto
+                    {
+                        ServiceTypeName = group.Key, 
+                        ServiceNames = group.Select(row => row.Field<string>("ServiceName")).ToList() 
+                    })
+                    .ToList();
+
+                return groupedData;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to fetch service names grouped by service type.", ex);
+            }
+        }
+
 
         public async Task<DataTable> GetServiceById(Guid id)
         {
