@@ -8,19 +8,43 @@
     }
 }
 
+
+.container-fluid {
+    padding: 0;
+    margin: 0;
+}
+
+
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
     position: relative;
-    min-height: 100%;
+    height: 100%;
+    margin: 0;
 }
+
+
 
 body {
     margin-bottom: 60px;
     margin: 0;
+    height: 100%;
 }
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+}
+
+main {
+    flex: 1;
+}
+
+
 .unifrakturmaguntia-regular {
     font-family: "UnifrakturMaguntia", cursive;
     font-weight: 400;
@@ -28,6 +52,12 @@ body {
 }
 
 .navbar {
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100%;
+    z-index: 999; 
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,7 +69,26 @@ body {
 .navbar-left {
     display: flex;
     align-items: center;
+    width: 30%;
 }
+
+    .navbar-left a {
+        text-decoration: none; 
+        color: white;
+    }
+
+        .navbar-left a:hover,
+        .navbar-left a:focus,
+        .navbar-left a:active {
+            text-decoration: none;
+            color: inherit; 
+            outline: none;
+        }
+
+        .navbar-left a:visited {
+            color: inherit;
+        }
+
 
 .navbar img {
     margin-right: 20px;
@@ -48,8 +97,32 @@ body {
 .navbar-right {
     display: flex;
     align-items: center;
+    justify-content: end;
     gap: 15px;
+    width: 30%;
 }
+    .navbar-center {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+        .navbar-center a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 15px;
+            position: relative;
+        }
+
+            .navbar-center a:hover::after {
+                content: ""; 
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -5px; 
+                height: 2px; 
+                background-color: white; 
+            }
 
 .nav-button {
     background-color: #007bff;
@@ -111,28 +184,6 @@ body {
         height: auto;
     }
 
-/* Thanh menu */
-.nav-menu {
-    background-color: #2E7D32;
-    display: flex;
-    justify-content: center;
-    padding: 15px 0;
-}
-
-.nav-item {
-    margin: 0 15px;
-}
-
-    .nav-item a {
-        text-decoration: none;
-        color: #fff;
-        font-weight: bold;
-        transition: color 0.3s;
-    }
-
-        .nav-item a:hover {
-            color: #f8f9fa;
-        }
 
 /* Ô tìm kiếm */
 .search-box {
@@ -198,17 +249,7 @@ body {
         margin-bottom: 10px;
     }
 
-/* Footer */
-footer {
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
 
-    footer p {
-        margin: 0;
-        font-size: 14px;
-    }
 
 .page-content {
     width: 100%;
@@ -585,3 +626,145 @@ footer {
         grid-template-columns: 1fr; /* 1 cột cho màn hình rất nhỏ */
     }
 }
+
+
+
+/*footer*/
+.footer {
+    background-color: #1c252c;
+    color: white;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Logo Section */
+.footer-logo-section {
+    flex: 1 1 250px;
+    text-align: left;
+    gap: 20px;
+}
+
+.footer-logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.footer-certificates img {
+    width: 50px;
+    margin: 5px;
+}
+
+.partner-button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    text-align: left; 
+}
+
+    .partner-button:hover {
+        background-color: #357ab9;
+    }
+
+/* Social media */
+.social-media-section {
+    padding-right: 150px;
+    flex: 1 1 250px;
+    text-align: right;
+}
+
+    .social-media-section h4 {
+        margin-bottom: 20px;
+    }
+
+.social-media-logos img {
+    width: 40px;
+    margin: 10px;
+}
+
+.social-media-logos a {
+    text-decoration: none;
+}
+
+/* Links Section */
+.footer-links {
+    display: flex;
+    flex: 2 1 300px;
+    justify-content: space-between;
+    text-align: left; 
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    text-align: left;
+}
+
+    .footer-column h4 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .footer-column a {
+        text-decoration: none;
+        color: white;
+        margin: 0; 
+        padding: 0; 
+        line-height: 1.6;
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+
+        .footer-column a:hover {
+            color: #4a90e2;
+        }
+
+
+/* Mail */
+.email-subscription h4 {
+    margin-bottom: 10px;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.email-subscription .form-control {
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.email-subscription .btn {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
