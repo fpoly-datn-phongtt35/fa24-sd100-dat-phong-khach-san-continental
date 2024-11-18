@@ -2,9 +2,13 @@ using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IAmenity;
+using Domain.Services.IServices.IRoom;
+using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomType;
 using Domain.Services.Services;
 using Domain.Services.Services.Amenity;
+using Domain.Services.Services.Room;
+using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomType;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -19,7 +23,11 @@ namespace View
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<IStaffService,StaffService>();
-
+            builder.Services.AddTransient<ICustomerService, CustomerService>();
+            builder.Services.AddTransient<IRoomGetService, RoomGetService>();
+            builder.Services.AddTransient<IRoomRepo, RoomRepo>();
+            builder.Services.AddTransient<IRoomBookingGetService, RoomBookingGetService>();
+            builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>();
             builder.Services.AddHttpClient();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {

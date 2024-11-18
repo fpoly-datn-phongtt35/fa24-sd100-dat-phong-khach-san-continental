@@ -23,6 +23,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetServiceById = "SP_GetServiceById";
         public const string SP_UpdateService = "SP_UpdateService";
         public const string SP_GetServiceByTypeId = "SP_GetServiceByTypeId";
+        public const string SP_GetAllServiceNamesGroupedByServiceType = "SP_GetAllServiceNamesGroupedByServiceType";
 
         //service order detail
         public const string SP_InsertServiceOrderDetail = "SP_InsertServiceOrderDetail";
