@@ -1,9 +1,10 @@
 ﻿using Domain.DTO.RoomBooking;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ViewClient.Repositories.IRepository
 {
     public interface IRoombooking
     {
-        Task<int> CreateRoomBooking(RoomBookingCreateRequest request);
+        Task<Guid> CreateRoomBooking(RoomBookingCreateRequestForCustomer request);
     }
 }

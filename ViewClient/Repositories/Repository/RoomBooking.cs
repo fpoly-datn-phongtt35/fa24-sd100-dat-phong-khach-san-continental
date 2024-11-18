@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomBooking;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
 using ViewClient.Repositories.IRepository;
@@ -14,25 +15,23 @@ namespace ViewClient.Repositories.Repository
             _httpClient = httpClient;
         }
 
-        public async Task<int> CreateRoomBooking(RoomBookingCreateRequest request)
+        public async Task<Guid> CreateRoomBooking(RoomBookingCreateRequestForCustomer request)
         {
-            string url = $"https://localhost:7130/api/RooomBooking/CreateRoomBooking";
+            string url = $"https://localhost:7130/api/RooomBooking/CreateRoomBookingForCustomer";
             var response = await _httpClient.PostAsJsonAsync(url, request);
 
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
-                var dataTable = JsonConvert.DeserializeObject<DataTable>(resultString);
+                var result = JsonConvert.DeserializeObject<Guid>(resultString);
 
-                // Kiểm tra nếu DataTable có ít nhất một hàng
-                if (dataTable != null && dataTable.Rows.Count > 0)
+                if (result != null)
                 {
-                    // Giả sử cột đầu tiên chứa ID của booking
-                    return Convert.ToInt32(dataTable.Rows[0][0]);
+                    return result;
                 }
                 else
                 {
-                    throw new Exception("Không có dữ liệu trả về từ API.");
+                    throw new Exception("Đặt phòng không thành công.");
                 }
             }
 

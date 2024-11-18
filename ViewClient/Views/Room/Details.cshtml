@@ -80,8 +80,8 @@
                 <dd>@Html.DisplayFor(model => model.Description)</dd>
             </div>
             <div class="info-row">
-                <dt>@Html.DisplayName("Diện tích phòng")</dt>
-                <dd>@Html.DisplayFor(model => model.RoomSize) m²</dd>
+                <dt>@Html.DisplayName("Số lượng người có thể ở")</dt>
+                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.MaximumOccupancy người</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Tầng của phòng")</dt>
@@ -97,8 +97,82 @@
 
 <div>
     <a asp-action="Index" asp-controller="Room" class="btn btn-outline-secondary">Quay lại</a>
+    <button type="button" class="btn btn-primary" id="openModalButton">
+       Đặt phòng
+    </button>
+</div>
+<!-- Modal cho đặt phòng -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel">Đặt Phòng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>@Model.Name</h6>
+                <p>Giá: @Model.Price VNĐ/đêm</p>
+
+                <div class="mb-3">
+                    <label for="checkInBooking" class="form-label">Check-In</label>
+                    <input type="datetime-local" class="form-control" id="checkInBooking" required />
+                </div>
+                <div class="mb-3">
+                    <label for="checkOutBooking" class="form-label">Check-Out</label>
+                    <input type="datetime-local" class="form-control" id="checkOutBooking" required />
+                </div>
+                <div id="validationMessage" class="text-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="confirmBookingButton">Xác Nhận Đặt Phòng</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $('#openModalButton').click(function () {
+            $('#bookingModal').modal('show');
+        });
+
+        $('#confirmBookingButton').click(function () {
+            var checkIn = new Date($('#checkInBooking').val());
+            var checkOut = new Date($('#checkOutBooking').val());
+            var now = new Date();
+
+            // Kiểm tra điều kiện
+            var fiveHoursFromNow = new Date(now.getTime() + 5 * 60 * 60 * 1000);
+            var validationMessage = "";
+
+            if (checkIn < fiveHoursFromNow) {
+                validationMessage += "Check-in must be at least 5 hours from now.<br>";
+            }
+            if (checkOut <= checkIn) {
+                validationMessage += "Check-out must be after check-in.<br>";
+            }
+
+            if (validationMessage) {
+                $('#validationMessage').html(validationMessage);
+            } else {
+                // Nếu hợp lệ, thực hiện gửi dữ liệu booking
+                var bookingDetails = {
+                    RoomId: '@Model.Id',
+                    CheckInBooking: $('#checkInBooking').val(),
+                    CheckOutBooking: $('#checkOutBooking').val(),
+                    Price: @Model.Price
+                };
+
+                $.post('@Url.Action("RoomBooking", "RoomBookingController")', bookingDetails, function (response) {
+                    // Xử lý phản hồi từ server
+                    $('#modalContainer').html(response);
+                    $('#bookingModal').modal('hide');  // Đóng modal nếu đặt phòng thành công
+                });
+            }
+        });
+    });
+</script>
 <style>
     h4 {
         color: #0056b3;

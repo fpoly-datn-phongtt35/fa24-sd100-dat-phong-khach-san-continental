@@ -21,7 +21,7 @@ namespace Domain.Services.Services.RoomBooking
             _roomBookingRepository = roomBookingRepository;
         }
 
-        public async Task<int> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request)
+        public async Task<Guid> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request)
         {
             try
             {
