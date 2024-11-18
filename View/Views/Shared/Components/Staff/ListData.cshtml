@@ -33,7 +33,7 @@
                     <td>@i.LastName</td>
                     <td>@i.Email</td>
                     <td>@i.PhoneNumber</td>
-                    <td>@i.CreatedTime.ToString("dd/MM/yyyy")</td>
+                    <td>@(i.CreatedTime != null ? i.CreatedTime.ToString() : "N/A")</td>
                     <td>
                         <button class="btn btn-outline-warning" onclick="_staff.LoadForm('@i.Id')">Update</button>
                         <button class="btn btn-outline-danger ps-1" onclick="_staff.Delete('@i.Id')">Delete</button>

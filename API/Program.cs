@@ -34,7 +34,7 @@ namespace API
             {
                 options.AddPolicy(name: "abc", builder =>
                 {
-                    builder.WithOrigins("http://localhost:7114")
+                    builder.WithOrigins("http://localhost:7114", "https://localhost:7173")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();
@@ -81,9 +81,6 @@ namespace API
             builder.Services.AddTransient<IServiceRepo,ServiceRepo>();
             builder.Services.AddTransient<IServiceService, ServiceService>();
 
-            builder.Services.AddTransient<IServiceOrderRepo, ServiceOrderRepo>();
-            builder.Services.AddTransient<IServiceOrderService, ServiceOrderService>();
-
             builder.Services.AddTransient<IServiceOrderDetailRepo, ServiceOrderDetailRepo>();
             builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
 
@@ -96,6 +93,7 @@ namespace API
             builder.Services.AddTransient<IRoomRepo, RoomRepo>();
             builder.Services.AddTransient<IRoomTypeServiceRepository, RoomTypeServiceRepository>();
             builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>();
+            builder.Services.AddTransient<IRoomBookingDetailRepository, RoomBookingDetailRepository>();
             //room
             builder.Services.AddTransient<IRoomCreateService, RoomCreateService>();
             builder.Services.AddTransient<IRoomDeleteService, RoomDeleteService>();
@@ -130,6 +128,7 @@ namespace API
             //RoomBooking
             builder.Services.AddTransient<IRoomBookingGetService, RoomBookingGetService>();
             builder.Services.AddTransient<IRoomBookingUpdateService, RoomBookingUpdateService>();
+            builder.Services.AddTransient<IRoomBookingCreateForCustomerService, RoomBookingCreateForCustomerService>();
             //Staff
             builder.Services.AddTransient<IStaffService, StaffService>();
 
@@ -140,6 +139,7 @@ namespace API
             builder.Services.AddTransient<IPostService, PostService>();
 
             builder.Services.AddTransient<IRoleService, RoleService>();
+            builder.Services.AddTransient<IRoomBookingDetailServiceForCustomer, RoomBookingDetailServiceForCustomer>();
 			builder.Services.AddDbContext<ContinentalDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));

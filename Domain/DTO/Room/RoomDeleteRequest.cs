@@ -13,7 +13,7 @@ namespace Domain.DTO.Room
         public RoomStatus Status { get; set; }
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
-        public DateTimeOffset DeletedTime { get; set; }
+        public DateTimeOffset? DeletedTime { get; set; }
 
         public Models.Room ToRoom()
         {

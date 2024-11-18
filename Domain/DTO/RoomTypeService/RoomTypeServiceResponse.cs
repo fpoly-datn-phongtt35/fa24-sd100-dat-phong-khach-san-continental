@@ -10,15 +10,15 @@ public class RoomTypeServiceResponse
     public Guid ServiceId { get; set; }
     public string? RoomTypeName { get; set; }
     public string? ServiceName { get; set; }
-    public int Amount { get; set; }
+    public int? Amount { get; set; }
     public EntityStatus Status { get; set; }
-    public DateTimeOffset CreatedTime { get; set; }
+    public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
-    public DateTimeOffset ModifiedTime { get; set; }
+    public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
     public bool Deleted { get; set; }
     public Guid? DeletedBy { get; set; }
-    public DateTimeOffset DeletedTime { get; set; }
+    public DateTimeOffset? DeletedTime { get; set; }
 
     public ServiceResponse Service { get; set; } = new ServiceResponse();
     

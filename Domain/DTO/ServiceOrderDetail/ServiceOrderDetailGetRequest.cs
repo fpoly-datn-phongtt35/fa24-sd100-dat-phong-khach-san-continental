@@ -9,6 +9,6 @@ namespace Domain.DTO.ServiceOrderDetail
 {
     public class ServiceOrderDetailGetRequest : PagingRequest
     {
-        public Guid? ServiceOrderId { get; set; }
+        public Guid? RoomBookingId { get; set; }
     }
 }

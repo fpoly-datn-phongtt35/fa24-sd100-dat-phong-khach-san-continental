@@ -2,6 +2,7 @@
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.Enums;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Domain.Services.IServices.IRoom
     public interface IRoomGetService
     {
         Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomRequest);
-        Task<RoomResponse?> GetRoomById(Guid? roomId);
+        Task<RoomResponse?> GetRoomById(Guid roomId);
+        //Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId);
     }
 }

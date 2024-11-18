@@ -1,6 +1,7 @@
 ﻿using Domain.DTO.AmenityRoom;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices.IAmenityRoom;
@@ -68,7 +69,18 @@ namespace API.Controllers
                 throw new NullReferenceException("The list of  rooms could not be retrieved", e);
             }
         }
-
+        //[HttpPost(nameof(GetRoomTypeWithAmenityRoomById))]
+        //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomTypeId)
+        //{
+        //    try
+        //    {
+        //        return await _roomGetService.GetRoomTypeWithAmenityRoomById(roomTypeId);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new NullReferenceException("The list of room types could not be retrieved", e);
+        //    }
+        //}
         [HttpPut(nameof(DeleteRoom))]
         public async Task<RoomResponse?> DeleteRoom(RoomDeleteRequest roomDeleteRequest)
         {

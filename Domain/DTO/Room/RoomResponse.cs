@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Paging;
+﻿using Domain.DTO.Amenity;
+using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
@@ -13,24 +14,26 @@ namespace Domain.DTO.Room
     public class RoomResponse
     {
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public string Address { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public double RoomSize { get; set; }
+        public string? Name { get; set; } = string.Empty;
+        public decimal? Price { get; set; }
+        public string? Address { get; set; }
+        public string? RoomTypeName { get; set; }
+        public string? Description { get; set; } = string.Empty;
+        public double? RoomSize { get; set; }
         public List<string> Images { get; set; } = new List<string>();
         public Guid? FloorId { get; set; }
         public Guid RoomTypeId { get; set; }
         public RoomStatus Status { get; set; } = RoomStatus.Vacant;
 
-        public DateTimeOffset CreatedTime { get; set; }
+        public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
-        public DateTimeOffset ModifiedTime { get; set; }
+        public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
-        public DateTimeOffset DeletedTime { get; set; }
+        public DateTimeOffset? DeletedTime { get; set; }
 
+        public RoomTypeResponse RoomType { get; set; } = new RoomTypeResponse();
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
@@ -113,7 +116,8 @@ namespace Domain.DTO.Room
                 ModifiedBy = room.ModifiedBy,
                 Deleted = room.Deleted,
                 DeletedTime = room.DeletedTime,
-                DeletedBy = room.DeletedBy
+                DeletedBy = room.DeletedBy,
+                RoomTypeName = room.RoomType?.Name,
             };
         }
     }

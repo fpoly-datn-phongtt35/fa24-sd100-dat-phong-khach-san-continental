@@ -1,0 +1,97 @@
+﻿@model ViewClient.Models.DTO.Register.RegisterInputRequest
+
+@{
+    ViewData["Title"] = "User Registration";
+}
+
+<div class="page-content">
+    <div class="form-v7-content">
+        <div class="form-left">
+            <img src="~/img/login.jpeg" alt="form">
+            <p class="text-1">Đăng ký</p>
+            <p class="text-2">Privaci policy & Term of service</p>
+        </div>
+        <form class="form-detail" asp-action="Register" asp-controller="Authoration" method="post" id="myform">
+          
+            <div class="form-row">
+                <label for="username">Tài khoản</label>
+                <input type="text" name="UserName" id="username" class="input-text" required>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-row">
+                <label for="phoneNumber">Số điện thoại</label>
+                <input type="text" name="PhoneNumber" id="phoneNumber" class="input-text">
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input type="text" name="Email" id="email" class="input-text" required>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-row">
+                <label for="password">Mật khẩu</label>
+                <input type="password" name="Password" id="password" class="input-text" required>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-row">
+                <label for="confirm_password">Xác nhận mật khẩu</label>
+                <input type="password" name="ConfirmPassword" id="confirm_password" class="input-text" required>
+            </div>
+            <div class="form-row-last">
+                <button type="submit" class="btn btn-primary btn-block register">Đăng ký</button>
+                <p>Or<a href="/login">Đăng nhập</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+@* <script>
+    // just for the demos, avoids form submit
+    jQuery.validator.setDefaults({
+        debug: true,
+        success: function (label) {
+            label.attr('id', 'valid');
+        },
+    });
+    $("#myform").validate({
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            phoneNumber: {
+                required:true,
+                Number:true
+            },
+            password: "required",
+            confirm_password: {
+                equalTo: "#password"
+            }
+        },
+        messages: {
+            username: {
+                required: "Hãy nhập tài khoản...."
+            },
+            email: {
+                required: "Hãy nhập email...."
+            },
+            phoneNumber: {
+                required: "Hãy nhập số điện thoại..."
+            },
+            password: {
+                required: "Hãy nhập mật khẩu...."
+            },
+            confirm_password: {
+                required: "Hãy nhập vào mật khẩu...",
+                equalTo: "Mật khẩu không trùng lặp!"
+            }
+        }
+    });
+</script> *@

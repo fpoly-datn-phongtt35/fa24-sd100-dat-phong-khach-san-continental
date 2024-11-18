@@ -13,7 +13,7 @@ namespace Domain.Models
         public DateTimeOffset? CheckOutBooking { get; set; }
         public DateTimeOffset? CheckInReality { get; set; }
         public DateTimeOffset? CheckOutReality { get; set; }        
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public decimal Deposit { get; set; } = 0;
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
@@ -27,6 +27,5 @@ namespace Domain.Models
 
         public Room Room { get; set; }
         public RoomBooking RoomBooking { get; set; }
-        public List<ServiceOrder> ServiceOrders { get; set; }
     }
 }

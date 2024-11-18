@@ -59,7 +59,6 @@ namespace Domain.Services.Services
                       select new ServiceOrderDetail
                       {
                           Id = row.Field<Guid>("Id"),
-                          ServiceOrderId = row.Field<Guid>("ServiceOrderId"),
                           ServiceId = row.Field<Guid>("ServiceId"),
                           Amount = row.Field<double>("Amount"),
                           Price = row.Field<decimal>("Price"),
@@ -81,18 +80,17 @@ namespace Domain.Services.Services
             return sv;
         }
 
-        public async Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetailByServiceOrderId(Guid id)
+        public async Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetailByRoomBookingId(Guid id)
         {
             var model = new ResponseData<ServiceOrderDetail>();
             try
             {
-                DataTable table = await _serviceOrderDetailRepo.GetServiceOrderDetailByServiceOrderId(id);
+                DataTable table = await _serviceOrderDetailRepo.GetServiceOrderDetailByRoomBookingId(id);
 
                 model.data = (from row in table.AsEnumerable()
                               select new ServiceOrderDetail
                               {
                                   Id = row.Field<Guid>("Id"),
-                                  ServiceOrderId = row.Field<Guid>("ServiceOrderId"),
                                   ServiceId = row.Field<Guid>("ServiceId"),
                                   Amount = row.Field<double>("Amount"),
                                   Price = row.Field<decimal>("Price"),
@@ -119,7 +117,7 @@ namespace Domain.Services.Services
                               select new ServiceOrderDetail
                               {
                                   Id = row.Field<Guid>("Id"),
-                                  ServiceOrderId = row.Field<Guid>("ServiceOrderId"),
+                                  RoomBookingId = row.Field<Guid>("RoomBookingId"),
                                   ServiceId = row.Field<Guid>("ServiceId"),
                                   Amount = row.Field<double>("Amount"),
                                   Price = row.Field<decimal>("Price"),

@@ -76,13 +76,14 @@ namespace Domain.Migrations
                     b.Property<Guid>("AmenityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Amount")
+                    b.Property<int?>("Amount")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -91,13 +92,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("RoomTypeId")
@@ -124,7 +125,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -133,13 +134,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -164,7 +165,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTime?>("DateOfBirth")
@@ -176,7 +177,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Email")
@@ -200,7 +201,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Password")
@@ -241,7 +242,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("CustomerId")
@@ -253,16 +254,17 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("Rating")
+                    b.Property<int?>("Rating")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<Guid>("RoomBookingId")
@@ -295,7 +297,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -304,13 +306,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -318,7 +320,8 @@ namespace Domain.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfRoom")
+                    b.Property<int?>("NumberOfRoom")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -345,7 +348,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -354,13 +357,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("PostTypeId")
@@ -400,7 +403,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -409,13 +412,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Status")
@@ -440,7 +443,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -490,7 +493,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -499,7 +502,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
@@ -518,7 +521,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -526,10 +529,12 @@ namespace Domain.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("RoomSize")
+                    b.Property<double?>("RoomSize")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<Guid>("RoomTypeId")
@@ -559,7 +564,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("CustomerId")
@@ -571,13 +576,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("StaffId")
@@ -585,6 +590,15 @@ namespace Domain.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalRoomPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalServicePrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -601,22 +615,26 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CheckInBooking")
+                    b.Property<DateTimeOffset?>("CheckInBooking")
+                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("CheckInReality")
+                    b.Property<DateTimeOffset?>("CheckInReality")
+                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("CheckOutBooking")
+                    b.Property<DateTimeOffset?>("CheckOutBooking")
+                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("CheckOutReality")
+                    b.Property<DateTimeOffset?>("CheckOutReality")
+                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -625,7 +643,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Deposit")
@@ -636,10 +654,11 @@ namespace Domain.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("RoomBookingId")
@@ -669,7 +688,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -678,7 +697,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
@@ -686,13 +705,14 @@ namespace Domain.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MaximumOccupancy")
+                    b.Property<int?>("MaximumOccupancy")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -714,13 +734,14 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Amount")
+                    b.Property<int?>("Amount")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -729,13 +750,13 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("RoomTypeId")
@@ -765,7 +786,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -774,7 +795,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
@@ -785,7 +806,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -812,64 +833,20 @@ namespace Domain.Migrations
                     b.ToTable("Service", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.ServiceOrder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("DeletedTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("ModifiedTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid?>("RoomBookingDetailId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("RoomBookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomBookingDetailId");
-
-                    b.HasIndex("RoomBookingId");
-
-                    b.ToTable("ServiceOrder", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Models.ServiceOrderDetail", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Amount")
+                    b.Property<double?>("Amount")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -878,22 +855,27 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("RoomBookingId");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ServiceOrderId")
+                    b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -901,9 +883,9 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("RoomBookingId");
 
-                    b.HasIndex("ServiceOrderId");
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("ServiceOrderDetail", (string)null);
                 });
@@ -917,7 +899,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -926,17 +908,16 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -961,7 +942,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -1005,7 +986,8 @@ namespace Domain.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid?>("RoleId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -1038,7 +1020,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -1047,7 +1029,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
@@ -1058,13 +1040,14 @@ namespace Domain.Migrations
                     b.Property<int>("DiscountType")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("DiscountValue")
+                    b.Property<decimal?>("DiscountValue")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -1094,7 +1077,7 @@ namespace Domain.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreatedTime")
+                    b.Property<DateTimeOffset?>("CreatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("Deleted")
@@ -1103,22 +1086,24 @@ namespace Domain.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DeletedTime")
+                    b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("EndDate")
+                    b.Property<DateTimeOffset?>("EndDate")
+                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("ModifiedTime")
+                    b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("RoomBookingId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("StartDate")
+                    b.Property<DateTimeOffset?>("StartDate")
+                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Status")
@@ -1297,36 +1282,23 @@ namespace Domain.Migrations
                     b.Navigation("ServiceType");
                 });
 
-            modelBuilder.Entity("Domain.Models.ServiceOrder", b =>
-                {
-                    b.HasOne("Domain.Models.RoomBookingDetail", null)
-                        .WithMany("ServiceOrders")
-                        .HasForeignKey("RoomBookingDetailId");
-
-                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
-                        .WithMany("ServiceOrders")
-                        .HasForeignKey("RoomBookingId");
-
-                    b.Navigation("RoomBooking");
-                });
-
             modelBuilder.Entity("Domain.Models.ServiceOrderDetail", b =>
                 {
+                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
+                        .WithMany("ServiceOrderDetails")
+                        .HasForeignKey("RoomBookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Models.Service", "Service")
                         .WithMany("ServiceOrderDetails")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.ServiceOrder", "ServiceOrder")
-                        .WithMany("ServiceOrderDetails")
-                        .HasForeignKey("ServiceOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("RoomBooking");
 
                     b.Navigation("Service");
-
-                    b.Navigation("ServiceOrder");
                 });
 
             modelBuilder.Entity("Domain.Models.Staff", b =>
@@ -1402,14 +1374,9 @@ namespace Domain.Migrations
 
                     b.Navigation("RoomBookingDetails");
 
-                    b.Navigation("ServiceOrders");
+                    b.Navigation("ServiceOrderDetails");
 
                     b.Navigation("VoucherDetails");
-                });
-
-            modelBuilder.Entity("Domain.Models.RoomBookingDetail", b =>
-                {
-                    b.Navigation("ServiceOrders");
                 });
 
             modelBuilder.Entity("Domain.Models.RoomType", b =>
@@ -1425,11 +1392,6 @@ namespace Domain.Migrations
                 {
                     b.Navigation("RoomTypeServices");
 
-                    b.Navigation("ServiceOrderDetails");
-                });
-
-            modelBuilder.Entity("Domain.Models.ServiceOrder", b =>
-                {
                     b.Navigation("ServiceOrderDetails");
                 });
 

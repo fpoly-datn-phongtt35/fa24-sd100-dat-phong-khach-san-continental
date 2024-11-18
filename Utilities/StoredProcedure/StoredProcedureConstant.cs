@@ -23,12 +23,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetServiceById = "SP_GetServiceById";
         public const string SP_UpdateService = "SP_UpdateService";
         public const string SP_GetServiceByTypeId = "SP_GetServiceByTypeId";
-        //service order
-        public const string SP_InsertServiceOrder = "SP_InsertServiceOrder";
-        public const string SP_GetListServiceOrder = "SP_GetListServiceOrder";
-        public const string SP_DeleteServiceOrder = "SP_DeleteServiceOrder";
-        public const string SP_UpdateServiceOrder = "SP_UpdateServiceOrder";
-        public const string SP_GetServiceOrderById = "SP_GetServiceOrderById";
+
         //service order detail
         public const string SP_InsertServiceOrderDetail = "SP_InsertServiceOrderDetail";
         public const string SP_GetListServiceOrderDetail = "SP_GetListServiceOrderDetail";
@@ -136,5 +131,11 @@ namespace Utilities.StoredProcedure
         public const string SP_GetFilteredRoomBookings = "SP_GetFilteredRoomBookings";
         public const string SP_GetRoomBookingById = "SP_GetRoomBookingById";
         public const string SP_UpdateRoomBooking = "SP_UpdateRoomBooking";
+        public const string SP_BookRoomForCustomer = "SP_BookRoomForCustomer";
+        // RoomBookingDetail
+        public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
+        //Client 
+        public const string SP_ClientLogin = "SP_ClientLogin";
+        public const string SP_ClientRegister = "SP_ClientRegister";
     }
 }

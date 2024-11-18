@@ -1,10 +1,12 @@
-﻿using Domain.DTO.Customer;
+﻿using Domain.DTO.Athorization;
+using Domain.DTO.Customer;
 using Domain.DTO.ServiceType;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using Utilities;
 using Utilities.StoredProcedure;
 
 namespace Domain.Repositories.Repository
@@ -26,12 +28,12 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@UserName", request.UserName),
-                    new SqlParameter("@Password", request.Password),
+                    new SqlParameter("@Password", ! string.IsNullOrEmpty(request.Password) ? PasswordHashingHelper.HashPassword(request.Password) : PasswordHashingHelper.HashPassword("123456")),
                     new SqlParameter("@FirstName", string.IsNullOrEmpty(request.FirstName) ? DBNull.Value : (object)request.FirstName),
                     new SqlParameter("@LastName", string.IsNullOrEmpty(request.LastName) ? DBNull.Value : (object)request.LastName),
                     new SqlParameter("@Email", request.Email),
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
-                    new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
+                    new SqlParameter("@Gender", SqlDbType.Int) { Value = request.Gender },
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedTime", request.CreatedTime),
@@ -95,12 +97,11 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Id", request.Id),
                     new SqlParameter("@UserName", request.UserName),
-                    new SqlParameter("@Password", request.Password),
                     new SqlParameter("@FirstName", string.IsNullOrEmpty(request.FirstName) ? DBNull.Value : (object)request.FirstName),
                     new SqlParameter("@LastName", string.IsNullOrEmpty(request.LastName) ? DBNull.Value : (object)request.LastName),
                     new SqlParameter("@Email", request.Email),
                     new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
-                    new SqlParameter("@Gender", request.Gender.HasValue ? (object)request.Gender.Value : DBNull.Value),
+                    new SqlParameter("@Gender", SqlDbType.Int) { Value = request.Gender },
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@ModifiedTime",DateTime.Now),
@@ -134,6 +135,52 @@ namespace Domain.Repositories.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+       
+        public async Task<DataTable> ClientLogin(LoginSubmitModel request)
+        {
+            try
+            {
+                string hashedPassword = PasswordHashingHelper.HashPassword(request.Password);
+
+
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+            new SqlParameter("@UserName", request.UserName),
+            new SqlParameter("@Password", hashedPassword)
+                };
+
+                return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_ClientLogin, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<DataTable> ClientRegister(RegisterSubmitModel register)
+        {
+            try
+            {
+                string hashedPassword = PasswordHashingHelper.HashPassword(register.Password);
+
+
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {   
+                    new SqlParameter("@UserName", register.UserName),
+                    new SqlParameter("@Password", hashedPassword),
+                    new SqlParameter("@Email", register.Email),
+                    new SqlParameter("@PhoneNumber", register.PhoneNumber),
+                   new SqlParameter("@CreatedTime", DateTimeOffset.Now),
+                };
+
+                return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_ClientRegister, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }
