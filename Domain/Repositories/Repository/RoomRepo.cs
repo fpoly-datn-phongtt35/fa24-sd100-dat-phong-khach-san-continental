@@ -197,9 +197,7 @@ namespace Domain.Repositories.Repository
                 new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
                 new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = room.CreatedTime },
                 new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = room.CreatedBy },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = room.ModifiedTime },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = room.DeletedTime }
+                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted }
                 };
 
                 await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoom, parameters);
