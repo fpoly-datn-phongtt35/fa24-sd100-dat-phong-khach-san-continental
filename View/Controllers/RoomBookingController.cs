@@ -17,6 +17,7 @@ public class RoomBookingController : Controller
     private readonly ICustomerService _customerService;
     private readonly IRoomGetService _roomGetService;
     private readonly IRoomBookingGetService _roomBookingService;
+    private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
     public RoomBookingController(ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService)
     {

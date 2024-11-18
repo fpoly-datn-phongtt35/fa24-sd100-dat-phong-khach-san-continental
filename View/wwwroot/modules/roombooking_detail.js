@@ -44,6 +44,7 @@
     else
     {
         $("#Client_Id").select2();
+        _roombooking_detail.LoadDetailCustomer($("#Client_Id").val());
     }
 
     $("#room_Id").select2({
