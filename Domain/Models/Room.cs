@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.RoomBookingDetail;
+using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models

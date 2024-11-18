@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.DTO.RoomBookingDetail;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Models
 {
