@@ -77,7 +77,22 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+        public async Task<DataTable> GetListRoomBookingDetailByRoomBookingId(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@RoomBookingId ", id != null ? id : DBNull.Value ),
+                };
 
+                return _worker.GetDataTable(StoredProcedureConstant.SP_GetListRoomBookingDetailByRoomBookingId, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<DataTable> GetById(Guid id)
         {
             try

@@ -82,7 +82,31 @@ namespace Domain.Services.Services
             }
             return roomBookingDetail;
         }
-
+        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id)
+        {
+            List<RoomBookingDetailGetByIdRoomBooking> roomBookingDetail = new List<RoomBookingDetailGetByIdRoomBooking>();
+            try
+            {
+                DataTable table = await _roomBookingDetailRepository.GetListRoomBookingDetailByRoomBookingId(id);
+                roomBookingDetail = (from row in table.AsEnumerable()
+                                     select new RoomBookingDetailGetByIdRoomBooking
+                                     {
+                                         RoomBookingDetailId = row.Field<Guid>("RoomBookingDetailId"),
+                                         RoomId = row.Field<Guid>("RoomId"),
+                                         CheckInBooking = row.Field<DateTimeOffset>("CheckInBooking"),
+                                         CheckOutBooking = row.Field<DateTimeOffset>("CheckOutBooking"),
+                                         CheckInReality = row.Field<DateTimeOffset>("CheckInReality"),
+                                         CheckOutReality = row.Field<DateTimeOffset>("CheckOutReality"),
+                                         Price = row.Field<decimal?>("Price"),
+                                         Name = row.Field<string>("Name")
+                                     }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return roomBookingDetail;
+        }
         public async Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request)
         {
             try
