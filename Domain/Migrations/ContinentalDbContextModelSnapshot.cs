@@ -867,7 +867,7 @@ namespace Domain.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("RoomBookingId")
+                    b.Property<Guid>("RoomBookingId");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

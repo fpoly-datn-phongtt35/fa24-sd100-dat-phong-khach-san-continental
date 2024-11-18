@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -24,6 +25,15 @@ namespace API.Controllers
         {
             try
             {
+                var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Guid? userId = null;
+
+                if (Guid.TryParse(userIdString, out var parsedUserId))
+                {
+                    userId = parsedUserId;
+                }
+
+                request.CreatedBy = userId;
                 return await _CustomerRepo.AddCustomer(request);
             }
             catch (Exception ex)

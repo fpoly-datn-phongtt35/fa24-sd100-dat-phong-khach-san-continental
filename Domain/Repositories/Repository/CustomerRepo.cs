@@ -97,7 +97,6 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Id", request.Id),
                     new SqlParameter("@UserName", request.UserName),
-                    new SqlParameter("@Password", request.Password),
                     new SqlParameter("@FirstName", string.IsNullOrEmpty(request.FirstName) ? DBNull.Value : (object)request.FirstName),
                     new SqlParameter("@LastName", string.IsNullOrEmpty(request.LastName) ? DBNull.Value : (object)request.LastName),
                     new SqlParameter("@Email", request.Email),
