@@ -1,0 +1,68 @@
+﻿@using Domain.DTO.Paging
+@using Domain.DTO.RoomBooking
+@using View.Models.Paging
+@{
+    Layout = null;
+}
+@model ResponseData<RoomBookingResponse>
+
+<table class="table" style="color: whitesmoke">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Khách hàng</th>
+            <th>Nhân viên</th>
+            <th>Loại đặt phòng</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model!= null && Model.data != null)
+        {
+            if(Model.data.Count > 0)
+            {
+                int STT = 0;
+                if (Model.CurrentPage == 1)
+                {
+                    STT = 1;
+                }
+                else
+                {
+                    STT = ((Model.CurrentPage - 1) * Model.PageSize) + 1;
+                }
+                foreach(var i in Model.data)
+                {
+                    <tr class="text-white">
+                        <th scope="row">@STT</th>
+                        <td>@i.CustomerFullName</td>
+                        <td>@i.StaffFullName</td>
+                        <td>@i.BookingType</td>
+                        <td>@i.Status</td>
+                        <td class="d-flex">
+                            <a class="text-decoration-underline" onclick="_roomBooking.RedirecDetail('@i.Id','@i.CustomerId')" style="color:deepskyblue;cursor:pointer">Update</a>
+                            <a class="ms-2 text-decoration-underline" style="color:darkred;cursor:pointer">Delete</a>
+                        </td>
+                    </tr>
+                    STT++;
+                }
+            }
+        }
+    </tbody>
+</table>
+@if (Model != null)
+{
+    @await Component.InvokeAsync("Paging", new
+        {
+            pageModel = new Paging()
+    {
+        TotalRecord = Model.totalRecord,
+        TotalPage = Model.totalPage,
+        CurrentPage = Model.CurrentPage,
+        PageSize = Model.PageSize,
+        RecordName = "Góp ý",
+        PageAction = "_roomBooking.OnPanging({0})",
+        PageAction1 = "_roomBooking.OnChangePageSize()"
+    }
+        })
+}

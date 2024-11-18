@@ -7,75 +7,47 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Danh sách Đặt phòng</h1>
-
-<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center">
-        <div class="form-group me-2">
-            <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
-                   value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+<div class="m-2">
+    <h1>Danh sách Đặt phòng</h1>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex">
+            <div class="input-group input-group-sm mb-3">
+                <input type="text" id="txtSearch" oninput="_roomBooking.OnInputTxtSearch()" class="form-control" aria-label="Sizing example input" placeholder="Tên khách hàng" aria-describedby="inputGroup-sizing-sm">
+            </div>
+            <div style="min-width:200px" class="ms-2">
+                <select class="select2" id="Staff_Id" onchange="_roomBooking.OnChangeStaff()" style="width:100% !important">
+                </select>
+            </div>
+            <div class="ms-2" style="width:330px">
+                <select name="status" onchange="_roomBooking.OnChangeStatus()" class="form-select p-lg-1" id="status">
+                    <option value="">Chọn trạng thái</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                    {
+                        // Ép kiểu status về EntityStatus
+                        var statusEnum = (EntityStatus)status;
+                        <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                            @StatusHelper.DisplayNameForEnum(statusEnum)
+                        </option>
+                    }
+                </select>
+            </div>
         </div>
-        <div class="form-group me-2">
-            <select name="status" class="form-select" id="status">
-                <option value="">Chọn trạng thái</option>
-                @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
-                {
-                    // Ép kiểu status về EntityStatus
-                    var statusEnum = (EntityStatus)status;
-                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                        @StatusHelper.DisplayNameForEnum(statusEnum)
-                    </option>
-                }
-            </select>
+        <div class="d-flex justify-content-end">
+            <a onclick="_roomBooking.RedirecDetail()">
+                <button class="btn btn-outline-success">
+                    Đặt Phòng +
+                </button>
+            </a>
         </div>
-        <button type="submit" class="btn btn-light">Tìm kiếm</button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
     </div>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-outline-success">Đặt Phòng +</button>
+    <div id="ListRoomBooking" class="">
+        <div class="d-flex justify-content-center pt-5">
+            <div id="loading-spinner" style="width: 5rem; height: 5rem;" class="spinner-border text-success pt-5" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
-</form>
-<table class="table" style="color: whitesmoke">
-    <thead>
-    <tr>
-        <th>Khách hàng</th>
-        <th>Nhân viên</th>
-        <th>Loại đặt phòng</th>
-        <th>Trạng thái</th>
-        <th>Chức năng</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var roomBooking in Model.data)
-    {
-        <tr>
-            <td style="width: 15%">@roomBooking.CustomerFullName</td>
-            <td style="width: 15%">@roomBooking.StaffFullName</td>
-            <td style="width: 10%">@roomBooking.BookingType</td>
-            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(roomBooking.Status)</td>
-            <td style="width: 30%">
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomBookingId = roomBooking.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { roomBookingId = roomBooking.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Delete", "Delete", new { roomBookingId = roomBooking.Id }, new { @class = "btn btn-danger" })
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-<div>
-    <nav>
-        <ul class="pagination">
-            @for (var i = 1; i <= Model.totalPage; i++)
-            {
-                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new {
-                        pageIndex = i,
-                        pageSize = Model.PageSize,
-                        searchString = Context.Request.Query["searchString"].ToString(),
-                        status = Context.Request.Query["status"].ToString()})">@i</a>
-                </li>
-            }
-        </ul>
-    </nav>
 </div>
+@section scripts {
+    <script asp-append-version="true" src="/modules/roombooking.js"></script>
+}

@@ -44,9 +44,11 @@
         }
     </tbody>
 </table>
-@await Component.InvokeAsync("Paging", new
-    {
-        pageModel = new Paging()
+@if(Model != null)
+{
+    @await Component.InvokeAsync("Paging", new
+        {
+            pageModel = new Paging()
     {
         TotalRecord = Model.totalRecord,
         TotalPage = Model.totalPage,
@@ -56,4 +58,5 @@
         PageAction = "_staff.OnPanging({0})",
         PageAction1 = "_staff.OnChangePageSize()"
     }
-    })
+        })
+}
