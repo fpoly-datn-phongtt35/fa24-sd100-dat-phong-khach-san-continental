@@ -17,7 +17,7 @@ namespace ViewClient.Repositories.Repository
 
         public async Task<Guid> CreateRoomBooking(RoomBookingCreateRequestForCustomer request)
         {
-            string url = $"https://localhost:7130/api/RooomBooking/CreateRoomBookingForCustomer";
+            string url = $"https://localhost:7130/api/RoomBooking/CreateRoomBookingForCustomer";
             var response = await _httpClient.PostAsJsonAsync(url, request);
 
             if (response.IsSuccessStatusCode)

@@ -627,7 +627,96 @@ main {
     }
 }
 
+h4 {
+    color: #0056b3;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
+hr {
+    border: 1px solid #0056b3;
+    margin: 20px 0;
+}
+
+.d-flex {
+    display: flex;
+    align-items: flex-start; /* Căn chỉnh các phần tử theo chiều dọc */
+}
+
+.img-column {
+    flex: 1; /* Chiếm không gian còn lại */
+    margin-right: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
+}
+
+dt {
+    font-weight: bold;
+    color: #0056b3;
+    margin-bottom: 5px;
+}
+
+dd {
+    margin-bottom: 20px;
+    padding-left: 10px;
+    border-left: 3px solid #0056b3;
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
+}
+
+div.info-row:hover {
+    background-color: #e7f1ff; /* Màu nền khi hover */
+    transform: scaleY(0.85);
+}
+
+.img-container-details {
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    height: 350px; /* Chiều cao cố định cho hình ảnh */
+    overflow: hidden;
+    margin: 5px 0; /* Khoảng cách giữa các hình ảnh */
+}
+
+img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+/*.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+    .btn:hover {
+        background-color: #004494;
+    }*/
+
+.amenities-column {
+    margin-top: 20px; /* Khoảng cách giữa ảnh và tiện ích */
+}
+
+.amenity-item {
+    padding: 5px;
+    border: 1px solid #0056b3; /* Đường viền cho tiện ích */
+    border-radius: 5px; /* Bo góc */
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
+}
+
+    .amenity-item:hover {
+        background-color: #e7f1ff; /* Màu nền khi hover */
+        transform: scale(1.1);
+    }
+
+    .amenity-item strong {
+        color: #0056b3; /* Màu chữ cho tên tiện ích */
+    }
 
 /*footer*/
 .footer {
