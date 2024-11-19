@@ -3,10 +3,13 @@ using Domain.DTO.Customer;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
+using Domain.DTO.RoomBookingDetail;
+using Domain.DTO.Service;
 using Domain.Models;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
+using Domain.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using WEB.CMS.Customize;
 
@@ -16,14 +19,65 @@ public class RoomBookingController : Controller
 {
     private readonly ICustomerService _customerService;
     private readonly IRoomGetService _roomGetService;
+    private readonly IServiceService _serviceService;
     private readonly IRoomBookingGetService _roomBookingService;
+    private readonly IRoomBookingCreateService _roomBookingCreateService;
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-    public RoomBookingController(ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService)
+    public RoomBookingController(IRoomBookingCreateService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
+        _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
+        _roomBookingCreateService = roomBookingCreateService;
         _roomBookingService = roomBookingGetService;
+        _serviceService = serviceService;
         _roomGetService = roomGetService;
+    }
+
+    public async Task<List<Service>> GetServiceSuggestion(string txt_search) 
+    {
+        try
+        {
+            ServiceGetRequest request = new ServiceGetRequest();
+            if (txt_search != null) 
+            {
+                request.Name = txt_search;
+            }
+            var response = await _serviceService.GetServices(request);
+            return response.data;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<int> Submit(RoomBookingCreateRequest bookingCreateRequest,List<RoomBookingDetailCreateRequest> lstUpsert)
+    {
+        try
+        {
+            var IdRoomBooking = await _roomBookingCreateService.CreateRoomBooking(bookingCreateRequest);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return -1;
+        }
+    }
+
+    public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRoomRelated(Guid Id) 
+    {
+        try
+        {
+            var response = await _roomBookingDetailServiceForCustomer.GetListRoomBookingDetailByRoomBookingId(Id);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
     }
 
     [Route("/BookingRoom/Id={IdRoomBooking}&&Client={IdClient}")]
