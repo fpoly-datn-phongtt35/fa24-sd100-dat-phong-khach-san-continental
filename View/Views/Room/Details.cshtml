@@ -8,64 +8,99 @@
 
 <h4>Chi tiết Phòng</h4>
 
-<div>
+<div class="container">
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayName("Hình ảnh")</dt>
-        <dd class="col-sm-10">
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                <div class="d-flex justify-content-center">
-                    @foreach (var img in Model.Images) // Lặp qua danh sách hình ảnh trong Model
-                    {
-                        var extension = System.IO.Path.GetExtension(img);
-                        if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+    <dl class="row ">
+
+        <!-- Phần Hình ảnh -->
+        <div class="row ">
+            <dt class="col-4 mb-2">@Html.DisplayName("Hình ảnh")</dt>
+            <dd class="col-8 mb-2">
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div class="d-flex justify-content-center">
+                        @foreach (var img in Model.Images)
                         {
-                            <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
-                                <img class="responsive-img" src="~/images/@img" alt="Hình ảnh" style="object-fit: cover; width: 100%; height: 100%;">
-                            </div>
+                            var extension = System.IO.Path.GetExtension(img);
+                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                            {
+                                <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
+                                    <img class="responsive-img" src="~/images/@img" alt="Hình ảnh" style="object-fit: cover; width: 100%; height: 100%;">
+                                </div>
+                            }
                         }
+                    </div>
+                }
+                else
+                {
+                    <p>Không có hình ảnh</p>
+                }
+            </dd>
+            <div class="row mb-2">
+                <dt class="col-4 mb-2">@Html.DisplayName("Tên loại phòng")</dt>
+                <dd class="col-8 mb-2">
+                    @{
+                        var roomTypes = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
+                        var roomType = roomTypes?.FirstOrDefault(s => s.Id == Model.RoomTypeId);
                     }
-                </div>
-            }
-            else
-            {
-                <p>Không có hình ảnh</p>
-            }
-        </dd>
-        <br>
-        <dt class="col-sm-2">@Html.DisplayName("Tên loại phòng ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomTypeId)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Tên ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("giá ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Price)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Địa chỉ ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Address)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Mô tả")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Room Size ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoomSize)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Số tầng ")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.FloorId)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
-        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
+                    @roomType?.Name
+                </dd>
+            </div>
+
+            <div class="row mb-2">
+                <dt class="col-4 mb-2">@Html.DisplayName("Tầng")</dt>
+                <dd class="col-8 mb-2">
+                    @{
+                        var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
+                        var floor = floorList?.FirstOrDefault(s => s.Id == Model.FloorId);
+                    }
+                    @floor?.Name
+                </dd>
+            </div>
+
+            <div class="row mb-2">
+                <dt class="col-4 mb-2">@Html.DisplayName("Tên")</dt>
+                <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Name)</dd>
+            </div>
+            <dt class="col-4 mb-2">@Html.DisplayName("Giá")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Price)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Địa chỉ")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Address)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Mô tả")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Description)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Room Size")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.RoomSize)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Trạng thái")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Status)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Thời gian tạo")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.CreatedTime)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Được tạo bởi")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.CreatedBy)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Thời gian sửa")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.ModifiedTime)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Được sửa bởi")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.ModifiedBy)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Xóa")</dt>
+            <dd class="col-8 mb-2">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Thời gian xóa")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.DeletedTime)</dd>
+
+            <dt class="col-4 mb-2">@Html.DisplayName("Được xóa bởi")</dt>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.DeletedBy)</dd>
+        </div>
     </dl>
 </div>
+
 <div>
     <hr />
     <h3>Danh sách tiện ích của @Model.Name</h3>
@@ -103,10 +138,10 @@
 
 <style>
     dt {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
 
     dd {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 </style>
