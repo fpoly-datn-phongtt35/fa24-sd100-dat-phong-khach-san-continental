@@ -24,8 +24,7 @@ public class AmenityRoomAddService : IAmenityRoomAddService
         var amenityRoom = amenityRoomAddRequest.ToAmenityRoom();
         
         amenityRoom.Deleted = false;
-        amenityRoom.DeletedTime = default;
-        amenityRoom.ModifiedTime = default;
+        amenityRoom.ModifiedTime = null;
 
         await _amenityRoomRepository.AddAmenityRoom(amenityRoom);
 

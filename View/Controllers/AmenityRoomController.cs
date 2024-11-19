@@ -106,7 +106,7 @@ public class AmenityRoomController : Controller
     }
 
     public async Task<IActionResult> Index(string? searchString = null, Guid? roomTypeId = null, 
-        EntityStatus? status = null, int pageIndex = 1, int pageSize = 5)
+        EntityStatus? status = null, int pageIndex = 1, int pageSize = 10)
     {
         await LoadAmenitiesAndRoomTypes();
         var amenityRoomGetRequest = new AmenityRoomGetRequest()

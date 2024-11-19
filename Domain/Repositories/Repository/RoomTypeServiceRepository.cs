@@ -103,20 +103,19 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@ServiceId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ServiceId },
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.RoomTypeId },
-                new SqlParameter("@Amount", SqlDbType.Int) { Value = roomTypeService.Amount },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = roomTypeService.Status },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = roomTypeService.CreatedBy },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.ModifiedTime },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.DeletedTime },
+                new("@ServiceId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ServiceId },
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.RoomTypeId },
+                new("@Amount", SqlDbType.Int) { Value = roomTypeService.Amount },
+                new("@Status", SqlDbType.Int) { Value = roomTypeService.Status },
+                new("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = roomTypeService.CreatedBy },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.ModifiedTime },
+                new("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted },
                 new("@NewRoomTypeServiceId", SqlDbType.UniqueIdentifier) {Direction = ParameterDirection.Output}
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomTypeService, parameters);
-            roomTypeService.Id = (Guid)parameters[9].Value;
+            roomTypeService.Id = (Guid)parameters[8].Value;
             
             return roomTypeService;
         }
@@ -137,13 +136,14 @@ public class RoomTypeServiceRepository : IRoomTypeServiceRepository
             
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeService.Id },
-                new SqlParameter("@ServiceId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ServiceId },
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.RoomTypeId },
-                new SqlParameter("@Amount", SqlDbType.Int) { Value = roomTypeService.Amount },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = roomTypeService.Status },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.ModifiedTime },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ModifiedBy }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomTypeService.Id },
+                new("@ServiceId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ServiceId },
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = roomTypeService.RoomTypeId },
+                new("@Amount", SqlDbType.Int) { Value = roomTypeService.Amount },
+                new("@Status", SqlDbType.Int) { Value = roomTypeService.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomTypeService.ModifiedTime },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomTypeService.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = roomTypeService.Deleted }
             };
             
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoomTypeService, parameters);

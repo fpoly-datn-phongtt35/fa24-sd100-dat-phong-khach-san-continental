@@ -10,7 +10,7 @@
     var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
 }
-<h4 style="margin-top:30px;">Đặt phòng của bạn</h4>
+<h4 style="margin-top:150px;">Đặt phòng của bạn</h4>
 
 <div class="d-flex">
     <div class="img-column me-3">
@@ -34,11 +34,11 @@
             <p>Không có hình ảnh</p>
         }
         <div class="amenities-column mt-3">
-            <h5>Diện tích phòng: <span style="font-weight: normal;">@Html.DisplayFor(model => model.RoomSize) m²</span></h5>
-            <h5>
+            <dt>Diện tích phòng: <span style="font-weight: normal;">@Html.DisplayFor(model => model.RoomSize) m²</span></dt>
+            <dt>
                 Tiện ích phòng của phòng:
                 <span style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight:bold;">@Html.DisplayFor(model => model.Name)</span>
-            </h5>
+            </dt>
             @if (Model.RoomType.AmenityRooms != null && Model.RoomType.AmenityRooms.Any())
             {
                 <div class="row">
@@ -80,8 +80,8 @@
                 <dd>@Html.DisplayFor(model => model.Description)</dd>
             </div>
             <div class="info-row">
-                <dt>@Html.DisplayName("Diện tích phòng")</dt>
-                <dd>@Html.DisplayFor(model => model.RoomSize) m²</dd>
+                <dt>@Html.DisplayName("Số lượng người có thể ở")</dt>
+                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.MaximumOccupancy người</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Tầng của phòng")</dt>
@@ -97,97 +97,47 @@
 
 <div>
     <a asp-action="Index" asp-controller="Room" class="btn btn-outline-secondary">Quay lại</a>
+    <button type="button" class="btn btn-primary" id="openModalButton">
+       Đặt phòng
+    </button>
 </div>
-
-<style>
-    h4 {
-        color: #0056b3;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-
-    hr {
-        border: 1px solid #0056b3;
-        margin: 20px 0;
-    }
-
-    .d-flex {
-        display: flex;
-        align-items: flex-start; /* Căn chỉnh các phần tử theo chiều dọc */
-    }
-
-    .img-column {
-        flex: 1; /* Chiếm không gian còn lại */
-        margin-right: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
-    }
-
-    dt {
-        font-weight: bold;
-        color: #0056b3;
-        margin-bottom: 5px;
-    }
-
-    dd {
-        margin-bottom: 20px;
-        padding-left: 10px;
-        border-left: 3px solid #0056b3;
-        transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
-    }
-
-        div.info-row:hover {
-            background-color: #e7f1ff; /* Màu nền khi hover */
-        transform: scaleY(0.85);
-        }
-
-    .img-container-details {
-        width: 100%; /* Chiếm toàn bộ chiều rộng */
-        height: 350px; /* Chiều cao cố định cho hình ảnh */
-        overflow: hidden;
-        margin: 5px 0; /* Khoảng cách giữa các hình ảnh */
-    }
-
-    img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-        border-radius: 5px;
-    }
-
-    .btn {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #0056b3;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-        .btn:hover {
-            background-color: #004494;
-        }
-
-    .amenities-column {
-        margin-top: 20px; /* Khoảng cách giữa ảnh và tiện ích */
-    }
-
-    .amenity-item {
-        padding: 5px;
-        border: 1px solid #0056b3; /* Đường viền cho tiện ích */
-        border-radius: 5px; /* Bo góc */
-        background-color: #f8f9fa; /* Màu nền nhẹ */
-        transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
-    }
-
-        .amenity-item:hover {
-            background-color: #e7f1ff; /* Màu nền khi hover */
-            transform: scale(1.1);
-        }
-
-        .amenity-item strong {
-            color: #0056b3; /* Màu chữ cho tên tiện ích */
-        }
-</style>
+<!-- Modal cho đặt phòng -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel">Đặt Phòng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="validationMessage" style="color: red;"></div>
+            <div class="modal-body">
+                <h6>@Model.Name</h6>
+                <p>Giá: @Model.Price VNĐ/đêm</p>
+                
+                <div class="mb-3">
+                    <label for="checkInBooking" class="form-label">Check-In</label>
+                    <input type="datetime-local" class="form-control" id="checkInBooking" required />
+                </div>
+                <div class="mb-3">
+                    <label for="checkOutBooking" class="form-label">Check-Out</label>
+                    <input type="datetime-local" class="form-control" id="checkOutBooking" required />
+                </div>
+                <div id="validationMessage" class="text-danger"></div>
+                <p id="totalPayment">Thanh toán: 0 VNĐ</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="confirmBookingButton">Xác Nhận Đặt Phòng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var isUserLoggedIn = @User.Identity.IsAuthenticated.ToString().ToLower();
+    var roomId = '@Model.Id';
+    var roomPrice = @Model.Price;
+    var bookingUrl = '@Url.Action("RoomBooking", "RoomBooking")';
+</script>
+@section scripts {
+    <script asp-append-version="true" src="~/module/roomBooking.js"></script>
+}

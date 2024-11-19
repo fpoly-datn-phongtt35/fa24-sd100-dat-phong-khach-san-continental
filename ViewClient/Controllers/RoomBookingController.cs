@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.DTO.Room;
+using Domain.DTO.RoomBooking;
+using Domain.DTO.RoomBookingDetail;
+using Domain.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using ViewClient.Repositories.IRepository;
 using ViewClient.Repositories.Repository;
@@ -8,33 +14,77 @@ namespace ViewClient.Controllers
     public class RoomBookingController : Controller
     {
         private readonly IRoombooking _roomBookingRepo;
-        private readonly HttpClient _httpClient;
-        public RoomBookingController(IRoombooking roomBookingRepo, HttpClient httpClient)
+        private readonly IRoomBookingDetail _roomBookingDetailRepo;
+        private readonly IRoom _roomRepo;
+        public RoomBookingController(IRoombooking roomBookingRepo, 
+            IRoomBookingDetail roomBookingDetailRepo, 
+            IRoom roomRepo)
         {
             _roomBookingRepo = roomBookingRepo;
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://localhost:7130/");
+            _roomBookingDetailRepo = roomBookingDetailRepo;
+            _roomRepo = roomRepo;
         }
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        //public IActionResult ModalPartial(Guid roomId, RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
+        //{
+        //    var room = _roomRepo.GetRoomById(roomId);
+
+        //    var model = new { Room = room, BookingDetails = roomBookingDetailCreateRequest };
+        //    return PartialView("ModalPartial", model);
+        //}
+
         [HttpPost]
-        public IActionResult Index()
+        public async Task<IActionResult> RoomBooking(RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
-            var _UserLogin = Guid.Empty;
-            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            if (HttpContext.Session.GetString("UserName") == null)
             {
-                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                if (_UserLogin == Guid.Empty) 
-                {
-                    
-                }
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt phòng.";
+                return RedirectToAction("Login", "Authoration");
             }
-            
-            return View();
+
+            var _UserLogin = Guid.Empty;
+            _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+
+            if (_UserLogin != Guid.Empty)
+            {
+                var room = await _roomRepo.GetRoomById(roomBookingDetailCreateRequest.RoomId);
+                if (room == null)
+                {
+                    return NotFound();
+                }
+
+                var roomBookingCreate = new RoomBookingCreateRequestForCustomer
+                {
+                    CustomerId = _UserLogin,
+                    BookingType = Domain.Enums.BookingType.Online,
+                    TotalPrice = room.Price,
+                    TotalRoomPrice = room.Price,
+                    TotalServicePrice = 0,
+                    Status = Domain.Enums.EntityStatus.Active,
+                    StaffId = null,
+                    CreatedBy = _UserLogin,
+                    NewId = null
+                };
+
+                var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
+                roomBookingDetailCreateRequest.RoomId = room.Id;
+                roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
+                roomBookingDetailCreateRequest.CreatedBy = _UserLogin;
+                roomBookingDetailCreateRequest.Status = Domain.Enums.EntityStatus.Active;
+                roomBookingDetailCreateRequest.Deposit = room.Price * 20 / 100;
+                var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
+                var roomStatus = new RoomUpdateStatusRequest
+                {
+                    Id = room.Id,
+                    Status = Domain.Enums.RoomStatus.OutOfOrder,
+                    ModifiedBy = _UserLogin,
+                    ModifiedTime = DateTime.Now
+                };
+                var updateRoomStatus = await _roomRepo.UpdateRoomStatus(roomStatus);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View("Details", "Room");
         }
-      
+
     }
 }

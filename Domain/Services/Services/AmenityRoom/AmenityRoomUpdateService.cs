@@ -31,7 +31,15 @@ public class AmenityRoomUpdateService : IAmenityRoomUpdateService
         existingAmenityRoom.AmenityId = amenityRoomUpdateRequest.AmenityId;
         existingAmenityRoom.RoomTypeId = amenityRoomUpdateRequest.RoomTypeId;
         existingAmenityRoom.Amount = amenityRoomUpdateRequest.Amount;
-        existingAmenityRoom.Status = amenityRoomUpdateRequest.Status;
+        if (amenityRoomUpdateRequest.Status == EntityStatus.Deleted)
+        {
+            existingAmenityRoom.Deleted = true;
+            existingAmenityRoom.Status = EntityStatus.Deleted;
+        }
+        else
+        {
+            existingAmenityRoom.Status = amenityRoomUpdateRequest.Status;
+        }
         existingAmenityRoom.ModifiedTime = amenityRoomUpdateRequest.ModifiedTime;
         existingAmenityRoom.ModifiedBy = amenityRoomUpdateRequest.ModifiedBy;
         

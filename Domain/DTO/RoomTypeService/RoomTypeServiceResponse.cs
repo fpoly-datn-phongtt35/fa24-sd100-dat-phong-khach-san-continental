@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Service;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.DTO.Service;
 using Domain.Enums;
 
 namespace Domain.DTO.RoomTypeService;
@@ -6,10 +7,17 @@ namespace Domain.DTO.RoomTypeService;
 public class RoomTypeServiceResponse
 {
     public Guid Id { get; set; }
+    
+    [Required(ErrorMessage = "Loại phòng không được để trống")]
     public Guid RoomTypeId { get; set; }
+    
+    [Required(ErrorMessage = "Dịch vụ không được để trống")]
     public Guid ServiceId { get; set; }
     public string? RoomTypeName { get; set; }
     public string? ServiceName { get; set; }
+    
+    [Required(ErrorMessage = "Số lượng không được để trống")]
+    [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn 0")]
     public int? Amount { get; set; }
     public EntityStatus Status { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
@@ -54,7 +62,8 @@ public class RoomTypeServiceResponse
             Amount = Amount,
             Status = Status,
             ModifiedTime = ModifiedTime,
-            ModifiedBy = ModifiedBy
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
         };
     }
 

@@ -18,11 +18,11 @@ namespace Domain.Repositories.Repository
         private readonly ServiceTypeRepo _serviceTypeRepo;
         private readonly DbWorker _DbWorker;
         private readonly IConfiguration _configuration;
-        public ServiceRepo(IConfiguration configuration, ServiceTypeRepo serviceTypeRepo)
+        public ServiceRepo(IConfiguration configuration)
         {
             _configuration = configuration;
             _DbWorker = new DbWorker(StoredProcedureConstant.Continetal);
-            _serviceTypeRepo = serviceTypeRepo;
+            _serviceTypeRepo = new ServiceTypeRepo(_configuration);
         }
         public async Task<int> AddService(ServiceCreateRequest request)
         {

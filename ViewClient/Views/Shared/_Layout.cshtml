@@ -5,29 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ViewClient.styles.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="wrapper d-flex flex-column min-vh-100">
     <header>
         <div class="navbar">
             <div class="navbar-left">
-                <div class="navbar-left">
-                    <img href="/index" src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
-                    <h1 href="/index" class="unifrakturmaguntia-regular">Continental</h1>
+                <a href="/Home/index" class="navbar-link d-flex align-items-center text-decoration-none">
+                    <img src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
+                    <h1 class="unifrakturmaguntia-regular ms-2">Continental</h1>
+                </a>
+            </div>
 
-                </div>
-           
+            <div class="navbar-center">
+                <a href="/room/index">Khách Sạn</a>
+                <a href="@Url.Action("GroupedServices", "Service")">Dịch vụ</a>
             </div>
             <div class="navbar-right">
                 @if (Context.Session.GetString("UserName") == null)
                 {
-                    <button class="nav-button" ><a href="/login">Đăng Nhập</a></button>
-                    <button class="nav-button" ><a href="/register">Đăng ký</a></button>
+                    <button class="nav-button"><a href="/login">Đăng Nhập</a></button>
+                    <button class="nav-button"><a href="/register">Đăng ký</a></button>
                 }
                 else
                 {
@@ -39,8 +41,8 @@
                 }
             </div>
         </div>
-
     </header>
+
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -48,14 +50,75 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Continental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <!-- Email -->
+        <div class="email-subscription text-center mb-4">
+            <h4>Đăng ký để nhận tin</h4>
+            <form class="d-flex justify-content-center align-items-center mt-2">
+                <input type="email" class="form-control w-50" placeholder="Nhập email của bạn" required>
+                <button type="submit" class="btn btn-primary ms-2">Đăng ký</button>
+            </form>
         </div>
+        <div class="footer-container">
+            <!-- Logo Section -->
+            <div class="footer-logo-section">
+                <h1 href="/index" class="unifrakturmaguntia-regular ps-5">Continental</h1>
+                <div class="footer-certificates ps-5">
+                    <img src="~/img/cer1.webp" alt="Certificate 1">
+                    <img src="~/img/cer2.svg" alt="Certificate 2">
+                    <img src="~/img/cer3.webp" alt="Certificate 3">
+                </div>
+            </div>
+
+
+
+            <!-- Links Section -->
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Về Continental</h4>
+                    <a href="#">Hướng dẫn đặt phòng</a>
+                    <a href="#">Liên lạc</a>
+                    <a href="#">Trợ giúp</a>
+                    <a href="#">Trở thành đối tác</a>
+                    <a href="#">Về chúng tôi</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Dịch vụ</h4>
+                    <a href="#">Khách sạn</a>
+                    <a href="#">Homestay</a>
+                    <a href="#">Bungalow</a>
+                    <a href="#">Phòng họp</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Khác</h4>
+                    <a href="#">Chú ý quyền riêng tư</a>
+                    <a href="#">Điều khoản và điều kiện</a>
+                    <a href="#">Đăng ký nơi ở</a>
+                    <a href="#">Chương trình Tiết lộ Lỗ hổng Bảo mật</a>
+                </div>
+            </div>
+
+            <!-- Social Medias -->
+            <div class="social-media-section">
+                <h4>Follow us on</h4>
+                <div class="social-media-logos">
+                    <a href="#">
+                        <img src="~/img/instagram.png" alt="Insta">
+                    </a>
+                    <a href="#">
+                        <img src="~/img/facebook.png" alt="Face">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p>© 2024 Continental. Bảo lưu mọi quyền.</p>
+
+
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

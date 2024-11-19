@@ -31,6 +31,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@RoomBookingId", request.RoomBookingId),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
+                    new SqlParameter("@Quantity", request.Quantity),
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),

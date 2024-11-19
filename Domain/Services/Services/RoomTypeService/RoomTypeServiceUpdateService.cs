@@ -32,7 +32,15 @@ public class RoomTypeServiceUpdateService : IRoomTypeServiceUpdateService
         exisingRoomTypeService.RoomTypeId = roomTypeServiceUpdateRequest.RoomTypeId;
         exisingRoomTypeService.ServiceId = roomTypeServiceUpdateRequest.ServiceId;
         exisingRoomTypeService.Amount = roomTypeServiceUpdateRequest.Amount;
-        exisingRoomTypeService.Status = roomTypeServiceUpdateRequest.Status;
+        if (roomTypeServiceUpdateRequest.Status == EntityStatus.Deleted)
+        {
+            exisingRoomTypeService.Deleted = true;
+            exisingRoomTypeService.Status = EntityStatus.Deleted;
+        }
+        else
+        {
+            exisingRoomTypeService.Status = roomTypeServiceUpdateRequest.Status;
+        }
         exisingRoomTypeService.ModifiedTime = roomTypeServiceUpdateRequest.ModifiedTime;
         exisingRoomTypeService.ModifiedBy = roomTypeServiceUpdateRequest.ModifiedBy;
 

@@ -9,6 +9,6 @@ namespace Domain.Services.IServices.IRoomBooking
 {
     public interface IRoomBookingCreateForCustomerService
     {
-        Task<int> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request);
+        Task<Guid> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request);
     }
 }
