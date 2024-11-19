@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Amenity;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.DTO.Amenity;
 using Domain.DTO.AmenityRoom;
 using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
@@ -9,8 +10,12 @@ namespace Domain.DTO.RoomType;
 public class RoomTypeResponse
 {
     public Guid Id { get; set; }
+    [Required(ErrorMessage = "Tên không được để trống.")]
     public string? Name { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
+    
+    [Required(ErrorMessage = "Số lượng không được để trống.")]
+    [RegularExpression("^[1-9]$|^10$", ErrorMessage = "Số lượng phải là một số trong khoảng từ 1 đến 10.")]
     public int? MaximumOccupancy { get; set; }
     public EntityStatus Status { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
@@ -55,7 +60,8 @@ public class RoomTypeResponse
             MaximumOccupancy = MaximumOccupancy,
             Status = Status,
             ModifiedTime = ModifiedTime,
-            ModifiedBy = ModifiedBy
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
         };
     }
 

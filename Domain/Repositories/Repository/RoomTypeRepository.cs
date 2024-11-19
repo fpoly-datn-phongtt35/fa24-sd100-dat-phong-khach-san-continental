@@ -278,27 +278,25 @@ public class RoomTypeRepository : IRoomTypeRepository
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
-                new("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
+                new("@Description", SqlDbType.NVarChar) { Value = roomType.Description ?? (object)DBNull.Value },
                 new("@Status", SqlDbType.Int) { Value = roomType.Status },
                 new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
                 new("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = roomType.CreatedBy },
-                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = roomType.ModifiedTime },
                 new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
-                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomType.DeletedTime },
                 new("@NewRoomTypeId", SqlDbType.UniqueIdentifier) {Direction = ParameterDirection.Output}
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomType, parameters);
-            roomType.Id = (Guid)parameters[9].Value;
+
+            roomType.Id = (Guid)parameters[7].Value;
+            return roomType;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("An error occurred while adding the amenity", e);
+            throw;
         }
-
-        return roomType;
     }
 
     public async Task<RoomType?> UpdateRoomType(RoomType roomType)
@@ -319,7 +317,8 @@ public class RoomTypeRepository : IRoomTypeRepository
                 new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
                 new("@Status", SqlDbType.Int) { Value = roomType.Status },
                 new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy }
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) {Value = roomType.Deleted}
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoomType, parameters);
@@ -423,7 +422,7 @@ public class RoomTypeRepository : IRoomTypeRepository
                 new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomType.ModifiedBy },
                 new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
-                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.MinValue },
+                new("@DeletedTime", SqlDbType.DateTimeOffset) { Value = roomType.DeletedTime ?? (object)DBNull.Value },
                 new("@DeletedBy", SqlDbType.UniqueIdentifier) { Value = default },
             };
             await _worker.GetDataTableAsync
