@@ -34,6 +34,9 @@ namespace View
             builder.Services.AddTransient<IServiceService, ServiceService>();
             builder.Services.AddTransient<IServiceRepo, ServiceRepo>();
             builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+            builder.Services.AddTransient<IRoomBookingCreateForCustomerService, RoomBookingCreateForCustomerService>();
+            builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>(); 
+            builder.Services.AddTransient<IRoomUpdateStatusService, RoomUpdateStatusService>();
             builder.Services.AddHttpClient();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {

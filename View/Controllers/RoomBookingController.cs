@@ -1,15 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
 using Domain.DTO.Service;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.Services;
+using Domain.Services.Services.Room;
 using Microsoft.AspNetCore.Mvc;
 using WEB.CMS.Customize;
 
@@ -20,14 +24,16 @@ public class RoomBookingController : Controller
     private readonly ICustomerService _customerService;
     private readonly IRoomGetService _roomGetService;
     private readonly IServiceService _serviceService;
+    private readonly IRoomUpdateStatusService _roomUpdateStatusService;
     private readonly IRoomBookingGetService _roomBookingService;
-    private readonly IRoomBookingCreateService _roomBookingCreateService;
+    private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-    public RoomBookingController(IRoomBookingCreateService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
+    public RoomBookingController(IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
         _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
+        _roomUpdateStatusService = roomUpdateStatusService;
         _roomBookingCreateService = roomBookingCreateService;
         _roomBookingService = roomBookingGetService;
         _serviceService = serviceService;
@@ -53,11 +59,21 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<int> Submit(RoomBookingCreateRequest bookingCreateRequest,List<RoomBookingDetailCreateRequest> lstUpsert)
+    public async Task<int> submit(RoomBookingCreateRequestForCustomer bookingcreaterequest, List<RoomBookingDetailCreateRequest> lstupsert)
     {
         try
         {
-            var IdRoomBooking = await _roomBookingCreateService.CreateRoomBooking(bookingCreateRequest);
+            bookingcreaterequest.BookingType = BookingType.Offline;
+            bookingcreaterequest.StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            bookingcreaterequest.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var idroombooking = await _roomBookingCreateService.CreateRoomBookingForCustomer(bookingcreaterequest);
+            foreach(var i in lstupsert) 
+            {
+                i.RoomBookingId = idroombooking;
+                i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _roomBookingDetailServiceForCustomer.CreateRoomBookingDetail(i);
+            }
+            return -1;
         }
         catch (Exception ex)
         {

@@ -124,7 +124,7 @@
 
 
 var roomBookingStatus = 1;
-
+var RoomBooking;
 var lstRoomBookingDetail = [];
 var lstIdRoom = [];
 var IdAdd = -1;
@@ -325,7 +325,7 @@ var _roombooking_detail = {
     },
     GetlistObjSubmit: function ()
     {
-        var RoomBooking =
+        RoomBooking =
         {
             Id: $("#IdRoomBooking").val(),
             CustomerId : $("#Client_Id").val(),
@@ -339,7 +339,7 @@ var _roombooking_detail = {
         {
             var obj =
             {
-                RoomIds: $("#Id_" + item).val(),
+                RoomId: $("#Id_" + item).val(),
                 CheckInBooking: $("#CheckIn_" + item).val(),
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: null,
@@ -357,5 +357,13 @@ var _roombooking_detail = {
     submit: function ()
     {
         _roombooking_detail.GetlistObjSubmit();
+        $.ajax({
+            url: "/RoomBooking/submit",
+            type: "post",
+            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
+            success: function (result) {
+                window.location.href = "/roombooking"
+            }
+        });
     }
 }
