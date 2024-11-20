@@ -2,7 +2,7 @@
     function showToast(toastId) {
         var toastEl = document.getElementById(toastId);
         var toast = new bootstrap.Toast(toastEl);
-        toast.show();
+       /* toast.show();*/
     }
 
     $('#openModalButton').click(function () {
@@ -19,9 +19,11 @@
             var timeDifference = checkOut - checkIn;
             var days = Math.ceil(timeDifference / (1000 * 3600 * 24));
             var totalPayment = days * pricePerNight;
-
+            var depositPayment = totalPayment * 20 / 100;
+            $('#depositPayment').text("Đặt cọc: " + depositPayment+ " VNĐ")
             $('#totalPayment').text("Thanh toán: " + totalPayment + " VNĐ");
         } else {
+            $('#depositPayment').text("Đặt cọc: 0 VNĐ")
             $('#totalPayment').text("Thanh toán: 0 VNĐ");
         }
     });

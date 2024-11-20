@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.Service;
+using Domain.DTO.ServiceType;
+using Domain.Enums;
+using Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace ViewClient.Controllers
 {
@@ -11,7 +17,7 @@ namespace ViewClient.Controllers
         {
             _client = client;
         }
-
+      
         public async Task<IActionResult> GroupedServices()
         {
             string requestUrl = "https://localhost:7130/api/Service/GetAllServiceNamesGroupedByServiceType";

@@ -2,6 +2,7 @@
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
+using Domain.DTO.Service;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -111,6 +112,39 @@ namespace ViewClient.Controllers
             catch (Exception ex)
             {
                 return View("Error", ex);
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> IndexService(int pageIndex = 1, int pageSize = 100, string serviceName = null, Guid? serviceTypeId = null, decimal? minPrice = null, decimal? maxPrice = null, EntityStatus? status = EntityStatus.Active)
+        {
+            // api url
+            string requestUrl = "https://localhost:7130/api/Service/GetListService";
+
+            var request = new ServiceGetRequest
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Name = serviceName,
+                ServiceTypeId = serviceTypeId,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                Status = status
+            };
+
+            var jsonRequest = JsonConvert.SerializeObject(request); 
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json"); 
+
+            try
+            {
+                var response = await _httpClient.PostAsync(requestUrl, content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                var services = JsonConvert.DeserializeObject<ResponseData<Service>>(responseString);
+                ViewBag.Services = services.data;
+                return Json(services.data);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
             }
         }
         public async Task<IActionResult> Details(Guid roomId)
