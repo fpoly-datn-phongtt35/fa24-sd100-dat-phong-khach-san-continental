@@ -93,10 +93,11 @@ namespace Domain.Services.Services
                                      {
                                          RoomBookingDetailId = row.Field<Guid>("RoomBookingDetailId"),
                                          RoomId = row.Field<Guid>("RoomId"),
-                                         CheckInBooking = row.Field<DateTimeOffset>("CheckInBooking"),
-                                         CheckOutBooking = row.Field<DateTimeOffset>("CheckOutBooking"),
-                                         CheckInReality = row.Field<DateTimeOffset>("CheckInReality"),
-                                         CheckOutReality = row.Field<DateTimeOffset>("CheckOutReality"),
+                                         CheckInBooking = row.Field<DateTimeOffset?>("CheckInBooking"),
+                                         CheckOutBooking = row.Field<DateTimeOffset?>("CheckOutBooking"),
+                                         Status =row.Field<EntityStatus>("Status").ToString(),
+                                         CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
+                                         CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),
                                          Name = row.Field<string>("Name")
                                      }).ToList();

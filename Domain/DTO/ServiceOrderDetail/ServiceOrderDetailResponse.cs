@@ -1,20 +1,23 @@
 ﻿using Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.DTO.ServiceOrderDetail
 {
-    public class ServiceOrderDetail
+    public class ServiceOrderDetailResponse
     {
-        [Key]
-        public Guid Id { get; set; } 
-        public Guid RoomBookingId { get; set; } 
+        public Guid Id { get; set; }
+        public Guid RoomBookingId { get; set; }
         public decimal Price { get; set; }
         public double? Amount { get; set; }
         public int Quantity { get; set; }
         public string? Description { get; set; }
         public Guid ServiceId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
-
+        public string? StatusName {  get; set; } 
         public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTimeOffset? ModifiedTime { get; set; }
@@ -22,8 +25,5 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-
-        public Service Service { get; set; }
-        public RoomBooking RoomBooking { get; set; }
     }
 }

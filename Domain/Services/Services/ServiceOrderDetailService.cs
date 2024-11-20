@@ -5,6 +5,7 @@ using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -24,11 +25,42 @@ namespace Domain.Services.Services
             _configuration = configuration;
             _serviceOrderDetailRepo = new ServiceOrderDetailRepo(_configuration);
         }
-        public Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request)
+
+        public async Task<List<ServiceOrderDetailResponse>> GetListServiceOrderDetailByRoomBookingI(Guid id)
         {
             try
             {
-                return _serviceOrderDetailRepo.AddServiceOrderDetail(request);
+                DataTable dt = await _serviceOrderDetailRepo.GetListServiceOrderDetailByRoomBookingI(id);
+                var sv = (from row in dt.AsEnumerable()
+                      select new ServiceOrderDetailResponse
+                      {
+                          Id = row.Field<Guid>("Id"),
+                          ServiceId = row.Field<Guid>("ServiceId"),
+                          Amount = row.Field<double>("Amount"),
+                          Price = row.Field<decimal>("Price"),
+                          Status = row.Field<EntityStatus>("Status"),
+                          StatusName = row.Field<EntityStatus>("Status").ToString(),
+                          CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
+                          CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
+                          ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
+                          ModifiedBy = row.Field<Guid?>("ModifiedBy") ?? Guid.Empty,
+                          Deleted = row.Field<bool>("Deleted"),
+                          DeletedBy = row.Field<Guid?>("DeletedBy") ?? Guid.Empty,
+                          DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
+                      }).ToList();
+                return sv;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Task<int> UpsertServiceOrderDetail(ServiceOrderDetail request)
+        {
+            try
+            {
+                return _serviceOrderDetailRepo.UpsertServiceOrderDetail(request);
             }
             catch (Exception ex)
             {
@@ -145,18 +177,6 @@ namespace Domain.Services.Services
                 throw ex;
             }
             return model;
-        }
-
-        public Task<int> UpdateServiceOrderDetail(ServiceOrderDetailUpdateRequest request)
-        {
-            try
-            {
-                return _serviceOrderDetailRepo.UpdateServiceOrderDetail(request);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
     }
 }
