@@ -102,20 +102,19 @@ public class AmenityRoomRepository : IAmenityRoomRepository
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@AmenityId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.AmenityId },
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.RoomTypeId },
-                new SqlParameter("@Amount", SqlDbType.Int) { Value = amenityRoom.Amount },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.CreatedBy },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.ModifiedTime },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.DeletedTime },
+                new("@AmenityId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.AmenityId },
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.RoomTypeId },
+                new("@Amount", SqlDbType.Int) { Value = amenityRoom.Amount },
+                new("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
+                new("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.CreatedBy },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = amenityRoom.ModifiedTime ?? (object)DBNull.Value },
+                new("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted },
                 new("@NewAmenityRoomId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertAmenityRoom, parameters);
-            amenityRoom.Id = (Guid)parameters[9].Value;
+            amenityRoom.Id = (Guid)parameters[8].Value;
             return amenityRoom;
         }
         catch (Exception e)
@@ -137,13 +136,14 @@ public class AmenityRoomRepository : IAmenityRoomRepository
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
-                new SqlParameter("@AmenityId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.AmenityId },
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.RoomTypeId },
-                new SqlParameter("@Amount", SqlDbType.Int) { Value = amenityRoom.Amount },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.ModifiedBy }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenityRoom.Id },
+                new("@AmenityId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.AmenityId },
+                new("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = amenityRoom.RoomTypeId },
+                new("@Amount", SqlDbType.Int) { Value = amenityRoom.Amount },
+                new("@Status", SqlDbType.Int) { Value = amenityRoom.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenityRoom.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) { Value = amenityRoom.Deleted }
             };
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateAmenityRoom, parameters);
 

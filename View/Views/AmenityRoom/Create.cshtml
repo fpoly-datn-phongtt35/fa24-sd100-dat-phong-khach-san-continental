@@ -43,7 +43,7 @@
             <div class="form-group">
                 <label asp-for="Status" class="control-label">Trạng thái</label>
                 <select name="status" class="form-select" id="status">
-                    <option disabled selected>Chọn trạng thái</option>
+                    <option disabled>Chọn trạng thái</option>
                     @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
                     // Ép kiểu status về EntityStatus

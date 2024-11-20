@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Amenity;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.DTO.Amenity;
 using Domain.Enums;
 
 namespace Domain.DTO.AmenityRoom;
@@ -6,11 +7,19 @@ namespace Domain.DTO.AmenityRoom;
 public class AmenityRoomResponse
 {
     public Guid Id { get; set; }
+    
+    [Required(ErrorMessage = "Không được để trống tiện nghi")]
     public Guid AmenityId { get; set; }
+    
+    [Required(ErrorMessage = "Không được để trống loại phòng")]
     public Guid RoomTypeId { get; set; }
     public string? AmenityName { get; set; }
     public string? RoomTypeName { get; set; }
+    
+    [Required(ErrorMessage = "Không được để trống số lượng")]
+    [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn 0")]
     public int? Amount { get; set; }
+    
     public EntityStatus Status { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }

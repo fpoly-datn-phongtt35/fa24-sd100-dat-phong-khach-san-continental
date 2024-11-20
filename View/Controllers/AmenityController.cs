@@ -65,7 +65,7 @@ namespace View.Controllers
             }
         }
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? searchString = null,
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10, string? searchString = null,
             EntityStatus? status = null)
         {
             string requestUrl = $"api/Amenity/GetFilteredAmenities";
