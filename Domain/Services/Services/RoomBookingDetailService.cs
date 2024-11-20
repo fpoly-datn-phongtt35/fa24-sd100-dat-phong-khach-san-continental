@@ -108,6 +108,12 @@ namespace Domain.Services.Services
             }
             return roomBookingDetail;
         }
+ 
+        public async Task<DataTable> GetRoomBookingDetailByCustomerId(Guid customerId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request)
         {
             try
