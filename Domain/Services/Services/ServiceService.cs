@@ -18,12 +18,12 @@ namespace Domain.Services.Services
 {
     public class ServiceService : IServiceService
     {
-        private readonly ServiceRepo _serviceRepo;
+        private readonly IServiceRepo _serviceRepo;
         private readonly IConfiguration _configuration;
-        public ServiceService(IConfiguration configuration, ServiceTypeRepo serviceTypeRepo)
+        public ServiceService(IConfiguration configuration, IServiceRepo serviceRepo)
         {
             _configuration = configuration;
-            _serviceRepo = new ServiceRepo(_configuration, serviceTypeRepo);
+            _serviceRepo = serviceRepo;
         }
         public Task<int> AddService(ServiceCreateRequest request)
         {

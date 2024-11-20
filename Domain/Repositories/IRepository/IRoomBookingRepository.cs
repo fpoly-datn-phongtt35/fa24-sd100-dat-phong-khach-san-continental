@@ -12,5 +12,6 @@ public interface IRoomBookingRepository
         (RoomBookingGetRequest roomBookingGetRequest);
     Task<RoomBooking?> GetRoomBookingById(Guid roomBookingId);
     Task<RoomBooking?> UpdateRoomBooking(RoomBooking roomBooking);
-    Task<int> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request);
+    Task<Guid> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request);
+    Task<int> CreateRoomBooking(RoomBookingCreateRequest request);
 }

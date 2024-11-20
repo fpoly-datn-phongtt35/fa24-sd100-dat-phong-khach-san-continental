@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.ServiceOrderDetail;
+using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -22,26 +23,67 @@ namespace Domain.Repositories.Repository
             _DbWorker = new DbWorker(StoredProcedureConstant.Continetal);
         }
 
-        public async Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request)
+        public async Task<int> UpsertServiceOrderDetail(ServiceOrderDetail request)
         {
             try
             {
-                SqlParameter[] sqlParameters = new SqlParameter[]
+                if (request.Id == Guid.Empty)
                 {
+                    SqlParameter[] sqlParameters = new SqlParameter[]
+                    {
                     new SqlParameter("@RoomBookingId", request.RoomBookingId),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
+                    new SqlParameter("@Quantity", request.Quantity),
+                    new SqlParameter("@Description", request.Description),
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),
                     new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
+                    };
+                    return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertServiceOrderDetail, sqlParameters);
+                }
+                else 
+                {
+                    SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
+                    new SqlParameter("@ServiceId", request.ServiceId),
+                    new SqlParameter("@Amount", request.Amount),
+                    new SqlParameter("@Description", request.Description),
+                    new SqlParameter("@Quantity", request.Quantity),
+                    new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@Status", request.Status),
+                    new SqlParameter("@Deleted", request.Deleted),
+                    new SqlParameter("@ModifiedTime", DateTimeOffset.Now),
+                    new SqlParameter("@ModifiedBy", request.ModifiedBy != null ? request.ModifiedBy : (object)DBNull.Value)
                 };
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertServiceOrderDetail, sqlParameters);
+
+                    return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateServiceOrderDetail, sqlParameters);
+                }
             }
             catch (Exception)
             {
 
                 throw;
+            }
+        }
+
+        public async Task<DataTable> GetListServiceOrderDetailByRoomBookingI(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@RoomBookingId", id != null ? id : DBNull.Value ),
+                };
+
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetailByRoomBookingId, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -108,31 +150,6 @@ namespace Domain.Repositories.Repository
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetail, sqlParameters);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<int> UpdateServiceOrderDetail(ServiceOrderDetailUpdateRequest request)
-        {
-            try
-            {
-                SqlParameter[] sqlParameters = new SqlParameter[]
-                {
-                    new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
-                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
-                    new SqlParameter("@ServiceId", request.ServiceId),
-                    new SqlParameter("@Amount", request.Amount),
-                    new SqlParameter("@Price", request.Price),
-                    new SqlParameter("@Status", request.Status),
-                    new SqlParameter("@Deleted", request.Deleted),
-                    new SqlParameter("@ModifiedTime", DateTimeOffset.Now),
-                    new SqlParameter("@ModifiedBy", request.ModifiedBy != null ? request.ModifiedBy : (object)DBNull.Value)
-                };
-
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateServiceOrderDetail, sqlParameters);
             }
             catch (Exception ex)
             {

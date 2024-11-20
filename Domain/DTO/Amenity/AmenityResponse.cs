@@ -1,12 +1,15 @@
-﻿using Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Enums;
 
 namespace Domain.DTO.Amenity;
 
 public class AmenityResponse
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; } = string.Empty;
-    public string? Description { get; set; } = string.Empty;
+    
+    [Required(ErrorMessage = "Tên không được để trống.")]
+    public string? Name { get; set; }
+    public string? Description { get; set; }
     public EntityStatus Status { get; set; }
 
     public DateTimeOffset? CreatedTime { get; set; }
@@ -47,7 +50,8 @@ public class AmenityResponse
             Description = Description,
             Status = Status,
             ModifiedTime = ModifiedTime,
-            ModifiedBy = ModifiedBy
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
         };
     }
 

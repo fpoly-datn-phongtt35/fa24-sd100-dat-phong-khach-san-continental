@@ -186,7 +186,6 @@ namespace Domain.Migrations
                         .HasColumnType("varchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
@@ -194,7 +193,6 @@ namespace Domain.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
@@ -620,7 +618,6 @@ namespace Domain.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("CheckInReality")
-                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("CheckOutBooking")
@@ -628,7 +625,6 @@ namespace Domain.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("CheckOutReality")
-                        .IsRequired()
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("CreatedBy")
@@ -858,6 +854,9 @@ namespace Domain.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -867,12 +866,10 @@ namespace Domain.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("RoomBookingId");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ServiceId")
+                    b.Property<Guid>("RoomBookingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ServiceId")

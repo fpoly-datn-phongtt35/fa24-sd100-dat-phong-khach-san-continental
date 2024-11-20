@@ -31,6 +31,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteServiceOrderDetail = "SP_DeleteServiceOrderDetail";
         public const string SP_UpdateServiceOrderDetail = "SP_UpdateServiceOrderDetail";
         public const string SP_GetServiceOrderDetailById = "SP_GetServiceOrderDetailById";
+        public const string SP_GetListServiceOrderDetailByRoomBookingId = "SP_GetListServiceOrderDetailByRoomBookingId";
 
         //room
         public const string SP_InsertRoom = "SP_InsertRoom";
@@ -38,6 +39,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteRoom = "SP_DeleteRoom";
         public const string SP_GetRoomById = "SP_GetRoomById";
         public const string SP_UpdateRoom = "SP_UpdateRoom";
+        public const string SP_UpdateRoomStatus = "SP_UpdateRoomStatus";
         ////public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
 
         //building
@@ -132,9 +134,14 @@ namespace Utilities.StoredProcedure
         public const string SP_GetFilteredRoomBookings = "SP_GetFilteredRoomBookings";
         public const string SP_GetRoomBookingById = "SP_GetRoomBookingById";
         public const string SP_UpdateRoomBooking = "SP_UpdateRoomBooking";
-        public const string SP_BookRoomForCustomer = "SP_BookRoomForCustomer";
+        public const string SP_InsertRoomBookingForCustomer = "SP_InsertRoomBookingForCustomer";
+        public const string SP_InsertRoomBooking = "SP_InsertRoomBooking";
         // RoomBookingDetail
         public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
+        public const string SP_InsertRoomBookingDetail = "SP_InsertRoomBookingDetail";
+        public const string SP_UpdateRoomBookingDetail = "SP_UpdateRoomBookingDetail";
+        public const string SP_GetRoomBookingDetailById = "SP_GetRoomBookingDetailById";
+        public const string SP_GetListRoomBookingDetailByRoomBookingId = "SP_GetListRoomBookingDetailByRoomBookingId";
         //Client 
         public const string SP_ClientLogin = "SP_ClientLogin";
         public const string SP_ClientRegister = "SP_ClientRegister";

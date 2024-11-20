@@ -32,7 +32,15 @@ public class AmenityUpdateService : IAmenityUpdateService
         }
         existingAmenity.Name = amenityUpdateRequest.Name;
         existingAmenity.Description = amenityUpdateRequest.Description;
-        existingAmenity.Status = amenityUpdateRequest.Status;
+        if (amenityUpdateRequest.Status == EntityStatus.Deleted)
+        {
+            existingAmenity.Deleted = true;
+            existingAmenity.Status = EntityStatus.Deleted;
+        }
+        else
+        {
+            existingAmenity.Status = amenityUpdateRequest.Status;
+        }
         existingAmenity.ModifiedTime = amenityUpdateRequest.ModifiedTime;
         existingAmenity.ModifiedBy = amenityUpdateRequest.ModifiedBy;
         

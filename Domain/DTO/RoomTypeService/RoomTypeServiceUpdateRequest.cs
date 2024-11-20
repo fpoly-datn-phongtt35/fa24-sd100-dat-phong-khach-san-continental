@@ -11,6 +11,7 @@ public class RoomTypeServiceUpdateRequest
     public EntityStatus Status { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
+    public bool Deleted { get; set; }
 
     /// <summary>
     /// Convert the current object of RoomTypeServiceUpdateRequest into a
@@ -27,7 +28,8 @@ public class RoomTypeServiceUpdateRequest
             Amount = Amount,
             Status = Status,
             ModifiedTime = ModifiedTime,
-            ModifiedBy = ModifiedBy
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
         };
     }
 }

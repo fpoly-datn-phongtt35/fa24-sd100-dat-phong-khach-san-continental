@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.AmenityRoom;
+using Domain.DTO.Customer;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
@@ -49,7 +50,7 @@ namespace Domain.Repositories.Repository
                 var roomlist = new List<RoomResponse>();
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    var room =RowToRoom(row);
+                    var room = RowToRoom(row);
                     var roomResponse = room.ToRoomResponse();
                     roomlist.Add(roomResponse);
                 }
@@ -197,9 +198,7 @@ namespace Domain.Repositories.Repository
                 new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
                 new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = room.CreatedTime },
                 new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = room.CreatedBy },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = room.ModifiedTime },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted },
-                new SqlParameter("@DeletedTime", SqlDbType.DateTimeOffset) { Value = room.DeletedTime }
+                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted }
                 };
 
                 await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoom, parameters);
@@ -319,5 +318,29 @@ namespace Domain.Repositories.Repository
             return null;
         }
 
+        public async Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request)
+        {
+            var existingRoom = GetRoomById(request.Id);
+            if (existingRoom == null)
+            {
+                throw new Exception("Customer could not be found");
+            }
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", request.Id),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                    new SqlParameter("@ModifiedTime",DateTime.Now),
+                    new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
+                };
+
+                return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomStatus, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

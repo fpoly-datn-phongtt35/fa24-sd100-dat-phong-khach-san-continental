@@ -1,12 +1,21 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
+using Domain.DTO.RoomBookingDetail;
+using Domain.DTO.Service;
+using Domain.DTO.ServiceOrderDetail;
+using Domain.DTO.ServiceType;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
+using Domain.Services.Services;
+using Domain.Services.Services.Room;
 using Microsoft.AspNetCore.Mvc;
 using WEB.CMS.Customize;
 
@@ -16,13 +25,230 @@ public class RoomBookingController : Controller
 {
     private readonly ICustomerService _customerService;
     private readonly IRoomGetService _roomGetService;
+    private readonly IServiceService _serviceService;
+    private readonly IRoomUpdateStatusService _roomUpdateStatusService;
     private readonly IRoomBookingGetService _roomBookingService;
+    private readonly IServiceTypeService _serviceTypeService;
+    private readonly IServiceOrderDetailService _serviceOrderDetailService;
+    private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
+    private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-    public RoomBookingController(ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService)
+    public RoomBookingController(IServiceOrderDetailService serviceOrderDetailService,IServiceTypeService serviceTypeService,IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
+        _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
+        _serviceOrderDetailService = serviceOrderDetailService;
+        _roomUpdateStatusService = roomUpdateStatusService;
+        _serviceTypeService = serviceTypeService;
+        _roomBookingCreateService = roomBookingCreateService;
         _roomBookingService = roomBookingGetService;
+        _serviceService = serviceService;
         _roomGetService = roomGetService;
+    }
+
+    public async Task<List<ServiceType>> GetlistServiceType(string txt_search) 
+    {
+        try
+        {
+            var request = new ServiceTypeGetRequest();
+            if(txt_search != null) 
+            {
+                request.Name = txt_search;
+            }
+            var response = await _serviceTypeService.GetServiceTypes(request);
+            return response.data;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<Service> GetServiceById(Guid Id) 
+    {
+        try
+        {
+            var response = await _serviceService.GetServiceById(Id);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<List<ServiceOrderDetailResponse>> GetSerOrderDetailRelated(Guid RoomBooking) 
+    {
+        try
+        {
+            var response = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingI(RoomBooking);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<List<Service>> GetServiceSuggestion(ServiceGetRequest request) 
+    {
+        try
+        {
+            var response = await _serviceService.GetServices(request);
+            return response.data;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<int> submit(RoomBookingCreateRequestForCustomer bookingcreaterequest, List<RoomBookingDetailCreateRequest> lstupsert,List<ServiceOrderDetail> lstSerOrderDetail)
+    {
+        try
+        {
+            bookingcreaterequest.BookingType = BookingType.Offline;
+            bookingcreaterequest.StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            bookingcreaterequest.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var idroombooking = await _roomBookingCreateService.CreateRoomBookingForCustomer(bookingcreaterequest);
+            foreach(var i in lstupsert) 
+            {
+                i.RoomBookingId = idroombooking;
+                i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                i.Status = EntityStatus.Active;
+                await _roomBookingDetailServiceForCustomer.CreateRoomBookingDetail(i);
+                var updateStatusRquest = new RoomUpdateStatusRequest()
+                {
+                    Id = i.RoomId,
+                    Status = RoomStatus.AwaitingConfirmation,
+                    ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                    ModifiedTime = DateTime.Now,
+                };
+                await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
+            }
+            foreach (var i in lstSerOrderDetail) 
+            {
+                if (i.Id == Guid.Empty)
+                {
+                    i.RoomBookingId = idroombooking;
+                    i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    i.Status = EntityStatus.Active;
+                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
+                }
+                else 
+                {
+                    i.RoomBookingId = idroombooking;
+                    i.ModifiedTime = DateTime.Now;
+                    i.ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
+                }
+            }
+            return -1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return -1;
+        }
+    }
+
+    public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRoomRelated(Guid Id) 
+    {
+        try
+        {
+            var response = await _roomBookingDetailServiceForCustomer.GetListRoomBookingDetailByRoomBookingId(Id);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<int> Cancel(Guid Id,Guid IdRoom) 
+    {
+        try
+        {
+            var RoomBDUpdate = new RoomBookingDetailUpdateRequest()
+            {
+                Id = Id,
+                Status = EntityStatus.Locked,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                ModifiedTime = DateTime.UtcNow
+            };
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(RoomBDUpdate);
+            var updateStatusRquest = new RoomUpdateStatusRequest()
+            {
+                Id = IdRoom,
+                Status = RoomStatus.Vacant,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                ModifiedTime = DateTime.Now,
+            };
+            await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return -1;
+        }
+    }
+
+    public async Task<int> CheckIn(Guid Id)
+    {
+        try
+        {
+            var RoomBDUpdate = new RoomBookingDetailUpdateRequest()
+            {
+                Id = Id,
+                Status = EntityStatus.InActive,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                CheckInReality = DateTime.UtcNow,
+                ModifiedTime = DateTime.UtcNow
+            };
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(RoomBDUpdate);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return -1;
+        }
+    }
+
+    public async Task<int> CheckOut(Guid Id, Guid IdRoom)
+    {
+        try
+        {
+            var RoomBDUpdate = new RoomBookingDetailUpdateRequest()
+            {
+                Id = Id,
+                Status = EntityStatus.Locked,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                CheckOutReality = DateTime.UtcNow,
+                ModifiedTime = DateTime.UtcNow
+            };
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(RoomBDUpdate);
+            var updateStatusRquest = new RoomUpdateStatusRequest()
+            {
+                Id = IdRoom,
+                Status = RoomStatus.Vacant,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                ModifiedTime = DateTime.Now,
+            };
+            var rs = await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return -1;
+        }
     }
 
     [Route("/BookingRoom/Id={IdRoomBooking}&&Client={IdClient}")]

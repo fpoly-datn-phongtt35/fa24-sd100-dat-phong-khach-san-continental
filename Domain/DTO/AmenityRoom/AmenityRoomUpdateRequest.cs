@@ -11,6 +11,7 @@ public class AmenityRoomUpdateRequest
     public EntityStatus Status { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
+    public bool Deleted { get; set; }
 
     public Models.AmenityRoom ToAmenityRoom()
     {
@@ -22,7 +23,8 @@ public class AmenityRoomUpdateRequest
             Amount = Amount,
             Status = Status,
             ModifiedTime = ModifiedTime,
-            ModifiedBy = ModifiedBy
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
         };
     }
 }

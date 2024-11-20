@@ -23,8 +23,6 @@ public class RoomTypeAddService : IRoomTypeAddService
         var roomType = roomTypeAddRequest.ToRoomType();
         
         roomType.Deleted = false;
-        roomType.DeletedTime = default(DateTimeOffset);
-        
         await _roomTypeRepository.AddRoomType(roomType);
 
         return roomType.ToRoomTypeResponse();

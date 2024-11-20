@@ -27,7 +27,20 @@ namespace View
             builder.Services.AddTransient<IRoomGetService, RoomGetService>();
             builder.Services.AddTransient<IRoomRepo, RoomRepo>();
             builder.Services.AddTransient<IRoomBookingGetService, RoomBookingGetService>();
+            builder.Services.AddTransient<IRoomBookingCreateService, RoomBookingCreateService>();
             builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>();
+            builder.Services.AddTransient<IRoomBookingDetailServiceForCustomer, RoomBookingDetailService>(); 
+            builder.Services.AddTransient<IRoomBookingDetailRepository, RoomBookingDetailRepository>();
+            builder.Services.AddTransient<IServiceService, ServiceService>();
+            builder.Services.AddTransient<IServiceRepo, ServiceRepo>();
+            builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
+            builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
+            builder.Services.AddTransient<IRoomBookingCreateForCustomerService, RoomBookingCreateForCustomerService>();
+            builder.Services.AddTransient<IRoomBookingRepository, RoomBookingRepository>(); 
+            builder.Services.AddTransient<IRoomUpdateStatusService, RoomUpdateStatusService>(); 
+            builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
+            builder.Services.AddTransient<IServiceOrderDetailRepo, ServiceOrderDetailRepo>();
+
             builder.Services.AddHttpClient();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {

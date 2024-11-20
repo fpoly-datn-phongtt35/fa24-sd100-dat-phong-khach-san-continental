@@ -183,20 +183,51 @@ public class RoomBookingRepository : IRoomBookingRepository
         return null;
     }
 
-    public async Task<int> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request)
+    public async Task<Guid> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request)
     {
         try
         {
             SqlParameter[] sqlParameters = new SqlParameter[]
             {
+                new SqlParameter("@BookingType", SqlDbType.Int) { Value = request.BookingType },
+                new SqlParameter("@CustomerId", request.CustomerId),
+                new SqlParameter("@StaffId", request.StaffId.HasValue ? (object)request.StaffId.Value : DBNull.Value),
+                new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                new SqlParameter("@CreatedBy", request.CreatedBy),
+                new SqlParameter("@TotalPrice", request.TotalPrice),
+                new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice.HasValue ? (object)request.TotalRoomPrice.Value : DBNull.Value),
+                new SqlParameter("@TotalServicePrice", request.TotalServicePrice.HasValue ? (object)request.TotalServicePrice.Value : DBNull.Value),
+                new SqlParameter("@NewId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
+            };
+
+            await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_InsertRoomBookingForCustomer, sqlParameters);
+
+            // Trả về ID được tạo ra
+            return (Guid)sqlParameters[8].Value;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<int> CreateRoomBooking(RoomBookingCreateRequest request)
+    {
+        try
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                    new SqlParameter("@BookingType", SqlDbType.Int) { Value = request.BookingType },
                     new SqlParameter("@CustomerId", request.CustomerId),
                     new SqlParameter("@StaffId", request.StaffId),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
-                    new SqlParameter("@CreatedTime", request.CreatedTime),
-                    new SqlParameter("@CreatedBy",request.CustomerId)
+                    new SqlParameter("@TotalPrice", request.TotalPrice),
+                    new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice),
+                    new SqlParameter("@TotalServicePrice", request.TotalServicePrice),
+                    new SqlParameter("@CreatedBy",request.CreatedBy)
             };
 
-            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_BookRoomForCustomer, sqlParameters);
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertRoomBooking, sqlParameters);
         }
         catch (Exception ex)
         {

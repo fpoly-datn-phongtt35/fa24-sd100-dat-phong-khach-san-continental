@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Enums;
 using Microsoft.VisualBasic;
 
 namespace Domain.DTO.RoomType;
@@ -6,12 +7,13 @@ namespace Domain.DTO.RoomType;
 public class RoomTypeUpdateRequest
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; } = string.Empty;
-    public string? Description { get; set; } = string.Empty;
+    public string? Name { get; set; }
+    public string? Description { get; set; }
     public int? MaximumOccupancy { get; set; }
     public EntityStatus Status { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }
+    public bool Deleted { get; set; }
 
     public Models.RoomType ToRoomType()
     {
@@ -23,7 +25,8 @@ public class RoomTypeUpdateRequest
             MaximumOccupancy = MaximumOccupancy,
             Status = Status,
             ModifiedTime = ModifiedTime,
-            ModifiedBy = ModifiedBy
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
         };
     }
 }

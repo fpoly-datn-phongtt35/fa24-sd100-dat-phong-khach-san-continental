@@ -1,7 +1,10 @@
 ﻿using Domain.Enums;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Security.Claims;
 using ViewClient.Models.DTO.Login;
 using ViewClient.Models.DTO.Register;
 using ViewClient.Repositories.IRepository;
@@ -31,6 +34,16 @@ namespace ViewClient.Controllers
                 var result = await _loginRepo.LoginAsync(loginInput);
                 if (result != null && result.Status == EntityStatus.Active)
                 {
+                    var claims = new List<Claim>();
+                    claims.Add(new Claim(ClaimTypes.UserData, result.Id.ToString()));
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var authProperties = new AuthenticationProperties
+                    {
+                        AllowRefresh = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
+                        IsPersistent = true
+                    };
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
                     HttpContext.Session.SetString("UserName", result.UserName);
                     return RedirectToAction("Index", "Home");
                 }
@@ -60,7 +73,7 @@ namespace ViewClient.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Yêu cầu nhập đúng thông tin."); // Show error if registration fails
+                    ModelState.AddModelError(string.Empty, "Yêu cầu nhập đúng thông tin.");
                 }
             }
 

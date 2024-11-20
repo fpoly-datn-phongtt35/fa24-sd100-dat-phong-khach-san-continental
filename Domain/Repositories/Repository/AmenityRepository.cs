@@ -33,12 +33,12 @@ public class AmenityRepository : IAmenityRepository
             // Creating list of SQL parameters
             SqlParameter[] parameters =
             {
-                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = amenity.Name },
-                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenity.CreatedBy },
-                new SqlParameter("@NewAmenityId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
+                new("@Name", SqlDbType.NVarChar) { Value = amenity.Name },
+                new("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
+                new("@Status", SqlDbType.Int) { Value = amenity.Status },
+                new("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = amenity.CreatedBy },
+                new("@NewAmenityId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
 
             // Executing the stored procedure to insert data
@@ -67,12 +67,13 @@ public class AmenityRepository : IAmenityRepository
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = amenity.Id },
-                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = amenity.Name },
-                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = amenity.Status },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy }
+                new("@Id", SqlDbType.UniqueIdentifier) { Value = amenity.Id },
+                new("@Name", SqlDbType.NVarChar) { Value = amenity.Name },
+                new("@Description", SqlDbType.NVarChar) { Value = amenity.Description },
+                new("@Status", SqlDbType.Int) { Value = amenity.Status },
+                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = amenity.ModifiedBy },
+                new("@Deleted", SqlDbType.Bit) {Value = amenity.Deleted}
             };
 
             await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdateAmenity, parameters);

@@ -16,6 +16,7 @@ namespace Domain.Repositories.IRepository
         Task<Room?> GetRoomById(Guid RoomId);
         Task<Room> AddRoom(Room Room);
         Task<Room?> UpdateRoom(Room Room);
+        Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request);
         Task<Room?> DeleteRoom(Room Room);
     }
 }

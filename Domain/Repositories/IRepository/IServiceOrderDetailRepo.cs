@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.ServiceOrderDetail;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,8 +11,8 @@ namespace Domain.Repositories.IRepository
 {
     public interface IServiceOrderDetailRepo
     {
-        Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request);
-        Task<int> UpdateServiceOrderDetail(ServiceOrderDetailUpdateRequest request);
+        Task<int> UpsertServiceOrderDetail(ServiceOrderDetail request);
+        Task<DataTable> GetListServiceOrderDetailByRoomBookingI(Guid id);
         Task<int> DeleteServiceOrderDetail(ServiceOrderDetailDeleteRequest request);
         Task<DataTable> GetServiceOrderDetails(ServiceOrderDetailGetRequest request);
     }
