@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.ServiceOrderDetail;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Deposit { get; set; }
         public EntityStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
+        //public List<ServiceOrderDetailCreateRequest> SelectedServices { get; set; }
     }
 }

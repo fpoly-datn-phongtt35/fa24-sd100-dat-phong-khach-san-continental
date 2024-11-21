@@ -16,5 +16,6 @@ namespace Domain.Services.IServices
         Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);
         Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request);
+        Task<DataTable> GetRoomBookingDetailByCustomerId(Guid customerId);
     }
 }
