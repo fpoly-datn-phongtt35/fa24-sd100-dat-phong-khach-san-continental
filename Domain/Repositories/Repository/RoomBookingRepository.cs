@@ -211,7 +211,7 @@ public class RoomBookingRepository : IRoomBookingRepository
             await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_InsertRoomBookingForCustomer, sqlParameters);
 
             // Trả về ID được tạo ra
-            return (Guid)sqlParameters[8].Value;
+            return (Guid)sqlParameters[9].Value;
         }
         catch (Exception ex)
         {

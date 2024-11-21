@@ -27,16 +27,18 @@ public class RoomBookingController : Controller
     private readonly IRoomGetService _roomGetService;
     private readonly IServiceService _serviceService;
     private readonly IRoomUpdateStatusService _roomUpdateStatusService;
+    private readonly IRoomBookingUpdateService _roomBookingUpdateService;
     private readonly IRoomBookingGetService _roomBookingService;
     private readonly IServiceTypeService _serviceTypeService;
     private readonly IServiceOrderDetailService _serviceOrderDetailService;
     private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-    public RoomBookingController(IServiceOrderDetailService serviceOrderDetailService,IServiceTypeService serviceTypeService,IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
+    public RoomBookingController(IRoomBookingUpdateService roomBookingUpdateService,IServiceOrderDetailService serviceOrderDetailService,IServiceTypeService serviceTypeService,IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
         _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
+        _roomBookingUpdateService = roomBookingUpdateService;
         _serviceOrderDetailService = serviceOrderDetailService;
         _roomUpdateStatusService = roomUpdateStatusService;
         _serviceTypeService = serviceTypeService;
@@ -107,20 +109,46 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<int> submit(RoomBookingCreateRequestForCustomer bookingcreaterequest, List<RoomBookingDetailCreateRequest> lstupsert,List<ServiceOrderDetail> lstSerOrderDetail)
+    public async Task<int> submit(RoomBooking bookingcreaterequest, List<RoomBookingDetail> lstupsert,List<ServiceOrderDetail> lstSerOrderDetail)
     {
         try
         {
-            bookingcreaterequest.BookingType = BookingType.Offline;
-            bookingcreaterequest.StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            bookingcreaterequest.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var idroombooking = await _roomBookingCreateService.CreateRoomBookingForCustomer(bookingcreaterequest);
+            Guid idroombooking = Guid.Empty;
+            if (bookingcreaterequest.Id == Guid.Empty) 
+            {
+                var RoomBooking = new RoomBookingCreateRequestForCustomer() 
+                {
+                    BookingType = BookingType.Offline,
+                    StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                    CustomerId = bookingcreaterequest.CustomerId,
+                    TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
+                    TotalPrice = bookingcreaterequest.TotalPrice,
+                    Status = EntityStatus.Active,
+                    TotalServicePrice = bookingcreaterequest.TotalServicePrice,
+                    TotalRoomPrice = bookingcreaterequest.TotalRoomPrice,
+                    CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                };
+                idroombooking = await _roomBookingCreateService.CreateRoomBookingForCustomer(RoomBooking);
+            }
+            else 
+            {
+                var roomBooking = new RoomBookingUpdateRequest()
+                {
+                    Id = bookingcreaterequest.Id,
+                    TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
+                    TotalPrice = bookingcreaterequest.TotalPrice,
+                    TotalServicePrice = bookingcreaterequest.TotalServicePrice,
+                    Status = bookingcreaterequest.Status,
+                    ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                    ModifiedTime = DateTime.Now,
+                };
+                await _roomBookingUpdateService.UpdateRoomBookingAsync(roomBooking);
+            }
             foreach(var i in lstupsert) 
             {
                 i.RoomBookingId = idroombooking;
                 i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                i.Status = EntityStatus.Active;
-                await _roomBookingDetailServiceForCustomer.CreateRoomBookingDetail(i);
+                await _roomBookingDetailServiceForCustomer.UpSertRoomBookingDetail(i);
                 var updateStatusRquest = new RoomUpdateStatusRequest()
                 {
                     Id = i.RoomId,
@@ -147,7 +175,7 @@ public class RoomBookingController : Controller
                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
                 }
             }
-            return -1;
+            return 1;
         }
         catch (Exception ex)
         {
