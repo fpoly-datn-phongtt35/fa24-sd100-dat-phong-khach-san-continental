@@ -10,6 +10,7 @@ namespace Domain.DTO.RoomBooking
         public decimal? TotalPrice { get; set; }
         public decimal? TotalRoomPrice { get; set; }
         public decimal? TotalServicePrice { get; set; }
+        public decimal? TotalExtraPrice { get; set; }
         public EntityStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
         public Guid? NewId { get; set; }

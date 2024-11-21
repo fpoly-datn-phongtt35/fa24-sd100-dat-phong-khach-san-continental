@@ -11,6 +11,7 @@ namespace Domain.Models
         public decimal Price { get; set; }
         public double? Amount { get; set; }
         public int Quantity { get; set; }
+        public decimal? ExtraPrice { get; set; }
         public string? Description { get; set; }
         public Guid ServiceId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
@@ -23,7 +24,7 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
 
-        public Service Service { get; set; }
-        public RoomBooking RoomBooking { get; set; }
+        public virtual Service Service { get; set; }
+        public virtual RoomBooking RoomBooking { get; set; }
     }
 }

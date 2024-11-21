@@ -18,7 +18,8 @@ namespace Domain.Models
         public Guid? StaffId { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal TotalRoomPrice { get; set; }
-        public decimal TotalServicePrice { get; set; }
+        public decimal? TotalServicePrice { get; set; }
+        public decimal? TotalExtraPrice { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset? CreatedTime { get; set; }

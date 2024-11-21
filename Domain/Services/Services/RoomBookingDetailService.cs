@@ -65,8 +65,10 @@ namespace Domain.Services.Services
                                 CheckInReality = row.Field<DateTimeOffset>("CheckInReality"),
                                 CheckOutReality = row.Field<DateTimeOffset>("CheckOutReality"),
                                 Price = row.Field<decimal?>("Price"),
+                                ExtraPrice = row.Field<decimal>("ExtraPrice"),
                                 Deposit = row.Field<decimal>("Deposit"),
                                 Status = row.Field<EntityStatus>("Status"),
+                                Deleted = row.Field<bool>("Deleted")
                                 //CreatedTime = row.Field<DateTime>("CreatedTime"),
                                 //CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                 //ModifiedTime = row.Field<DateTime>("ModifiedTime"),
@@ -99,6 +101,7 @@ namespace Domain.Services.Services
                                          CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
                                          CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),
+                                         ExtraPrice = row.Field<decimal>("ExtraPrice"),
                                          Name = row.Field<string>("Name")
                                      }).ToList();
             }

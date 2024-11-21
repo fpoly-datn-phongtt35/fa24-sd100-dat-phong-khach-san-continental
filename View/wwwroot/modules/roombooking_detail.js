@@ -311,10 +311,10 @@ var _roombooking_detail = {
                            <td class="room_price" id="Price_` + IdAdd +`">${result.price}</td>
                            <td class="deposit" id="Deposit_` + IdAdd + `"></td>
                            <td>
-                               <input id="CheckIn_` + IdAdd + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + IdAdd + `)" class="form-control checkin_time select_time" value="` + $("#fromDate").val() + `" type="datetime-local">
+                               <input id="CheckIn_` + IdAdd + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + IdAdd + `)" class="form-control checkin_time select_time" value="` + $("#fromDate").val() + `" type="date">
                            </td>
                            <td >
-                               <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="datetime-local">
+                               <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="date">
                           </td>
                            <td class="price_room" id="RoomPr_` + IdAdd + `"></td>
                            <td id="CheckInReal_`+ IdAdd +`"></td>
@@ -454,10 +454,10 @@ var _roombooking_detail = {
                            <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${item.price}</td>
                            <td class="deposit" id="Deposit_` + item.roomBookingDetailId + `"></td>
                            <td>
-                               <input id="CheckIn_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="datetime-local">
+                               <input id="CheckIn_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
                            <td >
-                               <input id="CheckOut_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="datetime-local">
+                               <input id="CheckOut_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
                           </td>
                            <td class="price_room" id="RoomPr_` + item.roomBookingDetailId + `"></td>
                            <td id="CheckInReal_`+ item.roomBookingDetailId + `">` + newCIfrom +`</td>
