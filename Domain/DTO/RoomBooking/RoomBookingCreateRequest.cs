@@ -10,7 +10,8 @@ public class RoomBookingCreateRequest
     public EntityStatus Status { get; set; }
     public decimal TotalPrice { get; set; }
     public decimal TotalRoomPrice { get; set; }
-    public decimal TotalServicePrice { get; set; }
+    public decimal? TotalServicePrice { get; set; }
+    public decimal? TotalExtraPrice { get; set; }
     public Guid? CreatedBy { get; set; }
 
     /// <summary>

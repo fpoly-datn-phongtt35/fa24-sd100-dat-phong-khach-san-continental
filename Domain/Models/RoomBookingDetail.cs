@@ -15,6 +15,7 @@ namespace Domain.Models
         public DateTimeOffset? CheckOutReality { get; set; }        
         public decimal? Price { get; set; }
         public decimal Deposit { get; set; } = 0;
+        public decimal ExtraPrice { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset? CreatedTime { get; set; }

@@ -11,6 +11,7 @@ namespace Domain.Models
         public decimal Price { get; set; }
         public double? Amount { get; set; }
         public int Quantity { get; set; }
+        public decimal? ExtraPrice { get; set; }
         public string? Description { get; set; }
         public Guid ServiceId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;

@@ -196,6 +196,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@CreatedBy", request.CreatedBy),
                 new SqlParameter("@TotalPrice", request.TotalPrice),
                 new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice.HasValue ? (object)request.TotalRoomPrice.Value : DBNull.Value),
+                new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice),
                 new SqlParameter("@TotalServicePrice", request.TotalServicePrice.HasValue ? (object)request.TotalServicePrice.Value : DBNull.Value),
                 new SqlParameter("@NewId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
@@ -224,6 +225,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                     new SqlParameter("@TotalPrice", request.TotalPrice),
                     new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice),
                     new SqlParameter("@TotalServicePrice", request.TotalServicePrice),
+                    new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice),
                     new SqlParameter("@CreatedBy",request.CreatedBy)
             };
 
