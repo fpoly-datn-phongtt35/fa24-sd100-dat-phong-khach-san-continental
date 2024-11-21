@@ -5,9 +5,9 @@
 
     });*/
 
-    if ($("#IdRoomBooking").val()) {
+/*    if ($("#IdRoomBooking").val()) {
         $(".btn-luu").remove();
-    }
+    }*/
 
     if (!$("#IdClient").val()) {
         $("#Client_Id").select2({
@@ -164,6 +164,7 @@
         }
     }).on('select2:opening', function (e) {
         $('#service_type_Id').val([]).trigger('change');
+        getSerRq.ServiceTypeId = null;
     });
 
 
@@ -188,6 +189,7 @@ var lstRoomBookingDetail = [];
 var lstIdRoom = [];
 var IdAdd = -1;
 var LstIdAdd = [];
+var LstIdUpdate = [];
 var STT = 1;
 
 var listIdService = [];
@@ -292,19 +294,8 @@ var _Service_OrderDetail =
 
 
 var _roombooking_detail = {
-    AddRoomToList: function (Id) {
-        if (lstIdRoom.indexOf(Id) < 0)
-        {
-            lstIdRoom.push(Id);
-            $.ajax({
-                url: "/RoomBooking/GetRoomById",
-                type: "post",
-                data: { Id: Id },
-                success: function (result) {
-                    if (result != null) {
-                        $("#room-related").append(`
-                        <tr class="text-white" Id="Element_` +IdAdd+ `">
-                           <td style="display:none"><input id="Id_`+ IdAdd + `" value="${result.id}"></input></td>
+/*    < tr class="text-white" Id = "Element_` +IdAdd+ `" >
+                           <td style="display:none"><input id="Idroom_`+ IdAdd + `" value="${result.id}"></input></td>
                            <td style="display:none"><input id="Status_`+ IdAdd + `" value="1"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${result.name}</td>
@@ -322,6 +313,44 @@ var _roombooking_detail = {
                            <td id="StatusRBD_`+ IdAdd + `">Active</td>
                            <td>
                                <a class="text-danger btn" style="cursor:pointer" onclick="_roombooking_detail.RemoveOutList('`+IdAdd+`')">Xóa</a>
+                           </td>
+                        </tr >*/
+    AddRoomToList: function (Id) {
+        if (lstIdRoom.indexOf(Id) < 0)
+        {
+            lstIdRoom.push(Id);
+            $.ajax({
+                url: "/RoomBooking/GetRoomById",
+                type: "post",
+                data: { Id: Id },
+                success: function (result) {
+                    if (result != null) {
+                        $("#room-related").append(`
+
+                        <tr class="text-white">
+                           <td style="display:none"><input id="Idroom_`+ IdAdd + `" value="${result.id}"></input></td>
+                           <td style="display:none"><input id="Id_`+ IdAdd + `" value=""></input></td>
+                           <td style="display:none"><input id="Status_`+ IdAdd + `" value="1"></input></td>
+                           <td scope="row">${STT}</td>
+                           <td>${result.name}</td>
+                           <td class="room_price" id="Price_` + IdAdd + `">${result.price}</td>
+                           <td class="deposit" id="Deposit_` + IdAdd + `"></td>
+                           <td>
+                               <input id="CheckIn_` + IdAdd + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + IdAdd + `)" class="form-control checkin_time select_time" value="` + $("#fromDate").val() + `" type="date">
+                           </td>
+                           <td >
+                               <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="date">
+                           </td>
+                           <td class="price_room" id="RoomPr_` + IdAdd + `"></td>
+                           <td class="price_extra" id="ExtraPr_` + IdAdd + `"></td>
+                           <td>
+                               <input id="CheckInReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
+                           </td>
+                           <td >
+                               <input id="CheckOutReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
+                           </td>
+                           <td id="StatusRBD_`+ IdAdd + `">Tạo mới</td>
+                           <td class="d-flex">
                            </td>
                         </tr>
                         `)
@@ -437,18 +466,20 @@ var _roombooking_detail = {
                 if (result != null) {
                     result.forEach(item =>
                     {
+                        LstIdUpdate.push(item.roomBookingDetailId);
                         const datefrom = new Date(item.checkInBooking);
-                        var newFMfrom = datefrom.toISOString().slice(0, 16);
+                        var newFMfrom = moment(datefrom).format("YYYY-MM-DD")
                         const dateto = new Date(item.checkOutBooking);
-                        var newFMto = dateto.toISOString().slice(0, 16);
+                        var newFMto = moment(dateto).format("YYYY-MM-DD")
                         const dateChein = new Date(item.checkInReality);
                         var newCIfrom = dateChein.toISOString().slice(0, 16);
                         const dateCheOut = new Date(item.checkOutReality);
                         var newCOto = dateCheOut.toISOString().slice(0, 16);
                         $("#room-related").append(`
                         <tr class="text-white">
-                           <td style="display:none"><input id="Id_`+  + `" value="${item.roomBookingDetailId}"></input></td>
-                           <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="6"></input></td>
+                           <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>
+                           <td style="display:none"><input id="Id_`+ item.roomBookingDetailId + `" value="${item.roomBookingDetailId}"></input></td>
+                           <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="${item.status}"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${item.name}</td>
                            <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${item.price}</td>
@@ -458,15 +489,20 @@ var _roombooking_detail = {
                            </td>
                            <td >
                                <input id="CheckOut_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
-                          </td>
+                           </td>
                            <td class="price_room" id="RoomPr_` + item.roomBookingDetailId + `"></td>
-                           <td id="CheckInReal_`+ item.roomBookingDetailId + `">` + newCIfrom +`</td>
-                           <td id="CheckOutReal_`+ item.roomBookingDetailId + `">` + newCOto +`</td>
+                           <td class="price_extra" id="ExtraPr_` + item.roomBookingDetailId + `"></td>
+                           <td>
+                               <input id="CheckInReal_`+ item.roomBookingDetailId + `" disabled class="form-control" disabled value="` + newCIfrom + `" type="datetime-local">
+                           </td>
+                           <td >
+                               <input id="CheckOutReal_`+ item.roomBookingDetailId + `" disabled class="form-control" disabled value="` + newCOto + `" type="datetime-local">
+                           </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + item.status + `</td>
                            <td class="d-flex">
                                <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('`+ item.roomBookingDetailId + `','` + item.roomId +`')">Hủy</a>
-                               <a class="text-green btn btn-success ms-2 btn-checkin" id="btn-checkin-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('`+ item.roomBookingDetailId + `')">Đã nhận</a>
-                               <a class="text-white btn btn-warning ms-2 btn-checkout" id="btn-checkout-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.CheckOut('`+ item.roomBookingDetailId + `','` + item.roomId +`')">Đã trả</a>
+                               <a class="text-green btn btn-success ms-2 btn-checkin text-nowrap" id="btn-checkin-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('`+ item.roomBookingDetailId + `')">Đã nhận</a>
+                               <a class="text-white btn btn-warning ms-2 btn-checkout text-nowrap" id="btn-checkout-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.CheckOut('`+ item.roomBookingDetailId + `','` + item.roomId +`')">Đã trả</a>
                            </td>
                         </tr>
                         `)
@@ -515,39 +551,27 @@ var _roombooking_detail = {
         });
     },
 
-    cancleRoomBookingDetail: function (Id, IdRoom)
+    cancleRoomBookingDetail: function (Id)
     {
-        $.ajax({
-            url: "/RoomBooking/Cancel",
-            type: "post",
-            data: { Id: Id, IdRoom: IdRoom },
-            success: function (result) {
-                window.location.reload();
-            }
-        });
+        $("#Status_" + Id).val(8);
+        $("#StatusRBD_" + Id).html("Đã hủy");
     },
 
     CheckIn: function (Id)
     {
-        $.ajax({
-            url: "/RoomBooking/CheckIn",
-            type: "post",
-            data: { Id: Id},
-            success: function (result) {
-                window.location.reload();
-            }
-        });
+        $("#Status_" + Id).val(2);
+        $("#StatusRBD_" + Id).html("Đã nhận");
+        var newDate = new Date();
+        newDate = newDate.toISOString().slice(0, 16);
+        $("#CheckInReal_" + Id).val(newDate);
     },
 
     CheckOut: function (Id, IdRoom) {
-        $.ajax({
-            url: "/RoomBooking/CheckOut",
-            type: "post",
-            data: { Id: Id, IdRoom: IdRoom },
-            success: function (result) {
-                window.location.reload();
-            }
-        });
+        $("#Status_" + Id).val(8);
+        $("#StatusRBD_" + Id).html("Đã trả");
+        var newDate = new Date();
+        newDate = newDate.toISOString().slice(0, 16);
+        $("#CheckOutReal_" + Id).val(newDate);
     },
 
     GetlistObjSubmit: function ()
@@ -566,17 +590,33 @@ var _roombooking_detail = {
         {
             var obj =
             {
-                RoomId: $("#Id_" + item).val(),
+                RoomId: $("#Idroom_" + item).val(),
                 CheckInBooking: $("#CheckIn_" + item).val(),
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: null,
                 CheckOutReality: null,
                 Price: $("#Price_" + item).text(),
                 Deposit: $("#Deposit_" + item).text(),
-                Status: $("#Status_" + item).text()
+                Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
         });
+        LstIdUpdate.forEach(item =>
+        {
+            var obj =
+            {
+                Id: $("#Id_" + item).val(),
+                RoomId: $("#Idroom_" + item).val(),
+                CheckInBooking: $("#CheckIn_" + item).val(),
+                CheckOutBooking: $("#CheckOut_" + item).val(),
+                CheckInReality: $("#CheckInReal_" + item).val(),
+                CheckOutReality: $("#CheckOutReal_" + item).val(),
+                Price: $("#Price_" + item).text(),
+                Deposit: $("#Deposit_" + item).text(),
+                Status: $("#Status_" + item).val()
+            }
+            lstRoomBookingDetail.push(obj);
+        })
         console.log(RoomBooking)
         console.log(lstRoomBookingDetail)
     },

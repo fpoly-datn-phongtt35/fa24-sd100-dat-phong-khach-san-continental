@@ -18,16 +18,16 @@
     }
 </style>
 
-<h1>Index</h1>
+<h1>Trang loại bài đăng</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
 </p>
 
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
-        <input type="text" id="titleOfType" name="titleOfType" class="form-control me-2" placeholder="Title Of Type" value="@Context.Request.Query["titleOfType"]" style="max-width: 200px;" />
+        <input type="text" id="titleOfType" name="titleOfType" class="form-control me-2" placeholder="Tiêu đề" value="@Context.Request.Query["titleOfType"]" style="max-width: 200px;" />
         <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
@@ -42,24 +42,25 @@
 <table class="table">
     <thead>
         <tr>
-            <th> @Html.DisplayNameFor(model => model.data.First().Id)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().TitleOfType)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().Content)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().Status)</th>
+            <th> Tiêu đề </th>
+            <th> Nội dung </th>
+            <th> Trạng thái</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.data) {
         <tr>
-            <td> @Html.DisplayFor(modelItem => item.Id)</td>
             <td> @Html.DisplayFor(modelItem => item.TitleOfType)</td>
             <td> @Html.DisplayFor(modelItem => item.Content)</td>
             <td> @Html.DisplayFor(modelItem => item.Status)</td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },
+                             new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id },
+                             new { @class = "btn btn-info" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id },
+                             new { @class = "btn btn-danger" })
             </td>
         </tr>
 }

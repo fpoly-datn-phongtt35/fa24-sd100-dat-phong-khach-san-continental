@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomBookingDetail;
+using Domain.Models;
 using System.Data;
 
 namespace Domain.Repositories.IRepository
@@ -7,6 +8,7 @@ namespace Domain.Repositories.IRepository
     {
         Task<DataTable> GetListRoomBookingDetailByRoomBookingId(Guid id);
         Task<DataTable> GetById(Guid id);
+        Task<int> UpSertRoomBookingDetail(RoomBookingDetail request);
         Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);
         Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request);
