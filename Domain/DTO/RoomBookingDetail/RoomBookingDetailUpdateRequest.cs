@@ -14,6 +14,7 @@ namespace Domain.DTO.RoomBookingDetail
         public DateTimeOffset? CheckOutBooking { get; set; }
         public DateTimeOffset? CheckInReality { get; set; }
         public DateTimeOffset? CheckOutReality { get; set; }
+        public decimal? ExtraPrice { get; set; }
         public EntityStatus Status { get; set; }
         public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }

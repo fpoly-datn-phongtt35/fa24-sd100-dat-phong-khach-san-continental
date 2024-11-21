@@ -37,6 +37,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@CheckInReality", request.CheckInReality),
                     new SqlParameter("@CheckOutReality", request.CheckOutReality),
                     new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@ExtraPrice", request.ExtraPrice),
                     new SqlParameter("@Deposit", request.Deposit),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedBy",request.CreatedBy)
@@ -64,6 +65,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@CheckInReality", request.CheckInReality),
                     new SqlParameter("@CheckOutReality", request.CheckOutReality),
                     new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@ExtraPrice", request.ExtraPrice),
                     new SqlParameter("@Deposit", request.Deposit),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedTime", request.CreatedTime),
@@ -127,6 +129,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@CheckInReality", (object)request.CheckInReality ?? DBNull.Value),
                     new SqlParameter("@CheckOutReality", (object)request.CheckOutReality ?? DBNull.Value),
                     new SqlParameter("@Status", (int)request.Status), // Chuyển đổi enum sang int
+                    new SqlParameter("@ExtraPrice", (object)request.ExtraPrice ?? DBNull.Value) ,
                     new SqlParameter("@ModifiedTime", (object)DateTimeOffset.Now ?? DBNull.Value),
                     new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value),
                     new SqlParameter("@Deleted", request.Deleted),
