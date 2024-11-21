@@ -21,7 +21,18 @@ namespace Domain.Services.Services
         public RoomBookingDetailService(IConfiguration configuration, IRoomBookingDetailRepository roomBookingDetailRepository)
         {
             _configuration = configuration;
-           _roomBookingDetailRepository = roomBookingDetailRepository;
+            _roomBookingDetailRepository = roomBookingDetailRepository;
+        }
+        public async Task<int> UpSertRoomBookingDetail(RoomBookingDetail request)
+        {
+            try
+            {
+                return await _roomBookingDetailRepository.UpSertRoomBookingDetail(request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request)
@@ -101,7 +112,7 @@ namespace Domain.Services.Services
                                          CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
                                          CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),
-                                         ExtraPrice = row.Field<decimal>("ExtraPrice"),
+                                         ExtraPrice = row.Field<decimal?>("ExtraPrice"),
                                          Name = row.Field<string>("Name")
                                      }).ToList();
             }

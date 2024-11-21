@@ -24,6 +24,64 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
         }
 
+        public async Task<int> UpSertRoomBookingDetail(RoomBookingDetail request) 
+        {
+            try
+            {
+                if (request.Id == Guid.Empty)
+                {
+                    SqlParameter[] sqlParameters = new SqlParameter[]
+                    {
+                    new SqlParameter("@RoomId", request.RoomId),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
+                    new SqlParameter("@CheckInBooking", request.CheckInBooking),
+                    new SqlParameter("@CheckOutBooking", request.CheckOutBooking),
+                    new SqlParameter("@CheckInReality", request.CheckInReality),
+                    new SqlParameter("@CheckOutReality", request.CheckOutReality),
+                    new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@ExtraPrice", request.ExtraPrice),
+                    new SqlParameter("@Deposit", request.Deposit),
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                    new SqlParameter("@CreatedBy",request.CreatedBy)
+                    };
+
+                    _worker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertRoomBookingDetail, sqlParameters);
+                }
+                else
+                {
+                    var existingRoomBookingDetail = GetById(request.Id);
+                    if (existingRoomBookingDetail == null)
+                    {
+                        throw new Exception("RoomBookingDetail could not be found");
+                    }
+
+                    SqlParameter[] sqlParameters = new SqlParameter[]
+                    {
+                        new SqlParameter("@Id", request.Id),
+                        new SqlParameter("@CheckInBooking", (object)request.CheckInBooking ?? DBNull.Value),
+                        new SqlParameter("@CheckOutBooking", (object)request.CheckOutBooking ?? DBNull.Value),
+                        new SqlParameter("@CheckInReality", (object)request.CheckInReality ?? DBNull.Value),
+                        new SqlParameter("@CheckOutReality", (object)request.CheckOutReality ?? DBNull.Value),
+                        new SqlParameter("@Status", (int)request.Status), // Chuyển đổi enum sang int
+                        new SqlParameter("@ExtraPrice", (object)request.ExtraPrice ?? DBNull.Value) ,
+                        new SqlParameter("@ModifiedTime", (object)DateTimeOffset.Now ?? DBNull.Value),
+                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value),
+                        new SqlParameter("@Deleted", request.Deleted),
+                        new SqlParameter("@DeletedTime", (object)(request.Deleted ? DateTimeOffset.Now : DBNull.Value)),
+                        new SqlParameter("@DeletedBy", (object)request.DeletedBy ?? DBNull.Value)
+                   };
+
+
+                    _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);
+                }
+                    return 1;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request)
         {
             try
