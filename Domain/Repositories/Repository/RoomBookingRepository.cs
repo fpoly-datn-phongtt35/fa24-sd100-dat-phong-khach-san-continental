@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Azure.Core;
 using Domain.DTO.Paging;
 using Domain.DTO.RoomBooking;
 using Domain.Enums;
@@ -73,6 +74,9 @@ public class RoomBookingRepository : IRoomBookingRepository
         return model;
     }
     
+
+
+
     public async Task<RoomBooking?> GetRoomBookingById(Guid roomBookingId)
     {
         try
@@ -109,10 +113,13 @@ public class RoomBookingRepository : IRoomBookingRepository
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new("@Id", SqlDbType.UniqueIdentifier) { Value = roomBooking.Id },
-                new("@Status", SqlDbType.Int) { Value = roomBooking.Status },
-                new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = roomBooking.ModifiedBy }
+                new SqlParameter("@Id", roomBooking.Id) ,
+                new SqlParameter("@Status", roomBooking.Status) ,
+                new SqlParameter("@ModifiedTime",roomBooking.ModifiedTime) ,
+                new SqlParameter("@ModifiedBy", roomBooking.ModifiedBy),
+                new SqlParameter("@TotalPrice", roomBooking.TotalPrice.HasValue ? (object)roomBooking.TotalPrice.Value : DBNull.Value),
+                new SqlParameter("@TotalExtraPrice", roomBooking.TotalExtraPrice.HasValue ? (object)roomBooking.TotalExtraPrice.Value : DBNull.Value),
+                new SqlParameter("@TotalServicePrice", roomBooking.TotalServicePrice.HasValue ? (object)roomBooking.TotalServicePrice.Value : DBNull.Value),
             };
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoomBooking, parameters);
 
@@ -196,7 +203,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@CreatedBy", request.CreatedBy),
                 new SqlParameter("@TotalPrice", request.TotalPrice),
                 new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice.HasValue ? (object)request.TotalRoomPrice.Value : DBNull.Value),
-                new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice),
+                new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice.HasValue ? (object)request.TotalExtraPrice.Value : DBNull.Value),
                 new SqlParameter("@TotalServicePrice", request.TotalServicePrice.HasValue ? (object)request.TotalServicePrice.Value : DBNull.Value),
                 new SqlParameter("@NewId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
@@ -225,7 +232,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                     new SqlParameter("@TotalPrice", request.TotalPrice),
                     new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice),
                     new SqlParameter("@TotalServicePrice", request.TotalServicePrice),
-                    new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice),
+                    new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice.HasValue ? (object)request.TotalExtraPrice.Value : DBNull.Value),
                     new SqlParameter("@CreatedBy",request.CreatedBy)
             };
 
