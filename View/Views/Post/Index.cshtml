@@ -17,7 +17,7 @@
         color: white;
     }
 </style>
-<h1>Index</h1>
+<h1>Trang chủ bài đăng</h1>
 
 
 
@@ -38,28 +38,25 @@
 </script>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().Id)
+                Id Loại bài đăng
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().PostTypeId)
+                Id Nhân viên
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().StaffId)
+               Tiêu đề
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().Title)
+               Nội dung
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().Status)
+                Trạng thái
             </th>
             <th></th>
         </tr>
@@ -67,9 +64,6 @@
     <tbody>
 @foreach (var item in Model.data) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PostTypeId)
             </td>
@@ -86,9 +80,12 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },
+                             new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id },
+                             new { @class = "btn btn-info" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id },
+                             new { @class = "btn btn-danger" })
             </td>
         </tr>
 }

@@ -21,7 +21,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
 </p>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
@@ -47,14 +47,14 @@
 <table class="table">
     <thead>
         <tr>
-            <th> @Html.DisplayNameFor(model => model.data.First().UserName)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().FirstName)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().LastName)</th>
+            <th> Tên tài khoản </th>
+            <th> Họ </th>
+            <th> Tên </th>
             <th> @Html.DisplayNameFor(model => model.data.First().Email)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().PhoneNumber)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().Gender)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().DateOfBirth)</th>
-            <th> @Html.DisplayNameFor(model => model.data.First().Status)</th>
+            <th> Số điện thoại </th>
+            <th> Giới tính </th>
+            <th> Ngày sinh nhật </th>
+            <th> Trạng thái </th>
             <th></th>
         </tr>
     </thead>
