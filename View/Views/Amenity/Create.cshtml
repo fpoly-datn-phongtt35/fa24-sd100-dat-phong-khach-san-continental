@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "_AdminLayout";
 }
 
 <h3>Tạo mới</h3>
@@ -41,12 +42,6 @@
                 <input asp-for="CreatedTime" class="form-control"/>
                 <span asp-validation-for="CreatedTime" class="text-danger"></span>
             </div>
-            @* <div class="form-group"> *@
-            @*     <label asp-for="CreatedBy" class="control-label">Được tạo bởi</label> *@
-            @*     <input asp-for="CreatedBy" class="form-control"/> *@
-            @*     <span asp-validation-for="CreatedBy" class="text-danger"></span> *@
-            @* </div> *@
-
             <div class="form-group mt-3">
                 <input type="submit" value="Tạo" class="btn btn-success"/>
             </div>
