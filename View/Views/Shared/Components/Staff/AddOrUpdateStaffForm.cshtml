@@ -26,9 +26,9 @@
                 <h1 class="modal-title fs-5" style="color:#0d6efd">Form Staff</h1>
                 <button type="button" class="btn-close close-form"></button>
             </div>
-            <form class="p-4 d-flex m-0" id="staff-form" onsubmit="return false">
-                @if (Model != null && Model.Id != Guid.Empty)
-                {
+            @if (Model != null && Model.Id != Guid.Empty)
+            {
+                <form class="ps-4 pe-4 d-flex m-0" id="staff-form" onsubmit="return false">
                     <input id="Id" value="@Model.Id" style="display:none" />
                     <div style="width:50%">
                         <div class="mb-3 align-items-center input-field">
@@ -58,9 +58,19 @@
                             </div>
                         </div>
                     </div>
-                }
-                else 
-                {
+                </form>
+                <div class="ps-4 pe-4 m-0">
+                    <div class="mb-3 align-items-center input-field">
+                        <label for="formFileMultiple" class="form-label pe-1">Password :</label>
+                        <div class="input-field">
+                            <input class="form-control" type="text" id="password" name="password">
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <form class="ps-4 pe-4 d-flex m-0" id="staff-form" onsubmit="return false">
                     <div style="width:50%">
                         <div class="mb-3 align-items-center input-field">
                             <label for="formFileMultiple" class="form-label pe-1">First name :</label>
@@ -89,8 +99,16 @@
                             </div>
                         </div>
                     </div>
-                }
-            </form>
+                </form>
+                <div class="ps-4 pe-4 m-0">
+                    <div class="mb-3 align-items-center input-field">
+                        <label for="formFileMultiple" class="form-label pe-1">Password :</label>
+                        <div class="input-field">
+                            <input class="form-control" type="text" id="password" name="password">
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary close-form">Bỏ qua</button>
                 <button type="button" class="btn btn-primary" onclick="_staff.Submit()">Lưu</button>

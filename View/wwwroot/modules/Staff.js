@@ -22,7 +22,7 @@ var _staff =
             PhoneNumber: $("#phonenumber").val(),
             Email: $("#email").val(),
             UserName: $("#email").val(),
-            Password: '',
+            Password: $("#password").val(),
             RoleId: '',
             Status: 1
         }
@@ -43,18 +43,12 @@ var _staff =
                     required: true,
                     number: true
                 },
-                /* "username":
-                 {
-                     required: true,
-                     minlength: 8,
-                     maxlength: 30
-                 },
                  "password":
                  {
                      required: true,
                      minlength: 8,
                      maxlength: 30
-                 }*/
+                 }
             },
             messages: {
                 "firstname": {
@@ -71,18 +65,12 @@ var _staff =
                     required: "Vui lòng nhập số điện số thoại",
                     number: "Số điện thoại không hợp lệ"
                 },
-                /* "username":
-                 {
-                     required: "Vui lòng nhập username",
-                     minlength: "username không được ít hơn 8 kí tự",
-                     maxlength: "username không được nhiều hơn 15 kí tự"
-                 },
                  "password":
                  {
                      required: "Vui lòng nhập password",
                      minlength: "password không được ít hơn 8 kí tự",
                      maxlength: "password không được nhiều hơn 15 kí tự"
-                 },*/
+                 },
             },
 
         });
@@ -94,12 +82,14 @@ var _staff =
                 data: { request: obj },
                 success: function (data) {
                     if (data.status == 200) {
+                        Notify.Success_Noti(data.msg, 1.5);
                         setTimeout(function () {
                             location.reload();
                         }, 1500);
                     }
                 },
                 error: function (xhr, status, error) {
+                    Notify.Faild_Noti(data.msg, 1.5);
                     console.log("Error: " + error);
                 }
             });
