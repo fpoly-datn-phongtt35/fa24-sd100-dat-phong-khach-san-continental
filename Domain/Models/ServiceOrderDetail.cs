@@ -24,7 +24,7 @@ namespace Domain.Models
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
 
-        public Service Service { get; set; }
-        public RoomBooking RoomBooking { get; set; }
+        public virtual Service Service { get; set; }
+        public virtual RoomBooking RoomBooking { get; set; }
     }
 }
