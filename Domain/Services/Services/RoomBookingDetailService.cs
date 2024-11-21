@@ -65,8 +65,10 @@ namespace Domain.Services.Services
                                 CheckInReality = row.Field<DateTimeOffset>("CheckInReality"),
                                 CheckOutReality = row.Field<DateTimeOffset>("CheckOutReality"),
                                 Price = row.Field<decimal?>("Price"),
+                                ExtraPrice = row.Field<decimal>("ExtraPrice"),
                                 Deposit = row.Field<decimal>("Deposit"),
                                 Status = row.Field<EntityStatus>("Status"),
+                                Deleted = row.Field<bool>("Deleted")
                                 //CreatedTime = row.Field<DateTime>("CreatedTime"),
                                 //CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                 //ModifiedTime = row.Field<DateTime>("ModifiedTime"),
@@ -93,11 +95,13 @@ namespace Domain.Services.Services
                                      {
                                          RoomBookingDetailId = row.Field<Guid>("RoomBookingDetailId"),
                                          RoomId = row.Field<Guid>("RoomId"),
-                                         CheckInBooking = row.Field<DateTimeOffset>("CheckInBooking"),
-                                         CheckOutBooking = row.Field<DateTimeOffset>("CheckOutBooking"),
-                                         CheckInReality = row.Field<DateTimeOffset>("CheckInReality"),
-                                         CheckOutReality = row.Field<DateTimeOffset>("CheckOutReality"),
+                                         CheckInBooking = row.Field<DateTimeOffset?>("CheckInBooking"),
+                                         CheckOutBooking = row.Field<DateTimeOffset?>("CheckOutBooking"),
+                                         Status =row.Field<EntityStatus>("Status").ToString(),
+                                         CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
+                                         CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),
+                                         ExtraPrice = row.Field<decimal>("ExtraPrice"),
                                          Name = row.Field<string>("Name")
                                      }).ToList();
             }
@@ -107,6 +111,12 @@ namespace Domain.Services.Services
             }
             return roomBookingDetail;
         }
+ 
+        public async Task<DataTable> GetRoomBookingDetailByCustomerId(Guid customerId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request)
         {
             try

@@ -17,11 +17,11 @@
             <div class="datepicker-wrap mt-3 d-flex justify-content-between" style="width:100%">
                 <div style="width:50%" class="m-2">
                     <label for="" style="width:90px;" class="form-label">Ngày nhận : </label>
-                    <input id="fromDate" onchange="_roombooking_detail.OnchangeFromDate()" class="form-control" placeholder="Ngày nhận" type="datetime-local" name="fromDate">
+                    <input id="fromDate" onchange="_roombooking_detail.OnchangeFromDate()" class="form-control" placeholder="Ngày nhận" type="date" name="fromDate">
                 </div>
                 <div style="width:50%" class="m-2">
                     <label for="" style="width:90px;" class="form-label">Ngày trả : </label>
-                    <input id="toDate" onchange="_roombooking_detail.OnchangetoDate()" class="form-control" placeholder="Ngày trả" type="datetime-local" name="toDateDate">
+                    <input id="toDate" onchange="_roombooking_detail.OnchangetoDate()" class="form-control" placeholder="Ngày trả" type="date" name="toDateDate">
                 </div>
             </div>
             <table class="table table-bordered mt-3 rounded-3">
@@ -36,7 +36,8 @@
                         <th scope="col">Thành tiền</th>
                         <th scope="col">Ngày nhận thực tế</th>
                         <th scope="col">Ngày trả thực tế</th>
-                        <th scope="col" style="width:120px">Action</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col" style="width:160px">Action</th>
                     </tr>
                 </thead>
                 <tbody id="room-related"> 
@@ -65,8 +66,76 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between">
-            <div id="form_add_Cus" class="mt-4 p-2 rounded-2 bg-secondary" style="height:300px;width:50%">
+        <div>
+            <div id="" class="mt-4 p-2 rounded-2 bg-secondary" style="min-height:300px;width:100%">
+                <h2 class="text-color-blue">Dịch vụ</h2>
+                <div class="d-flex justify-content-end mb-3">
+                    <select class="select2 m-2" id="service_type_Id" style="width:100% !important">
+                    </select>
+                    <div class="d-flex ms-2">
+                        <input type="number" name="minprice" oninput="_Service_OrderDetail.OnchangeMinSer()" id="min_Ser" placeholder="Giá min" min="0" value="" />
+                        <input class="ms-2" type="number" oninput="_Service_OrderDetail.OnchangeMaxSer()" id="max_Ser" name="maxprice" min="0" placeholder="Giá max" value="" />
+                    </div>
+                </div>
+                <select class="select2 m-2" id="service_Id" style="width:100% !important">
+                </select>
+                <table class="table table-bordered mt-3 rounded-3">
+                    <thead>
+                        <tr class="text-white">
+                            <th scope="col">#</th>
+                            <th scope="col">Tên dịch vụ</th>
+                            <th scope="col">Giá (VNĐ)</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn vị</th>
+                            <th scope="col">Thành tiền</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Ghi chú</th>
+                            <th scope="col" style="width:120px">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="service-related">
+                        @* <tr class="text-white">
+                            <td scope="col">#</td>
+                            <td scope="col">Dịch vụ dọn phòng</td>
+                            <td scope="col">
+                                <input class="form-control" value="0" disabled />
+                            </td>
+                            <td scope="col">
+                                <input class="form-control" type="number" value="1" min="1" />
+                            </td>
+                            <td scope="col">
+                                lần
+                            </td>
+                            <td scope="col">
+                                Chưa phục vụ
+                            </td>
+                            <td scope="col">
+                                <textarea class="form-control text-start">Ghi chú</textarea>
+                            </td>
+                            <td scope="col">
+                                <a class="btn btn-success">Đã phục vụ</a>
+                            </td>
+                        </tr> *@
+                    </tbody>
+                </table>
+                <div class="row justify-content-end">
+                    <div class="col-md-4">
+                        <div class="flex justify-content-end w-100">
+                            <ul class="w-100 my-3" style="text-decoration:none !important;">
+                                <li class="flex list-unstyled justify-content-between mb-2">
+                                    <div class="text-white">Tổng giá dịch vụ</div>
+                                    <div class="text-right d-flex">
+                                        <div id="total_service_price">0</div> VNĐ
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div id="form_add_Cus" class="mt-4 p-2 rounded-2 bg-secondary" style="height:300px;width:100%">
                 <h2 class="text-color-blue">Khách hàng</h2>
                 <input id="IdClient" style="display:none" value="@ViewBag.IdClient" />
                 <select class="select2 m-2" id="Client_Id" style="width:100% !important">
@@ -108,45 +177,12 @@
                     </div>
                 </div>
             </div>
-            <div id="" class="mt-4 p-2 rounded-2 bg-secondary" style="height:300px;width:49%">
-                <h2 class="text-color-blue">Dịch vụ</h2>
-                <select class="select2 m-2" id="service_Id" style="width:100% !important">
-                </select>
-                <table class="table table-bordered mt-3 rounded-3">
-                    <thead>
-                        <tr class="text-white">
-                            <th scope="col">#</th>
-                            <th scope="col">Tên dịch vụ</th>
-                            <th scope="col">Giá</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Mô tả</th>
-                            <th scope="col" style="width:120px">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="room-related">
-                    </tbody>
-                </table>
-                <div class="row justify-content-end">
-                    <div class="col-md-4">
-                        <div class="flex justify-content-end w-100">
-                            <ul class="w-100 my-3" style="text-decoration:none !important;">
-                                <li class="flex list-unstyled justify-content-between mb-2">
-                                    <div class="text-white">Tổng giá dịch vụ</div>
-                                    <div class="text-right d-flex">
-                                        <div id="total_service_price">0</div> VNĐ
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 <div class="d-flex justify-content-between" style="width:100%">
-    <button class="btn btn-secondary">Bỏ qua</button>
-    <button class="btn btn-success" onclick="_roombooking_detail.submit()">Lưu</button>
+    <button class="btn btn-secondary" href="/BookingRoom">Quay lại</button>
+    <button class="btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
 </div>
 
 @section scripts {

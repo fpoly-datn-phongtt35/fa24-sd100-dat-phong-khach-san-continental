@@ -19,12 +19,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("AddServiceOrderDetail")]
-        public async Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request)
+        [Route("UpSertServiceOrderDetail")]
+        public async Task<int> AddServiceOrderDetail(ServiceOrderDetail request)
         {
             try
             {
-                return  await _serviceOrderDetailService.AddServiceOrderDetail(request);
+                return  await _serviceOrderDetailService.UpsertServiceOrderDetail(request);
             }
             catch (Exception ex)
             {
@@ -84,17 +84,5 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("UpdateServiceOrderDetail")]
-        public async Task<int> UpdateServiceOrderDetail(ServiceOrderDetailUpdateRequest request)
-        {
-            try
-            {
-                return await _serviceOrderDetailService.UpdateServiceOrderDetail(request);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
     }
 }

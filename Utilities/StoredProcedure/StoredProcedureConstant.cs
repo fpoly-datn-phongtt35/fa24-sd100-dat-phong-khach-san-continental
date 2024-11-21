@@ -31,6 +31,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteServiceOrderDetail = "SP_DeleteServiceOrderDetail";
         public const string SP_UpdateServiceOrderDetail = "SP_UpdateServiceOrderDetail";
         public const string SP_GetServiceOrderDetailById = "SP_GetServiceOrderDetailById";
+        public const string SP_GetListServiceOrderDetailByRoomBookingId = "SP_GetListServiceOrderDetailByRoomBookingId";
 
         //room
         public const string SP_InsertRoom = "SP_InsertRoom";
@@ -141,6 +142,7 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomBookingDetail = "SP_UpdateRoomBookingDetail";
         public const string SP_GetRoomBookingDetailById = "SP_GetRoomBookingDetailById";
         public const string SP_GetListRoomBookingDetailByRoomBookingId = "SP_GetListRoomBookingDetailByRoomBookingId";
+        public const string SP_GetRoomBookingDetailsByCustomerId = "SP_GetRoomBookingDetailsByCustomerId";
         //Client 
         public const string SP_ClientLogin = "SP_ClientLogin";
         public const string SP_ClientRegister = "SP_ClientRegister";

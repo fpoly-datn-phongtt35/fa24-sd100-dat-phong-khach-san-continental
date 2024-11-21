@@ -12,8 +12,8 @@ namespace Domain.Services.IServices
 {
     public interface IServiceOrderDetailService
     {
-        Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request);
-        Task<int> UpdateServiceOrderDetail(ServiceOrderDetailUpdateRequest request);
+        Task<int> UpsertServiceOrderDetail(ServiceOrderDetail request);
+        Task<List<ServiceOrderDetailResponse>> GetListServiceOrderDetailByRoomBookingI(Guid id);
         Task<int> DeleteServiceOrderDetail(ServiceOrderDetailDeleteRequest request);
         Task<ServiceOrderDetail> GetServiceOrderDetailById(Guid Id);
         Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetails(ServiceOrderDetailGetRequest request);

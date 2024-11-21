@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ContinentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241120074215_hehe")]
+    partial class hehe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -589,16 +592,13 @@ namespace Domain.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("TotalExtraPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalRoomPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("TotalServicePrice")
+                    b.Property<decimal>("TotalServicePrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -649,9 +649,6 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
-
-                    b.Property<decimal>("ExtraPrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
@@ -862,9 +859,6 @@ namespace Domain.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("ExtraPrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
