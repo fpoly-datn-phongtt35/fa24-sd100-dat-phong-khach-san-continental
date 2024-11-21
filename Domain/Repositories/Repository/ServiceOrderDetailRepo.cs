@@ -37,6 +37,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Quantity", request.Quantity),
                     new SqlParameter("@Description", request.Description),
                     new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@ExtraPrice", request.ExtraPrice),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),
                     new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
@@ -54,6 +55,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Description", request.Description),
                     new SqlParameter("@Quantity", request.Quantity),
                     new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@ExtraPrice", request.ExtraPrice),
                     new SqlParameter("@Status", request.Status),
                     new SqlParameter("@Deleted", request.Deleted),
                     new SqlParameter("@ModifiedTime", DateTimeOffset.Now),
