@@ -6,7 +6,13 @@
 
 <h2>Create Service</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="ServiceTypeId">Service type</label>
+        <select asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name"))">
+            <option value="">-- Select Service Type --</option>
+        </select>
+    </div>
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
@@ -28,11 +34,11 @@
         <span asp-validation-for="Unit" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ServiceTypeId">Service type</label>
-        <select asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name"))">
-            <option value="">-- Select Service Type --</option>
-        </select>
+        <label asp-for="Image">Upload Image</label>
+        <input asp-for="Image" type="file" name="img" class="form-control" />
+        <span asp-validation-for="Image" class="text-danger"></span>
     </div>
+
     <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
 

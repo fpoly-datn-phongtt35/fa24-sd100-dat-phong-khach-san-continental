@@ -41,6 +41,30 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Unit)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                var extension = System.IO.Path.GetExtension(Model.Image);
+                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                {
+                    <div style="width: 200px; height: 200px; overflow: hidden;">
+                        <img src="~/images/service/@Model.Image" alt="@Model.Name" style="object-fit: cover; width: 100%; height: 100%;">
+                    </div>
+                }
+                else
+                {
+                    <span>Invalid Image Format</span>
+                }
+            }
+            else
+            {
+                <span>No Image Available</span>
+            }
+        </dd>
+
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ServiceTypeId)
         </dt>

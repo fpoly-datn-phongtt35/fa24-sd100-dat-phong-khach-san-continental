@@ -135,10 +135,24 @@ namespace View.Controllers
         // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiceCreateRequest request)
+        public async Task<IActionResult> Create(ServiceCreateRequest request, IFormFile img)
         {
             if (ModelState.IsValid)
             {
+                // Xử lý ảnh
+                if (img != null && img.Length > 0)
+                {
+                    var fileName = Path.GetFileName(img.FileName);
+
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/service", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await img.CopyToAsync(stream);
+                    }
+
+                    request.Image = fileName;
+                }
                 request.Status = EntityStatus.Active;
                 request.CreatedTime = DateTimeOffset.Now;
                 var response = await _client.PostAsJsonAsync("api/Service/CreateService", request);
@@ -196,15 +210,59 @@ namespace View.Controllers
 
         // POST: ServiceController/Edit/5
         [HttpPost]
-        public async Task<IActionResult> Edit(Service request)
+        public async Task<IActionResult> Edit(Service request, IFormFile img)
         {
             ViewBag.Units = Enum.GetValues(typeof(UnitType));
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
+            //xử lý ảnh
+            if (img != null && img.Length > 0)
+            {
+                var fileName = Path.GetFileName(img.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/service", fileName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await img.CopyToAsync(stream);
+                }
+
+                request.Image = fileName;
+            }
+            else
+            {
+                var existingServiceResponse = await _client.GetAsync($"api/Service/GetServiceById?id={request.Id}");
+                if (existingServiceResponse.IsSuccessStatusCode)
+                {
+                    var responseString = await existingServiceResponse.Content.ReadAsStringAsync();
+                    var existingService = JsonConvert.DeserializeObject<Service>(responseString);
+
+                    if (existingService != null)
+                    {
+                        request.Image = existingService.Image;
+                    }
+                }
+            }
+
             request.ModifiedTime = DateTimeOffset.Now;
+
+            // Gửi request chỉnh sửa lên API
             var response = await _client.PutAsJsonAsync("api/Service/UpdateService", request);
-            return RedirectToAction("Index"); 
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(request);
         }
+
+
+
 
 
         // DELETE: ServiceController/Delete/5
