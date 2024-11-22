@@ -11,6 +11,17 @@
 
 <hr/>
 <div class="row">
+    <!-- Fullscreen button -->
+    <div class="header-tools" style="margin-bottom: 15px;">
+        <a href="javascript:void(0)" class="lh-full-card" onclick="toggleFullScreen()">
+            <i class="ri-fullscreen-line" title="Full Screen"></i>
+        </a>
+    </div>
+
+    <div class="header-tools">
+        <a href="javascript:void(0)" class="lh-full-card"><i class="ri-fullscreen-line" title="Full Screen"></i></a>
+    </div>
+    
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -58,3 +69,18 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<!-- Add JavaScript for fullscreen functionality -->
+<script>
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+</script>
