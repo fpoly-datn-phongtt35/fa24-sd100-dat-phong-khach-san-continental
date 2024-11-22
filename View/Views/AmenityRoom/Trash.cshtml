@@ -5,12 +5,13 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_AdminLayout";
     // Lấy danh sách Amenities và RoomTypes từ ViewBag
     var amenities = ViewBag.Amenities as List<AmenityResponse>;
     var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
 }
 
-<h1>Danh sách tiện nghi thuộc loại phòng đã xóa</h1>
+<h3>Danh sách tiện nghi thuộc loại phòng đã xóa</h3>
 
 <form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
     <div class="form-group me-2">

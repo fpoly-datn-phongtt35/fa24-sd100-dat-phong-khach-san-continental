@@ -2,9 +2,10 @@
 
 @{
     ViewData["Title"] = "Create Customer";
+    Layout = "_AdminLayout";
 }
 
-<h1>Create</h1>
+<h3>Create</h3>
 
 <h4>CustomerCreateRequest</h4>
 <hr />
@@ -84,9 +85,9 @@
 <div class="mt-3">
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
-<script>
-    https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
-</script>
+@* <script> *@
+@*     https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css *@
+@* </script> *@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
