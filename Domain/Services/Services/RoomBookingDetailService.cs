@@ -109,6 +109,7 @@ namespace Domain.Services.Services
                                          CheckInBooking = row.Field<DateTimeOffset?>("CheckInBooking"),
                                          CheckOutBooking = row.Field<DateTimeOffset?>("CheckOutBooking"),
                                          Status =row.Field<EntityStatus>("Status").ToString(),
+                                         RoomStatus = row.Field<RoomStatus>("RoomStatus").ToString(),
                                          CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
                                          CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),

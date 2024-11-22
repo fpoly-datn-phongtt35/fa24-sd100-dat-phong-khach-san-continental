@@ -152,10 +152,17 @@ public class RoomBookingController : Controller
                 var updateStatusRquest = new RoomUpdateStatusRequest()
                 {
                     Id = i.RoomId,
-                    Status = RoomStatus.AwaitingConfirmation,
                     ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     ModifiedTime = DateTime.Now,
                 };
+                if (i.Status == EntityStatus.Deleted || i.Status == EntityStatus.Locked)
+                {
+                    updateStatusRquest.Status = RoomStatus.Vacant;
+                }
+                else if (i.Status == EntityStatus.InActive) 
+                {
+                    updateStatusRquest.Status = RoomStatus.Occupied;
+                }
                 await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
             }
             foreach (var i in lstSerOrderDetail) 

@@ -34,18 +34,19 @@
                 <table class="table table-nowrap table-bordered mt-3 rounded-3">
                     <thead>
                         <tr class="text-white">
-                            <th scope="col">#</th>
-                            <th scope="col">Tên Phòng</th>
-                            <th scope="col">Giá phòng (/1 ngày)</th>
+                            <th scope="col" style="min-width:50px">#</th>
+                            <th scope="col" style="min-width:180px">Tên Phòng</th>
+                            <th scope="col">Giá phòng (/ đêm)</th>
                             <th scope="col">Tiền cọc</th>
                             <th scope="col">Ngày nhận dự kiến</th>
                             <th scope="col">Ngày trả dự kiến</th>
                             <th scope="col">Thành tiền</th>
-                            <th scope="col">Phụ thu</th>
+                            <th scope="col" style="min-width:100px">Phụ thu</th>
                             <th scope="col">Ngày nhận thực tế</th>
                             <th scope="col">Ngày trả thực tế</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col" style="width:180px">Action</th>
+                            <th scope="col" style="min-width:150px">Trạng thái</th>
+                            <th scope="col" style="min-width:150px">Trạng thái phòng</th>
+                            <th scope="col" style="min-width:180px">Action</th>
                         </tr>
                     </thead>
                     <tbody id="room-related">
@@ -53,19 +54,31 @@
                 </table>
             </div>
             <div class="row justify-content-end">
-                <div class="col-md-4">
-                    <div class="flex justify-content-end w-100">
-                        <ul class="w-100 my-3" style="text-decoration:none !important;">
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end w-100">
+                        <ul class="w-100 d-flex my-3" style="text-decoration:none !important;">
+                            <li class="flex me-5 list-unstyled justify-content-between mb-2">
+                                <div class="fs-5" style="color:#b7eaff">Tổng giá Bill</div>
+                                <div class="text-right d-flex">
+                                    <div id="total_price">0</div> VNĐ
+                                </div>
+                            </li>
+                            <li class="flex ms-5 list-unstyled justify-content-between mb-2">
                                 <div class="text-white">Tổng giá các phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="total_roomprice">0</div> VNĐ
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex ms-4 list-unstyled justify-content-between mb-2">
                                 <div class="text-white">Tổng tiền cọc</div>
                                 <div class="text-right d-flex" >
                                     <div id="total_deposit">0</div> VNĐ
+                                </div>
+                            </li>
+                            <li class="flex ms-4 list-unstyled justify-content-between mb-2">
+                                <div class="text-white">Tổng phụ thu</div>
+                                <div class="text-right d-flex">
+                                    <div id="TotalExtraPrice">0</div> VNĐ
                                 </div>
                             </li>
                         </ul>
@@ -96,10 +109,10 @@
                                 <th scope="col">Số lượng</th>
                                 <th scope="col">Đơn vị</th>
                                 <th scope="col">Thành tiền</th>
-                                <th scope="col">Phụ thu</th>
+                                <th scope="col" style="min-width:100px">Phụ thu</th>
                                 <th scope="col">Trạng thái</th>
                                 <th scope="col">Ghi chú</th>
-                                <th scope="col" style="width:120px">Action</th>
+                                <th scope="col" style="min-width:120px">Action</th>
                             </tr>
                         </thead>
                         <tbody id="service-related">
@@ -107,7 +120,7 @@
                     </table>
                 </div>
                 <div class="row justify-content-end">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="flex justify-content-end w-100">
                             <ul class="w-100 my-3" style="text-decoration:none !important;">
                                 <li class="flex list-unstyled justify-content-between mb-2">
@@ -168,9 +181,9 @@
         </div>
     </div>
 </div>
-<div class="container d-flex justify-content-between" style="width:100%">
+<div class="container d-flex" style="width:100%">
     <button class="btn btn-secondary" href="/BookingRoom">Quay lại</button>
-    <button class="btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+    <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
 </div>
 
 @section scripts {
