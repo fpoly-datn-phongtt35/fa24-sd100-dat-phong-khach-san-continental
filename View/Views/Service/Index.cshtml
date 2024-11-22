@@ -80,6 +80,7 @@
             <th>@Html.DisplayNameFor(model => model.data.First().Description)</th>
             <th>@Html.DisplayNameFor(model => model.data.First().Price)</th>
             <th>@Html.DisplayNameFor(model => model.data.First().Unit)</th>
+            <th>@Html.DisplayNameFor(model => model.data.First().Image)</th>
             <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
             <th></th>
         </tr>
@@ -99,12 +100,35 @@
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
                 <td>@Html.DisplayFor(modelItem => item.Unit)</td>
+                <td>
+                    <div class="d-flex justify-content-start">
+                        @if (!string.IsNullOrEmpty(item.Image))
+                        {
+                            var extension = System.IO.Path.GetExtension(item.Image);
+                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                            {
+                                <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
+                                    <img class="responsive-img" src="~/images/service/@item.Image" alt="@item.Name" style="object-fit: cover; width: 100%; height: 100%;">
+                                </div>
+                            }
+                            else
+                            {
+                                <span>Invalid Image Format</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>No Image</span>
+                        }
+                    </div>
+                </td>
                 <td>                
                     @if (item.Status != null)
                     {
                         @StatusHelper.DisplayStatusBadge(item.Status)
+                    }else{
+                        @: "No data"
                     }
-                    No data
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) 

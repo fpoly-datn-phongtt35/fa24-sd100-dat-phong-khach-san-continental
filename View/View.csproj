@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\service\" />
     <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
 
