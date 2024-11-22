@@ -11,6 +11,15 @@
     <link href="~/fonts/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+    <style>
+        .fixed-notification {
+            position: fixed;
+            top: 60px; /* Khoảng cách từ đỉnh màn hình */
+            right: 10px; /* Khoảng cách từ bên trái màn hình */
+            padding: 10px;
+            z-index: 9999; /* Đảm bảo nó hiển thị trên các phần tử khác */
+        }
+    </style>
     <div class="d-flex" style="min-height:100vh">
         <partial name="_header" />
 
