@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "_AdminLayout";
 }
 
 <h3>Tạo mới</h3>
@@ -69,18 +68,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-<!-- Add JavaScript for fullscreen functionality -->
-<script>
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-            });
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-        }
-    }
-</script>
