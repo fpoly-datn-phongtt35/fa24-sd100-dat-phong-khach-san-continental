@@ -1,0 +1,121 @@
+﻿@model Domain.Models.Service
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="header-wrapper">
+    <div class="header-background">
+        <div class="header-content">
+            <h1 class="title py-3">Trải nghiệm @Model.Name</h1>
+            <h5><strong>Bắt đầu từ:</strong> <span class="price-highlight">@Model.Price VNĐ</span></h5>
+        </div>
+    </div>
+</div>
+
+<div class="content-container">
+    <div class="service-details">
+        <div class="image-container pt-3">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                var extension = System.IO.Path.GetExtension(Model.Image);
+                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                {
+                    var imagePath = Url.Content($"/View/wwwroot/images/service/{Model.Image}");
+
+                    <img src="@imagePath" alt="Service Image" class="service-image" />
+                }
+            }
+            else
+            {
+                <p>Không có hình ảnh</p>
+            }
+        </div>
+
+        <div class="service-info">
+            <p><strong>Bạn sẽ trải nghiệm:</strong> @Model.Description</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Vùng chứa header */
+    .header-wrapper {
+        width: 100%; /* Full chiều ngang */
+        background: linear-gradient(135deg, #0078D7, #4DAFFF);
+        border-bottom-left-radius: 50px; /* Bo góc dưới trái */
+        position: relative; /* Để sử dụng pseudo-element */
+        overflow: hidden; /* Đảm bảo không cho nội dung bên trong vượt ra ngoài */
+    }
+
+    /* Nền xanh và kiểm soát chiều cao */
+    .header-background {
+        padding: 120px 0; /* Điều chỉnh chiều cao */
+        text-align: left;
+    }
+
+    /* Nội dung bên trong header */
+    .header-content {
+        max-width: 70%;
+        margin: 0 auto;
+        color: white;
+        transform: translateY(-50px); /* Dịch lên trên một chút */
+    }
+
+        .header-content .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0;
+        }
+
+    .price-highlight {
+        color: #FFD700;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* Container cho nội dung chính */
+    .content-container {
+        max-width: 70%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .service-details {
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: none; /* Bỏ hiệu ứng */
+        border: none; /* Loại bỏ viền */
+    }
+
+    /* Hình ảnh dịch vụ */
+    .image-container {
+        position: relative;
+        margin-bottom: 20px;
+        margin-top: -180px;
+        z-index: 1;
+    }
+
+    .service-image {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .service-info {
+        margin-top: 20px;
+        padding: 20px; /* Thêm khoảng cách bên trong */
+        background: #fff; /* Nền trắng */
+        border-radius: 8px; /* Bo góc */
+        border: 1px solid rgba(0, 0, 0, 0.1); /* Đường viền nhẹ */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+    }
+
+        .service-info p {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+</style>

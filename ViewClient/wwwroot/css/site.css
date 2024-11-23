@@ -34,16 +34,6 @@ body {
     height: 100%;
 }
 
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; 
-}
-
-main {
-    flex: 1;
-}
-
 
 .unifrakturmaguntia-regular {
     font-family: "UnifrakturMaguntia", cursive;
@@ -51,25 +41,31 @@ main {
     font-style: normal;
 }
 
+.navbar, .navbar-left, .navbar-center, .navbar-right {
+    box-sizing: border-box;
+}
+
+
 .navbar {
-    position: fixed; 
+    /*position: fixed; 
     top: 0; 
     left: 0;
     width: 100%;
-    z-index: 999; 
-
+    z-index: 999; */
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #000000;
     color: white;
     padding: 10px 20px;
+    width: 100%;
 }
 
 .navbar-left {
     display: flex;
     align-items: center;
-    width: 30%;
+    width:30%;
 }
 
     .navbar-left a {

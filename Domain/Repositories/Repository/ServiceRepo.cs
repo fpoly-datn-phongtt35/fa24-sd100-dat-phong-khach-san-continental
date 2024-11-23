@@ -40,6 +40,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@Description", !string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Price", request.Price),
+                    new SqlParameter("@Image", request.Image != null ? request.Image : DBNull.Value),
                     new SqlParameter("@Unit", request.Unit),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),
@@ -110,6 +111,7 @@ namespace Domain.Repositories.Repository
                     .Select(group => new ServiceTypeGroupDto
                     {
                         ServiceTypeName = group.Key, 
+                        ServiceIds = group.Select(row => row.Field<Guid>("ServiceId")).ToList(),
                         ServiceNames = group.Select(row => row.Field<string>("ServiceName")).ToList() 
                     })
                     .ToList();
@@ -118,7 +120,7 @@ namespace Domain.Repositories.Repository
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Failed to fetch service names grouped by service type.", ex);
+                throw new InvalidOperationException("Error", ex);
             }
         }
 
@@ -157,6 +159,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@Description",!string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Price",request.Price),
+                    new SqlParameter("@Image", request.Image),
                     new SqlParameter("@Unit",request.Unit),
                     new SqlParameter("@Status",request.Status),
                     new SqlParameter("@Deleted",request.Deleted),

@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "_AdminLayout";
 }
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
@@ -91,7 +90,10 @@
                     {
                         @StatusHelper.DisplayStatusBadge(item.Status)
                     }
-                N/A
+                    else
+                    {
+                        @: "No data"
+                    }
             </td>
            
             <td>
