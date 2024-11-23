@@ -2,10 +2,13 @@
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
+using Domain.DTO.Floor;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
+using Domain.DTO.RoomType;
+using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
 using Domain.DTO.ServiceOrderDetail;
 using Domain.DTO.ServiceType;
@@ -14,8 +17,11 @@ using Domain.Models;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
+using Domain.Services.IServices.IRoomType;
+using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services;
 using Domain.Services.Services.Room;
+using Domain.Services.Services.RoomTypeService;
 using Microsoft.AspNetCore.Mvc;
 using WEB.CMS.Customize;
 
@@ -24,20 +30,24 @@ namespace View.Controllers;
 public class RoomBookingController : Controller
 {
     private readonly ICustomerService _customerService;
+    private readonly IFloorService _floorService;
     private readonly IRoomGetService _roomGetService;
     private readonly IServiceService _serviceService;
     private readonly IRoomUpdateStatusService _roomUpdateStatusService;
     private readonly IRoomBookingUpdateService _roomBookingUpdateService;
     private readonly IRoomBookingGetService _roomBookingService;
     private readonly IServiceTypeService _serviceTypeService;
+    private readonly IRoomTypeGetService _roomTypeGetService;
     private readonly IServiceOrderDetailService _serviceOrderDetailService;
     private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-    public RoomBookingController(IRoomBookingUpdateService roomBookingUpdateService,IServiceOrderDetailService serviceOrderDetailService,IServiceTypeService serviceTypeService,IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
+    public RoomBookingController(IRoomTypeGetService roomTypeServiceGetService,IFloorService floorService,IRoomBookingUpdateService roomBookingUpdateService,IServiceOrderDetailService serviceOrderDetailService,IServiceTypeService serviceTypeService,IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
         _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
+        _roomTypeGetService = roomTypeServiceGetService;
+        _floorService = floorService;
         _roomBookingUpdateService = roomBookingUpdateService;
         _serviceOrderDetailService = serviceOrderDetailService;
         _roomUpdateStatusService = roomUpdateStatusService;
@@ -65,6 +75,42 @@ public class RoomBookingController : Controller
             Console.WriteLine(ex.Message);
             return null;
         }
+    }
+
+    public async Task<List<Floor>> GetFloorSuggestion()
+    {
+        var model = new ResponseData<Floor>();
+        try
+        {
+            FloorGetRequest request = new FloorGetRequest() 
+            {
+                PageSize = 100,
+            };
+            model = await _floorService.GetFloor(request);
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine(ex.Message);
+        }
+        return model.data;
+    }
+
+    public async Task<List<RoomTypeResponse>> GetRoomTypeSuggestion() 
+    {
+        var model = new ResponseData<RoomTypeResponse>();
+        try
+        {
+            RoomTypeGetRequest request = new RoomTypeGetRequest()
+            {
+                PageSize = 100,
+            };
+            model = await _roomTypeGetService.GetFilteredRoomTypes(request);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        return model.data;
     }
 
     public async Task<Service> GetServiceById(Guid Id) 
@@ -152,10 +198,17 @@ public class RoomBookingController : Controller
                 var updateStatusRquest = new RoomUpdateStatusRequest()
                 {
                     Id = i.RoomId,
-                    Status = RoomStatus.AwaitingConfirmation,
                     ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     ModifiedTime = DateTime.Now,
                 };
+                if (i.Status == EntityStatus.Deleted || i.Status == EntityStatus.Locked)
+                {
+                    updateStatusRquest.Status = RoomStatus.Dirty;
+                }
+                else if (i.Status == EntityStatus.InActive) 
+                {
+                    updateStatusRquest.Status = RoomStatus.Occupied;
+                }
                 await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
             }
             foreach (var i in lstSerOrderDetail) 
@@ -312,22 +365,18 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<ResponseData<RoomResponse>> GetRoomSuggestion(string txt_search) 
+    public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest)
     {
-        var response = new ResponseData<RoomResponse>();
+        var response = new RoomAvailableResponse();
         try
         {
-            var request = new RoomRequest();
-            request.Name = txt_search;
-            request.Status = Domain.Enums.RoomStatus.Vacant;
-            response = await _roomGetService.GetAllRooms(request);
-            return response;
+            response = await _roomGetService.GetAvailableRooms(roomRequest);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return response;
         }
+        return response;
     }
 
     [HttpPost]

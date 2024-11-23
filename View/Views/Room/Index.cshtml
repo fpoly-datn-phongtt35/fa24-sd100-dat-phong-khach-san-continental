@@ -18,8 +18,11 @@
         color: white;
     }
 
+    h1 {
+        color: white;
+    }
 </style>
-<h1>Danh sách Room</h1>
+<h1>Danh sách Phòng</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
@@ -102,7 +105,7 @@
                             var extension = System.IO.Path.GetExtension(firstImage);
                             if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
                             {
-                                <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
+                                <div class="img-container d-flex justify-content-start" style="width: 100px; height: 100px; margin: 5px;">
                                     <img class="responsive-img" src="~/images/@firstImage" alt="@item.Name" style="object-fit: cover; width: 100%; height: 100%;">
                                 </div>
                             }

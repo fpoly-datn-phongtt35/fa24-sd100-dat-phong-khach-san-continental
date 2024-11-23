@@ -1,5 +1,6 @@
 ﻿﻿@using Domain.DTO.Paging
-@model ResponseData<Domain.Models.Building>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.DTO.Paging.ResponseData<Domain.Models.Building>
 
 @{
     ViewData["Title"] = "Index";
@@ -18,8 +19,7 @@
         color: white;
     }
 </style>
-
-<h1>List of Buildings</h1>
+<h3>List of Buildings</h3>
 
 <p>
     <a asp-action="Create">Create New</a>

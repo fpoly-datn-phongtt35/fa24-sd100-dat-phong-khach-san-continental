@@ -5,56 +5,53 @@
 namespace Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class _2111 : Migration
+    public partial class addServiceImage : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<decimal>(
-                name: "ExtraPrice",
-                table: "ServiceOrderDetail",
-                type: "decimal(18,2)",
+            migrationBuilder.AddColumn<string>(
+                name: "Image",
+                table: "Service",
+                type: "nvarchar(max)",
                 nullable: true);
 
-            migrationBuilder.AddColumn<decimal>(
-                name: "ExtraPrice",
-                table: "RoomBookingDetail",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
-
             migrationBuilder.AlterColumn<decimal>(
-                name: "TotalServicePrice",
+                name: "TotalRoomPrice",
                 table: "RoomBooking",
                 type: "decimal(18,2)",
                 nullable: true,
                 oldClrType: typeof(decimal),
                 oldType: "decimal(18,2)");
 
-            migrationBuilder.AddColumn<decimal>(
-                name: "TotalExtraPrice",
+            migrationBuilder.AlterColumn<decimal>(
+                name: "TotalPrice",
                 table: "RoomBooking",
                 type: "decimal(18,2)",
-                nullable: true);
+                nullable: true,
+                oldClrType: typeof(decimal),
+                oldType: "decimal(18,2)");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ExtraPrice",
-                table: "ServiceOrderDetail");
-
-            migrationBuilder.DropColumn(
-                name: "ExtraPrice",
-                table: "RoomBookingDetail");
-
-            migrationBuilder.DropColumn(
-                name: "TotalExtraPrice",
-                table: "RoomBooking");
+                name: "Image",
+                table: "Service");
 
             migrationBuilder.AlterColumn<decimal>(
-                name: "TotalServicePrice",
+                name: "TotalRoomPrice",
+                table: "RoomBooking",
+                type: "decimal(18,2)",
+                nullable: false,
+                defaultValue: 0m,
+                oldClrType: typeof(decimal),
+                oldType: "decimal(18,2)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<decimal>(
+                name: "TotalPrice",
                 table: "RoomBooking",
                 type: "decimal(18,2)",
                 nullable: false,

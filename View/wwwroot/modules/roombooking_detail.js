@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
 
 /*    $('.select_time"]').on('change', function ()
     {
@@ -8,7 +9,69 @@
 /*    if ($("#IdRoomBooking").val()) {
         $(".btn-luu").remove();
     }*/
+    $("#RoomType_Id").select2({
+        placeholder: "Chọn loại phòng",
+        maximumSelectionLength: 1,
+        ajax: {
+            url: "/RoomBooking/GetRoomTypeSuggestion",
+            type: "post",
+            dataType: 'json',
+            delay: 250,
+            processResults: function (response) {
+                return {
+                    results: $.map(response, function (item) {
+                        return {
+                            text: item.name + ' - Sức chứa: ' + item.maximumOccupancy,
+                            id: item.id,
+                        }
+                    })
+                };
+            },
+        }
+    }).on('select2:opening', function (e) {
+        $('#RoomType_Id').val([]).trigger('change');
+        getRoomRq.RoomTypeId = null;
+    });
 
+    $("#RoomType_Id").on("select2:select", function (e) {
+        var data = e.params.data;
+        getRoomRq.RoomTypeId = data.id;
+    });
+
+
+    $("#Floor_Id").select2({
+        placeholder: "Chọn tầng",
+        maximumSelectionLength: 1,
+        ajax: {
+            url: "/RoomBooking/GetFloorSuggestion",
+            type: "post",
+            dataType: 'json',
+            delay: 250,
+            processResults: function (response) {
+                return {
+                    results: $.map(response, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id,
+                        }
+                    })
+                };
+            },
+        }
+    }).on('select2:opening', function (e) {
+        $('#Floor_Id').val([]).trigger('change');
+        getRoomRq.FloorId = null;
+    });
+
+    $("#Floor_Id").on("select2:select", function (e) {
+        var data = e.params.data;
+        getRoomRq.FloorId = data.id;
+    });
+
+
+    $("#fromDate").attr('min', moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
+    $("#toDate").attr('min',moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
+    
     if (!$("#IdClient").val()) {
         $("#Client_Id").select2({
             placeholder: "Tìm theo UserName, Email, SĐT",
@@ -63,13 +126,14 @@
         placeholder: "Tìm tên phòng",
         maximumSelectionLength: 1,
         ajax: {
-            url: "/RoomBooking/GetRoomSuggestion",
+            url: "/RoomBooking/GetAvailableRooms",
             type: "post",
             dataType: 'json',
             delay: 250,
             data: function (params) {
+                getRoomRq.Name = params.term;
                 var query = {
-                    txt_search: params.term,
+                    roomRequest : getRoomRq,
                 }
 
                 // Query parameters will be ?search=[term]&type=public
@@ -77,7 +141,7 @@
             },
             processResults: function (response) {
                 return {
-                    results: $.map(response.data, function (item) {
+                    results: $.map(response.lstRoom, function (item) {
                         return {
                             text: item.name + ' - ' + item.description,
                             id: item.id,
@@ -183,6 +247,16 @@ var getSerRq =
     MaxPrice: null
 }
 
+var getRoomRq = {
+    Name : null,
+    FloorId : null,
+    RoomTypeId : null,
+    StartDate : null,
+    EndDate : null,
+    MinPrice : null,
+    MaxPrice : null
+}
+
 var roomBookingStatus = 1;
 var RoomBooking;
 var lstRoomBookingDetail = [];
@@ -234,6 +308,9 @@ var _Service_OrderDetail =
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
+                            <td class="priceSer_extra">
+                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control" value="0" min="0" type="number">
+                           </td>
                              <td scope="col">
                                 Chưa phục vụ
                             </td>
@@ -294,27 +371,6 @@ var _Service_OrderDetail =
 
 
 var _roombooking_detail = {
-/*    < tr class="text-white" Id = "Element_` +IdAdd+ `" >
-                           <td style="display:none"><input id="Idroom_`+ IdAdd + `" value="${result.id}"></input></td>
-                           <td style="display:none"><input id="Status_`+ IdAdd + `" value="1"></input></td>
-                           <td scope="row">${STT}</td>
-                           <td>${result.name}</td>
-                           <td class="room_price" id="Price_` + IdAdd +`">${result.price}</td>
-                           <td class="deposit" id="Deposit_` + IdAdd + `"></td>
-                           <td>
-                               <input id="CheckIn_` + IdAdd + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + IdAdd + `)" class="form-control checkin_time select_time" value="` + $("#fromDate").val() + `" type="date">
-                           </td>
-                           <td >
-                               <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="date">
-                          </td>
-                           <td class="price_room" id="RoomPr_` + IdAdd + `"></td>
-                           <td id="CheckInReal_`+ IdAdd +`"></td>
-                           <td id="CheckOutReal_`+ IdAdd +`"></td>
-                           <td id="StatusRBD_`+ IdAdd + `">Active</td>
-                           <td>
-                               <a class="text-danger btn" style="cursor:pointer" onclick="_roombooking_detail.RemoveOutList('`+IdAdd+`')">Xóa</a>
-                           </td>
-                        </tr >*/
     AddRoomToList: function (Id) {
         if (lstIdRoom.indexOf(Id) < 0)
         {
@@ -342,7 +398,9 @@ var _roombooking_detail = {
                                <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + IdAdd + `"></td>
-                           <td class="price_extra" id="ExtraPr_` + IdAdd + `"></td>
+                           <td class="">
+                               <input id="ExtraPr_` + IdAdd + `" oninput="_roombooking_detail.CalculatingRoomPrice()" class="form-control price_extra" value="0" min="0" type="number">
+                           </td>
                            <td>
                                <input id="CheckInReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
                            </td>
@@ -350,12 +408,15 @@ var _roombooking_detail = {
                                <input id="CheckOutReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
                            </td>
                            <td id="StatusRBD_`+ IdAdd + `">Tạo mới</td>
+                           <td></td>
                            <td class="d-flex">
                            </td>
                         </tr>
                         `)
                         STT++;
                         LstIdAdd.push(IdAdd);
+                        $("#CheckIn_" + IdAdd).attr('min', moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
+                        $("#CheckOut_" + IdAdd).attr('min', moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
                         _roombooking_detail.CalculatePrice(IdAdd);                        
                         IdAdd = IdAdd - 1;
                     }
@@ -367,6 +428,8 @@ var _roombooking_detail = {
 
     OnchangeFromDateRow: function (Id)
     {
+        $("#CheckOut_"+Id).attr('min', $("#CheckIn_"+Id).val());
+        $("#CheckIn_" + Id).val($("#CheckIn_"+Id).val());
         _roombooking_detail.CalculatePrice(Id);
         _roombooking_detail.CalculatingRoomPrice();
     },
@@ -412,6 +475,14 @@ var _roombooking_detail = {
     },
     OnchangeFromDate: function ()
     {
+        $("#toDate").attr('min', $("#fromDate").val());
+        $("#toDate").val($("#fromDate").val());
+        getRoomRq.StartDate = $("#fromDate").val();
+        var SelectEle = document.getElementsByClassName('select_time');
+        for (let i = 0; i < SelectEle.length; i++) {
+            SelectEle[i].setAttribute('min', $("#fromDate").val());
+            SelectEle[i].value = $("#fromDate").val();
+        }
         var lstEleCheckIn = document.getElementsByClassName('checkin_time');
         for (let i = 0; i < lstEleCheckIn.length; i++) {
             const element = lstEleCheckIn[i];
@@ -428,23 +499,44 @@ var _roombooking_detail = {
     {
         var TotalRoomPrice = 0;
         var TotalDeposit = 0;
-        var lstEleRoomPrce = document.getElementsByClassName('price_room');
-        var lstEleDeposit = document.getElementsByClassName('deposit');
+        var TotalExtraPrice = 0;
+        var TotalBill = 0;
+        var lstEleRoomPrce = document.querySelectorAll('td[id^="RoomPr_"]');
+        var lstEleDeposit = document.querySelectorAll('td[id^="Deposit_"]');
+        var lstEleExtra = document.querySelectorAll('input[id^="ExtraPr_"]');
+
+        for (let i = 0; i < lstEleExtra.length; i++) {
+            const element = lstEleExtra[i];
+            var idEle = element.id.replace('ExtraPr_', '');
+            var statusEle = $("#Status_" + idEle).val();
+            if (statusEle != 3)
+            {
+                TotalExtraPrice = TotalExtraPrice + parseInt(element.value);
+            }
+        }
+
         for (let i = 0; i < lstEleRoomPrce.length; i++) {
             const element = lstEleRoomPrce[i];
-            TotalRoomPrice = TotalRoomPrice + parseInt(element.innerHTML); 
+            var idEle = element.id.replace('RoomPr_', '');
+            var statusEle = $("#Status_" + idEle).val();
+            if (statusEle != 3) {
+                TotalRoomPrice = TotalRoomPrice + parseInt(element.innerHTML); 
+            }
         }
 
         for (let i = 0; i < lstEleDeposit.length; i++) {
             const element = lstEleDeposit[i];
             TotalDeposit = TotalDeposit + parseInt(element.innerHTML);
         }
-
+        TotalBill = TotalRoomPrice + TotalExtraPrice - TotalDeposit;
+        $("#total_price").text(TotalBill);
         $("#total_roomprice").text(TotalRoomPrice);
         $("#total_deposit").text(TotalDeposit);
+        $("#TotalExtraPrice").text(TotalExtraPrice);
     },
 
     OnchangetoDate: function () {
+        getRoomRq.EndDate = $("#toDate").val();
         var lstEleCheckIn = document.getElementsByClassName('checkout_time');
         for (let i = 0; i < lstEleCheckIn.length; i++) {
             const element = lstEleCheckIn[i];
@@ -471,10 +563,17 @@ var _roombooking_detail = {
                         var newFMfrom = moment(datefrom).format("YYYY-MM-DD")
                         const dateto = new Date(item.checkOutBooking);
                         var newFMto = moment(dateto).format("YYYY-MM-DD")
-                        const dateChein = new Date(item.checkInReality);
-                        var newCIfrom = dateChein.toISOString().slice(0, 16);
-                        const dateCheOut = new Date(item.checkOutReality);
-                        var newCOto = dateCheOut.toISOString().slice(0, 16);
+                        var newCIfrom;
+                        var newCOto
+                        if (item.checkInReality != null)
+                        {
+                            const dateChein = new Date(item.checkInReality);
+                            newCIfrom = dateChein.toISOString().slice(0, 16);
+                        }
+                        if (item.checkOutReality != null) {
+                            const dateCheOut = new Date(item.checkOutReality);
+                            newCOto = dateCheOut.toISOString().slice(0, 16);
+                        }
                         $("#room-related").append(`
                         <tr class="text-white">
                            <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>
@@ -485,20 +584,23 @@ var _roombooking_detail = {
                            <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${item.price}</td>
                            <td class="deposit" id="Deposit_` + item.roomBookingDetailId + `"></td>
                            <td>
-                               <input id="CheckIn_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
+                               <input id="CheckIn_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
                            <td >
-                               <input id="CheckOut_` + item.roomBookingDetailId + `" onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
+                               <input id="CheckOut_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + item.roomBookingDetailId + `"></td>
-                           <td class="price_extra" id="ExtraPr_` + item.roomBookingDetailId + `"></td>
+                           <td class="">
+                               <input id="ExtraPr_` + item.roomBookingDetailId + `" oninput="_roombooking_detail.CalculatingRoomPrice()" class="form-control price_extra" value="` + item.extraPrice +`" min="0" type="number">
+                           </td>
                            <td>
-                               <input id="CheckInReal_`+ item.roomBookingDetailId + `" disabled class="form-control" disabled value="` + newCIfrom + `" type="datetime-local">
+                               <input id="CheckInReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCIfrom + `" type="datetime-local">
                            </td>
                            <td >
-                               <input id="CheckOutReal_`+ item.roomBookingDetailId + `" disabled class="form-control" disabled value="` + newCOto + `" type="datetime-local">
+                               <input id="CheckOutReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCOto + `" type="datetime-local">
                            </td>
-                           <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + item.status + `</td>
+                           <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
+                           <td>`+ global.getResponseStatus(item.roomStatus, constant.Room_Status) +`</td>
                            <td class="d-flex">
                                <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('`+ item.roomBookingDetailId + `','` + item.roomId +`')">Hủy</a>
                                <a class="text-green btn btn-success ms-2 btn-checkin text-nowrap" id="btn-checkin-` + item.roomBookingDetailId +`" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('`+ item.roomBookingDetailId + `')">Đã nhận</a>
@@ -506,18 +608,19 @@ var _roombooking_detail = {
                            </td>
                         </tr>
                         `)
-                        if (item.status == "Locked")
+                        if (item.status == "3" || item.status == "8")
                         {
                             $("#btn-huy-" + item.roomBookingDetailId).remove();
                             $("#btn-checkin-" + item.roomBookingDetailId).remove();
                             $("#btn-checkout-" + item.roomBookingDetailId).remove();
+                            $("#ExtraPr_" + item.roomBookingDetailId).attr('disabled','disabled');
                         }
-                        else if (item.status == "InActive")
+                        else if (item.status == "2")
                         {
                             $("#btn-huy-" + item.roomBookingDetailId).remove();
                             $("#btn-checkin-" + item.roomBookingDetailId).remove();
                         }
-                        else if (item.status == "Active") {
+                        else if (item.status == "1") {
                             $("#btn-checkout-" + item.roomBookingDetailId).remove();
                         }
                         STT++;
@@ -553,25 +656,41 @@ var _roombooking_detail = {
 
     cancleRoomBookingDetail: function (Id)
     {
-        $("#Status_" + Id).val(8);
+        $("#Status_" + Id).val(3);
         $("#StatusRBD_" + Id).html("Đã hủy");
+        $("#StatusRBD_" + Id).css('color', 'red');
+        $("#ExtraPr_" + Id).attr('disabled', 'disabled');
+        _roombooking_detail.CalculatingRoomPrice()
+        $("#btn-huy-" + Id).remove();
     },
 
     CheckIn: function (Id)
     {
         $("#Status_" + Id).val(2);
-        $("#StatusRBD_" + Id).html("Đã nhận");
-        var newDate = new Date();
+        $("#StatusRBD_" + Id).html("Đã nhận phòng");
+        var newDate = global.createNewDateInVietnamTimezone();
         newDate = newDate.toISOString().slice(0, 16);
-        $("#CheckInReal_" + Id).val(newDate);
+        $("#StatusRBD_" + Id).css('color', 'yellow');
+        $("#CheckInReal_" + Id).val(newDate); 
+        $("#btn-checkin-" + Id).remove();
+        _roombooking_detail.CalculatingRoomPrice()
     },
 
     CheckOut: function (Id, IdRoom) {
         $("#Status_" + Id).val(8);
-        $("#StatusRBD_" + Id).html("Đã trả");
-        var newDate = new Date();
+        $("#StatusRBD_" + Id).html("Đã khóa");
+        var newDate = global.createNewDateInVietnamTimezone();
         newDate = newDate.toISOString().slice(0, 16);
         $("#CheckOutReal_" + Id).val(newDate);
+        $("#StatusRBD_" + Id).css('color', 'White');
+        $("#btn-checkout-" + Id).remove();
+        _roombooking_detail.CalculatingRoomPrice()
+    },
+    OnchangeMinRoom: function () {
+        getRoomRq.MinPrice = $("#min_room").val();
+    },
+    OnchangeMaxRoom: function () {
+        getRoomRq.MaxPrice = $("#max_room").val();
     },
 
     GetlistObjSubmit: function ()
@@ -581,7 +700,8 @@ var _roombooking_detail = {
             Id: $("#IdRoomBooking").val(),
             CustomerId : $("#Client_Id").val(),
             Status: roomBookingStatus,
-            TotalPrice: parseInt($("#total_roomprice").text()) + parseInt($("#total_service_price").text()),
+            TotalPrice: parseInt($("#total_roomprice").text()) + parseInt($("#total_service_price").text()) + parseInt($("#TotalExtraPrice").text()),
+            TotalExtraPrice: parseInt($("#TotalExtraPrice").text()),
             TotalRoomPrice: parseInt($("#total_roomprice").text()),
             TotalServicePrice: parseInt($("#total_service_price").text())
         }
@@ -596,6 +716,7 @@ var _roombooking_detail = {
                 CheckInReality: null,
                 CheckOutReality: null,
                 Price: $("#Price_" + item).text(),
+                ExtraPrice: $("#ExtraPr_"+item).val(),
                 Deposit: $("#Deposit_" + item).text(),
                 Status: $("#Status_" + item).val()
             }
@@ -612,6 +733,7 @@ var _roombooking_detail = {
                 CheckInReality: $("#CheckInReal_" + item).val(),
                 CheckOutReality: $("#CheckOutReal_" + item).val(),
                 Price: $("#Price_" + item).text(),
+                ExtraPrice: $("#ExtraPr_" + item).val(),
                 Deposit: $("#Deposit_" + item).text(),
                 Status: $("#Status_" + item).val()
             }
@@ -629,7 +751,7 @@ var _roombooking_detail = {
             type: "post",
             data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
             success: function (result) {
-                window.location.href = "/roombooking"
+                window.location.href = "/roombooking/Index"
             }
         });
     }

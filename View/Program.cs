@@ -5,11 +5,13 @@ using Domain.Services.IServices.IAmenity;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomType;
+using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services;
 using Domain.Services.Services.Amenity;
 using Domain.Services.Services.Room;
 using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomType;
+using Domain.Services.Services.RoomTypeService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace View
@@ -41,7 +43,10 @@ namespace View
             builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
             builder.Services.AddTransient<IServiceOrderDetailRepo, ServiceOrderDetailRepo>();
             builder.Services.AddTransient<IRoomBookingUpdateService, RoomBookingUpdateService>();
-
+            builder.Services.AddTransient<IFloorService, FloorService>();
+            builder.Services.AddTransient<IBuildingRepo, BuildingRepo>();
+            builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
+            builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
 
             builder.Services.AddHttpClient();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>

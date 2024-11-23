@@ -82,9 +82,7 @@ var _authorization =
                 success: function (data) {
                     if (data.success)
                     {
-                        $('body').prepend(`<div class="alert alert-success m-0" style="position:absolute;right:0px;color:green;z-index:10" role="alert">
-                        Đăng nhập thành công
-                        </div>`);
+                        Notify.Success_Noti("Đăng nhập thành công!", 2);
                         setTimeout(function () {
                             window.location.href = "/"
                         }, 2000);

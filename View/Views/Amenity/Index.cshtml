@@ -6,9 +6,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Danh sách tiện nghi</h1>
+<h3>Danh sách tiện nghi</h3>
 
-<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" 
+      class="d-flex align-items-center">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm tiện nghi..."
                value="@Context.Request.Query["searchString"]" />

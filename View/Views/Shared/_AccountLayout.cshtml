@@ -11,9 +11,21 @@
     <link href="~/fonts/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+    <style>
+        .fixed-notification {
+            position: fixed;
+            top: 60px; /* Khoảng cách từ đỉnh màn hình */
+            right: 10px; /* Khoảng cách từ bên trái màn hình */
+            padding: 10px;
+            min-width: 350px;
+            text-align: left;
+            z-index: 9999; /* Đảm bảo nó hiển thị trên các phần tử khác */
+        }
+    </style>
     @RenderBody()
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script asp-append-version="true" src="~/modules/constant.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/modules/constant.js"></script>
     @await RenderSectionAsync("Scripts", required: false)

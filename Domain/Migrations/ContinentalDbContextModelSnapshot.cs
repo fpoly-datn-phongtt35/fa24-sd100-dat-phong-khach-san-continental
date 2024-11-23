@@ -592,10 +592,10 @@ namespace Domain.Migrations
                     b.Property<decimal?>("TotalExtraPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<decimal?>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TotalRoomPrice")
+                    b.Property<decimal?>("TotalRoomPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("TotalServicePrice")
@@ -807,6 +807,9 @@ namespace Domain.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ModifiedBy")
