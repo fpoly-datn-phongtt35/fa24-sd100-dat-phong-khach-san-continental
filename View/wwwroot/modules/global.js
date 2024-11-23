@@ -1,5 +1,28 @@
 ﻿var global =
 {
+    createNewDateInVietnamTimezone: function () {
+        // Tạo đối tượng Date mới với thời gian hiện tại
+        const now = new Date();
+
+        // Tính toán thời gian tại Việt Nam (GMT+7)
+        const vietnamOffset = 7 * 60 * 60 * 1000; // 7 giờ * 60 phút * 60 giây * 1000 mili giây
+        const vietnamTime = now.getTime() + vietnamOffset;
+
+        // Tạo đối tượng Date mới với thời gian tại Việt Nam
+        return new Date(vietnamTime);
+    },
+    getStatusText: function (statusId, statusMap) {
+        return statusMap.get(statusId) || "Trạng thái không hợp lệ";
+    },
+
+    getResponseStatus: function (statusId, statusMap) {
+        for (const status in statusMap) {
+            if (statusMap[status] === statusId) {
+                return status;
+            }
+        }
+        return "Trạng thái không hợp lệ";
+    },
     POST: function (url, data) {
         return new Promise(function (resolve, reject) {
             $.ajax({

@@ -32,6 +32,11 @@ namespace Domain.Services.Services.Room
             return await _roomRepository.GetAllRooms(roomRequest);
         }
 
+        public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest)
+        {
+            return await _roomRepository.GetAvailableRooms(roomRequest);
+        }
+
         public async Task<RoomResponse?> GetRoomById(Guid roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId); // Lấy Room từ repository

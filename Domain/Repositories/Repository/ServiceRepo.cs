@@ -83,8 +83,8 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@PageIndex", request.PageIndex),
                     new SqlParameter("@Name", request.Name),
                     new SqlParameter("@ServiceTypeId", request.ServiceTypeId),
-                    new SqlParameter("@MinPrice", request.MinPrice),
-                    new SqlParameter("@MaxPrice", request.MaxPrice),
+                    new SqlParameter("@MinPrice", request.MinPrice != 0 ? request.MinPrice : DBNull.Value),
+                    new SqlParameter("@MaxPrice", request.MaxPrice != 0 ? request.MaxPrice : DBNull.Value),
                     new SqlParameter("@Status", request.Status)
                 };
 

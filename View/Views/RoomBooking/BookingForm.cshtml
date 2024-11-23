@@ -17,6 +17,18 @@
     <div style="" class="m-2">
         <div id="list_room_add" class="rounded-2 p-2 bg-secondary" style="min-height:300px;">
             <h2 class="text-color-blue">Danh sách phòng</h2>
+            <div class="d-flex mb-3 justify-content-between">
+                <div class="d-flex justify-content-between" style="width:50%">
+                    <select class="select2 m-2" id="RoomType_Id" style="width:49%">
+                    </select>
+                    <select class="select2 m-2" id="Floor_Id" style="width:49%">
+                    </select>
+                </div>
+                <div class="d-flex ms-2 justify-content-end" style="width:45%">
+                    <input type="number" name="minprice" oninput="_roombooking_detail.OnchangeMinRoom()" id="min_room" placeholder="Giá min" min="0" value="">
+                    <input class="ms-2" type="number" oninput="_roombooking_detail.OnchangeMaxRoom()" id="max_room" name="maxprice" min="0" placeholder="Giá max" value="">
+                </div>
+            </div>
             <input id="IdRoomBooking" style="display:none" value="@ViewBag.IdRoomBooking" />
             <select class="select2 m-2" id="room_Id" style="width:100%">
             </select>
@@ -54,31 +66,43 @@
                 </table>
             </div>
             <div class="row justify-content-end">
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-end w-100">
-                        <ul class="w-100 d-flex my-3" style="text-decoration:none !important;">
-                            <li class="flex me-5 list-unstyled justify-content-between mb-2">
-                                <div class="fs-5" style="color:#b7eaff">Tổng giá Bill</div>
-                                <div class="text-right d-flex">
-                                    <div id="total_price">0</div> VNĐ
-                                </div>
-                            </li>
-                            <li class="flex ms-5 list-unstyled justify-content-between mb-2">
+                <div class="col-md-4">
+                    <div class="flex justify-content-end w-100">
+                        <ul class="w-100 my-3" style="text-decoration:none !important;">
+                            <li class="flex list-unstyled justify-content-between mb-2">
                                 <div class="text-white">Tổng giá các phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="total_roomprice">0</div> VNĐ
                                 </div>
                             </li>
-                            <li class="flex ms-4 list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Tổng tiền cọc</div>
+                            <li class="flex list-unstyled justify-content-between mb-2">
+                                <div class="" style="color:rgb(244 168 175)">Tổng tiền cọc</div>
                                 <div class="text-right d-flex" >
                                     <div id="total_deposit">0</div> VNĐ
                                 </div>
                             </li>
-                            <li class="flex ms-4 list-unstyled justify-content-between mb-2">
+                            <li class="flex list-unstyled justify-content-between mb-2">
                                 <div class="text-white">Tổng phụ thu</div>
                                 <div class="text-right d-flex">
                                     <div id="TotalExtraPrice">0</div> VNĐ
+                                </div>
+                            </li>
+                            <li class="flex list-unstyled justify-content-between mb-2">
+                                <div class="text-white">Tổng phụ thu dịch vụ</div>
+                                <div class="text-right d-flex">
+                                    <div id="total_service_extra_price">0</div> VNĐ
+                                </div>
+                            </li>
+                            <li class="flex list-unstyled justify-content-between mb-2">
+                                <div class="text-white">Tổng giá dịch vụ</div>
+                                <div class="text-right d-flex">
+                                    <div id="total_service_price">0</div> VNĐ
+                                </div>
+                            </li>
+                            <li class="flex list-unstyled justify-content-between mb-2">
+                                <div class="" style="color:#00b0f9">Tổng giá Bill</div>
+                                <div class="text-right d-flex">
+                                    <div id="total_price">0</div> VNĐ
                                 </div>
                             </li>
                         </ul>
@@ -90,7 +114,7 @@
             <div id="" class="mt-4 p-2 rounded-2 bg-secondary" style="min-height:300px;width:100%">
                 <h2 class="text-color-blue">Dịch vụ</h2>
                 <div class="d-flex justify-content-end mb-3">
-                    <select class="select2 m-2" id="service_type_Id" style="width:100%">
+                    <select class="select2 m-2" multiple="multiple" id="service_type_Id" style="width:100%">
                     </select>
                     <div class="d-flex ms-2">
                         <input type="number" name="minprice" oninput="_Service_OrderDetail.OnchangeMinSer()" id="min_Ser" placeholder="Giá min" min="0" value="" />
@@ -118,20 +142,6 @@
                         <tbody id="service-related">
                         </tbody>
                     </table>
-                </div>
-                <div class="row justify-content-end">
-                    <div class="col-md-6">
-                        <div class="flex justify-content-end w-100">
-                            <ul class="w-100 my-3" style="text-decoration:none !important;">
-                                <li class="flex list-unstyled justify-content-between mb-2">
-                                    <div class="text-white">Tổng giá dịch vụ</div>
-                                    <div class="text-right d-flex">
-                                        <div id="total_service_price">0</div> VNĐ
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
