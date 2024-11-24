@@ -10,7 +10,7 @@ namespace Domain.Models
         public string? Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
         public int? MaximumOccupancy { get; set; }
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset? CreatedTime { get; set; }

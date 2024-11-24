@@ -13,6 +13,7 @@ public class RoomTypeAddRequest
     [Required(ErrorMessage = "Số lượng không được để trống.")]
     [RegularExpression("^[1-9]$|^10$", ErrorMessage = "Số lượng phải là một số trong khoảng từ 1 đến 10.")]
     public int? MaximumOccupancy { get; set; }
+    public int Quantity { get; set; }
     public EntityStatus Status { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
@@ -26,7 +27,8 @@ public class RoomTypeAddRequest
             MaximumOccupancy = MaximumOccupancy,
             Status = Status,
             CreatedTime = CreatedTime,
-            CreatedBy = CreatedBy
+            CreatedBy = CreatedBy,
+            Quantity = Quantity
         };
     }
 }
