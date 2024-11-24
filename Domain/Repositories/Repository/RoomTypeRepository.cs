@@ -279,8 +279,9 @@ public class RoomTypeRepository : IRoomTypeRepository
             {
                 new("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
                 new("@Description", SqlDbType.NVarChar) { Value = roomType.Description ?? (object)DBNull.Value },
-                new("@Status", SqlDbType.Int) { Value = roomType.Status },
                 new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
+                new("@Status", SqlDbType.Int) { Value = roomType.Status },
+                new("@Quantity", SqlDbType.Int) { Value = roomType.Quantity },
                 new("@CreatedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
                 new("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = roomType.CreatedBy },
                 new("@Deleted", SqlDbType.Bit) { Value = roomType.Deleted },
@@ -289,7 +290,7 @@ public class RoomTypeRepository : IRoomTypeRepository
 
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoomType, parameters);
 
-            roomType.Id = (Guid)parameters[7].Value;
+            roomType.Id = (Guid)parameters[8].Value;
             return roomType;
         }
         catch (Exception e)
