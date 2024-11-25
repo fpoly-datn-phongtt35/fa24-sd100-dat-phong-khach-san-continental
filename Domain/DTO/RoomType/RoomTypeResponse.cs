@@ -42,7 +42,8 @@ public class RoomTypeResponse
                Status == roomType.Status && CreatedTime == roomType.CreatedTime &&
                CreatedBy == roomType.CreatedBy && ModifiedTime == roomType.ModifiedTime &&
                ModifiedBy == roomType.ModifiedBy && Deleted == roomType.Deleted &&
-               DeletedTime == roomType.DeletedTime && DeletedBy == roomType.DeletedBy && Quantity == roomType.Quantity;
+               DeletedTime == roomType.DeletedTime && DeletedBy == roomType.DeletedBy &&
+               Quantity == roomType.Quantity;
     }
 
     public override int GetHashCode()
