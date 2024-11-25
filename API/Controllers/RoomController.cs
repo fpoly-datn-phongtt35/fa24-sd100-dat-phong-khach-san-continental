@@ -72,6 +72,18 @@ namespace API.Controllers
                 throw new NullReferenceException("The list of  rooms could not be retrieved", e);
             }
         }
+        [HttpPost(nameof(SearchRooms))]
+        public async Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request)
+        {
+            try
+            {
+                return await _roomGetService.SearchRooms(request);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("The list of  rooms could not be retrieved", e);
+            }
+        }
         //[HttpPost(nameof(GetRoomTypeWithAmenityRoomById))]
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomTypeId)
         //{

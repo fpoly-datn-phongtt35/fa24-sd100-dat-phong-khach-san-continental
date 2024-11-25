@@ -41,6 +41,7 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoom = "SP_UpdateRoom";
         public const string SP_UpdateRoomStatus = "SP_UpdateRoomStatus";
         public const string SP_GetAvailableRooms = "SP_GetAvailableRooms";
+        public const string SP_SearchRooms = "SP_SearchRooms";
         ////public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
 
         //building

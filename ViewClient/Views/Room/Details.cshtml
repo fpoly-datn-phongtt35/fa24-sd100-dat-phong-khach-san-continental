@@ -11,9 +11,9 @@
     var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
 }
-<h4 style="margin-top:150px;">Đặt phòng của bạn</h4>
+<h4 style="margin-top:50px;">Đặt phòng của bạn</h4>
 
-<div class="d-flex">
+<div class="d-flex" style="padding:10px;">
     <div class="img-column me-3">
         @if (Model.Images != null && Model.Images.Any())
         {
@@ -97,7 +97,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Room" class="btn btn-outline-secondary">Quay lại</a>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Quay lại</a>
     <button type="button" class="btn btn-primary" id="openModalButton">
        Đặt phòng
     </button>

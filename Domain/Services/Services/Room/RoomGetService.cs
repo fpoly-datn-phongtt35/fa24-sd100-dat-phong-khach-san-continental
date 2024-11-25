@@ -68,6 +68,11 @@ namespace Domain.Services.Services.Room
             return roomResponse;
 
         }
+
+        public async Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request)
+        {
+            return await _roomRepository.SearchRooms(request);
+        }
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
         //{
         //    var room = await _roomRepository.GetRoomTypeWithAmenityRoomById(roomId); // Lấy Room từ repository
