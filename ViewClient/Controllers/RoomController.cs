@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using ViewClient.Models;
 using ViewClient.Repositories.IRepository;
 
 namespace ViewClient.Controllers
@@ -59,26 +60,15 @@ namespace ViewClient.Controllers
             }
         }
 
-        public async Task<IActionResult> Index(string? name = null, Guid? roomTypeId = null, Guid? floorId = null, RoomStatus? status = RoomStatus.Vacant, int pageIndex = 1, int pageSize = 12)
+        public async Task<IActionResult> SearchRooms(SearchRoomsRequest request)
         {
-            // Tạo PagingRequest
-            var roomRequest = new RoomRequest()
-            {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                RoomTypeId = roomTypeId,
-                FloorId = floorId,
-                Name = name,
-                Status = status
-            };
 
-            // Tạo URL yêu cầu cho danh sách phòng
-            string roomsRequestUrl = $"/api/Room/GetAllRooms";
+            string roomsRequestUrl = $"/api/Room/SearchRooms";
 
             try
             {
                 // Gửi yêu cầu để lấy danh sách phòng
-                var roomsResponse = await SendHttpRequest<ResponseData<RoomResponse>>(roomsRequestUrl, HttpMethod.Post, roomRequest);
+                var roomsResponse = await SendHttpRequest<RoomAvailableResponse>(roomsRequestUrl, HttpMethod.Post, request);
 
                 if (roomsResponse == null)
                 {
@@ -111,7 +101,7 @@ namespace ViewClient.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error", ex);
+                return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
             }
         }
         [HttpGet]

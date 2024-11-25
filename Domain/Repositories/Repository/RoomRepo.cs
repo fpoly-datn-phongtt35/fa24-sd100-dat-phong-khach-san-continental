@@ -381,5 +381,43 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+
+        public async Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request)
+        {
+            var Response = new RoomAvailableResponse();
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new("@MinPrice", request.MaxPrice),
+                    new("@MaxPrice", request.MaxPrice),
+                    new("@MaximumOccupancy", request.MaxiumOccupancy),
+                    new("@QuantityRoom", request.QuantityRoom),
+                    new("@CheckIn", request.CheckIn),
+                    new("@CheckOut", request.CheckOut),
+                    new("@FloorId", request.FloorId)
+               };
+                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_SearchRooms, parameters);
+                var roomlist = new List<RoomResponse>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    var room = RowToRoom(row);
+                    var roomResponse = room.ToRoomResponse();
+                    roomlist.Add(roomResponse);
+                }
+                if (roomlist.Count > 0)
+                {
+                    Response.LstRoom = roomlist;
+                    Response.TotalRoom = roomlist.Count;
+                    Response.TotalOccupancy = Convert.ToInt32(dataTable.Rows[0]["TotalOccupancy"]); ;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException("An error occurred while getting available rooms", ex);
+            }
+            return Response;
+        }
     }
 }
