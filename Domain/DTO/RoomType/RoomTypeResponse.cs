@@ -25,7 +25,8 @@ public class RoomTypeResponse
     public bool Deleted { get; set; }
     public Guid? DeletedBy { get; set; }
     public DateTimeOffset? DeletedTime { get; set; }
-
+    public int Quantity { get; set; }
+    
     public List<AmenityRoomResponse> AmenityRooms { get; set; } = new List<AmenityRoomResponse>();
     public List<RoomTypeServiceResponse> RoomTypeServices { get; set; } = new List<RoomTypeServiceResponse>();
     
@@ -41,7 +42,8 @@ public class RoomTypeResponse
                Status == roomType.Status && CreatedTime == roomType.CreatedTime &&
                CreatedBy == roomType.CreatedBy && ModifiedTime == roomType.ModifiedTime &&
                ModifiedBy == roomType.ModifiedBy && Deleted == roomType.Deleted &&
-               DeletedTime == roomType.DeletedTime && DeletedBy == roomType.DeletedBy;
+               DeletedTime == roomType.DeletedTime && DeletedBy == roomType.DeletedBy &&
+               Quantity == roomType.Quantity;
     }
 
     public override int GetHashCode()
@@ -96,7 +98,8 @@ public static class RoomTypeExtensions
             ModifiedBy = roomType.ModifiedBy,
             Deleted = roomType.Deleted,
             DeletedTime = roomType.DeletedTime,
-            DeletedBy = roomType.DeletedBy
+            DeletedBy = roomType.DeletedBy,
+            Quantity = roomType.Quantity
         };
     }
 }
