@@ -452,7 +452,8 @@ public class RoomTypeRepository : IRoomTypeRepository
             ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-            DeletedBy = ConvertGuidToString(row, "DeletedBy")
+            DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+            Quantity = int.Parse(row["Quantity"].ToString()!)
         };
     }
 

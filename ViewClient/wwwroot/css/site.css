@@ -184,7 +184,7 @@ body {
 /* Ô tìm kiếm */
 .search-box {
     margin: 20px auto;
-    max-width: 600px;
+    max-width: 1000px;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
@@ -560,6 +560,9 @@ body {
     .card:hover {
         transform: scale(1.2);
     }
+    h5.card-title.p{
+        text-decoration:none;
+    }
 .card-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -668,7 +671,27 @@ div.info-row:hover {
     overflow: hidden;
     margin: 5px 0; /* Khoảng cách giữa các hình ảnh */
 }
+.info-column {
+    width: 300px; /* Adjust the width as needed */
+    padding: 10px; /* Reduce padding */
+    font-size: 14px; /* Make font size smaller */
+    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+    border-radius: 5px; /* Optional: Rounded corners */
+    background-color: #f9f9f9; /* Optional: Light background color */
+}
 
+.info-row {
+    margin-bottom: 8px; /* Space between rows */
+}
+
+dt {
+    font-weight: bold; /* Bold for labels */
+    margin-bottom: 4px; /* Space below labels */
+}
+
+dd {
+    margin: 0; /* Remove default margin */
+}
 img {
     object-fit: cover;
     width: 100%;

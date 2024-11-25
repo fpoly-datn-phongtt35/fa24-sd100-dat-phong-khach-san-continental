@@ -1,7 +1,81 @@
-﻿@{
+﻿@using System.Diagnostics
+@using Domain.DTO.Floor
+@using Domain.DTO.RoomType
+@using Domain.Enums
+@using Domain.DTO.Paging
+@using ViewClient.Views.Shared
+@model ResponseData<Domain.DTO.Room.RoomResponse>
+@{
     ViewBag.Title = "Continental";
+    var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
+    var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
+    var noData = ViewBag.NoData as List<Domain.DTO.Room.RoomResponse>;
 }
 
+
+
+<div class="search-box">
+    <h3 style="text-align: center;">Tìm Kiếm Phòng</h3>
+    <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
+        <input type="date" id="checkIn" name="checkIn" class="form-control me-2" placeholder="Ngày nhận phòng" required>
+        <input type="date" id="checkOut" name="checkOut" class="form-control me-2" placeholder="Ngày trả phòng" required>
+        <input type="number" name="maxiumOccupancy" class="form-control me-2" placeholder="Số người tối đa" min="1" required>
+        <input type="number" name="quantityRoom" class="form-control me-2" placeholder="Số lượng phòng" min="1" required>
+        <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+    </form>
+</div>
+<div class="container">
+    @if (ViewBag.NoData != null)
+    {
+        <h3 style="text-align: center;">@ViewBag.NoData</h3>
+    }
+    else if (!groupedData.Any())
+    {
+
+        <h3 style="text-align: center;">Không có phòng nào phù hợp</h3>
+    }
+    else
+    {
+        foreach (var group in groupedData)
+        {
+            var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == group.Key);
+            if (roomType != null)
+            {
+                <h3 class="room-type-title d-flex">
+                    Loại phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.Name</p>  -
+                    Số lượng người: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.MaximumOccupancy</p>
+                </h3>
+                <div class="row">
+                    @foreach (var room in group)
+                    {
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link">
+                                <div class="card">
+                                    <h5 class="card-title" style="color:black;">@room.Name</h5>
+                                    <div class="d-flex justify-content-center">
+                                        @foreach (var img in room.Images)
+                                        {
+                                            var extension = System.IO.Path.GetExtension(img);
+                                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                                            {
+                                                var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+                                                <div class="img-container" style="margin: 5px;">
+                                                    <img src="@imagePath" alt="@room.Name" style="object-fit: cover; width: 100%; height: 150px;" />
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <p>Giá: @Html.DisplayFor(modelItem => room.Price)</p>
+                                    <p class="status-badge">@StatusHelper.DisplayRoomStatusBadge(room.Status)</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    }
+</div>
 <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="500">
     <div class="carousel-inner">
         <div class="carousel-item active">
@@ -14,13 +88,6 @@
             <img src="~/img/banner3.jpg" class="d-block w-100" alt="...">
         </div>
     </div>
-</div>
-
-
-<div class="search-box">
-    <h3 style="text-align: center;">Tìm Kiếm Khách Sạn</h3>
-    <input type="text" placeholder="Nhập địa điểm, khách sạn...">
-    <button>Tìm Kiếm</button>
 </div>
 
 <h3 style="text-align: center; margin-top: 20px;">Dịch Vụ Của Chúng Tôi</h3>
