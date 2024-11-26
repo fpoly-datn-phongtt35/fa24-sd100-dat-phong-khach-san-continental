@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    [Migration("20241121032614_addExtraPrice")]
-    partial class addExtraPrice
+    [Migration("20241124050140_24-11")]
+    partial class _2411
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -595,10 +595,10 @@ namespace Domain.Migrations
                     b.Property<decimal?>("TotalExtraPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<decimal?>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TotalRoomPrice")
+                    b.Property<decimal?>("TotalRoomPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("TotalServicePrice")
@@ -725,6 +725,10 @@ namespace Domain.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Quantity")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -806,6 +810,9 @@ namespace Domain.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ModifiedBy")
