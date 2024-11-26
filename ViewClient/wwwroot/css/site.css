@@ -121,7 +121,7 @@ body {
             }
 
 .nav-button {
-    background-color: #007bff;
+    background-color: #108AB1;
     color: white;
     border: none;
     border-radius: 5px;
@@ -188,32 +188,48 @@ body {
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+    .search-box input[type="date"],
+    .search-box input[type="number"],
     .search-box input[type="text"] {
         width: 100%;
         padding: 12px;
         border: 1px solid #ddd;
         border-radius: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 15px; /* Tăng khoảng cách giữa các input */
         box-sizing: border-box;
+        transition: border-color 0.3s; /* Thêm hiệu ứng chuyển tiếp cho border */
     }
 
+        .search-box input[type="date"]:focus,
+        .search-box input[type="number"]:focus,
+        .search-box input[type="text"]:focus {
+            border-color: #06D7A0; /* Màu border khi input được chọn */
+            outline: none; /* Ẩn outline mặc định */
+        }
+
     .search-box button {
+        margin-top: 14px;
         padding: 12px;
-        width: 100%;
-        background-color: #2E7D32;
+        width: 20%;
+        background-color: #06D7A0;
         color: white;
         border: none;
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background-color 0.3s, transform 0.2s; /* Thêm hiệu ứng chuyển tiếp cho transform */
     }
 
         .search-box button:hover {
             background-color: #1b5e20;
+            transform: scale(1.02); /* Tăng kích thước nút khi hover */
+        }
+
+        .search-box button:active {
+            transform: scale(0.98); /* Giảm kích thước nút khi nhấn */
         }
 
 /* Các dịch vụ */
@@ -601,7 +617,7 @@ body {
         }
 
     .status-badge:hover {
-        transform: scale(1.2); 
+        transform: scale(1.1); 
     }
 
 .card .btn {
@@ -625,9 +641,12 @@ body {
         grid-template-columns: 1fr; /* 1 cột cho màn hình rất nhỏ */
     }
 }
-
+h3{
+    color: #F78C6A;
+    font-weight:bold;
+}
 h4 {
-    color: #0056b3;
+    color: #FFD167;
     margin-bottom: 20px;
     text-align: center;
 }
