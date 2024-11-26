@@ -8,7 +8,7 @@
 
 
 @{
-    ViewData["Title"] = "Danh sách Room";
+    ViewData["Title"] = "Danh sách phòng theo tìm kiếm";
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
     var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
 }
@@ -17,30 +17,30 @@
 
 
 <form method="get" action="@Url.Action("SearchRooms")" class="d-flex align-items-center">
-      
-        <div class="form-group me-2">
-            <select name="roomTypeId" class="form-select" id="roomTypeId">
-                <option value="">Chọn loại phòng</option>
-                @foreach (var roomType in ViewBag.RoomTypes)
-                {
-                    <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
-                        @roomType.Name
-                    </option>
-                }
-            </select>
-        </div>
 
-        <div class="form-group me-2">
-            <select name="floorId" class="form-select" id="floorId">
-                <option value="">Chọn tầng</option>
-                @foreach (var floor in ViewBag.FloorList)
-                {
-                    <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
-                        @floor.Name
-                    </option>
-                }
-            </select>
-        </div>
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomTypeId">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.RoomTypes)
+            {
+                <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                    @roomType.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group me-2">
+        <select name="floorId" class="form-select" id="floorId">
+            <option value="">Chọn tầng</option>
+            @foreach (var floor in ViewBag.FloorList)
+            {
+                <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
+                    @floor.Name
+                </option>
+            }
+        </select>
+    </div>
     <div class="form-group me-2">
         <input type="date" name="checkIn" class="form-control" placeholder="Ngày nhận phòng"
                value="@ViewContext.HttpContext.Request.Query["checkIn"]" />
@@ -70,10 +70,10 @@
         <input type="number" step="0.01" name="maxPrice" class="form-control" placeholder="Giá tối đa"
                value="@ViewContext.HttpContext.Request.Query["maxPrice"]" />
     </div>
-      
-        <button type="submit" class="btn btn-light">Tìm kiếm</button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
-    </form>
+
+    <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
 
 
 <div class="container">
@@ -114,50 +114,4 @@
         }
     }
 </div>
-<div>
-    <nav>
-        <ul class="pagination justify-content-center">
-            @if (Model.CurrentPage > 1)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new {
-                        pageIndex = Model.CurrentPage - 1,
-                        pageSize = Model.PageSize,
-                        search = Context.Request.Query["search"].ToString(),
-                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
-                        floorId = Context.Request.Query["floorId"].ToString(),
-                        status = Context.Request.Query["status"].ToString()
-                    })">Previous</a>
-                </li>
-            }
 
-            @for (var i = 1; i <= Model.totalPage; i++)
-            {
-                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new {
-                        pageIndex = i,
-                        pageSize = Model.PageSize,
-                        search = Context.Request.Query["search"].ToString(),
-                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
-                        floorId = Context.Request.Query["floorId"].ToString(),
-                        status = Context.Request.Query["status"].ToString()
-                    })">@i</a>
-                </li>
-            }
-
-            @if (Model.CurrentPage < Model.totalPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new {
-                        pageIndex = Model.CurrentPage + 1,
-                        pageSize = Model.PageSize,
-                        search = Context.Request.Query["search"].ToString(),
-                        roomTypeId = Context.Request.Query["roomTypeId"].ToString(),
-                        floorId = Context.Request.Query["floorId"].ToString(),
-                        status = Context.Request.Query["status"].ToString()
-                    })">Next</a>
-                </li>
-            }
-        </ul>
-    </nav>
-</div>
