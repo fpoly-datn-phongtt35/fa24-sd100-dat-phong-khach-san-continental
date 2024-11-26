@@ -13,8 +13,8 @@ namespace ViewClient
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromHours(6);
-                options.Cookie.HttpOnly = false;
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
           

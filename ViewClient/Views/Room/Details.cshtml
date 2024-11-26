@@ -114,18 +114,10 @@
             <div class="modal-body">
                 <h6>@Model.Name</h6>
                 <p class="font-monospace">Giá: @Model.Price VNĐ/đêm</p>
-                
-                <div class="mb-3">
-                    <label for="checkInBooking" class="form-label">Check-In</label>
-                    <input type="datetime-local" class="form-control" id="checkInBooking" required />
-                </div>
-                <div class="mb-3">
-                    <label for="checkOutBooking" class="form-label">Check-Out</label>
-                    <input type="datetime-local" class="form-control" id="checkOutBooking" required />
-                </div>
+
                 <div id="validationMessage" class="text-danger"></div>
                 <p id="depositPayment">Đặt cọc: 0 VNĐ</p>
-                <p id="totalPayment">Thanh toán: 0 VNĐ</p>
+                <p id="totalRoomPayment">Thanh toán: 0 VNĐ</p>
             </div>
             <dt>Bạn có muốn đặt thêm dịch vụ không ?</dt>
             <div class="modal-body">
