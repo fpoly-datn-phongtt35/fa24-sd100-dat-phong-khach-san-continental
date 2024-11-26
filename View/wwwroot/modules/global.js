@@ -1,5 +1,11 @@
 ﻿var global =
 {
+    NumberVNFormated: function (number)
+    {
+        var formattedprice = parseFloat(number).toLocaleString('vi-VN');
+        formattedprice = formattedprice.replaceAll('.', ',')
+        return formattedprice;
+    },
     createNewDateInVietnamTimezone: function () {
         // Tạo đối tượng Date mới với thời gian hiện tại
         const now = new Date();
@@ -10,6 +16,18 @@
 
         // Tạo đối tượng Date mới với thời gian tại Việt Nam
         return new Date(vietnamTime);
+    },
+    formatDateToMMDDYYYY: function (date) {
+        // Tạo một đối tượng Date mới để tránh thay đổi đối tượng gốc
+        const newDate = new Date(date);
+
+        // Lấy năm, tháng và ngày
+        const year = newDate.getFullYear();
+        const month = newDate.getMonth() + 1; // Tháng bắt đầu từ 0
+        const day = newDate.getDate();
+
+        // Tạo đối tượng Date mới với định dạng MM/DD/YYYY
+        return new Date(year, month - 1, day);
     },
     getStatusText: function (statusId, statusMap) {
         return statusMap.get(statusId) || "Trạng thái không hợp lệ";

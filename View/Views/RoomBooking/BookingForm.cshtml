@@ -10,7 +10,7 @@
     .table-scroll {
         overflow-x: scroll;
         scroll-behavior: smooth;
-        width:1233px;
+        max-width:1196px;
     }
 </style>
 <div class="m-3" style="min-height:600px;">
@@ -25,8 +25,8 @@
                     </select>
                 </div>
                 <div class="d-flex ms-2 justify-content-end" style="width:45%">
-                    <input type="number" name="minprice" oninput="_roombooking_detail.OnchangeMinRoom()" id="min_room" placeholder="Giá min" min="0" value="">
-                    <input class="ms-2" type="number" oninput="_roombooking_detail.OnchangeMaxRoom()" id="max_room" name="maxprice" min="0" placeholder="Giá max" value="">
+                    <input type="number" class="rounded-2" name="minprice" oninput="_roombooking_detail.OnchangeMinRoom()" id="min_room" placeholder="Giá min" min="0" value="">
+                    <input class="ms-2 rounded-2" type="number" oninput="_roombooking_detail.OnchangeMaxRoom()" id="max_room" name="maxprice" min="0" placeholder="Giá max" value="">
                 </div>
             </div>
             <input id="IdRoomBooking" style="display:none" value="@ViewBag.IdRoomBooking" />
@@ -66,8 +66,8 @@
                 </table>
             </div>
             <div class="row justify-content-end">
-                <div class="col-md-4">
-                    <div class="flex justify-content-end w-100">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end w-100">
                         <ul class="w-100 my-3" style="text-decoration:none !important;">
                             <li class="flex list-unstyled justify-content-between mb-2">
                                 <div class="text-white">Tổng giá các phòng</div>
@@ -77,18 +77,20 @@
                             </li>
                             <li class="flex list-unstyled justify-content-between mb-2">
                                 <div class="" style="color:rgb(244 168 175)">Tổng tiền cọc</div>
-                                <div class="text-right d-flex" >
+                                <div class="text-right d-flex">
                                     <div id="total_deposit">0</div> VNĐ
                                 </div>
                             </li>
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Tổng phụ thu</div>
+                                <div class="text-white">Phụ thu phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="TotalExtraPrice">0</div> VNĐ
                                 </div>
                             </li>
+                        </ul>
+                        <ul class="w-100 my-3" style="text-decoration:none !important;">
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Tổng phụ thu dịch vụ</div>
+                                <div class="text-white">Phụ thu dịch vụ</div>
                                 <div class="text-right d-flex">
                                     <div id="total_service_extra_price">0</div> VNĐ
                                 </div>
@@ -117,8 +119,8 @@
                     <select class="select2 m-2" multiple="multiple" id="service_type_Id" style="width:100%">
                     </select>
                     <div class="d-flex ms-2">
-                        <input type="number" name="minprice" oninput="_Service_OrderDetail.OnchangeMinSer()" id="min_Ser" placeholder="Giá min" min="0" value="" />
-                        <input class="ms-2" type="number" oninput="_Service_OrderDetail.OnchangeMaxSer()" id="max_Ser" name="maxprice" min="0" placeholder="Giá max" value="" />
+                        <input type="number" class="rounded-2" name="minprice" oninput="_Service_OrderDetail.OnchangeMinSer()" id="min_Ser" placeholder="Giá min" min="0" value="" />
+                        <input class="ms-2 rounded-2" type="number" oninput="_Service_OrderDetail.OnchangeMaxSer()" id="max_Ser" name="maxprice" min="0" placeholder="Giá max" value="" />
                     </div>
                 </div>
                 <select class="select2 m-2" id="service_Id" style="width:100%">
@@ -134,7 +136,6 @@
                                 <th scope="col">Đơn vị</th>
                                 <th scope="col">Thành tiền</th>
                                 <th scope="col" style="min-width:100px">Phụ thu</th>
-                                <th scope="col">Trạng thái</th>
                                 <th scope="col">Ghi chú</th>
                                 <th scope="col" style="min-width:120px">Action</th>
                             </tr>

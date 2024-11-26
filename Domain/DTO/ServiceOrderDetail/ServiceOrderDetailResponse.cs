@@ -11,6 +11,8 @@ namespace Domain.DTO.ServiceOrderDetail
     {
         public Guid Id { get; set; }
         public Guid RoomBookingId { get; set; }
+        public string Name { get; set; }
+        public string Unit {  get; set; }
         public decimal Price { get; set; }
         public decimal? ExtraPrice { get; set; }
         public double? Amount { get; set; }
