@@ -6,9 +6,10 @@
     <title>@ViewData["Title"] - View</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" /> *@
     <link href="~/lib/select2/css/select2.css" rel="stylesheet" />
     <link href="~/fonts/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="~/js/font-fontawesome-ae333ffef2.js"></script>
 </head>
 <body>
     <style>
@@ -21,20 +22,37 @@
             text-align:left;
             z-index: 9999; /* Đảm bảo nó hiển thị trên các phần tử khác */
         }
+
+        .Layout-scroll{
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            max-height: 100vh;
+        }
+
+        .bar-css{
+            height: 55px;
+            width: 100%;
+            background-color: #fff;
+            position: fixed;
+            top: 0px;
+            max-width: 1289px;
+            z-index: 100
+        }
     </style>
-    <div class="d-flex" style="min-height:100vh">
+    <div class="d-flex ">
         <partial name="_header" />
 
-        <div class="container-fluid p-0">
-            <div class="d-flex align-items-center ps-1" style="height:55px;width:100%;background-color:#262936">
-                <div class="d-flex align-items-center justify-content-end" style="width:100%">
-                    <p class="m-0" id="name_current_user"></p>
-                    <button class="btn btn-outline-warning ms-3 me-2" onclick="_authorization.LogOut()" id="signout_button">Đăng xuất</button>
-               </div>
-
-            </div>
-            <main role="main" class="pb-3">
-                @RenderBody()
+        <div class="container-fluid p-0" style="width:83%;margin-left:17%">
+            <main role="main" class="pb-3" style="background-color:#f8f9fa;min-height:100vh">
+                <div class="d-flex align-items-center ps-1 bar-css" style="">
+                    <div class="d-flex align-items-center justify-content-end" style="width:100%">
+                        <p class="m-0" id="name_current_user" style="color:#484d54"></p>
+                        <button class="btn btn-outline-warning ms-3 me-4" style="color:#484d54" onclick="_authorization.LogOut()" id="signout_button">Đăng xuất</button>
+                    </div>
+                </div>
+                <div style="margin-top:65px;">
+                    @RenderBody()
+                </div>
             </main>
         </div>
     </div>
