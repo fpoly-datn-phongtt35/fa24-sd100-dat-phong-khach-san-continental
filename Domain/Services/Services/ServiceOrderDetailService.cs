@@ -37,17 +37,21 @@ namespace Domain.Services.Services
                           Id = row.Field<Guid>("Id"),
                           ServiceId = row.Field<Guid>("ServiceId"),
                           Amount = row.Field<double>("Amount"),
+                          Name = row.Field<string?>("Name"),
+                          Unit = row.Field<UnitType>("Unit").ToString(),
                           Price = row.Field<decimal>("Price"),
+                          Quantity = row.Field<int>("Quantity"),
+                          Description = row.Field<string?>("Description"),
                           ExtraPrice = row.Field<decimal>("ExtraPrice"),
                           Status = row.Field<EntityStatus>("Status"),
                           StatusName = row.Field<EntityStatus>("Status").ToString(),
                           CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                           CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
-                          ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
+                          ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
                           ModifiedBy = row.Field<Guid?>("ModifiedBy") ?? Guid.Empty,
                           Deleted = row.Field<bool>("Deleted"),
                           DeletedBy = row.Field<Guid?>("DeletedBy") ?? Guid.Empty,
-                          DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
+                          DeletedTime = row.Field<DateTimeOffset?>("DeletedTime")
                       }).ToList();
                 return sv;
             }
