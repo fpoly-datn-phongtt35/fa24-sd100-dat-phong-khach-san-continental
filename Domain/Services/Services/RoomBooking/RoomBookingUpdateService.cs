@@ -26,7 +26,10 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
         existingRoomBooking.Status = roomBookingUpdateRequest.Status;
         existingRoomBooking.ModifiedTime = roomBookingUpdateRequest.ModifiedTime;
         existingRoomBooking.ModifiedBy = roomBookingUpdateRequest.ModifiedBy;
-        
+        existingRoomBooking.TotalServicePrice = roomBookingUpdateRequest.TotalServicePrice;
+        existingRoomBooking.TotalPrice = roomBookingUpdateRequest.TotalPrice;
+        existingRoomBooking.TotalExtraPrice = roomBookingUpdateRequest.TotalExtraPrice;
+
         await _roomBookingRepository.UpdateRoomBooking(existingRoomBooking);
         return existingRoomBooking.ToRoomBookingResponse();
     }

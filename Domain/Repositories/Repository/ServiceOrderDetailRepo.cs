@@ -39,7 +39,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@ExtraPrice", request.ExtraPrice),
                     new SqlParameter("@Status", (int)request.Status),
-                    new SqlParameter("@CreatedTime", request.CreatedTime),
+                    new SqlParameter("@CreatedTime", DateTimeOffset.Now),
                     new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
                     };
                     return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertServiceOrderDetail, sqlParameters);
@@ -49,11 +49,11 @@ namespace Domain.Repositories.Repository
                     SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
-                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
+                      new SqlParameter("@RoomBookingId", request.RoomBookingId != Guid.Empty? request.RoomBookingId : DBNull.Value),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Description", request.Description),
-                    new SqlParameter("@Quantity", request.Quantity),
+                    new SqlParameter("@Quantity", request.Quantity != 0 ? request.Quantity : DBNull.Value),
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@ExtraPrice", request.ExtraPrice),
                     new SqlParameter("@Status", request.Status),
