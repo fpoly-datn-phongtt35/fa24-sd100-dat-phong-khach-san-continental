@@ -117,9 +117,9 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@Status", roomBooking.Status) ,
                 new SqlParameter("@ModifiedTime",roomBooking.ModifiedTime) ,
                 new SqlParameter("@ModifiedBy", roomBooking.ModifiedBy),
-                new SqlParameter("@TotalPrice", roomBooking.TotalPrice.HasValue ? roomBooking.TotalPrice : DBNull.Value),
-                new SqlParameter("@TotalExtraPrice", roomBooking.TotalExtraPrice.HasValue ? roomBooking.TotalExtraPrice : DBNull.Value),
-                new SqlParameter("@TotalServicePrice", roomBooking.TotalServicePrice.HasValue ? roomBooking.TotalServicePrice : DBNull.Value),
+                new SqlParameter("@TotalPrice", roomBooking.TotalPrice.HasValue ? (object)roomBooking.TotalPrice.Value : DBNull.Value),
+                new SqlParameter("@TotalExtraPrice", roomBooking.TotalExtraPrice.HasValue ? (object)roomBooking.TotalExtraPrice.Value : DBNull.Value),
+                new SqlParameter("@TotalServicePrice", roomBooking.TotalServicePrice.HasValue ? (object)roomBooking.TotalServicePrice.Value : DBNull.Value),
             };
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoomBooking, parameters);
 

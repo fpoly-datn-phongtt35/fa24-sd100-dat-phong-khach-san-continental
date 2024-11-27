@@ -68,9 +68,9 @@ $(document).ready(function () {
         getRoomRq.FloorId = data.id;
     });
 
-    var currentTime = moment(global.formatDateToMMDDYYYY(global.createNewDateInVietnamTimezone().toISOString().slice(0, 16))).format("YYYY-MM-DD");
-    $("#fromDate").attr('min', currentTime);
-    $("#toDate").attr('min', currentTime);
+
+    $("#fromDate").attr('min', moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
+    $("#toDate").attr('min',moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
     
     if (!$("#IdClient").val()) {
         $("#Client_Id").select2({
@@ -269,22 +269,11 @@ var STT = 1;
 var listIdService = [];
 var lstServiceOrderDetail = [];
 var IdSerAdd = -1;
-var LstDelete = [];
 var LstIdSerAdd = [];
 var STT2 = 1;
 
 var _Service_OrderDetail =
 {
-    LoadListRoomRelated: function (Id) {
-        $.ajax({
-            url: "/RoomBooking/GetListServiceRelated",
-            type: "post",
-            data: { id: Id },
-            success: function (result) {
-                $("#service-related").append();
-            }
-        });
-    },
     OnchangeMinSer: function () {
         getSerRq.MinPrice = $("#min_Ser").val();
     },
@@ -305,7 +294,7 @@ var _Service_OrderDetail =
                         $("#service-related").append(`
                         <tr class="text-white align-items-center" id="ElementSer_`+ IdSerAdd + `">
                             <td style="display:none"><input id="IdSer_`+ IdSerAdd + `" value="${result.id}"></input></td>
-                            <td scope="col" class="STT_Ser"></td>
+                            <td scope="col">${STT2}</td>
                             <td scope="col">${result.name}</td>
                             <td scope="col">
                                 <input id="PriceSer_`+ IdSerAdd + `" class="form-control" value="${formattedprice}" disabled />
@@ -319,9 +308,12 @@ var _Service_OrderDetail =
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
-                            <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
+                            <td class="priceSer_extra">
+                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control" value="0" min="0" type="number">
                            </td>
+                             <td scope="col">
+                                Chưa phục vụ
+                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
                             </td>
@@ -330,12 +322,11 @@ var _Service_OrderDetail =
                             </td>
                         </tr>
                         `)
+                        STT2++;
                         LstIdSerAdd.push(IdSerAdd);
                         IdSerAdd = IdSerAdd - 1;
                         _Service_OrderDetail.CalculatingTotalPriceSer();
-                        _Service_OrderDetail.ResetIndex();
                     }
-                    
                 }
             });
         }
@@ -346,19 +337,7 @@ var _Service_OrderDetail =
             listIdService = listIdService.filter(x => x != Idremove);
             LstIdSerAdd = LstIdSerAdd.filter(x => x != Id);
         }
-        LstDelete.push(Id);
         $("#ElementSer_" + Id).remove();
-        _Service_OrderDetail.CalculatingTotalPriceSer();
-        _Service_OrderDetail.ResetIndex();
-    },
-    ResetIndex: function ()
-    {
-        STT2 = 1;
-        var EleIndex = $('tr[id^="ElementSer_"]');
-        EleIndex.each(function () {
-            $(this).find('td[class^="STT_Ser"]').html(STT2);
-            STT2++;
-        });
     },
     OnchangeQuantity: function (Id) {
         var TotalPriceSer = $("#PriceSer_" + Id).val().replaceAll(',', '') * $("#QuantitySer_" + Id).val();
@@ -369,89 +348,24 @@ var _Service_OrderDetail =
     },
     CalculatingTotalPriceSer: function () {
         var AmountPriceService = 0;
-        var AmountExtraSer = 0;
         var lstToalPriceSerEle = document.getElementsByClassName("total_price_ser");
-        var lstExtraSerElete = document.getElementsByClassName("priceSer_extra");
         for (let i = 0; i < lstToalPriceSerEle.length; i++) {
             const element = lstToalPriceSerEle[i];
             AmountPriceService = AmountPriceService + parseInt(element.value.replaceAll(',', ''));
         }
-
-        for (let i = 0; i < lstExtraSerElete.length; i++) {
-            const element = lstExtraSerElete[i];
-            AmountExtraSer = AmountExtraSer + parseInt(element.value);
-        }
-        $("#total_service_price").html(global.NumberVNFormated(AmountPriceService));
-        $("#total_service_extra_price").html(global.NumberVNFormated(AmountExtraSer));
-        _roombooking_detail.CalculatingRoomPrice();
+        var formattedprice = parseFloat(AmountPriceService).toLocaleString('vi-VN');
+        formattedprice = formattedprice.replaceAll('.', ',')
+        $("#total_service_price").html(formattedprice);
     },
     LoadListSerOrderDetailRelated: function (Id)
     {
         $.ajax({
-            url: "/RoomBooking/GetListServiceRelated",
+            url: "/RoomBooking/GetSerOrderDetailRelated",
             type: "post",
-            data: { id: Id},
+            data: { RoomBooking: Id},
             success: function (result) {
-                if (result != null)
-                {
-                    result.forEach(item =>
-                    {
-                        var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',')
-                        $("#service-related").append(`
-                        <tr class="text-white align-items-center" id="ElementSer_`+ item.id + `">
-                            <td style="display:none"><input id="IdSerOrder_`+ item.id + `" value="${item.id}"></input></td>
-                            <td style="display:none"><input id="IdSer_`+ item.id + `" value="${item.serviceId}"></input></td>
-                            <td scope="col" class="STT_Ser">${STT2}</td>
-                            <td scope="col">${item.name}</td>
-                            <td scope="col">
-                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${formattedprice}" disabled />
-                            </td>
-                            <td scope="col">
-                                <input id="QuantitySer_`+ item.id + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + item.id + `')" class="form-control" type="number" value="${item.quantity}" min="1" />
-                            </td>
-                            <td scope="col">
-                                ${item.unit}
-                            </td>
-                            <td scope="col">
-                                <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
-                            </td>
-                            <td class="">
-                               <input id="ExtraSerPr_` + item.id + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="${item.extraPrice}" min="0" type="number">
-                           </td>
-                            <td scope="col">
-                                <textarea id="NoteSer_`+ item.id + `" class="form-control text-start" placeholder="Thêm ghi chú">${item.description != null ? item.description : ""}</textarea>
-                            </td>
-                            <td scope="col">
-                                <a class="btn btn-danger" onclick="_Service_OrderDetail.RemoveServiceOut('`+ item.id + `')">Xóa</a>
-                            </td>
-                        </tr>
-                        `)
-                        STT2++;
-                        LstIdSerAdd.push(item.id);
-                    })
-                    _Service_OrderDetail.CalculatingTotalPriceSer();
-                    _Service_OrderDetail.ResetIndex();
-                }
             }
         });
-    },
-
-    GetListOBjService: function ()
-    {
-        LstIdSerAdd.forEach(item => {
-            var obj =
-            {
-                Id: $("#IdSerOrder_" + item).val(),
-                Price: $("#PriceSer_" + item).val(),
-                Amount: $("#TotalPriceSer_" + item).val(),
-                Quantity: $("#QuantitySer_" + item).val(),
-                ExtraPrice: $("#ExtraSerPr_" + item).val(),
-                Description: $("#NoteSer_" + item).val(),
-                ServiceId: $("#IdSer_" + item).val()
-            }
-            lstServiceOrderDetail.push(obj);
-        })
     }
 }
 
@@ -543,9 +457,9 @@ var _roombooking_detail = {
         var fromdate = $("#CheckIn_" + Id).val();
         var todate = $("#CheckOut_" + Id).val();
         var daycount = _roombooking_detail.calculateDaysDifference(fromdate, todate);
-        var Price = $("#Price_" + Id).text().replaceAll(',','') * daycount;
-        $("#RoomPr_" + Id).html(global.NumberVNFormated(Price));
-        $("#Deposit_" + Id).html(global.NumberVNFormated(Price * 0.2));
+        var Price = $("#Price_" + Id).text() * daycount;
+        $("#RoomPr_" + Id).html(Price);
+        $("#Deposit_" + Id).html(Price * 0.2);
     },
 
     RemoveOutList: function (Id)
@@ -606,19 +520,19 @@ var _roombooking_detail = {
             var idEle = element.id.replace('RoomPr_', '');
             var statusEle = $("#Status_" + idEle).val();
             if (statusEle != 3) {
-                TotalRoomPrice = TotalRoomPrice + parseInt(element.innerHTML.replaceAll(',','')); 
+                TotalRoomPrice = TotalRoomPrice + parseInt(element.innerHTML); 
             }
         }
 
         for (let i = 0; i < lstEleDeposit.length; i++) {
             const element = lstEleDeposit[i];
-            TotalDeposit = TotalDeposit + parseInt(element.innerHTML.replaceAll(',',''));
+            TotalDeposit = TotalDeposit + parseInt(element.innerHTML);
         }
-        TotalBill = TotalRoomPrice + TotalExtraPrice - TotalDeposit + parseInt($("#total_service_extra_price").text().replaceAll(',', '')) + parseInt($("#total_service_price").text().replaceAll(',', ''));
-        $("#total_price").text(global.NumberVNFormated(TotalBill)); 
-        $("#total_roomprice").text(global.NumberVNFormated(TotalRoomPrice));
-        $("#total_deposit").text(global.NumberVNFormated(TotalDeposit));
-        $("#TotalExtraPrice").text(global.NumberVNFormated(TotalExtraPrice));
+        TotalBill = TotalRoomPrice + TotalExtraPrice - TotalDeposit;
+        $("#total_price").text(TotalBill);
+        $("#total_roomprice").text(TotalRoomPrice);
+        $("#total_deposit").text(TotalDeposit);
+        $("#TotalExtraPrice").text(TotalExtraPrice);
     },
 
     OnchangetoDate: function () {
@@ -667,8 +581,8 @@ var _roombooking_detail = {
                            <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="${item.status}"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${item.name}</td>
-                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.price)}</td>
-                           <td class="deposit" id="Deposit_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.deposit)}</td>
+                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${item.price}</td>
+                           <td class="deposit" id="Deposit_` + item.roomBookingDetailId + `"></td>
                            <td>
                                <input id="CheckIn_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
@@ -786,10 +700,10 @@ var _roombooking_detail = {
             Id: $("#IdRoomBooking").val(),
             CustomerId : $("#Client_Id").val(),
             Status: roomBookingStatus,
-            TotalPrice: parseInt($("#total_roomprice").text().replaceAll(',', '')) + parseInt($("#total_service_price").text().replaceAll(',', '')) + parseInt($("#TotalExtraPrice").text().replaceAll(',', '')),
-            TotalExtraPrice: parseInt($("#TotalExtraPrice").text().replaceAll(',', '')) + parseInt($("#total_service_extra_price").text().replaceAll(',', '')),
-            TotalRoomPrice: parseInt($("#total_roomprice").text().replaceAll(',', '')),
-            TotalServicePrice: parseInt($("#total_service_price").text().replaceAll(',',''))
+            TotalPrice: parseInt($("#total_roomprice").text()) + parseInt($("#total_service_price").text()) + parseInt($("#TotalExtraPrice").text()),
+            TotalExtraPrice: parseInt($("#TotalExtraPrice").text()),
+            TotalRoomPrice: parseInt($("#total_roomprice").text()),
+            TotalServicePrice: parseInt($("#total_service_price").text())
         }
 
         LstIdAdd.forEach(item =>
@@ -832,13 +746,12 @@ var _roombooking_detail = {
     submit: function ()
     {
         _roombooking_detail.GetlistObjSubmit();
-        _Service_OrderDetail.GetListOBjService();
         $.ajax({
             url: "/RoomBooking/submit",
             type: "post",
-            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail, lstSerOrderDetail : lstServiceOrderDetail, ListDelete : LstDelete},
+            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
             success: function (result) {
-                window.location.reload();
+                window.location.href = "/roombooking/Index"
             }
         });
     }

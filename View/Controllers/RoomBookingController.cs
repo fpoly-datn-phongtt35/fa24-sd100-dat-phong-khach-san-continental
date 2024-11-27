@@ -155,24 +155,7 @@ public class RoomBookingController : Controller
         }
     }
 
-    [HttpPost]
-    public async Task<List<ServiceOrderDetailResponse>> GetListServiceRelated(Guid id) 
-    {
-        try
-        {
-            var response = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingI(id);
-            return response;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            return null;
-        }
-    }
-
-    public async Task<int> submit(RoomBooking bookingcreaterequest,
-        List<RoomBookingDetail> lstupsert,
-        List<ServiceOrderDetail> lstSerOrderDetail,List<Guid> ListDelete)
+    public async Task<int> submit(RoomBooking bookingcreaterequest, List<RoomBookingDetail> lstupsert,List<ServiceOrderDetail> lstSerOrderDetail)
     {
         try
         {
@@ -228,46 +211,23 @@ public class RoomBookingController : Controller
                 }
                 await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
             }
-
             foreach (var i in lstSerOrderDetail) 
             {
                 if (i.Id == Guid.Empty)
                 {
-                    i.RoomBookingId = idroombooking != Guid.Empty ? idroombooking : bookingcreaterequest.Id;
+                    i.RoomBookingId = idroombooking;
                     i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     i.Status = EntityStatus.Active;
                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
                 }
                 else 
                 {
+                    i.RoomBookingId = idroombooking;
+                    i.ModifiedTime = DateTime.Now;
                     i.ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
                 }
             }
-
-            foreach(var i in ListDelete) 
-            {
-                var request = new ServiceOrderDetailDeleteRequest() 
-                {
-                    Id = i,
-                    DeletedTime = DateTime.UtcNow,
-                    DeletedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                };
-                await _serviceOrderDetailService.DeleteServiceOrderDetail(request);
-            }
-
-
-           /* if (idroombooking != Guid.Empty) 
-            {
-                foreach (var i in lstSerOrderDetail)
-                {
-                    i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    i.Status = EntityStatus.Active;
-                    i.RoomBookingId = idroombooking;
-                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
-                }
-            }*/
-
             return 1;
         }
         catch (Exception ex)
@@ -410,10 +370,7 @@ public class RoomBookingController : Controller
         var response = new RoomAvailableResponse();
         try
         {
-            if(roomRequest.StartDate != null && roomRequest.EndDate != null)
-            {
-                response = await _roomGetService.GetAvailableRooms(roomRequest);
-            }
+            response = await _roomGetService.GetAvailableRooms(roomRequest);
         }
         catch (Exception ex)
         {
