@@ -45,7 +45,7 @@ namespace Domain.Services.Services
                           ExtraPrice = row.Field<decimal>("ExtraPrice"),
                           Status = row.Field<EntityStatus>("Status"),
                           StatusName = row.Field<EntityStatus>("Status").ToString(),
-                          CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
+                          CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                           CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                           ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
                           ModifiedBy = row.Field<Guid?>("ModifiedBy") ?? Guid.Empty,

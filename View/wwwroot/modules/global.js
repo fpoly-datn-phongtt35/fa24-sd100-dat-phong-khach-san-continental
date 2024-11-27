@@ -1,7 +1,6 @@
 ﻿var global =
 {
-    NumberVNFormated: function (number)
-    {
+    NumberVNFormated: function (number) {
         var formattedprice = parseFloat(number).toLocaleString('vi-VN');
         formattedprice = formattedprice.replaceAll('.', ',')
         return formattedprice;

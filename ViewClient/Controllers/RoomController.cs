@@ -62,11 +62,28 @@ namespace ViewClient.Controllers
 
         public async Task<IActionResult> SearchRooms(SearchRoomsRequest request)
         {
-
+           
+        
             string roomsRequestUrl = $"/api/Room/SearchRooms";
 
             try
             {
+                if (request.CheckIn != null)
+                {
+                    HttpContext.Session.SetString("CheckIn", request.CheckIn.ToString("yyyy-MM-dd"));
+                }
+                if (request.CheckOut != null)
+                {
+                    HttpContext.Session.SetString("CheckOut", request.CheckOut.ToString("yyyy-MM-dd"));
+                }
+                if (request.MaxiumOccupancy != null)
+                {
+                    HttpContext.Session.SetInt32("MaxiumOccupancy", request.MaxiumOccupancy);
+                }
+                if (request.QuantityRoom != null)
+                {
+                    HttpContext.Session.SetInt32("QuantityRoom", request.QuantityRoom);
+                }
                 // Gửi yêu cầu để lấy danh sách phòng
                 var roomsResponse = await SendHttpRequest<RoomAvailableResponse>(roomsRequestUrl, HttpMethod.Post, request);
 
@@ -94,9 +111,10 @@ namespace ViewClient.Controllers
                 var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
                     (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
-
+                var checkIn = HttpContext.Session.GetString("CheckIn");
+                Console.WriteLine("CheckIn từ session: " + checkIn);
                 ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
-
+                
                 return View(roomsResponse); // Trả về danh sách phòng
             }
             catch (Exception ex)

@@ -9,30 +9,35 @@
     ViewBag.Title = "Continental";
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
     var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
-    var noData = ViewBag.NoData as List<Domain.DTO.Room.RoomResponse>;
+   
 }
-
-
 
 <div class="search-box">
     <h3 style="text-align: center;">Tìm Kiếm Phòng</h3>
     <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
-        <input type="date" id="checkIn" name="checkIn" class="form-control me-2" placeholder="Ngày nhận phòng" required>
-        <input type="date" id="checkOut" name="checkOut" class="form-control me-2" placeholder="Ngày trả phòng" required>
-        <input type="number" name="maxiumOccupancy" class="form-control me-2" placeholder="Số người tối đa" min="1" required>
-        <input type="number" name="quantityRoom" class="form-control me-2" placeholder="Số lượng phòng" min="1" required>
-        <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+        <div class="me-2">
+            <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
+            <input type="date" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+        </div> 
+        <div class="me-2">
+            <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
+            <input type="date" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+        </div>
+        <div class="me-2">
+            <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
+            <input type="number" id="maxiumOccupancy" name="maxiumOccupancy" class="form-control" title="Số người" min="1" max="50" required>
+        </div>
+        <div class="me-2">
+            <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
+            <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
+        </div>
+        <button type="submit" id="validateButton" class="btn btn-primary">Tìm Kiếm</button>
     </form>
 </div>
 <div class="container">
-    @if (ViewBag.NoData != null)
+    @if (!groupedData.Any())
     {
-        <h3 style="text-align: center;">@ViewBag.NoData</h3>
-    }
-    else if (!groupedData.Any())
-    {
-
-        <h3 style="text-align: center;">Không có phòng nào phù hợp</h3>
+        <h3 style="text-align: center; color:#F04770;">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
     }
     else
     {
@@ -42,14 +47,14 @@
             if (roomType != null)
             {
                 <h3 class="room-type-title d-flex">
-                    Loại phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.Name</p>  -
+                    Loại phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.Name</p> -
                     Số lượng người: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.MaximumOccupancy</p>
                 </h3>
-                <div class="row">
+                <div class="row mb-2">
                     @foreach (var room in group)
                     {
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link">
+                            <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link" style="text-decoration:none;">
                                 <div class="card">
                                     <h5 class="card-title" style="color:black;">@room.Name</h5>
                                     <div class="d-flex justify-content-center">
@@ -66,7 +71,7 @@
                                         }
                                     </div>
                                     <p>Giá: @Html.DisplayFor(modelItem => room.Price)</p>
-                                    <p class="status-badge">@StatusHelper.DisplayRoomStatusBadge(room.Status)</p>
+                                  
                                 </div>
                             </a>
                         </div>
@@ -100,3 +105,6 @@
     <!-- Bạn có thể thêm các dịch vụ khác vào đây -->
 </div>
 
+@section scripts {
+    <script asp-append-version="true" src="~/module/searchRoom.js"></script>
+}

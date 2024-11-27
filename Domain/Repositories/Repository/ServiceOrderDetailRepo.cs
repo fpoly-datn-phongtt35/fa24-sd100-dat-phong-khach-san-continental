@@ -49,7 +49,7 @@ namespace Domain.Repositories.Repository
                     SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
-                    new SqlParameter("@RoomBookingId", request.RoomBookingId != Guid.Empty? request.RoomBookingId : DBNull.Value),
+                      new SqlParameter("@RoomBookingId", request.RoomBookingId != Guid.Empty? request.RoomBookingId : DBNull.Value),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Description", request.Description),

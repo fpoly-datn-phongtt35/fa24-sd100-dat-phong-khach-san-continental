@@ -8,10 +8,10 @@
     $('#openModalButton').click(function () {
         $('#bookingModal').modal('show');
     });
-
+    const checkIn = localStorage.getItem("CheckIn");
+    const checkOut = localStorage.getItem("CheckOut");
     $('#checkInBooking, #checkOutBooking').change(function () {
-        var checkIn = new Date($('#checkInBooking').val());
-        var checkOut = new Date($('#checkOutBooking').val());
+      
         var pricePerNight = roomPrice;
 
         // Calculate number of days

@@ -156,7 +156,7 @@ public class RoomBookingController : Controller
     }
 
     [HttpPost]
-    public async Task<List<ServiceOrderDetailResponse>> GetListServiceRelated(Guid id) 
+    public async Task<List<ServiceOrderDetailResponse>> GetListServiceRelated(Guid id)
     {
         try
         {
@@ -172,7 +172,7 @@ public class RoomBookingController : Controller
 
     public async Task<int> submit(RoomBooking bookingcreaterequest,
         List<RoomBookingDetail> lstupsert,
-        List<ServiceOrderDetail> lstSerOrderDetail,List<Guid> ListDelete)
+        List<ServiceOrderDetail> lstSerOrderDetail, List<Guid> ListDelete)
     {
         try
         {
@@ -244,10 +244,9 @@ public class RoomBookingController : Controller
                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
                 }
             }
-
-            foreach(var i in ListDelete) 
+            foreach (var i in ListDelete)
             {
-                var request = new ServiceOrderDetailDeleteRequest() 
+                var request = new ServiceOrderDetailDeleteRequest()
                 {
                     Id = i,
                     DeletedTime = DateTime.UtcNow,
@@ -257,16 +256,16 @@ public class RoomBookingController : Controller
             }
 
 
-           /* if (idroombooking != Guid.Empty) 
-            {
-                foreach (var i in lstSerOrderDetail)
-                {
-                    i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    i.Status = EntityStatus.Active;
-                    i.RoomBookingId = idroombooking;
-                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
-                }
-            }*/
+            /* if (idroombooking != Guid.Empty) 
+             {
+                 foreach (var i in lstSerOrderDetail)
+                 {
+                     i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                     i.Status = EntityStatus.Active;
+                     i.RoomBookingId = idroombooking;
+                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
+                 }
+             }*/
 
             return 1;
         }
@@ -410,7 +409,7 @@ public class RoomBookingController : Controller
         var response = new RoomAvailableResponse();
         try
         {
-            if(roomRequest.StartDate != null && roomRequest.EndDate != null)
+            if (roomRequest.StartDate != null && roomRequest.EndDate != null)
             {
                 response = await _roomGetService.GetAvailableRooms(roomRequest);
             }
