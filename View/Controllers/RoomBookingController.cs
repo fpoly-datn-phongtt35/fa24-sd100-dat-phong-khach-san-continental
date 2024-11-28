@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
@@ -42,7 +43,7 @@ public class RoomBookingController : Controller
     private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-    public RoomBookingController(IRoomTypeGetService roomTypeServiceGetService,IFloorService floorService,IRoomBookingUpdateService roomBookingUpdateService,IServiceOrderDetailService serviceOrderDetailService,IServiceTypeService serviceTypeService,IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,ICustomerService customerService,IRoomGetService roomGetService,IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
+    public RoomBookingController(IRoomTypeGetService roomTypeServiceGetService, IFloorService floorService, IRoomBookingUpdateService roomBookingUpdateService, IServiceOrderDetailService serviceOrderDetailService, IServiceTypeService serviceTypeService, IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService, ICustomerService customerService, IRoomGetService roomGetService, IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
         _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
@@ -58,12 +59,12 @@ public class RoomBookingController : Controller
         _roomGetService = roomGetService;
     }
 
-    public async Task<List<ServiceType>> GetlistServiceType(string txt_search) 
+    public async Task<List<ServiceType>> GetlistServiceType(string txt_search)
     {
         try
         {
             var request = new ServiceTypeGetRequest();
-            if(txt_search != null) 
+            if (txt_search != null)
             {
                 request.Name = txt_search;
             }
@@ -82,20 +83,20 @@ public class RoomBookingController : Controller
         var model = new ResponseData<Floor>();
         try
         {
-            FloorGetRequest request = new FloorGetRequest() 
+            FloorGetRequest request = new FloorGetRequest()
             {
                 PageSize = 100,
             };
             model = await _floorService.GetFloor(request);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
         return model.data;
     }
 
-    public async Task<List<RoomTypeResponse>> GetRoomTypeSuggestion() 
+    public async Task<List<RoomTypeResponse>> GetRoomTypeSuggestion()
     {
         var model = new ResponseData<RoomTypeResponse>();
         try
@@ -113,7 +114,7 @@ public class RoomBookingController : Controller
         return model.data;
     }
 
-    public async Task<Service> GetServiceById(Guid Id) 
+    public async Task<Service> GetServiceById(Guid Id)
     {
         try
         {
@@ -127,7 +128,7 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<List<ServiceOrderDetailResponse>> GetSerOrderDetailRelated(Guid RoomBooking) 
+    public async Task<List<ServiceOrderDetailResponse>> GetSerOrderDetailRelated(Guid RoomBooking)
     {
         try
         {
@@ -141,7 +142,7 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<List<Service>> GetServiceSuggestion(ServiceGetRequest request) 
+    public async Task<List<Service>> GetServiceSuggestion(ServiceGetRequest request)
     {
         try
         {
@@ -177,9 +178,9 @@ public class RoomBookingController : Controller
         try
         {
             Guid idroombooking = Guid.Empty;
-            if (bookingcreaterequest.Id == Guid.Empty) 
+            if (bookingcreaterequest.Id == Guid.Empty)
             {
-                var RoomBooking = new RoomBookingCreateRequestForCustomer() 
+                var RoomBooking = new RoomBookingCreateRequestForCustomer()
                 {
                     BookingType = BookingType.Offline,
                     StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
@@ -193,7 +194,7 @@ public class RoomBookingController : Controller
                 };
                 idroombooking = await _roomBookingCreateService.CreateRoomBookingForCustomer(RoomBooking);
             }
-            else 
+            else
             {
                 var roomBooking = new RoomBookingUpdateRequest()
                 {
@@ -207,7 +208,7 @@ public class RoomBookingController : Controller
                 };
                 await _roomBookingUpdateService.UpdateRoomBookingAsync(roomBooking);
             }
-            foreach(var i in lstupsert) 
+            foreach (var i in lstupsert)
             {
                 i.RoomBookingId = idroombooking;
                 i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -222,14 +223,14 @@ public class RoomBookingController : Controller
                 {
                     updateStatusRquest.Status = RoomStatus.Dirty;
                 }
-                else if (i.Status == EntityStatus.InActive) 
+                else if (i.Status == EntityStatus.InActive)
                 {
                     updateStatusRquest.Status = RoomStatus.Occupied;
                 }
                 await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
             }
 
-            foreach (var i in lstSerOrderDetail) 
+            foreach (var i in lstSerOrderDetail)
             {
                 if (i.Id == Guid.Empty)
                 {
@@ -238,12 +239,13 @@ public class RoomBookingController : Controller
                     i.Status = EntityStatus.Active;
                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
                 }
-                else 
+                else
                 {
                     i.ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
                 }
             }
+
             foreach (var i in ListDelete)
             {
                 var request = new ServiceOrderDetailDeleteRequest()
@@ -276,7 +278,7 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRoomRelated(Guid Id) 
+    public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRoomRelated(Guid Id)
     {
         try
         {
@@ -290,7 +292,7 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<int> Cancel(Guid Id,Guid IdRoom) 
+    public async Task<int> Cancel(Guid Id, Guid IdRoom)
     {
         try
         {
@@ -372,16 +374,16 @@ public class RoomBookingController : Controller
     }
 
     [Route("/BookingRoom/Id={IdRoomBooking}&&Client={IdClient}")]
-    public async Task<IActionResult> BookingForm(Guid IdRoomBooking,Guid IdClient) 
+    public async Task<IActionResult> BookingForm(Guid IdRoomBooking, Guid IdClient)
     {
         ViewBag.IdRoomBooking = null;
         ViewBag.IdClient = null;
         ViewBag.Client = null;
-        if (IdRoomBooking != Guid.Empty) 
+        if (IdRoomBooking != Guid.Empty)
         {
             ViewBag.IdRoomBooking = IdRoomBooking;
         }
-        if(IdClient != Guid.Empty) 
+        if (IdClient != Guid.Empty)
         {
             ViewBag.IdClient = IdClient;
             var Client = await _customerService.GetCustomerById(IdClient);
@@ -390,7 +392,7 @@ public class RoomBookingController : Controller
         return View();
     }
 
-    public async Task<RoomResponse> GetRoomById(Guid Id) 
+    public async Task<RoomResponse> GetRoomById(Guid Id)
     {
         try
         {
@@ -422,7 +424,7 @@ public class RoomBookingController : Controller
     }
 
     [HttpPost]
-    public async Task<Customer> GetCustomerById(Guid Id) 
+    public async Task<Customer> GetCustomerById(Guid Id)
     {
         try
         {
@@ -436,24 +438,25 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<ResponseData<Customer>> GetCustomerSuggestion(string txt_search) 
-    {   var response = new ResponseData<Customer>();
-        try 
+    public async Task<ResponseData<Customer>> GetCustomerSuggestion(string txt_search)
+    {
+        var response = new ResponseData<Customer>();
+        try
         {
             var request = new CustomerGetRequest();
-            if (Regex.IsMatch(txt_search, @"^\d+$")) 
+            if (Regex.IsMatch(txt_search, @"^\d+$"))
             {
                 request.PhoneNumber = txt_search;
                 request.UserName = null;
                 request.Email = null;
             }
-            else if(Regex.IsMatch(txt_search, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))    
+            else if (Regex.IsMatch(txt_search, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 request.PhoneNumber = null;
                 request.UserName = null;
                 request.Email = txt_search;
             }
-            else 
+            else
             {
                 request.PhoneNumber = null;
                 request.UserName = txt_search;
@@ -473,8 +476,8 @@ public class RoomBookingController : Controller
     {
         return View();
     }
-    
-    public async Task<IActionResult> ListRoomBooking(RoomBookingGetRequest Request) 
+
+    public async Task<IActionResult> ListRoomBooking(RoomBookingGetRequest Request)
     {
         try
         {

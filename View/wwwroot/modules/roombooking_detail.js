@@ -68,7 +68,6 @@ $(document).ready(function () {
         getRoomRq.FloorId = data.id;
     });
 
-
     var currentTime = moment(global.formatDateToMMDDYYYY(global.createNewDateInVietnamTimezone().toISOString().slice(0, 16))).format("YYYY-MM-DD");
     $("#fromDate").attr('min', currentTime);
     $("#toDate").attr('min', currentTime);
@@ -321,6 +320,7 @@ var _Service_OrderDetail =
                             </td>
                             <td class="">
                                <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
+                           </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
                             </td>
@@ -334,6 +334,7 @@ var _Service_OrderDetail =
                         _Service_OrderDetail.CalculatingTotalPriceSer();
                         _Service_OrderDetail.ResetIndex();
                     }
+
                 }
             });
         }
@@ -372,6 +373,11 @@ var _Service_OrderDetail =
         for (let i = 0; i < lstToalPriceSerEle.length; i++) {
             const element = lstToalPriceSerEle[i];
             AmountPriceService = AmountPriceService + parseInt(element.value.replaceAll(',', ''));
+        }
+
+        for (let i = 0; i < lstExtraSerElete.length; i++) {
+            const element = lstExtraSerElete[i];
+            AmountExtraSer = AmountExtraSer + parseInt(element.value);
         }
         $("#total_service_price").html(global.NumberVNFormated(AmountPriceService));
         $("#total_service_extra_price").html(global.NumberVNFormated(AmountExtraSer));
@@ -425,6 +431,7 @@ var _Service_OrderDetail =
             }
         });
     },
+
     GetListOBjService: function () {
         LstIdSerAdd.forEach(item => {
             var obj =
@@ -584,7 +591,7 @@ var _roombooking_detail = {
             var idEle = element.id.replace('RoomPr_', '');
             var statusEle = $("#Status_" + idEle).val();
             if (statusEle != 3) {
-                TotalRoomPrice = TotalRoomPrice + parseInt(element.innerHTML.replaceAll(',', '')); 
+                TotalRoomPrice = TotalRoomPrice + parseInt(element.innerHTML.replaceAll(',', ''));
             }
         }
 
@@ -798,6 +805,7 @@ var _roombooking_detail = {
     },
 
     submit: function () {
+        _roombooking_detail.GetlistObjSubmit();
         _Service_OrderDetail.GetListOBjService();
         $.ajax({
             url: "/RoomBooking/submit",

@@ -1,4 +1,5 @@
-﻿using Domain.DTO.ServiceOrderDetail;
+﻿
+using Domain.DTO.ServiceOrderDetail;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
@@ -44,12 +45,12 @@ namespace Domain.Repositories.Repository
                     };
                     return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertServiceOrderDetail, sqlParameters);
                 }
-                else 
+                else
                 {
                     SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
-                      new SqlParameter("@RoomBookingId", request.RoomBookingId != Guid.Empty? request.RoomBookingId : DBNull.Value),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId != Guid.Empty? request.RoomBookingId : DBNull.Value),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Description", request.Description),

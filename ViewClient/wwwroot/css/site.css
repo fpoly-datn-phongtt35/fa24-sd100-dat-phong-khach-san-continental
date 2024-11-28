@@ -232,6 +232,13 @@ body {
             transform: scale(0.98); /* Giảm kích thước nút khi nhấn */
         }
 
+#serviceContainer {
+    max-height: 200px; /* Chiều cao tối đa cho phần tử */
+    overflow-y: auto; /* Thêm thanh cuộn theo chiều dọc */
+    border: 1px solid #ccc; /* Viền xung quanh để dễ thấy */
+    padding: 10px; /* Đệm bên trong */
+    border-radius: 5px; /* Bo góc */
+}
 /* Các dịch vụ */
 .services {
     display: flex;
@@ -553,10 +560,6 @@ body {
     padding: 15px; /* Khoảng cách bên trong */
     margin-bottom: 20px; /* Khoảng cách dưới */
 }
-
-    .alert-custom .close {
-        color: #721c24; /* Màu cho nút đóng */
-    }
 
 //room
 .card-container {
