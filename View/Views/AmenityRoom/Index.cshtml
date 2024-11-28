@@ -13,12 +13,12 @@
 <h3>Danh sách tiện nghi thuộc phòng</h3>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
-    <div class="form-group me-2">
+    <div class="form-group me-2 p-3">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["searchString"]" />
     </div>
     <!-- Dropdown chọn RoomType -->
-    <div class="form-group me-2">
+    <div class="form-group me-2 p-3">
         <select name="RoomTypeId" class="form-select" id="RoomTypeId">
             <option value="">Chọn loại phòng</option>
             @foreach (var roomType in ViewBag.RoomTypes)
@@ -30,7 +30,7 @@
         </select>
     </div>
     <!-- Dropdown chọn trạng thái -->
-    <div class="form-group me-2">
+    <div class="form-group me-2 p-3">
         <select name="status" class="form-select" id="status">
             <option value="">Chọn trạng thái</option>
             @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
@@ -47,12 +47,12 @@
     <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
 </form>
 
-<p>
+<p style="p-3">
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
     <a asp-action="AmenityRoomsPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
-<table class="table" style="color: whitesmoke">
+<table class="table style="color: whitesmoke">
     <thead>
     <tr>
         <th>Loại phòng</th>

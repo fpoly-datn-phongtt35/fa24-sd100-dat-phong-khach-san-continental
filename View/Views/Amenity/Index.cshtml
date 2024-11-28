@@ -6,7 +6,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h3>Danh sách tiện nghi</h3>
+<h3 class="p-3">Danh sách tiện nghi</h3>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" 
       class="d-flex align-items-center">
@@ -33,12 +33,12 @@
     <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
 </form>
 
-<p>
+<p class="">
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
     <a asp-action="AmenitiesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
-<table class="table" style="color: whitesmoke">
+<table class="table ">
     <thead>
     <tr>
         <th>Tên tiện nghi</th>
