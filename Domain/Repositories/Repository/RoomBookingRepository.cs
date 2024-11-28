@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿
+using System.Data;
 using Azure.Core;
 using Domain.DTO.Paging;
 using Domain.DTO.RoomBooking;
@@ -23,7 +24,7 @@ public class RoomBookingRepository : IRoomBookingRepository
         _worker = new DbWorker(StoredProcedureConstant.Continetal);
         _configuration = configuration;
     }
-    
+
     public async Task<ResponseData<RoomBookingResponse>> GetFilteredRoomBookings
         (RoomBookingGetRequest roomBookingGetRequest)
     {
@@ -39,7 +40,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new("@BookingType", roomBookingGetRequest.BookingType),
                 new("@Status", roomBookingGetRequest.Status)
             };
-            
+
             var dataTable = await _worker.GetDataTableAsync
                 (StoredProcedureConstant.SP_GetFilteredRoomBookings, parameters);
             var roomBookings = new List<RoomBookingResponse>();
@@ -50,11 +51,11 @@ public class RoomBookingRepository : IRoomBookingRepository
                 var roomBookingResponse = roomBooking.ToRoomBookingResponse();
                 roomBookings.Add(roomBookingResponse);
             }
-            
+
             model.data = roomBookings;
             model.CurrentPage = roomBookingGetRequest.PageIndex;
             model.PageSize = roomBookingGetRequest.PageSize;
-            
+
             try
             {
                 model.totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRows"]);
@@ -73,7 +74,7 @@ public class RoomBookingRepository : IRoomBookingRepository
 
         return model;
     }
-    
+
 
 
 
@@ -91,10 +92,10 @@ public class RoomBookingRepository : IRoomBookingRepository
 
             if (dataTable.Rows.Count == 0)
                 return null;
-            
+
             var row = dataTable.Rows[0];
             var roomBooking = ConvertToRoomBookingRow(row);
-            
+
             return roomBooking;
         }
         catch (Exception e)
@@ -108,7 +109,7 @@ public class RoomBookingRepository : IRoomBookingRepository
         try
         {
             var existingRoomBooking = GetRoomBookingById(roomBooking.Id);
-            if(existingRoomBooking == null)
+            if (existingRoomBooking == null)
                 throw new Exception("Room booking not found");
 
             SqlParameter[] parameters = new SqlParameter[]
@@ -137,7 +138,7 @@ public class RoomBookingRepository : IRoomBookingRepository
         var customerNameParts = row["CustomerName"].ToString().Split(' ');
         var customerLastName = string.Join(" ", customerNameParts.Take(customerNameParts.Length - 1));
         var customerFirstName = customerNameParts.Last();
-        
+
         var staffNameParts = row["StaffName"].ToString().Split(' ');
         var staffLastName = string.Join(" ", staffNameParts.Take(staffNameParts.Length - 1));
         var staffFirstName = staffNameParts.Last();
@@ -169,7 +170,7 @@ public class RoomBookingRepository : IRoomBookingRepository
             }
         };
     }
-    
+
     private static DateTimeOffset ConvertDateTimeOffsetToString(DataRow row, string columnName)
     {
         if (row[columnName] != DBNull.Value)

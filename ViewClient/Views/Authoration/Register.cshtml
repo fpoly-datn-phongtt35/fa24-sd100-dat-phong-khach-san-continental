@@ -25,12 +25,12 @@
             </div>
             <div class="form-row">
                 <label for="email">Email</label>
-                <input type="text" name="Email" id="email" class="input-text" required>
+                <input type="text" name="Email" id="email" class="input-text" aria-required="true" required>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-row">
                 <label for="password">Mật khẩu</label>
-                <input type="password" name="Password" id="password" class="input-text" required>
+                <input type="password" name="Password" id="password" class="input-text" aria-required="true" required>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-row">
@@ -44,54 +44,8 @@
         </form>
     </div>
 </div>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+
+
+@section scripts {
+    <script asp-append-version="true" src="~/module/Register.js"></script>
 }
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-@* <script>
-    // just for the demos, avoids form submit
-    jQuery.validator.setDefaults({
-        debug: true,
-        success: function (label) {
-            label.attr('id', 'valid');
-        },
-    });
-    $("#myform").validate({
-        rules: {
-            email: {
-                required: true,
-                email: true
-            },
-            phoneNumber: {
-                required:true,
-                Number:true
-            },
-            password: "required",
-            confirm_password: {
-                equalTo: "#password"
-            }
-        },
-        messages: {
-            username: {
-                required: "Hãy nhập tài khoản...."
-            },
-            email: {
-                required: "Hãy nhập email...."
-            },
-            phoneNumber: {
-                required: "Hãy nhập số điện thoại..."
-            },
-            password: {
-                required: "Hãy nhập mật khẩu...."
-            },
-            confirm_password: {
-                required: "Hãy nhập vào mật khẩu...",
-                equalTo: "Mật khẩu không trùng lặp!"
-            }
-        }
-    });
-</script> *@

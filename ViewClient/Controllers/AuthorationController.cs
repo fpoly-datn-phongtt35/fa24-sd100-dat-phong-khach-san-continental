@@ -32,27 +32,35 @@ namespace ViewClient.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _loginRepo.LoginAsync(loginInput);
-                if (result != null && result.Status == EntityStatus.Active)
-                {
-                    var claims = new List<Claim>();
-                    claims.Add(new Claim(ClaimTypes.UserData, result.Id.ToString()));
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties
-                    {
-                        AllowRefresh = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
-                        IsPersistent = true
-                    };
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                    HttpContext.Session.SetString("UserName", result.UserName);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
+
+                // Check if result is null or the status is not Active
+                if (result == null || result.Status != EntityStatus.Active)
                 {
                     ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không đúng.");
+                    return View(loginInput);
                 }
+
+                // Proceed with successful login
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.UserData, result.Id.ToString())
+        };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    AllowRefresh = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
+                    IsPersistent = true
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+                HttpContext.Session.SetString("UserName", result.UserName);
+
+                return RedirectToAction("Index", "Home");
             }
 
+            // If we got this far, something failed, redisplay form
             return View(loginInput);
         }
         [HttpGet("register")]

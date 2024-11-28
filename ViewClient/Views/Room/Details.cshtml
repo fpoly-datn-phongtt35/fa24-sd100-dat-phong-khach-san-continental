@@ -99,12 +99,12 @@
 <div>
     <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Quay lại</a>
     <button type="button" class="btn btn-primary" id="openModalButton">
-       Đặt phòng
+        Đặt phòng
     </button>
 </div>
 <!-- Modal cho đặt phòng -->
-<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="bookingModalLabel">Đặt Phòng</h5>
@@ -112,24 +112,29 @@
             </div>
             <div id="validationMessage" style="color: red;"></div>
             <div class="modal-body">
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <h6 style="margin: 0;"><i class="fa-regular fa-clock"></i> Giờ nhận phòng: <strong id="checkIn">Từ 14:00</strong></h6>
+                    <h6 style="margin: 0;"><i class="fa-regular fa-clock"></i> Giờ trả phòng: <strong id="checkOut">Trước 12:00</strong></h6>
+                </div>
+                <br />
                 <h6>@Model.Name</h6>
                 <p class="font-monospace">Giá: @Model.Price VNĐ/đêm</p>
-
-                <div id="validationMessage" class="text-danger"></div>
-                <p id="depositPayment">Đặt cọc: 0 VNĐ</p>
-                <p id="totalRoomPayment">Thanh toán: 0 VNĐ</p>
-            </div>
-            <dt>Bạn có muốn đặt thêm dịch vụ không ?</dt>
-            <div class="modal-body">
+                <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Bạn có muốn đặt thêm dịch vụ không ?</dt>
                 <form id="addServiceForm" method="post" action="@Url.Action("CreateService")">
                     <div class="mb-3">
                         <label class="form-label">Chọn Dịch Vụ:</label>
-                        <div class="form-check" id="serviceContainer">
-                            <!-- Dịch vụ sẽ được thêm vào đây bằng JavaScript -->
+                        <div class="modal-dialog-scrollable">
+                            <div class="form-check" id="serviceContainer">
+                                <!-- Dịch vụ sẽ được thêm vào đây bằng JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </form>
+                <hr />
+                <p style="font-weight: 600;" id="depositPayment">Đặt cọc: 0 VNĐ</p>
+                <p style="font-weight: 600;" id="totalRoomPayment">Thanh toán: 0 VNĐ</p>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <button type="button" class="btn btn-primary" id="confirmBookingButton">Xác Nhận Đặt Phòng</button>
@@ -140,7 +145,7 @@
 <script>
     var isUserLoggedIn = @User.Identity.IsAuthenticated.ToString().ToLower();
     var roomId = '@Model.Id';
-    var roomPrice = @Model.Price;
+    var roomPrice = '@Model.Price';
     var bookingUrl = '@Url.Action("RoomBooking", "RoomBooking")';
 </script>
 @section scripts {
