@@ -302,7 +302,7 @@ var _Service_OrderDetail =
                         var formattedprice = parseFloat(result.price).toLocaleString('vi-VN');
                         formattedprice = formattedprice.replaceAll('.', ',')
                         $("#service-related").append(`
-                        <tr class="text-white align-items-center" id="ElementSer_`+ IdSerAdd + `">
+                        <tr class="align-items-center" id="ElementSer_`+ IdSerAdd + `">
                             <td style="display:none"><input id="IdSer_`+ IdSerAdd + `" value="${result.id}"></input></td>
                             <td scope="col" class="STT_Ser"></td>
                             <td scope="col">${result.name}</td>
@@ -394,7 +394,7 @@ var _Service_OrderDetail =
                         var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
                         formattedprice = formattedprice.replaceAll('.', ',')
                         $("#service-related").append(`
-                        <tr class="text-white align-items-center" id="ElementSer_`+ item.id + `">
+                        <tr class="align-items-center" id="ElementSer_`+ item.id + `">
                             <td style="display:none"><input id="IdSerOrder_`+ item.id + `" value="${item.id}"></input></td>
                             <td style="display:none"><input id="IdSer_`+ item.id + `" value="${item.serviceId}"></input></td>
                             <td scope="col" class="STT_Ser">${STT2}</td>
@@ -462,7 +462,7 @@ var _roombooking_detail = {
                     if (result != null) {
                         $("#room-related").append(`
 
-                        <tr class="text-white">
+                        <tr class="">
                            <td style="display:none"><input id="Idroom_`+ IdAdd + `" value="${result.id}"></input></td>
                            <td style="display:none"><input id="Id_`+ IdAdd + `" value=""></input></td>
                            <td style="display:none"><input id="Status_`+ IdAdd + `" value="1"></input></td>
@@ -643,7 +643,7 @@ var _roombooking_detail = {
                             newCOto = dateCheOut.toISOString().slice(0, 16);
                         }
                         $("#room-related").append(`
-                        <tr class="text-white">
+                        <tr class="">
                            <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>
                            <td style="display:none"><input id="Id_`+ item.roomBookingDetailId + `" value="${item.roomBookingDetailId}"></input></td>
                            <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="${item.status}"></input></td>
