@@ -1,4 +1,5 @@
-﻿using Domain.DTO.RoomBooking;
+﻿
+using Domain.DTO.RoomBooking;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomBooking;
 
@@ -15,21 +16,21 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
 
     public async Task<RoomBookingResponse?> UpdateRoomBookingAsync(RoomBookingUpdateRequest roomBookingUpdateRequest)
     {
-        if(roomBookingUpdateRequest is null)
+        if (roomBookingUpdateRequest is null)
             throw new ArgumentNullException(nameof(roomBookingUpdateRequest));
-        
+
         var existingRoomBooking = await _roomBookingRepository
             .GetRoomBookingById(roomBookingUpdateRequest.Id);
-        if(existingRoomBooking is null)
+        if (existingRoomBooking is null)
             throw new Exception("Room booking not found");
-        
+
         existingRoomBooking.Status = roomBookingUpdateRequest.Status;
         existingRoomBooking.ModifiedTime = roomBookingUpdateRequest.ModifiedTime;
         existingRoomBooking.ModifiedBy = roomBookingUpdateRequest.ModifiedBy;
         existingRoomBooking.TotalServicePrice = roomBookingUpdateRequest.TotalServicePrice;
         existingRoomBooking.TotalPrice = roomBookingUpdateRequest.TotalPrice;
         existingRoomBooking.TotalExtraPrice = roomBookingUpdateRequest.TotalExtraPrice;
-        
+
         await _roomBookingRepository.UpdateRoomBooking(existingRoomBooking);
         return existingRoomBooking.ToRoomBookingResponse();
     }

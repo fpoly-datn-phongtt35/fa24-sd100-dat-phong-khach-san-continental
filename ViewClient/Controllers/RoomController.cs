@@ -62,11 +62,28 @@ namespace ViewClient.Controllers
 
         public async Task<IActionResult> SearchRooms(SearchRoomsRequest request)
         {
-
+           
+        
             string roomsRequestUrl = $"/api/Room/SearchRooms";
 
             try
             {
+                if (request.CheckIn != null)
+                {
+                    HttpContext.Session.SetString("CheckIn", request.CheckIn.ToString("yyyy-MM-dd"));
+                }
+                if (request.CheckOut != null)
+                {
+                    HttpContext.Session.SetString("CheckOut", request.CheckOut.ToString("yyyy-MM-dd"));
+                }
+                if (request.MaxiumOccupancy != null)
+                {
+                    HttpContext.Session.SetInt32("MaxiumOccupancy", request.MaxiumOccupancy);
+                }
+                if (request.QuantityRoom != null)
+                {
+                    HttpContext.Session.SetInt32("QuantityRoom", request.QuantityRoom);
+                }
                 // Gửi yêu cầu để lấy danh sách phòng
                 var roomsResponse = await SendHttpRequest<RoomAvailableResponse>(roomsRequestUrl, HttpMethod.Post, request);
 
@@ -94,9 +111,10 @@ namespace ViewClient.Controllers
                 var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
                     (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
-
+                var checkIn = HttpContext.Session.GetString("CheckIn");
+                Console.WriteLine("CheckIn từ session: " + checkIn);
                 ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
-
+                
                 return View(roomsResponse); // Trả về danh sách phòng
             }
             catch (Exception ex)
@@ -121,20 +139,33 @@ namespace ViewClient.Controllers
                 Status = status
             };
 
-            var jsonRequest = JsonConvert.SerializeObject(request); 
-            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json"); 
+            var jsonRequest = JsonConvert.SerializeObject(request);
+            Console.WriteLine(jsonRequest);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             try
             {
                 var response = await _httpClient.PostAsync(requestUrl, content);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorResponse = await response.Content.ReadAsStringAsync();
+                    return Json(new { error = $"Lỗi từ server: {errorResponse}" });
+                }
+
                 var responseString = await response.Content.ReadAsStringAsync();
                 var services = JsonConvert.DeserializeObject<ResponseData<Service>>(responseString);
-                ViewBag.Services = services.data;
-                return Json(services.data);
+                var serviceOptions = services.data.Select(s =>
+                    $"<div class='form-check'>" +
+                    $"<input class='form-check-input' type='checkbox' value='{s.Id}' id='service_{s.Id}'>" +
+                    $"<label class='form-check-label' for='service_{s.Id}'>{s.Name} - {s.Price} VNĐ / {s.Unit}</label>" +
+                    $"</div>"
+                );
+
+                return Json(new { html = string.Join("", serviceOptions) });
             }
             catch (Exception ex)
             {
-                return Json(new { error = ex.Message });
+                return Json(new { error = $"Đã xảy ra lỗi: {ex.Message}" });
             }
         }
         public async Task<IActionResult> Details(Guid roomId)

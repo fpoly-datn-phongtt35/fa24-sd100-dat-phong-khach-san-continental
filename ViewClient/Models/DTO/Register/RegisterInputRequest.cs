@@ -13,6 +13,7 @@ namespace ViewClient.Models.DTO.Register
         [Required]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Vui lòng nhập đúng định dạng: example@domain.com")]
         public string Email { get; set; }
+        [MaxLength(13)]
         public string? PhoneNumber { get; set; }
 
     }

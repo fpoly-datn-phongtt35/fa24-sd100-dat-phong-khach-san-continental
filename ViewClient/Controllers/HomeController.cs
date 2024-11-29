@@ -84,7 +84,6 @@ namespace ViewClient.Controllers
         }
         public async Task<IActionResult> SearchRooms(SearchRoomsRequest request)
         {
-
             string roomsRequestUrl = $"/api/Room/SearchRooms";
 
             try
@@ -92,9 +91,9 @@ namespace ViewClient.Controllers
                 // Gửi yêu cầu để lấy danh sách phòng
                 var roomsResponse = await SendHttpRequest<RoomAvailableResponse>(roomsRequestUrl, HttpMethod.Post, request);
 
-                if (roomsResponse == null)
+                if (roomsResponse.LstRoom == null || !roomsResponse.LstRoom.Any())
                 {
-                    return View("Error", new Exception("Không thể lấy danh sách phòng."));
+                    return View("NoRoomsFound");
                 }
                 // Gửi yêu cầu lấy danh sách tầng
                 string floorsRequestUrl = "/api/Floor/GetListFloor";
@@ -116,17 +115,13 @@ namespace ViewClient.Controllers
                 var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
                     (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
-
                 ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
                 var responseData = new ResponseData<Domain.DTO.Room.RoomResponse>
                 {
                     data = roomsResponse.LstRoom,
                     totalRecord = roomsResponse.TotalRoom
                 };
-                if(responseData.data == null)
-                {
-                    ViewBag.NoData = "Chúng tôi không có phòng nào phù hợp với tìm kiểm của bạn";
-                }
+ 
                 return View("Index", responseData);
             }
             catch (Exception ex)

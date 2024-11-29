@@ -1,4 +1,5 @@
-﻿using Domain.DTO.ServiceOrderDetail;
+﻿
+using Domain.DTO.ServiceOrderDetail;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
@@ -44,7 +45,7 @@ namespace Domain.Repositories.Repository
                     };
                     return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertServiceOrderDetail, sqlParameters);
                 }
-                else 
+                else
                 {
                     SqlParameter[] sqlParameters = new SqlParameter[]
                 {

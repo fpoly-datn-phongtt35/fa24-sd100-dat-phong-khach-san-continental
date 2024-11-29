@@ -2,69 +2,87 @@
     function showToast(toastId) {
         var toastEl = document.getElementById(toastId);
         var toast = new bootstrap.Toast(toastEl);
-       /* toast.show();*/
+        // toast.show();  // Uncomment this line to show the toast
     }
+   
 
     $('#openModalButton').click(function () {
         $('#bookingModal').modal('show');
-    });
 
-    $('#checkInBooking, #checkOutBooking').change(function () {
-        var checkIn = new Date($('#checkInBooking').val());
-        var checkOut = new Date($('#checkOutBooking').val());
+        // Lấy giá trị checkIn và checkOut từ localStorage khi mở modal
+        var checkIn = new Date(localStorage.getItem("CheckIn"));
+        var checkOut = new Date(localStorage.getItem("CheckOut"));
+
+        // Cập nhật giá trị vào các trường input
+        $('#checkIn').val(checkIn);
+        $('#checkOut').val(checkOut);
+
+        // Gọi hàm để tính toán giá tiền khi modal mở
+        updateBookingDates(checkIn, checkOut);
+        $.get('/Room/IndexService', {})
+            .done(function (data) {
+                if (data.html) {
+                    $('#serviceContainer').html(data.html);
+                } else if (data.error) {
+                    $('#serviceContainer').html("<p class='text-danger'>" + data.error + "</p>");
+                }
+            })
+            .fail(function () {
+                $('#serviceContainer').html("<p class='text-danger'>Đã xảy ra lỗi khi tải dịch vụ.</p>");
+            });
+    });
+    function formatDate(date) {
+        var day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu cần
+        var month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng (tháng bắt đầu từ 0)
+        var year = date.getFullYear(); // Lấy năm
+        return day + '-' + month + '-' + year; // Trả về định dạng dd-mm-yyyy
+    }
+    function updateBookingDates(checkIn, checkOut) {
         var pricePerNight = roomPrice;
 
-        // Calculate number of days
-        if (checkIn && checkOut && checkOut > checkIn) {
-            var timeDifference = checkOut - checkIn;
+        // Chuyển đổi checkIn và checkOut thành mốc thời gian
+        var checkInDate = new Date(checkIn).getTime();
+        var checkOutDate = new Date(checkOut).getTime();
+
+        // Tính toán số ngày
+        if (checkInDate && checkOutDate && checkOutDate > checkInDate) {
+            var timeDifference = checkOutDate - checkInDate;
             var days = Math.ceil(timeDifference / (1000 * 3600 * 24));
             var totalPayment = days * pricePerNight;
             var depositPayment = totalPayment * 20 / 100;
-            $('#depositPayment').text("Đặt cọc: " + depositPayment+ " VNĐ")
-            $('#totalPayment').text("Thanh toán: " + totalPayment + " VNĐ");
+            $('#depositPayment').text("Đặt cọc: " + depositPayment + " VNĐ");
+            $('#totalRoomPayment').text("Thanh toán: " + totalPayment + " VNĐ");
+            $('#checkIn').text("Từ 14:00 " + formatDate(checkIn));
+            $('#checkOut').text("Trước 12:00 " + formatDate(checkOut));
         } else {
-            $('#depositPayment').text("Đặt cọc: 0 VNĐ")
-            $('#totalPayment').text("Thanh toán: 0 VNĐ");
+            $('#depositPayment').text("Đặt cọc: 0 VNĐ");
+            $('#totalRoomPayment').text("Thanh toán: 0 VNĐ");
         }
+    }
+
+    $('#checkIn, #checkOut').change(function () {
+        // Cập nhật lại giá trị trong localStorage khi người dùng thay đổi
+        var checkIn = $('#checkIn').val();
+        var checkOut = $('#checkOut').val();
+        localStorage.setItem("CheckIn", checkIn);
+        localStorage.setItem("CheckOut", checkOut);
+
+        // Gọi hàm để tính toán giá tiền
+        updateBookingDates(checkIn, checkOut);
     });
 
     $('#confirmBookingButton').click(function () {
         $('#validationMessage').html('').hide();
 
-        if (!isUserLoggedIn) {
-            $('#validationMessage').html("Vui lòng đăng nhập để đặt phòng.");
-            console.log("User is not logged in, showing error toast");
-            showToast('errorToastLogin');
-            $('#validationMessage').show();
-            return;
-        }
-
-        var checkIn = new Date($('#checkInBooking').val());
-        var checkOut = new Date($('#checkOutBooking').val());
-        var now = new Date();
-
-        // Kiểm tra điều kiện
-        var fiveHoursFromNow = new Date(now.getTime() + 5 * 60 * 60 * 1000);
-        var validationMessage = "";
-
-        if (checkIn < Date.now) {
-            validationMessage += "Thời gian checkin phải không được nhỏ hơn hiện tại.<br>";
-        }
-        if (checkIn < fiveHoursFromNow) {
-            validationMessage += "Thời gian checkin phải cách thời điểm hiện tại 5 tiếng.<br>";
-        }
-        if (checkOut <= checkIn) {
-            validationMessage += "Thời gian checkout không được nhỏ hơn thời gian checkin.<br>";
-        }
-
+        // Kiểm tra thông tin và hiển thị thông báo nếu có
         if (validationMessage) {
-            $('#validationMessage').html(validationMessage);
+            $('#validationMessage').html(validationMessage).show();
         } else {
             // Nếu hợp lệ, thực hiện gửi dữ liệu booking
             var bookingDetails = {
                 RoomId: roomId,
-                CheckInBooking: $('#checkInBooking').val(),
-                CheckOutBooking: $('#checkOutBooking').val(),
+                CheckInBooking: new Date(localStorage.getItem("CheckIn")).toISOString(), // Chuyển đổi về định dạng ISO
+                CheckOutBooking: new Date(localStorage.getItem("CheckOut")).toISOString(), // Chuyển đổi về định dạng ISO
                 Price: parseFloat($('#totalPayment').text().replace("Thanh toán: ", "").replace(" VNĐ", ""))
             };
 
@@ -72,7 +90,7 @@
                 // Xử lý phản hồi từ server
                 $('#modalContainer').html(response);
                 $('#bookingModal').modal('hide');
- 
+
                 setTimeout(function () {
                     window.location.href = '/Home/Index';
                 }, 2000);
