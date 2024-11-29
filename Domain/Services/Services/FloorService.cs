@@ -20,8 +20,10 @@ namespace Domain.Services.Services
     {
         private readonly FloorRepo _floorRepo;
         private readonly IConfiguration _configuration;
-        public FloorService(IConfiguration configuration, BuildingRepo building)
+        private readonly BuildingRepo building;
+        public FloorService(IConfiguration configuration)
         {
+            building = new(configuration);
             _configuration = configuration;
             _floorRepo = new FloorRepo(_configuration, building);
         }

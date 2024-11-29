@@ -16,11 +16,8 @@
 <h1 style="margin-bottom:100px;">Danh sách Phòng</h1>
 
 
-<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
-        <div class="form-group me-2">
-            <input type="text" name="name" class="form-control" placeholder="Tìm kiếm"
-               value="@ViewContext.HttpContext.Request.Query["name"]" />
-        </div>
+<form method="get" action="@Url.Action("SearchRooms")" class="d-flex align-items-center">
+      
         <div class="form-group me-2">
             <select name="roomTypeId" class="form-select" id="roomTypeId">
                 <option value="">Chọn loại phòng</option>
@@ -44,7 +41,35 @@
                 }
             </select>
         </div>
+    <div class="form-group me-2">
+        <input type="date" name="checkIn" class="form-control" placeholder="Ngày nhận phòng"
+               value="@ViewContext.HttpContext.Request.Query["checkIn"]" />
+    </div>
 
+    <div class="form-group me-2">
+        <input type="date" name="checkOut" class="form-control" placeholder="Ngày trả phòng"
+               value="@ViewContext.HttpContext.Request.Query["checkOut"]" />
+    </div>
+
+    <div class="form-group me-2">
+        <input type="number" name="maxiumOccupancy" class="form-control" placeholder="Số người tối đa"
+               value="@ViewContext.HttpContext.Request.Query["maxiumOccupancy"]" min="1" />
+    </div>
+
+    <div class="form-group me-2">
+        <input type="number" name="quantityRoom" class="form-control" placeholder="Số lượng phòng"
+               value="@ViewContext.HttpContext.Request.Query["quantityRoom"]" min="1" />
+    </div>
+
+    <div class="form-group me-2">
+        <input type="number" step="0.01" name="minPrice" class="form-control" placeholder="Giá tối thiểu"
+               value="@ViewContext.HttpContext.Request.Query["minPrice"]" />
+    </div>
+
+    <div class="form-group me-2">
+        <input type="number" step="0.01" name="maxPrice" class="form-control" placeholder="Giá tối đa"
+               value="@ViewContext.HttpContext.Request.Query["maxPrice"]" />
+    </div>
       
         <button type="submit" class="btn btn-light">Tìm kiếm</button>
         <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>

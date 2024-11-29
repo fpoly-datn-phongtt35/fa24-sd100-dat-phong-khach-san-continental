@@ -4,19 +4,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-<style>
-    body {
-        color: white;
-    }
 
-    .table th, .table td {
-        color: white;
-    }
-
-    h1 {
-        color: white;
-    }
-</style>
 <h3>Trang chủ bài đăng</h3>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">

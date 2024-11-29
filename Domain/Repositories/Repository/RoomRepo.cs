@@ -7,6 +7,7 @@ using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,44 @@ namespace Domain.Repositories.Repository
         {
             _worker = new DbWorker(StoredProcedureConstant.Continetal);
             _configuration = configuration;
+        }
+
+        public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest) 
+        {
+            var Response = new RoomAvailableResponse();
+            try 
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+               {
+                    new("@MinPrice", roomRequest.MaxPrice),
+                    new("@MaxPrice", roomRequest.MaxPrice),
+                    new("@name", roomRequest.Name),
+                    new("@CheckIn", roomRequest.StartDate),
+                    new("@CheckOut", roomRequest.EndDate),
+                    new("@FloorId", roomRequest.FloorId),
+                    new("@RoomTypeId", roomRequest.RoomTypeId)
+               };
+                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAvailableRooms, parameters);
+                var roomlist = new List<RoomResponse>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    var room = RowToRoom(row);
+                    var roomResponse = room.ToRoomResponse();
+                    roomlist.Add(roomResponse);
+                }
+                if(roomlist.Count > 0) 
+                {
+                    Response.LstRoom = roomlist;
+                    Response.TotalRoom = roomlist.Count;
+                    Response.TotalOccupancy = Convert.ToInt32(dataTable.Rows[0]["TotalOccupancy"]); ;
+                }
+
+            }
+            catch(Exception ex) 
+            {
+                throw new ArgumentNullException("An error occurred while getting available rooms", ex);
+            }
+            return Response;
         }
 
         public async Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomRequest)
@@ -330,7 +369,7 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id),
-                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
+                    new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status != 0? request.Status : DBNull.Value },
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
@@ -341,6 +380,44 @@ namespace Domain.Repositories.Repository
             {
                 throw ex;
             }
+        }
+
+        public async Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request)
+        {
+            var Response = new RoomAvailableResponse();
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new("@MinPrice", request.MaxPrice),
+                    new("@MaxPrice", request.MaxPrice),
+                    new("@MaximumOccupancy", request.MaxiumOccupancy),
+                    new("@QuantityRoom", request.QuantityRoom),
+                    new("@CheckIn", request.CheckIn),
+                    new("@CheckOut", request.CheckOut),
+                    new("@FloorId", request.FloorId)
+               };
+                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_SearchRooms, parameters);
+                var roomlist = new List<RoomResponse>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    var room = RowToRoom(row);
+                    var roomResponse = room.ToRoomResponse();
+                    roomlist.Add(roomResponse);
+                }
+                if (roomlist.Count > 0)
+                {
+                    Response.LstRoom = roomlist;
+                    Response.TotalRoom = roomlist.Count;
+                    Response.TotalOccupancy = Convert.ToInt32(dataTable.Rows[0]["TotalOccupancy"]); ;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException("An error occurred while getting available rooms", ex);
+            }
+            return Response;
         }
     }
 }

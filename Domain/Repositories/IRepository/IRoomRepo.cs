@@ -14,9 +14,11 @@ namespace Domain.Repositories.IRepository
     {
         Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomResponse);
         Task<Room?> GetRoomById(Guid RoomId);
+        Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest);
         Task<Room> AddRoom(Room Room);
         Task<Room?> UpdateRoom(Room Room);
         Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request);
         Task<Room?> DeleteRoom(Room Room);
+        Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request);
     }
 }

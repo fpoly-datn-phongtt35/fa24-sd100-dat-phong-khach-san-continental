@@ -1,7 +1,86 @@
-﻿@{
+﻿@using System.Diagnostics
+@using Domain.DTO.Floor
+@using Domain.DTO.RoomType
+@using Domain.Enums
+@using Domain.DTO.Paging
+@using ViewClient.Views.Shared
+@model ResponseData<Domain.DTO.Room.RoomResponse>
+@{
     ViewBag.Title = "Continental";
+    var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
+    var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
+   
 }
 
+<div class="search-box">
+    <h3 style="text-align: center;">Tìm Kiếm Phòng</h3>
+    <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
+        <div class="me-2">
+            <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
+            <input type="date" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+        </div> 
+        <div class="me-2">
+            <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
+            <input type="date" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+        </div>
+        <div class="me-2">
+            <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
+            <input type="number" id="maxiumOccupancy" name="maxiumOccupancy" class="form-control" title="Số người" min="1" max="50" required>
+        </div>
+        <div class="me-2">
+            <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
+            <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
+        </div>
+        <button type="submit" id="validateButton" class="btn btn-primary">Tìm Kiếm</button>
+    </form>
+</div>
+<div class="container">
+    @if (!groupedData.Any())
+    {
+        <h3 style="text-align: center; color:#F04770;">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
+    }
+    else
+    {
+        foreach (var group in groupedData)
+        {
+            var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == group.Key);
+            if (roomType != null)
+            {
+                <h3 class="room-type-title d-flex">
+                    Loại phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.Name</p> -
+                    Số lượng người: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.MaximumOccupancy</p>
+                </h3>
+                <div class="row mb-2">
+                    @foreach (var room in group)
+                    {
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link" style="text-decoration:none;">
+                                <div class="card">
+                                    <h5 class="card-title" style="color:black;">@room.Name</h5>
+                                    <div class="d-flex justify-content-center">
+                                        @foreach (var img in room.Images)
+                                        {
+                                            var extension = System.IO.Path.GetExtension(img);
+                                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                                            {
+                                                var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+                                                <div class="img-container" style="margin: 5px;">
+                                                    <img src="@imagePath" alt="@room.Name" style="object-fit: cover; width: 100%; height: 150px;" />
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <p>Giá: @Html.DisplayFor(modelItem => room.Price)</p>
+                                  
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    }
+</div>
 <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="500">
     <div class="carousel-inner">
         <div class="carousel-item active">
@@ -16,13 +95,6 @@
     </div>
 </div>
 
-
-<div class="search-box">
-    <h3 style="text-align: center;">Tìm Kiếm Khách Sạn</h3>
-    <input type="text" placeholder="Nhập địa điểm, khách sạn...">
-    <button>Tìm Kiếm</button>
-</div>
-
 <h3 style="text-align: center; margin-top: 20px;">Dịch Vụ Của Chúng Tôi</h3>
 <div class="services">
     <div class="service">
@@ -33,3 +105,6 @@
     <!-- Bạn có thể thêm các dịch vụ khác vào đây -->
 </div>
 
+@section scripts {
+    <script asp-append-version="true" src="~/module/searchRoom.js"></script>
+}

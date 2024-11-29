@@ -37,13 +37,14 @@
     <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
 </p>
 
-<table class="table" style="color: whitesmoke">
+<table class="table" >
     <thead>
     <tr>
         <th>Tên loại phòng</th>
         <th>Mô tả</th>
         <th>Số lượng người ở</th>
         <th>Trạng thái</th>
+        <th>Số lượng</th>
         <th>Chức năng</th>
     </tr>
     </thead>
@@ -55,6 +56,7 @@
             <td style="width: 20%">@roomType.Description</td>
             <td style="width: 10%">@roomType.MaximumOccupancy</td>
             <td style="width: 10%">@StatusHelper.DisplayStatusBadge(roomType.Status)</td>
+            <td style="width: 10%">@roomType.Quantity</td>
             <td style="width: 30%">
                 @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeId = roomType.Id }, 
                     new { @class = "btn btn-warning" })

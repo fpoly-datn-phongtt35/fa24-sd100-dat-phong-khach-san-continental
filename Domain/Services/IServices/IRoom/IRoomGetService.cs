@@ -15,6 +15,8 @@ namespace Domain.Services.IServices.IRoom
     {
         Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomRequest);
         Task<RoomResponse?> GetRoomById(Guid roomId);
+        Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest);
         //Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId);
+        Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request);
     }
 }

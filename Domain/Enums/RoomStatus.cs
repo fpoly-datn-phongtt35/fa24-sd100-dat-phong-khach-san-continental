@@ -2,10 +2,10 @@
 {
     public enum RoomStatus
     {
-        Vacant = 1,
+        Vacant = 1,//trống
         OutOfOrder = 2,
-        Deleted = 3,
-        Occupied = 4,
+        Deleted = 3,//Bị xóa
+        Occupied = 4,//Không trống
         Reserved = 5,
         Cleaned = 6,
         Dirty = 7,
