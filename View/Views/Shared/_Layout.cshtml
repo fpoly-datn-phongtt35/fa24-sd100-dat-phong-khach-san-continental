@@ -38,16 +38,32 @@
             max-width: 1289px;
             z-index: 100
         }
+
+        #acc_dashboard {
+            color: #073a4b;
+            cursor: pointer;
+        }
+
+        .show_dashboard{
+            transform: rotate(180deg);
+        }
     </style>
     <div class="d-flex ">
         <partial name="_header" />
 
         <div class="container-fluid p-0" style="width:83%;margin-left:17%">
             <main role="main" class="pb-3" style="background-color:#f8f9fa;min-height:100vh">
-                <div class="d-flex align-items-center ps-1 bar-css" style="">
-                    <div class="d-flex align-items-center justify-content-end" style="width:100%">
-                        <p class="m-0" id="name_current_user" style="color:#484d54"></p>
-                        <button class="btn btn-outline-warning ms-3 me-4" style="color:#484d54" onclick="_authorization.LogOut()" id="signout_button">Đăng xuất</button>
+                <div class="d-flex align-items-center ps-1 bar-css" style="box-shadow:0px 0px 3px">
+                    <div class="d-flex align-items-center justify-content-end" style="width:97%;">
+                        <div id="acc_dashboard" onclick="global.Account_DashBoard()">
+                            <i id="icon_up_dashboard" class="fa-solid fa-caret-down"></i>
+                            <span class="fw-bold">Tài khoản</span>
+                            <i class="fs-4 fa-solid fa-user-gear"></i>
+                        </div>
+                        <div class="dashboard rounded-1 p-1" style="position:absolute;display:none;top:60px;background-color:#ffd167">
+                            <p class="m-0 me-2" id="name_current_user" style="color:#484d54"></p>
+                            <p class="me-4 mb-0" style="color:#484d54;cursor:pointer" onclick="_authorization.LogOut()" id="signout_button">Đăng xuất</p>
+                        </div>
                     </div>
                 </div>
                 <div style="margin-top:65px;">
