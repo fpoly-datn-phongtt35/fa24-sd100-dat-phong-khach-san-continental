@@ -11,7 +11,7 @@ var _authorization =
             url: '/Authorization/GetCurrentUserClaims',
             success: function (data) {
                 if (data) {
-                    $("#name_current_user").text("Xin chào " + data.email);
+                    $("#name_current_user").text(data.email);
                     sessionStorage.setItem(constant.Current_user, data)
                 }
                 else

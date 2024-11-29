@@ -4,7 +4,7 @@
 }
 <style>
     .text-color-blue{
-        color: #009ad8;
+        color: #92979d !important;
     }
 
     .table-scroll {
@@ -12,10 +12,14 @@
         scroll-behavior: smooth;
         max-width:1196px;
     }
+
+    .element-shadow{
+        box-shadow: 1px 2px 3px;
+    }
 </style>
 <div class="m-3" style="min-height:600px;">
     <div style="" class="m-2">
-        <div id="list_room_add" class="rounded-2 p-2 bg-secondary" style="min-height:300px;">
+        <div id="list_room_add" class="rounded-2 p-2 element-shadow" style="min-height:300px;">
             <h2 class="text-color-blue">Danh sách phòng</h2>
             <div class="d-flex mb-3 justify-content-between">
                 <div class="d-flex justify-content-between" style="width:50%">
@@ -45,7 +49,7 @@
             <div class="table-responsive table-scroll">
                 <table class="table table-nowrap table-bordered mt-3 rounded-3">
                     <thead>
-                        <tr class="text-white">
+                        <tr class="">
                             <th scope="col" style="min-width:50px">#</th>
                             <th scope="col" style="min-width:180px">Tên Phòng</th>
                             <th scope="col">Giá phòng (/ đêm)</th>
@@ -70,19 +74,19 @@
                     <div class="d-flex justify-content-end w-100">
                         <ul class="w-100 my-3" style="text-decoration:none !important;">
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Tổng giá các phòng</div>
+                                <div class="text-dark fw-bold">Tổng giá các phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="total_roomprice">0</div> VNĐ
                                 </div>
                             </li>
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="" style="color:rgb(244 168 175)">Tổng tiền cọc</div>
+                                <div class="fw-bold" style="color:rgb(244 168 175)">Tổng tiền cọc</div>
                                 <div class="text-right d-flex">
                                     <div id="total_deposit">0</div> VNĐ
                                 </div>
                             </li>
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Phụ thu phòng</div>
+                                <div class="text-dark fw-bold">Phụ thu phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="TotalExtraPrice">0</div> VNĐ
                                 </div>
@@ -90,19 +94,19 @@
                         </ul>
                         <ul class="w-100 my-3" style="text-decoration:none !important;">
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Phụ thu dịch vụ</div>
+                                <div class="text-dark fw-bold">Phụ thu dịch vụ</div>
                                 <div class="text-right d-flex">
                                     <div id="total_service_extra_price">0</div> VNĐ
                                 </div>
                             </li>
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="text-white">Tổng giá dịch vụ</div>
+                                <div class="text-dark fw-bold">Tổng giá dịch vụ</div>
                                 <div class="text-right d-flex">
                                     <div id="total_service_price">0</div> VNĐ
                                 </div>
                             </li>
                             <li class="flex list-unstyled justify-content-between mb-2">
-                                <div class="" style="color:#00b0f9">Tổng giá Bill</div>
+                                <div class="fw-bold" style="color:#00b0f9">Tổng giá Bill</div>
                                 <div class="text-right d-flex">
                                     <div id="total_price">0</div> VNĐ
                                 </div>
@@ -113,7 +117,7 @@
             </div>
         </div>
         <div>
-            <div id="" class="mt-4 p-2 rounded-2 bg-secondary" style="min-height:300px;width:100%">
+            <div id="" class="mt-4 p-2 rounded-2 element-shadow" style="min-height:300px;width:100%">
                 <h2 class="text-color-blue">Dịch vụ</h2>
                 <div class="d-flex justify-content-end mb-3">
                     <select class="select2 m-2" multiple="multiple" id="service_type_Id" style="width:100%">
@@ -147,7 +151,7 @@
             </div>
         </div>
         <div class="">
-            <div id="form_add_Cus" class="mt-4 p-2 rounded-2 bg-secondary" style="height:300px;width:100%">
+            <div id="form_add_Cus" class="mt-4 p-2 rounded-2 element-shadow" style="height:300px;width:100%">
                 <h2 class="text-color-blue">Khách hàng</h2>
                 <input id="IdClient" style="display:none" value="@ViewBag.IdClient" />
                 <select class="select2 m-2" id="Client_Id" style="width:100%">
@@ -159,7 +163,7 @@
                 <div class="m-2 mt-4">
                     <div class="d-flex justify-content-between">
                         <div class="mb-3 d-flex align-items-center" style="width:48%">
-                            <label for="" style="width:90px;" class="form-label">Tên : </label>
+                            <label for="" style="width:95px;" class="form-label">Tên : </label>
                             <input type="text" disabled class="form-control" id="FirstName" placeholder="">
                         </div>
                         <div class="mb-3 d-flex align-items-center" style="width:48%">
@@ -169,7 +173,7 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="mb-3 d-flex align-items-center" style="width:48%">
-                            <label for="" style="width:90px;" class="form-label">Ngày sinh : </label>
+                            <label for="" style="width:95px;" class="form-label">Ngày sinh : </label>
                             <input type="text" disabled class="form-control" id="BirthDay" placeholder="">
                         </div>
                         <div class="mb-3 d-flex align-items-center" style="width:48%">
@@ -179,7 +183,7 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="mb-3 d-flex align-items-center" style="width:48%">
-                            <label for="" style="width:90px;" class="form-label">Email :</label>
+                            <label for="" style="width:95px;" class="form-label">Email :</label>
                             <input type="text" disabled class="form-control" id="Email" placeholder="">
                         </div>
                         <div class="mb-3 d-flex align-items-center" style="width:48%">

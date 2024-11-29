@@ -1,5 +1,22 @@
 ﻿var global =
 {
+    ShowTabMenu: function (element) {
+        var menu = element.parentElement.querySelector('ul');
+        var i = element.parentElement.querySelector('i');
+        i.classList.toggle('icon_rotate');
+        menu.classList.toggle('show');
+    },
+    Account_DashBoard: function ()
+    {
+        $(".dashboard").toggle('show');
+        if ($("#icon_up_dashboard").hasClass('show_dashboard')) {
+            $("#icon_up_dashboard").removeClass('show_dashboard');
+
+        }
+        else {
+            $("#icon_up_dashboard").addClass('show_dashboard');
+        }
+    },
     NumberVNFormated: function (number)
     {
         var formattedprice = parseFloat(number).toLocaleString('vi-VN');

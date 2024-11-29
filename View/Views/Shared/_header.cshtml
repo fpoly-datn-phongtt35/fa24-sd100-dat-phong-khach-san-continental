@@ -4,8 +4,37 @@
 <style>
     .menu-option
     {
-        color: #92979d;
-        text-decoration :none;
+        color: #92979d !important;
+        text-decoration :none !important;
+        padding-top: 5px !important;
+        cursor: pointer;
+    }
+    
+    .link_css{
+        text-decoration : none;
+        color: #92979d !important;
+    }
+
+    .transit{
+        display:none;
+    }
+
+    .icon_rotate {
+        transform: rotate(-90deg);
+        opacity: 1; /* Ensure full opacity when visible */
+        transition: opacity 1s ease-in-out;
+    }
+
+    .show {
+        display: block !important;
+    }
+
+    .li-option{
+        padding-top: 15px !important;
+    }
+
+    .span-option{
+        color: #ffd167;
     }
 
     .menu-scroll {
@@ -38,19 +67,153 @@
         background: #f1f1f1; /* Màu nền */
     }
 </style>
-<div class="menu-scroll" style="width:17%;background-color:#fff;position:fixed">
-    <ul class="p-4 list-unstyled">
-        <li class="">
+<div class="menu-scroll" style="width:17%;background-color:#073a4b;position:fixed">
+    <ul class="p-4 pt-2 list-unstyled">
+        <li class="pb-3">
             <a class="fs-5 text-decoration-none" href="/">
-                <h2 class="menu-option m-0">
-                    Continetal
+                <h2 class="menu-option m-0" style="color:#ffd167">
+                    Continental
                 </h2>
             </a>
         </li>
-        <hr class="m-0" />
-        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/Staff">Quản lí khách hàng</a></li>
-        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/livecameras">Quản lí quyền</a></li>
-        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/photo">Photos</a></li>
+        <li class="li-option p-1 ps-0">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">THỐNG KÊ</span>
+                <i class="fa-solid fa-angles-down"></i>
+            </div>
+            <ul class="list-unstyled transit show">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-chart-line p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Thống kê</a>
+
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-wallet p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Lịch sử giao dịch</a>
+
+                </li>
+            </ul>
+        </li>
+        <li class="li-option p-1 ps-0 ">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">QUẢN LÍ HẠ TẦNG</span>
+                <i class="fa-solid fa-angles-down"></i>
+            </div>
+            <ul class="list-unstyled transit show">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-layer-group p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Tầng</a>
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-regular fa-building p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Tòa</a>
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-house p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Phòng</a>
+
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-list-check p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Loại phòng</a>
+
+                </li>
+            </ul>
+        </li>
+        <li class="li-option p-1 ps-0">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">ĐẶT PHÒNG</span>
+                <i class="fa-solid fa-angles-down"></i>
+            </div>
+            <ul class="list-unstyled transit show">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-regular fa-calendar-check p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Quản lí đặt phòng</a>
+                </li>
+            </ul>
+        </li>
+        <li class="li-option p-1 ps-0">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">TIỆN ÍCH | DỊCH VỤ</span>
+                <i class="fa-solid fa-angles-down icon_rotate"></i>
+            </div>
+            <ul class="list-unstyled transit">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-couch p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Tiện ích</a>
+
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-bell-concierge p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Dịch vụ</a>
+
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-list-check p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Loại dịch vụ</a>
+                </li>
+            </ul>
+        </li>
+        <li class="li-option p-1 ps-0">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">NHÂN SỰ | QUYỀN</span>
+                <i class="fa-solid fa-angles-down icon_rotate"></i>
+            </div>
+            <ul class="list-unstyled transit">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-id-card p-1 me-1"></i>
+                    </div>Quyền
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-users p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Nhân sự</a>
+                </li>
+            </ul>
+        </li>
+        <li class="li-option p-1 ps-0">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">CHÍNH SÁCH</span>
+                <i class="fa-solid fa-angles-down icon_rotate"></i>
+            </div>
+            <ul class="list-unstyled transit">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-list-check p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Loại bài viết</a>
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-regular fa-file-word p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/roombooking">Bài viết</a>
+                </li>
+            </ul>
+        </li>
+@*         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/photo">Photos</a></li>
         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/contact">Contact</a></li>
         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/">Home</a></li>
         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/amenity">amenity</a></li>
@@ -71,6 +234,9 @@
         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/serviceorder">serviceorder</a></li>
         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/serviceorderdetail">serviceorderdetail</a></li>
         <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/voucher">voucher</a></li>
-        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/voucherdetail">voucherdetail</a></li>
+        <li class="li-option p-1 ps-0"><a class="fs-5 menu-option" href="/voucherdetail">voucherdetail</a></li> *@
     </ul>
 </div>
+@section scripts {
+    <script asp-append-version="true" src="~/modules/menu.js"></script>
+}
