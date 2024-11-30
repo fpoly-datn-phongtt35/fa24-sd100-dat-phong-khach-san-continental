@@ -21,6 +21,7 @@ using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services.Room;
 using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomTypeService;
+using Net.payOS;
 
 namespace API
 {
@@ -29,6 +30,15 @@ namespace API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+
+            builder.Services.AddSingleton(payOS);
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddCors(options =>
             {
