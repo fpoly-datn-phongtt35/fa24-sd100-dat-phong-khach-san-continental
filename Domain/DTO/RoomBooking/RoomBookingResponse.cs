@@ -8,9 +8,13 @@ public class RoomBookingResponse
     public BookingType? BookingType { get; set; }
     public Guid CustomerId { get; set; }
     public Guid? StaffId { get; set; }
+    public decimal? TotalPrice { get; set; }
+    public decimal? TotalRoomPrice { get; set; }
+    public decimal? TotalServicePrice { get; set; }
+    public decimal? TotalExtraPrice { get; set; }
+    public EntityStatus Status { get; set; } = EntityStatus.Active;
     public string? StaffFullName { get; set; }
     public string? CustomerFullName { get; set; }
-    public EntityStatus Status { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
@@ -29,6 +33,8 @@ public class RoomBookingResponse
         
         return Id == roomBookingResponse.Id && BookingType == roomBookingResponse.BookingType &&
                CustomerId == roomBookingResponse.CustomerId && StaffId == roomBookingResponse.StaffId &&
+               TotalPrice == roomBookingResponse.TotalPrice && TotalRoomPrice == roomBookingResponse.TotalRoomPrice &&
+               TotalServicePrice == roomBookingResponse.TotalServicePrice && TotalExtraPrice == roomBookingResponse.TotalExtraPrice &&
                Status == roomBookingResponse.Status && CreatedTime == roomBookingResponse.CreatedTime &&
                CreatedBy == roomBookingResponse.CreatedBy && ModifiedTime == roomBookingResponse.ModifiedTime &&
                ModifiedBy == roomBookingResponse.ModifiedBy && Deleted == roomBookingResponse.Deleted &&
@@ -80,6 +86,10 @@ public static class RoomBookingResponseExtensions
             BookingType = roomBooking.BookingType,
             CustomerId = roomBooking.CustomerId,
             StaffId = roomBooking.StaffId,
+            TotalServicePrice = roomBooking.TotalServicePrice,
+            TotalExtraPrice = roomBooking.TotalExtraPrice,
+            TotalRoomPrice = roomBooking.TotalRoomPrice,
+            TotalPrice = roomBooking.TotalPrice,
             Status = roomBooking.Status,
             CreatedTime = roomBooking.CreatedTime,
             CreatedBy = roomBooking.CreatedBy,
