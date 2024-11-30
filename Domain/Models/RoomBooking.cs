@@ -20,7 +20,7 @@ namespace Domain.Models
         public decimal? TotalRoomPrice { get; set; }
         public decimal? TotalServicePrice { get; set; }
         public decimal? TotalExtraPrice { get; set; }
-        public EntityStatus Status { get; set; } = EntityStatus.Active;
+        public RoomBookingStatus Status { get; set; } = RoomBookingStatus.PENDING;
 
         public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }

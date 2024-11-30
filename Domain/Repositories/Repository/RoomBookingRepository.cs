@@ -147,7 +147,7 @@ public class RoomBookingRepository : IRoomBookingRepository
             Id = Guid.Parse(row["Id"].ToString()!),
             CustomerId = Guid.Parse(row["CustomerId"].ToString()!),
             StaffId = Guid.Parse(row["StaffId"].ToString()!),
-            Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
+            Status = (RoomBookingStatus)Enum.Parse(typeof(RoomBookingStatus), row["Status"].ToString()!),
             TotalExtraPrice = row["TotalExtraPrice"] != DBNull.Value ? (decimal)row["TotalExtraPrice"] : null,
             TotalPrice = row["TotalPrice"] != DBNull.Value ? (decimal)row["TotalPrice"] : null,
             TotalRoomPrice = row["TotalRoomPrice"] != DBNull.Value ? (decimal)row["TotalRoomPrice"] : null,

@@ -19,7 +19,7 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Price { get; set; }
         public decimal? ExtraPrice { get; set; }
         public decimal? Deposit { get; set; }
-        public EntityStatus? Status { get; set; }
+        public RoomBookingStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
         //public List<ServiceOrderDetailCreateRequest> SelectedServices { get; set; }
     }

@@ -59,7 +59,7 @@ namespace ViewClient.Controllers
                     TotalPrice = room.Price,
                     TotalRoomPrice = room.Price,
                     TotalServicePrice = 0,
-                    Status = Domain.Enums.EntityStatus.Active,
+                    Status = Domain.Enums.RoomBookingStatus.PENDING,
                     StaffId = null,
                     CreatedBy = _UserLogin,
                     NewId = null
@@ -69,7 +69,7 @@ namespace ViewClient.Controllers
                 roomBookingDetailCreateRequest.RoomId = room.Id;
                 roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
                 roomBookingDetailCreateRequest.CreatedBy = _UserLogin;
-                roomBookingDetailCreateRequest.Status = Domain.Enums.EntityStatus.Active;
+                roomBookingDetailCreateRequest.Status = Domain.Enums.RoomBookingStatus.PENDING;
                 roomBookingDetailCreateRequest.Deposit = room.Price * 20 / 100;
                 var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
                 var roomStatus = new RoomUpdateStatusRequest

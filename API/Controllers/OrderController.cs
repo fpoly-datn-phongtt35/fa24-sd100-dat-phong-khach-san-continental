@@ -24,8 +24,7 @@ namespace API.Controllers
             _customerService = customerService;
             _payOS = payOS;
         }
-
-
+        
         public static int GenerateOrderCode(Guid roomBookingId)
         {
             // Chuyển GUID thành chuỗi
@@ -49,17 +48,18 @@ namespace API.Controllers
             var urls = "https://localhost:7114/";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
             var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
-
-
+            
             try
             {
                 int orderCode = GenerateOrderCode(roomBookingId);
                 var description = customer.PhoneNumber + 'x' + orderCode;
-                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, (int)(roomBooking?.TotalPrice ?? 0));
+                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, 
+                    (int)(roomBooking?.TotalPrice ?? 0));
 
                 List<ItemData> items = new List<ItemData>() ;
                 items.Add(item);
-                PaymentData paymentData = new PaymentData(orderCode, (int)roomBooking.TotalPrice, description, items, urls, urls);
+                PaymentData paymentData = new PaymentData(orderCode, (int)roomBooking.TotalPrice, description, items, 
+                    urls, urls);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
@@ -83,11 +83,9 @@ namespace API.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
-
         }
 
         [HttpGet("GetOrderLink/{orderId}")]
@@ -102,11 +100,9 @@ namespace API.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
-
         }
 
         [HttpPut("{orderId}")]
@@ -119,7 +115,6 @@ namespace API.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
