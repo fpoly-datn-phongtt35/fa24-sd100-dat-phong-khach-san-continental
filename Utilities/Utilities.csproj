@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="APIs\" />
+    <Compile Remove="APIs\**" />
+    <EmbeddedResource Remove="APIs\**" />
+    <None Remove="APIs\**" />
   </ItemGroup>
 
   <ItemGroup>

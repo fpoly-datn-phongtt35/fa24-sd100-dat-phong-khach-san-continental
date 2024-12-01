@@ -1,8 +1,8 @@
 ﻿@using Domain.Enums
-@using Domain.Models
+@using ViewClient.Models.DTO
 @using ViewClient.Views.Shared
 
-@model Domain.DTO.Room.RoomResponse
+@model RoomDetailViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -15,9 +15,9 @@
 
 <div class="d-flex" style="padding:10px;">
     <div class="img-column me-3">
-        @if (Model.Images != null && Model.Images.Any())
+        @if (Model.Room.Images != null && Model.Room.Images.Any())
         {
-            @foreach (var img in Model.Images)
+            @foreach (var img in Model.Room.Images)
             {
                 var extension = System.IO.Path.GetExtension(img);
                 if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
@@ -35,15 +35,15 @@
             <p>Không có hình ảnh</p>
         }
         <div class="amenities-column mt-3">
-            <dt>Diện tích phòng: <span style="font-weight: normal;">@Html.DisplayFor(model => model.RoomSize) m²</span></dt>
+            <dt>Diện tích phòng: <span style="font-weight: normal;">@Html.DisplayFor(model => model.Room.RoomSize) m²</span></dt>
             <dt>
                 Tiện ích phòng của phòng:
-                <span style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight:bold;">@Html.DisplayFor(model => model.Name)</span>
+                <span style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight:bold;">@Html.DisplayFor(model => model.Room.Name)</span>
             </dt>
-            @if (Model.RoomType.AmenityRooms != null && Model.RoomType.AmenityRooms.Any())
+            @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
             {
                 <div class="row">
-                    @foreach (var amenityRoom in Model.RoomType.AmenityRooms
+                    @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms
                    .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
                     {
                         <div class="col-4 mb-2">
@@ -66,31 +66,31 @@
         <dl>
             <div class="info-row">
                 <dt>@Html.DisplayName("Tên phòng")</dt>
-                <dd>@Html.DisplayFor(model => model.Name)</dd>
+                <dd>@Html.DisplayFor(model => model.Room.Name)</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Giá phòng(VNĐ/đêm)")</dt>
-                <dd>@Html.DisplayFor(model => model.Price)</dd>
+                <dd>@Html.DisplayFor(model => model.Room.Price)</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Địa chỉ của khách sạn/phòng")</dt>
-                <dd>@Html.DisplayFor(model => model.Address)</dd>
+                <dd>@Html.DisplayFor(model => model.Room.Address)</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Mô tả chi tiết phòng")</dt>
-                <dd>@Html.DisplayFor(model => model.Description)</dd>
+                <dd>@Html.DisplayFor(model => model.Room.Description)</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Số lượng người có thể ở")</dt>
-                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.MaximumOccupancy người</dd>
+                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.Room.RoomTypeId)?.MaximumOccupancy người</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Tầng của phòng")</dt>
-                <dd>@floorList?.FirstOrDefault(f => f.Id == Model.FloorId)?.Name</dd>
+                <dd>@floorList?.FirstOrDefault(f => f.Id == Model.Room.FloorId)?.Name</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Loại phòng")</dt>
-                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.RoomTypeId)?.Name</dd>
+                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.Room.RoomTypeId)?.Name</dd>
             </div>
         </dl>
     </div>
@@ -103,7 +103,7 @@
     </button>
 </div>
 <!-- Modal cho đặt phòng -->
-<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="false">
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -117,22 +117,39 @@
                     <h6 style="margin: 0;"><i class="fa-regular fa-clock"></i> Giờ trả phòng: <strong id="checkOut">Trước 12:00</strong></h6>
                 </div>
                 <br />
-                <h6>@Model.Name</h6>
-                <p class="font-monospace">Giá: @Model.Price VNĐ/đêm</p>
+                <dt>@Model.Room.Name</dt>
+                <p class="font-monospace">Giá: @Model.Room.Price VNĐ/đêm</p>
                 <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Bạn có muốn đặt thêm dịch vụ không ?</dt>
-                <form id="addServiceForm" method="post" action="@Url.Action("CreateService")">
-                    <div class="mb-3">
-                        <label class="form-label">Chọn Dịch Vụ:</label>
-                        <div class="modal-dialog-scrollable">
-                            <div class="form-check" id="serviceContainer">
-                                <!-- Dịch vụ sẽ được thêm vào đây bằng JavaScript -->
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-label">Chọn Dịch Vụ</label>
+                    <label class="form-label" style="margin-left: auto;">Chọn số lượng</label>
+                </div>
+                <div class="service-list" style="max-height: 200px; overflow-y: auto;">
+                    @if (Model.Services != null && Model.Services.Any())
+                    {
+                        foreach (var service in Model.Services)
+                        {
+                            <div class="form-check" style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <input class="form-check-input service-checkbox" type="checkbox" value="@service.Id" id="service_@service.Id" style="margin-right: 10px;">
+                                <label class="form-check-label" for="service_@service.Id" style="flex-grow: 1;">
+                                    <strong>@service.Name</strong> - <span style="color: green;">@service.Price VNĐ</span> / @service.Unit
+                                </label>
+                                <input type="number" class="form-control quantity-input" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
                             </div>
-                        </div>
-                    </div>
-                </form>
+                        }
+                    }
+                    else
+                    {
+                        <p>Không có dịch vụ nào hiện có.</p>
+                    }
+                </div>
+
                 <hr />
                 <p style="font-weight: 600;" id="depositPayment">Đặt cọc: 0 VNĐ</p>
-                <p style="font-weight: 600;" id="totalRoomPayment">Thanh toán: 0 VNĐ</p>
+                <p style="font-weight: 600;" id="totalRoomPayment">Tiền phòng: 0 VNĐ</p>
+                <p style="font-weight: 600;" id="totalServicePayment">Tiền dịch vụ: 0 VNĐ</p>
+                <p style="font-weight: 600;" id="totalPrice">Tổng tiền: 0 VNĐ</p>
             </div>
 
             <div class="modal-footer">
@@ -144,8 +161,8 @@
 </div>
 <script>
     var isUserLoggedIn = @User.Identity.IsAuthenticated.ToString().ToLower();
-    var roomId = '@Model.Id';
-    var roomPrice = '@Model.Price';
+    var roomId = '@Model.Room.Id';
+    var roomPrice = '@Model.Room.Price';
     var bookingUrl = '@Url.Action("RoomBooking", "RoomBooking")';
 </script>
 @section scripts {

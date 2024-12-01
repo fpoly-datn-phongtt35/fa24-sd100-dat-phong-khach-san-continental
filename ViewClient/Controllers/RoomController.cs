@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using ViewClient.Models;
+using ViewClient.Models.DTO;
 using ViewClient.Repositories.IRepository;
 
 namespace ViewClient.Controllers
@@ -62,8 +63,8 @@ namespace ViewClient.Controllers
 
         public async Task<IActionResult> SearchRooms(SearchRoomsRequest request)
         {
-           
-        
+
+
             string roomsRequestUrl = $"/api/Room/SearchRooms";
 
             try
@@ -111,10 +112,8 @@ namespace ViewClient.Controllers
                 var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
                     (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
-                var checkIn = HttpContext.Session.GetString("CheckIn");
-                Console.WriteLine("CheckIn từ session: " + checkIn);
                 ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
-                
+
                 return View(roomsResponse); // Trả về danh sách phòng
             }
             catch (Exception ex)
@@ -122,74 +121,73 @@ namespace ViewClient.Controllers
                 return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> IndexService(int pageIndex = 1, int pageSize = 100, string serviceName = null, Guid? serviceTypeId = null, decimal? minPrice = null, decimal? maxPrice = null, EntityStatus? status = EntityStatus.Active)
+        private async Task<IEnumerable<Service>> IndexService()
         {
             // api url
-            string requestUrl = "https://localhost:7130/api/Service/GetListService";
+            string requestUrl = $"/api/Service/GetListService";
 
             var request = new ServiceGetRequest
             {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Name = serviceName,
-                ServiceTypeId = serviceTypeId,
-                MinPrice = minPrice,
-                MaxPrice = maxPrice,
-                Status = status
+                PageIndex = 1,
+                PageSize = 100,
+                Status = EntityStatus.Active
             };
 
             var jsonRequest = JsonConvert.SerializeObject(request);
-            Console.WriteLine(jsonRequest);
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            try
+            var response = await _httpClient.PostAsync(requestUrl, content);
+            if (response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.PostAsync(requestUrl, content);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorResponse = await response.Content.ReadAsStringAsync();
-                    return Json(new { error = $"Lỗi từ server: {errorResponse}" });
-                }
-
                 var responseString = await response.Content.ReadAsStringAsync();
-                var services = JsonConvert.DeserializeObject<ResponseData<Service>>(responseString);
-                var serviceOptions = services.data.Select(s =>
-                    $"<div class='form-check'>" +
-                    $"<input class='form-check-input' type='checkbox' value='{s.Id}' id='service_{s.Id}'>" +
-                    $"<label class='form-check-label' for='service_{s.Id}'>{s.Name} - {s.Price} VNĐ / {s.Unit}</label>" +
-                    $"</div>"
-                );
+                var servicesResponse = JsonConvert.DeserializeObject<ResponseData<Service>>(responseString);
+                return servicesResponse.data;
+            }
 
-                return Json(new { html = string.Join("", serviceOptions) });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { error = $"Đã xảy ra lỗi: {ex.Message}" });
-            }
+            return new List<Service>();
         }
         public async Task<IActionResult> Details(Guid roomId)
         {
             string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
             string floorsRequestUrl = "/api/Floor/GetListFloor";
-            var floorsRequest = new FloorGetRequest();
-            var floorJsonRequest = JsonConvert.SerializeObject(floorsRequest);
-            var floorContent = new StringContent(floorJsonRequest, Encoding.UTF8, "application/json");
-            var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, floorContent);
 
-            var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
-            var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
-            ViewBag.FloorList = floorList.data;
-            var roomTypeGetRequest = new RoomTypeGetRequest();
-            string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
-            var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>
-                (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
-            ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
-            var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
-            if (room != null)
-                return View(room);
+            try
+            {
+                // Lấy danh sách tầng
+                var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+                var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
+                var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
 
-            return View("Error");
+                // Lấy danh sách loại phòng
+                var roomTypeGetRequest = new RoomTypeGetRequest();
+                string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
+                var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
+
+                // Lấy thông tin phòng
+                var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
+                if (room != null)
+                {
+                    // Lấy danh sách dịch vụ
+                    var services = await IndexService();
+
+                    var viewModel = new RoomDetailViewModel
+                    {
+                        Room = room,
+                        Floors = floorList.data,
+                        RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>(),
+                        Services = services
+                    };
+
+                    return View(viewModel);
+                }
+
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi ở đây nếu cần
+                return View("Error", new ErrorViewModel { Message = ex.Message });
+            }
         }
 
     }
