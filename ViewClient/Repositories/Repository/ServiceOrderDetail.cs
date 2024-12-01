@@ -1,4 +1,4 @@
-﻿using Domain.DTO.ServiceOrderDetail;
+﻿using Domain.Models;
 using Newtonsoft.Json;
 using ViewClient.Repositories.IRepository;
 namespace ViewClient.Repositories.Repository
@@ -12,7 +12,8 @@ namespace ViewClient.Repositories.Repository
             _httpClient = httpClient;
         }
 
-        public async Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request)
+
+        public async Task<int> AddServiceOrderDetail(Domain.Models.ServiceOrderDetail request)
         {
             string url = $"https://localhost:7130/api/ServiceOrderDetail/AddServiceOrderDetail";
             var response = await _httpClient.PostAsJsonAsync(url, request);
@@ -20,7 +21,7 @@ namespace ViewClient.Repositories.Repository
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<Guid>(resultString);
+                var result = JsonConvert.DeserializeObject<int>(resultString);
 
                 if (result != null)
                 {

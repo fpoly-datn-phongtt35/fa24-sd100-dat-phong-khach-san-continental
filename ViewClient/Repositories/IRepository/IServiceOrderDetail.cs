@@ -1,9 +1,9 @@
-﻿using Domain.DTO.ServiceOrderDetail;
+﻿using Domain.Models;
 
 namespace ViewClient.Repositories.IRepository
 {
     public interface IServiceOderDetail
     {
-        Task<int> AddServiceOrderDetail(ServiceOrderDetailCreateRequest request);
+        Task<int> AddServiceOrderDetail(ServiceOrderDetail request);
     }
 }
