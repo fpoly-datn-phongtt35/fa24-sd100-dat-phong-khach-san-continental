@@ -39,7 +39,7 @@ public static class StatusHelper
                 return new HtmlString("<span class='badge bg-secondary'>Chờ thanh toán</span>");
             case RoomBookingStatus.PAID:
                 return new HtmlString("<span class='badge bg-success'>Đã thanh toán</span>");
-            case RoomBookingStatus.CANCEL:
+            case RoomBookingStatus.CANCELLED:
                 return new HtmlString("<span class='badge bg-danger'>Đã hủy</span>");
             case RoomBookingStatus.FAILED:
                 return new HtmlString("<span class='badge bg-danger'>Thất bại</span>");

@@ -248,4 +248,25 @@ public class RoomBookingRepository : IRoomBookingRepository
             throw ex;
         }
     }
+
+    public async Task<int> UpdateRoomBookingStatus(Guid id, int status)
+    {
+        try
+        {
+            var existingRoomBooking = GetRoomBookingById(id);
+            if (existingRoomBooking == null)
+                throw new Exception("Room booking not found");
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", id) ,
+                new SqlParameter("@Status", status) ,
+            };
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingStatus, parameters);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while updating the room booking", e);
+        }
+    }
 }

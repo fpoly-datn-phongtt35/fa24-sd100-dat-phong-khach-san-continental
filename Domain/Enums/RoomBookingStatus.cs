@@ -2,8 +2,9 @@
 
 public enum RoomBookingStatus
 {
+    NEW = 0,
     PENDING = 1,
     PAID = 2,
-    CANCEL = 3,
+    CANCELLED = 3,
     FAILED = 4
 }

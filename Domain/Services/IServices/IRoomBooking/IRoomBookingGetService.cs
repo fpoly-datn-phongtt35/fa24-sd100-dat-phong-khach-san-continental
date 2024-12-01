@@ -9,4 +9,5 @@ public interface IRoomBookingGetService
     Task<ResponseData<RoomBookingResponse>> GetFilteredRoomBooking
         (RoomBookingGetRequest bookingGetRequest);
     Task<RoomBookingResponse?> GetRoomBookingById(Guid? roomBookingId);
+    Task<Guid?> GetRoomBookingIdByOrderCode(int orderCode);
 }
