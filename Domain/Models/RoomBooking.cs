@@ -36,5 +36,6 @@ namespace Domain.Models
         public ICollection<FeedBack> FeedBacks { get; set; }
         public List<VoucherDetail> VoucherDetails { get; set; }
         public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
+        public virtual List<PaymentHistory> PaymentHistorys { get; set; }
     }
 }

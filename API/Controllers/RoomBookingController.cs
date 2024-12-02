@@ -11,6 +11,8 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using Domain.Models;
 using System.Text;
 using System.Security.Cryptography;
+using Domain.Services.IServices;
+using Domain.DTO.PaymentHistory;
 
 namespace API.Controllers;
 
@@ -21,16 +23,19 @@ public class RoomBookingController : Controller
     private readonly IRoomBookingGetService _roomBookingGetService;
     private readonly IRoomBookingUpdateService _roomBookingUpdateService;
     private readonly IRoomBookingCreateService _roomBookingCreateService;
+    private readonly IPaymentHistoryService _paymentHistoryService;
     private readonly PayOS _payOS;
 
     public RoomBookingController(IRoomBookingGetService roomBookingGetService, 
         IRoomBookingUpdateService roomBookingUpdateService,
          IRoomBookingCreateService roomBookingCreateService,
+         IPaymentHistoryService paymentHistoryService,
          PayOS payOS)
     {
         _roomBookingGetService = roomBookingGetService;
         _roomBookingUpdateService = roomBookingUpdateService;
         _roomBookingCreateService = roomBookingCreateService;
+        _paymentHistoryService = paymentHistoryService;
         _payOS = payOS;
     }
     [HttpPost("CreateRoomBooking")]
@@ -130,6 +135,15 @@ public class RoomBookingController : Controller
                     if (paymentLinkInformation.status == "PAID")
                     {
                         await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 2);
+                        // thêm 1 bản ghi vào PaymentHistory
+                        await _paymentHistoryService.AddPaymentHistory(new PaymentHistoryCreateRequest
+                        {
+                            RoomBookingId = roomBooking.Id,
+                            PaymentMethod = PaymentMethod.BankTransfer,
+                            Amount = roomBooking.TotalPrice ?? 0,
+                            PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
+                            Note = "Thanh toán toàn bộ"
+                        });
                     }
                     else if (paymentLinkInformation.status == "CANCELLED")
                     {
