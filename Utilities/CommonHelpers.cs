@@ -58,5 +58,19 @@ namespace Utilities
 
             return builder.ToString();
         }
+        private static readonly string _chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private static readonly Random _random = new Random();
+
+        public string GeneratePassword(int length = 6)
+        {
+            char[] result = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = _chars[_random.Next(_chars.Length)];
+            }
+
+            return new string(result);
+        }
     }
 }

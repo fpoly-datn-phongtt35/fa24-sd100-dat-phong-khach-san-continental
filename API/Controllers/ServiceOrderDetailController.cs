@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("UpSertServiceOrderDetail")]
+        [Route("AddServiceOrderDetail")]
         public async Task<int> AddServiceOrderDetail(ServiceOrderDetail request)
         {
             try

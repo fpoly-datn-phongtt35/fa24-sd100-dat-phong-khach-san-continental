@@ -1,4 +1,5 @@
 ﻿@using Domain.DTO.Paging
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.Models.PostType>
 
 @{
@@ -40,7 +41,7 @@
         <tr>
             <td> @Html.DisplayFor(modelItem => item.TitleOfType)</td>
             <td> @Html.DisplayFor(modelItem => item.Content)</td>
-            <td> @Html.DisplayFor(modelItem => item.Status)</td>
+            <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
             <td>
                     @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },
                              new { @class = "btn btn-warning" })

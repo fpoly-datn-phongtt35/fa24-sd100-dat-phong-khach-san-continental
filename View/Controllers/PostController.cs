@@ -7,7 +7,8 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
 using WEB.CMS.Customize;
-
+using Domain.DTO.PostType;
+using Domain.DTO.Staff;
 namespace View.Controllers
 {
     [CustomAuthorize]
@@ -37,14 +38,29 @@ namespace View.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
             try
             {
-                // gửi request lên api
                 var response = await _httpClient.PostAsync(requestURL, content);
-
-                // đọc nội dung trả về từ api
                 var responseString = await response.Content.ReadAsStringAsync();
-
-                // chuyển đổi lại thành respondata 
                 var Posts = JsonConvert.DeserializeObject<ResponseData<Post>>(responseString);
+
+                string postTypesRequestUrl = "https://localhost:7130/api/PostType/GetListPostType";
+                var postTypesRequest = new PostTypeGetRequest();
+                var postTypeJsonRequest = JsonConvert.SerializeObject(postTypesRequest);
+                var postTypeContent = new StringContent(postTypeJsonRequest, Encoding.UTF8, "application/json");
+                var postTypeResponse = await _httpClient.PostAsync(postTypesRequestUrl, postTypeContent);
+
+                var postTypeResponseString = await postTypeResponse.Content.ReadAsStringAsync();
+                var postTypeList = JsonConvert.DeserializeObject<ResponseData<PostType>>(postTypeResponseString);
+                ViewBag.postTypeList = postTypeList.data;
+
+                string StaffsRequestUrl = "https://localhost:7130/api/Staff/GetListStaff";
+                var StaffsRequest = new StaffGetRequest();
+                var StaffJsonRequest = JsonConvert.SerializeObject(StaffsRequest);
+                var StaffContent = new StringContent(StaffJsonRequest, Encoding.UTF8, "application/json");
+                var StaffResponse = await _httpClient.PostAsync(StaffsRequestUrl, StaffContent);
+
+                var StaffResponseString = await StaffResponse.Content.ReadAsStringAsync();
+                var StaffList = JsonConvert.DeserializeObject<ResponseData<Domain.Models.Staff>>(StaffResponseString);
+                ViewBag.StaffList = StaffList.data;
 
                 return View(Posts);
             }
