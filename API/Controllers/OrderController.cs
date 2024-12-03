@@ -17,14 +17,16 @@ namespace API.Controllers
     {
         private readonly IRoomBookingGetService _roomBookingGetService;
         private readonly ICustomerService _customerService;
+        private readonly IPaymentHistoryService _paymentHistoryService;
         private readonly PayOS _payOS;
-        public OrderController(IRoomBookingGetService roomBookingGetService, ICustomerService customerService, PayOS payOS)
+        public OrderController(IRoomBookingGetService roomBookingGetService, ICustomerService customerService, IPaymentHistoryService paymentHistoryService, PayOS payOS)
         {
             _roomBookingGetService = roomBookingGetService;
             _customerService = customerService;
+            _paymentHistoryService = paymentHistoryService;
             _payOS = payOS;
         }
-        
+
         public static int GenerateOrderCode(Guid roomBookingId)
         {
             // Chuyển GUID thành chuỗi
@@ -43,33 +45,70 @@ namespace API.Controllers
 
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePaymentLink(Guid roomBookingId)
+        public async Task<IActionResult> CreatePaymentLink(Guid roomBookingId, int? deposit)
         {
-            var urls = "https://localhost:7114/";
+            var urls = "https://my.payos.vn/ff1f9d29a95211ef964c0242ac110002/payment-link";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
             var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
-            
+
             try
             {
                 int orderCode = GenerateOrderCode(roomBookingId);
-                var description = customer.PhoneNumber + 'x' + orderCode;
-                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, 
-                    (int)(roomBooking?.TotalPrice ?? 0));
+                //int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+                string description = "1";
+                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, deposit ?? (int)(roomBooking.TotalPrice));
 
-                List<ItemData> items = new List<ItemData>() ;
-                items.Add(item);
-                PaymentData paymentData = new PaymentData(orderCode, (int)roomBooking.TotalPrice, description, items, 
+
+                List<ItemData> items = new List<ItemData>() { item };
+                PaymentData paymentData = new PaymentData(orderCode, deposit ?? (int)(roomBooking.TotalPrice), description, items,
                     urls, urls);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-                return Ok(new Response(0, "success", createPayment));
+                return Ok(new Response(0, "ok", createPayment));
             }
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
+        }
+
+        [HttpPost("create-remaining")]
+        public async Task<IActionResult> CreateRemainingPaymentLink(Guid paymentHistoryId)
+        {
+            var urls = "https://my.payos.vn/ff1f9d29a95211ef964c0242ac110002/payment-link";
+
+            var unfinishedPaidRoomBooking = await _paymentHistoryService.GetPaymentHistoryById(paymentHistoryId);
+            var roomBooking = await _roomBookingGetService.GetRoomBookingById(unfinishedPaidRoomBooking.RoomBookingId);
+
+
+            if (roomBooking is not null)
+            {
+                try
+                {
+                    int orderCode = GenerateOrderCode(paymentHistoryId);
+                    string description = "1";
+                    ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, (int)(roomBooking.TotalPrice) - (int)unfinishedPaidRoomBooking.Amount );
+
+
+                    List<ItemData> items = new List<ItemData>() { item };
+                    PaymentData paymentData = new PaymentData(orderCode, (int)(roomBooking.TotalPrice) - (int)unfinishedPaidRoomBooking.Amount, description, items,
+                        urls, urls);
+
+                    CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
+
+                    return Ok(new Response(0, "ok", createPayment));
+                }
+                catch (System.Exception exception)
+                {
+                    Console.WriteLine(exception);
+                    return Ok(new Response(-1, "fail", null));
+                }
+            }
+            return Ok(new Response(-1, "fail", null));
+
+
         }
 
 

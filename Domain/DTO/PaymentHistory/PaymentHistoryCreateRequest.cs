@@ -13,6 +13,6 @@ namespace Domain.DTO.PaymentHistory
         public PaymentMethod PaymentMethod { get; set; }
         public decimal Amount { get; set; }
         public DateTimeOffset? PaymentTime { get; set; }
-        public string? Note { get; set; }
+        public PaymentType? Note { get; set; }
     }
 }

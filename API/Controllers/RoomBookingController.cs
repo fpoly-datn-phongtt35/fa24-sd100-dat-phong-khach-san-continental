@@ -56,6 +56,7 @@ public class RoomBookingController : Controller
     {
         try
         {
+            //await UpdateRoomBookingsStatusAsync();
             return await _roomBookingGetService.GetFilteredRoomBooking(roomBookingGetRequest);
         }
         catch (Exception e)
@@ -128,11 +129,9 @@ public class RoomBookingController : Controller
                 {
                     int orderCode = await GenerateOrderCode(roomBooking.Id);
 
-                    //await Task.Delay(200);
-
                     PaymentLinkInformation paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderCode);
 
-                    if (paymentLinkInformation.status == "PAID")
+                    if (paymentLinkInformation.status == "PAID" && paymentLinkInformation.amountPaid == roomBooking.TotalPrice)
                     {
                         await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 2);
                         // thêm 1 bản ghi vào PaymentHistory
@@ -140,9 +139,22 @@ public class RoomBookingController : Controller
                         {
                             RoomBookingId = roomBooking.Id,
                             PaymentMethod = PaymentMethod.BankTransfer,
-                            Amount = roomBooking.TotalPrice ?? 0,
+                            Amount = paymentLinkInformation.amountPaid,
                             PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
-                            Note = "Thanh toán toàn bộ"
+                            Note = PaymentType.Full
+                        });
+                    }
+                    else if (paymentLinkInformation.status == "PAID" && paymentLinkInformation.amountPaid < roomBooking.TotalPrice)
+                    {
+                        await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 5);
+                        // thêm 1 bản ghi vào PaymentHistory
+                        await _paymentHistoryService.AddPaymentHistory(new PaymentHistoryCreateRequest
+                        {
+                            RoomBookingId = roomBooking.Id,
+                            PaymentMethod = PaymentMethod.BankTransfer,
+                            Amount = paymentLinkInformation.amountPaid,
+                            PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
+                            Note = PaymentType.Deposit
                         });
                     }
                     else if (paymentLinkInformation.status == "CANCELLED")
@@ -178,6 +190,9 @@ public class RoomBookingController : Controller
             return BadRequest(new Response(-1, "Failed to update room bookings' status", null));
         }
     }
+
+
+    
 
 
 

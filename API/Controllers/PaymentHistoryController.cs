@@ -1,5 +1,9 @@
-﻿using Domain.DTO.PaymentHistory;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.PaymentHistory;
+using Domain.DTO.Voucher;
+using Domain.Models;
 using Domain.Services.IServices;
+using Domain.Services.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,5 +32,33 @@ namespace API.Controllers
                 throw ex;
             }
         }
+
+        [HttpPost("GetPaymentHistoryById")]
+        public async Task<PaymentHistory> GetPaymentHistoryById(Guid Id)
+        {
+            try
+            {
+                return await _paymentHistoryService.GetPaymentHistoryById(Id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost("GetListPaymentHistory")]
+        public async Task<ResponseData<PaymentHistory>> GetListPaymentHistory(PaymentHistoryGetRequest request)
+        {
+            try
+            {
+                return await _paymentHistoryService.GetListPaymentHistory(request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
     }
 }
