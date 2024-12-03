@@ -157,5 +157,8 @@ namespace Utilities.StoredProcedure
         public const string SP_InsertPaymentHistory = "SP_InsertPaymentHistory";
         public const string SP_GetPaymentHistoryById = "SP_GetPaymentHistoryById";
         public const string SP_GetListPaymentHistory = "SP_GetListPaymentHistory";
+        public const string SP_UpdatePaymentHistoryAmount = "SP_UpdatePaymentHistoryAmount";
+        public const string SP_DeletePaymentHistory = "SP_DeletePaymentHistory";
+        
     }
 }

@@ -38,6 +38,19 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<int> DeletePaymentHistory(Guid id)
+        {
+            try
+            {
+                return await _paymentHistoryRepo.DeletePaymentHistory(id);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<ResponseData<PaymentHistory>> GetListPaymentHistory(PaymentHistoryGetRequest request)
         {
             var model = new ResponseData<PaymentHistory>();
@@ -48,6 +61,7 @@ namespace Domain.Services.Services
                               select new PaymentHistory
                               {
                                   Id = row.Field<Guid>("Id"),
+                                  OrderCode = row.Field<int>("OrderCode"),
                                   RoomBookingId = row.Field<Guid>("RoomBookingId"),
                                   PaymentMethod = row.Field<PaymentMethod>("PaymentMethod"),
                                   Amount = row.Field<decimal>("Amount"),
@@ -86,6 +100,7 @@ namespace Domain.Services.Services
                            select new PaymentHistory
                            {
                                Id = row.Field<Guid>("Id"),
+                               OrderCode = row.Field<int>("OrderCode"),
                                RoomBookingId = row.Field<Guid>("RoomBookingId"),
                                PaymentMethod = row.Field<PaymentMethod>("PaymentMethod"),
                                Amount = row.Field<decimal>("Amount"),
@@ -98,6 +113,19 @@ namespace Domain.Services.Services
                 throw ex;
             }
             return ph;
+        }
+
+        public Task<int> UpdatePaymentHistoryAmount(Guid id, decimal amount)
+        {
+            try
+            {
+                return _paymentHistoryRepo.UpdatePaymentHistoryAmount(id, amount);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
