@@ -895,21 +895,21 @@ footer p {
     border-radius: 5px;
 }
 .toast {
-    background-color: #f8f9fa; /* Light background */
-    border: 1px solid #007bff; /* Blue border */
+    background-color: #f8f9fa; 
+    border: 1px solid #007bff; 
     border-radius: 5px;
-    color: #333; /* Dark text color */
+    color: #333; 
 }
 
 .toast-header {
-    background-color: #007bff; /* Blue header */
-    color: white; /* White text in header */
-    border-bottom: 1px solid #0056b3; /* Darker blue bottom border */
+    background-color: #47d055; 
+    color: white;
+    border-bottom: 1px solid #0056b3;
 }
 
 .toast-body {
-    background-color: #f8f9fa; /* Light background for body */
-    color: #333; /* Dark text color */
+    background-color: #f8f9fa;
+    color: #333; 
 }
 
 

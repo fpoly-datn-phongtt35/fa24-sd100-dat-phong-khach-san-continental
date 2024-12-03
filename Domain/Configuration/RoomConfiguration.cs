@@ -12,8 +12,8 @@ namespace Domain.Configuration
             builder.ToTable("Room");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.Name).IsUnicode(false).IsRequired();
-            builder.Property(x => x.Address).IsUnicode(false).IsRequired();
+            builder.Property(x => x.Name).IsUnicode(true).IsRequired();
+            builder.Property(x => x.Address).IsUnicode(true).IsRequired();
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.Description).IsUnicode(true).IsRequired();
             builder.Property(x => x.RoomSize).IsRequired();
