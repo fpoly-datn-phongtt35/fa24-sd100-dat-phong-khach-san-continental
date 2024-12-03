@@ -894,7 +894,23 @@ footer p {
     padding: 0.5rem 1rem;
     border-radius: 5px;
 }
+.toast {
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #007bff; /* Blue border */
+    border-radius: 5px;
+    color: #333; /* Dark text color */
+}
 
+.toast-header {
+    background-color: #007bff; /* Blue header */
+    color: white; /* White text in header */
+    border-bottom: 1px solid #0056b3; /* Darker blue bottom border */
+}
+
+.toast-body {
+    background-color: #f8f9fa; /* Light background for body */
+    color: #333; /* Dark text color */
+}
 
 
 

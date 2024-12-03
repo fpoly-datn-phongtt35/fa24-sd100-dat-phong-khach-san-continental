@@ -94,8 +94,8 @@ namespace ViewClient.Controllers
                             };
                             await _serviceOderDetailRepo.AddServiceOrderDetail(serviceOrderDetail);
                         }
-
-                        roomBookingDetailCreateRequest.RoomId = room.Id;
+                    }
+                    roomBookingDetailCreateRequest.RoomId = room.Id;
                     roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
                     roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
                     roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
@@ -115,8 +115,6 @@ namespace ViewClient.Controllers
                         ModifiedTime = DateTime.Now
                     };
                     await _roomRepo.UpdateRoomStatus(roomStatus);
-                    
-                    }
 
                     return RedirectToAction("Index", "Home");
                 }
