@@ -12,6 +12,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
+        public int OrderCode { get; set; }
         public Guid RoomBookingId { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public decimal Amount { get; set; }

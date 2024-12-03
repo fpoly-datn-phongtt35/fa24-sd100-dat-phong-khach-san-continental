@@ -8,7 +8,7 @@ namespace Domain.Enums
 {
     public enum PaymentType
     {
-        Full = 0,
+        Bill = 0,
         Deposit = 1
     }
 }

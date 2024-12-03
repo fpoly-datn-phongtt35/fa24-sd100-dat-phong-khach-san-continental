@@ -28,6 +28,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
+                    new SqlParameter("@OrderCode", request.OrderCode),
                     new SqlParameter("@RoomBookingId", request.RoomBookingId),
                     new SqlParameter("@PaymentMethod", request.PaymentMethod),
                     new SqlParameter("@Amount", request.Amount),
@@ -43,12 +44,30 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<int> DeletePaymentHistory(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", id),
+                };
+                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_DeletePaymentHistory, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<DataTable> GetListPaymentHistory(PaymentHistoryGetRequest request)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
+                new SqlParameter("@Amount", request.Amount),
                 new SqlParameter("@RoomBookingId", request.RoomBookingId != null ? request.RoomBookingId : (object)DBNull.Value),
                 new SqlParameter("@Note", request.Note),
                 new SqlParameter("@PageSize", request.PageSize),
@@ -81,6 +100,25 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<int> UpdatePaymentHistoryAmount(Guid id, decimal amount)
+        {
+            try
+            {
+                var ph = GetPaymentHistoryById(id);
+                if (ph == null)
+                    throw new Exception("Payment history not found");
 
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                new SqlParameter("@Id", id) ,
+                new SqlParameter("@Amount", amount) ,
+                };
+                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdatePaymentHistoryAmount, parameters);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("An error occurred while updating the room booking", e);
+            }
+        }
     }
 }
