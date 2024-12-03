@@ -75,6 +75,7 @@
             success: function (response) {
                 $('#modalContainer').html(response);
                 $('#bookingModal').modal('hide');
+                showToast("Đặt phòng thành công!");
                 setTimeout(function () {
                     window.location.href = '/Home/Index';
                 }, 2000);
@@ -85,4 +86,23 @@
             }
         });
     });
+    function showToast(message) {
+        var toastHTML = `
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 100px; right: 10px; z-index: 1050;">
+                <div class="toast-header">
+                    <strong class="mr-auto">Thông báo</strong>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            </div>
+        `;
+        $('body').append(toastHTML); // Thêm toast vào body
+        $('.toast').toast({ delay: 3000 }).toast('show'); // Hiển thị toast
+
+        // Tự động xóa toast sau khi hiển thị
+        setTimeout(function () {
+            $('.toast').remove();
+        }, 3200);
+    }
 });
