@@ -47,6 +47,7 @@ namespace ViewClient.Controllers
                     return RedirectToAction("Login", "Authoration");
                 }
 
+
                 var _UserLogin = Guid.Empty;
                 _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
 

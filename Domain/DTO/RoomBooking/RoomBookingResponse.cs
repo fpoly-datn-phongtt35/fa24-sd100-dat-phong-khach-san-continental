@@ -12,7 +12,7 @@ public class RoomBookingResponse
     public decimal? TotalRoomPrice { get; set; }
     public decimal? TotalServicePrice { get; set; }
     public decimal? TotalExtraPrice { get; set; }
-    public EntityStatus Status { get; set; } = EntityStatus.Active;
+    public RoomBookingStatus Status { get; set; }
     public string? StaffFullName { get; set; }
     public string? CustomerFullName { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }

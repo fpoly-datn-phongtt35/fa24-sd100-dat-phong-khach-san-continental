@@ -187,7 +187,7 @@ public class RoomBookingController : Controller
                     CustomerId = bookingcreaterequest.CustomerId,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
                     TotalPrice = bookingcreaterequest.TotalPrice,
-                    Status = EntityStatus.Active,
+                    Status = RoomBookingStatus.PENDING,
                     TotalServicePrice = bookingcreaterequest.TotalServicePrice,
                     TotalRoomPrice = bookingcreaterequest.TotalRoomPrice,
                     CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),

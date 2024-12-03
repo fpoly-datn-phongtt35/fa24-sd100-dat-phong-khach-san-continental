@@ -138,6 +138,10 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomBooking = "SP_UpdateRoomBooking";
         public const string SP_InsertRoomBookingForCustomer = "SP_InsertRoomBookingForCustomer";
         public const string SP_InsertRoomBooking = "SP_InsertRoomBooking";
+
+        public const string SP_UpdateRoomBookingStatus = "SP_UpdateRoomBookingStatus";
+
+
         // RoomBookingDetail
         public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
         public const string SP_InsertRoomBookingDetail = "SP_InsertRoomBookingDetail";
@@ -148,5 +152,10 @@ namespace Utilities.StoredProcedure
         //Client 
         public const string SP_ClientLogin = "SP_ClientLogin";
         public const string SP_ClientRegister = "SP_ClientRegister";
+
+        //payment history
+        public const string SP_InsertPaymentHistory = "SP_InsertPaymentHistory";
+        public const string SP_GetPaymentHistoryById = "SP_GetPaymentHistoryById";
+        public const string SP_GetListPaymentHistory = "SP_GetListPaymentHistory";
     }
 }
