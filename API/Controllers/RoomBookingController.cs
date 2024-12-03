@@ -106,90 +106,90 @@ public class RoomBookingController : Controller
         }
     }
 
-    [HttpPost("update-roombookings-status")]
-    public async Task<IActionResult> UpdateRoomBookingsStatus()
-    {
-        try
-        {
-            RoomBookingGetRequest roomBookingGetRequest = new RoomBookingGetRequest
-            {
-                StaffId = null,
-                Status = null,
-                BookingType = null,
-                SearchString = null
-            };
+    //[HttpPost("update-roombookings-status")]
+    //public async Task<IActionResult> UpdateRoomBookingsStatus()
+    //{
+    //    try
+    //    {
+    //        RoomBookingGetRequest roomBookingGetRequest = new RoomBookingGetRequest
+    //        {
+    //            StaffId = null,
+    //            Status = null,
+    //            BookingType = null,
+    //            SearchString = null
+    //        };
 
-            // Lấy danh sách tất cả các RoomBookingId từ cơ sở dữ liệu
-            var allRoomBookings = await _roomBookingGetService.GetFilteredRoomBooking(roomBookingGetRequest);
+    //        // Lấy danh sách tất cả các RoomBookingId từ cơ sở dữ liệu
+    //        var allRoomBookings = await _roomBookingGetService.GetFilteredRoomBooking(roomBookingGetRequest);
 
-            // Duyệt qua từng RoomBookingId
-            foreach (var roomBooking in allRoomBookings.data)
-            {
-                try
-                {
-                    int orderCode = await GenerateOrderCode(roomBooking.Id);
+    //        // Duyệt qua từng RoomBookingId
+    //        foreach (var roomBooking in allRoomBookings.data)
+    //        {
+    //            try
+    //            {
+    //                int orderCode = await GenerateOrderCode(roomBooking.Id);
 
-                    PaymentLinkInformation paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderCode);
+    //                PaymentLinkInformation paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderCode);
 
-                    if (paymentLinkInformation.status == "PAID" && paymentLinkInformation.amountPaid == roomBooking.TotalPrice)
-                    {
-                        await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 2);
-                        // thêm 1 bản ghi vào PaymentHistory
-                        await _paymentHistoryService.AddPaymentHistory(new PaymentHistoryCreateRequest
-                        {
-                            RoomBookingId = roomBooking.Id,
-                            PaymentMethod = PaymentMethod.BankTransfer,
-                            Amount = paymentLinkInformation.amountPaid,
-                            PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
-                            Note = PaymentType.Full
-                        });
-                    }
-                    else if (paymentLinkInformation.status == "PAID" && paymentLinkInformation.amountPaid < roomBooking.TotalPrice)
-                    {
-                        await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 5);
-                        // thêm 1 bản ghi vào PaymentHistory
-                        await _paymentHistoryService.AddPaymentHistory(new PaymentHistoryCreateRequest
-                        {
-                            RoomBookingId = roomBooking.Id,
-                            PaymentMethod = PaymentMethod.BankTransfer,
-                            Amount = paymentLinkInformation.amountPaid,
-                            PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
-                            Note = PaymentType.Deposit
-                        });
-                    }
-                    else if (paymentLinkInformation.status == "CANCELLED")
-                    {
-                        await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 3);
-                    }
-                    else if (paymentLinkInformation.status == "PENDING")
-                    {
-                        await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 1);
-                    }
-                    else if (paymentLinkInformation.status == "FAILED")
-                    {
-                        await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 4);
-                    }
-                }
-                catch (Net.payOS.Errors.PayOSError ex)
-                {
-                    Console.WriteLine($"Order code for RoomBookingId {roomBooking.Id} does not exist. Skipping this record.");
-                    continue;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing RoomBookingId {roomBooking.Id}: {ex.Message}");
-                }
-            }
+    //                if (paymentLinkInformation.status == "PAID" && paymentLinkInformation.amountPaid == roomBooking.TotalPrice)
+    //                {
+    //                    await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 2);
+    //                    // thêm 1 bản ghi vào PaymentHistory
+    //                    await _paymentHistoryService.AddPaymentHistory(new PaymentHistoryCreateRequest
+    //                    {
+    //                        RoomBookingId = roomBooking.Id,
+    //                        PaymentMethod = PaymentMethod.BankTransfer,
+    //                        Amount = paymentLinkInformation.amountPaid,
+    //                        PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
+    //                        Note = PaymentType.Bill
+    //                    });
+    //                }
+    //                else if (paymentLinkInformation.status == "PAID" && paymentLinkInformation.amountPaid < roomBooking.TotalPrice)
+    //                {
+    //                    await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 5);
+    //                    // thêm 1 bản ghi vào PaymentHistory
+    //                    await _paymentHistoryService.AddPaymentHistory(new PaymentHistoryCreateRequest
+    //                    {
+    //                        RoomBookingId = roomBooking.Id,
+    //                        PaymentMethod = PaymentMethod.BankTransfer,
+    //                        Amount = paymentLinkInformation.amountPaid,
+    //                        PaymentTime = Convert.ToDateTime(paymentLinkInformation.transactions[0].transactionDateTime),
+    //                        Note = PaymentType.Deposit
+    //                    });
+    //                }
+    //                else if (paymentLinkInformation.status == "CANCELLED")
+    //                {
+    //                    await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 3);
+    //                }
+    //                else if (paymentLinkInformation.status == "PENDING")
+    //                {
+    //                    await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 1);
+    //                }
+    //                else if (paymentLinkInformation.status == "FAILED")
+    //                {
+    //                    await _roomBookingUpdateService.UpdateRoomBookingStatus(roomBooking.Id, 4);
+    //                }
+    //            }
+    //            catch (Net.payOS.Errors.PayOSError ex)
+    //            {
+    //                Console.WriteLine($"Order code for RoomBookingId {roomBooking.Id} does not exist. Skipping this record.");
+    //                continue;
+    //            }
+    //            catch (Exception ex)
+    //            {
+    //                Console.WriteLine($"Error processing RoomBookingId {roomBooking.Id}: {ex.Message}");
+    //            }
+    //        }
 
-            return Ok(new Response(0, "Updated all room bookings' status successfully", null));
-        }
-        catch (Exception ex)
-        {
-            // Nếu có lỗi, log lỗi và trả về response thất bại
-            Console.WriteLine(ex);
-            return BadRequest(new Response(-1, "Failed to update room bookings' status", null));
-        }
-    }
+    //        return Ok(new Response(0, "Updated all room bookings' status successfully", null));
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Nếu có lỗi, log lỗi và trả về response thất bại
+    //        Console.WriteLine(ex);
+    //        return BadRequest(new Response(-1, "Failed to update room bookings' status", null));
+    //    }
+    //}
 
 
     

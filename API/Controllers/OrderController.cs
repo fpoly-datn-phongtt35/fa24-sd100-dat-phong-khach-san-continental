@@ -7,6 +7,8 @@ using API.Types;
 using System.Text;
 using System.Security.Cryptography;
 using Domain.Services.IServices;
+using Domain.Enums;
+using Domain.DTO.PaymentHistory;
 
 
 namespace API.Controllers
@@ -45,7 +47,7 @@ namespace API.Controllers
 
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePaymentLink(Guid roomBookingId, int? deposit)
+        public async Task<IActionResult> CreatePaymentLink(Guid roomBookingId, PaymentType? paymentType, int? money)
         {
             var urls = "https://my.payos.vn/ff1f9d29a95211ef964c0242ac110002/payment-link";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
@@ -53,62 +55,44 @@ namespace API.Controllers
 
             try
             {
-                int orderCode = GenerateOrderCode(roomBookingId);
-                //int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+                //int orderCode = GenerateOrderCode(roomBookingId);
+                int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
                 string description = "1";
-                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, deposit ?? (int)(roomBooking.TotalPrice));
+
+                int amount = paymentType switch
+                {
+                    PaymentType.Bill => money ?? 0,
+                    PaymentType.Deposit => (int)(roomBooking.TotalRoomPrice * 20 / 100)
+                };
+
+                // Thêm bản ghi vào PaymentHistory
+                var paymentHistory = new PaymentHistoryCreateRequest
+                {
+                    OrderCode = orderCode,
+                    RoomBookingId = roomBookingId,
+                    Amount = 0,
+                    PaymentTime = DateTime.Now,
+                    Note = paymentType,
+                    PaymentMethod =  0
+                };
+                await _paymentHistoryService.AddPaymentHistory(paymentHistory);
+
+                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, amount);
 
 
                 List<ItemData> items = new List<ItemData>() { item };
-                PaymentData paymentData = new PaymentData(orderCode, deposit ?? (int)(roomBooking.TotalPrice), description, items,
+                PaymentData paymentData = new PaymentData(orderCode, (int)amount, description, items,
                     urls, urls);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-                return Ok(new Response(0, "ok", createPayment));
+                return Ok(new Response(0, "success", createPayment));
             }
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
-        }
-
-        [HttpPost("create-remaining")]
-        public async Task<IActionResult> CreateRemainingPaymentLink(Guid paymentHistoryId)
-        {
-            var urls = "https://my.payos.vn/ff1f9d29a95211ef964c0242ac110002/payment-link";
-
-            var unfinishedPaidRoomBooking = await _paymentHistoryService.GetPaymentHistoryById(paymentHistoryId);
-            var roomBooking = await _roomBookingGetService.GetRoomBookingById(unfinishedPaidRoomBooking.RoomBookingId);
-
-
-            if (roomBooking is not null)
-            {
-                try
-                {
-                    int orderCode = GenerateOrderCode(paymentHistoryId);
-                    string description = "1";
-                    ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, (int)(roomBooking.TotalPrice) - (int)unfinishedPaidRoomBooking.Amount );
-
-
-                    List<ItemData> items = new List<ItemData>() { item };
-                    PaymentData paymentData = new PaymentData(orderCode, (int)(roomBooking.TotalPrice) - (int)unfinishedPaidRoomBooking.Amount, description, items,
-                        urls, urls);
-
-                    CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
-
-                    return Ok(new Response(0, "ok", createPayment));
-                }
-                catch (System.Exception exception)
-                {
-                    Console.WriteLine(exception);
-                    return Ok(new Response(-1, "fail", null));
-                }
-            }
-            return Ok(new Response(-1, "fail", null));
-
-
         }
 
 

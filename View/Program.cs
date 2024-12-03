@@ -48,6 +48,11 @@ namespace View
             builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
 
+            builder.Services.AddSession(option =>
+            {
+                option.IdleTimeout = TimeSpan.FromSeconds(100);
+            });
+
             builder.Services.AddHttpClient();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
@@ -83,6 +88,8 @@ namespace View
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
 
             app.UseAuthentication();

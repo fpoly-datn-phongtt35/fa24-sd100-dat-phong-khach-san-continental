@@ -9,6 +9,7 @@ namespace Domain.DTO.PaymentHistory
 {
     public class PaymentHistoryGetRequest : PagingRequest
     {
+        public decimal? Amount { get; set; }
         public int? Note { get; set; }
         public Guid? RoomBookingId { get; set; }
     }
