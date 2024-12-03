@@ -1,12 +1,7 @@
-﻿using Domain.Enums;
-using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.DTO.ServiceOrderDetail;
+using Domain.Enums;
 
-namespace Domain.DTO.RoomBookingDetail
+namespace ViewClient.Models.DTO
 {
     public class RoomBookingDetailCreateRequest
     {
@@ -19,8 +14,9 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Price { get; set; }
         public decimal? ExtraPrice { get; set; }
         public decimal? Deposit { get; set; }
-        public RoomBookingStatus? Status { get; set; }
+        public EntityStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
-        public List<Domain.Models.ServiceOrderDetail>? SelectedServices { get; set; }
+
+        public List<ServiceOrderDetailCreateRequest>? SelectedServices { get; set; }
     }
 }

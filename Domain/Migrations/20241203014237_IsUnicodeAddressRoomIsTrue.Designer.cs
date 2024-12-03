@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ContinentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203014237_IsUnicodeAddressRoomIsTrue")]
+    partial class IsUnicodeAddressRoomIsTrue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,34 +333,6 @@ namespace Domain.Migrations
                     b.HasIndex("BuildingId");
 
                     b.ToTable("Floor", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.PaymentHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("Note")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("PaymentTime")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("RoomBookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomBookingId");
-
-                    b.ToTable("PaymentHistory");
                 });
 
             modelBuilder.Entity("Domain.Models.Post", b =>
@@ -1218,17 +1193,6 @@ namespace Domain.Migrations
                     b.Navigation("Building");
                 });
 
-            modelBuilder.Entity("Domain.Models.PaymentHistory", b =>
-                {
-                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
-                        .WithMany("PaymentHistorys")
-                        .HasForeignKey("RoomBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoomBooking");
-                });
-
             modelBuilder.Entity("Domain.Models.Post", b =>
                 {
                     b.HasOne("Domain.Models.PostType", "PostType")
@@ -1422,8 +1386,6 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Models.RoomBooking", b =>
                 {
                     b.Navigation("FeedBacks");
-
-                    b.Navigation("PaymentHistorys");
 
                     b.Navigation("RoomBookingDetails");
 

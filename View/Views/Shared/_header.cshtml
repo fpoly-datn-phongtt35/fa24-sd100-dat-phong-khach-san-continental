@@ -106,29 +106,28 @@
             <ul class="list-unstyled transit show">
                 <li class="menu-option d-flex fw-bold">
                     <div style="width:50px" class="d-flex justify-content-center">
-                        <i class="fa-solid fa-layer-group p-1 me-1"></i>
-                    </div>
-                    <a class="link_css" href="/roombooking">Tầng</a>
-                </li>
-                <li class="menu-option d-flex fw-bold">
-                    <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-regular fa-building p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Tòa</a>
+                    <a class="link_css" href="/Building">Tòa</a>
                 </li>
                 <li class="menu-option d-flex fw-bold">
                     <div style="width:50px" class="d-flex justify-content-center">
-                        <i class="fa-solid fa-house p-1 me-1"></i>
+                        <i class="fa-solid fa-layer-group p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Phòng</a>
-
+                    <a class="link_css" href="/Floor">Tầng</a>
                 </li>
                 <li class="menu-option d-flex fw-bold">
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-solid fa-list-check p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Loại phòng</a>
+                    <a class="link_css" href="/RoomType">Loại phòng</a>
 
+                </li>
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-solid fa-house p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/Room">Phòng</a>
                 </li>
             </ul>
         </li>
@@ -156,21 +155,21 @@
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-solid fa-couch p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Tiện ích</a>
+                    <a class="link_css" href="/Amenity">Tiện ích</a>
 
                 </li>
                 <li class="menu-option d-flex fw-bold">
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-solid fa-bell-concierge p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Dịch vụ</a>
+                    <a class="link_css" href="/Service">Dịch vụ</a>
 
                 </li>
                 <li class="menu-option d-flex fw-bold">
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-solid fa-list-check p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Loại dịch vụ</a>
+                    <a class="link_css" href="/ServiceType">Loại dịch vụ</a>
                 </li>
             </ul>
         </li>
@@ -189,7 +188,21 @@
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-solid fa-users p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Nhân sự</a>
+                    <a class="link_css" href="/Staff">Nhân sự</a>
+                </li>
+            </ul>
+        </li>
+        <li class="li-option p-1 ps-0">
+            <div class="d-flex justify-content-between span-option align-items-center" onclick="global.ShowTabMenu(this)" style="cursor:pointer">
+                <span class="fs-6 fw-bold text-align-center">Khách hàng</span>
+                <i class="fa-solid fa-angles-down"></i>
+            </div>
+            <ul class="list-unstyled transit show">
+                <li class="menu-option d-flex fw-bold">
+                    <div style="width:50px" class="d-flex justify-content-center">
+                        <i class="fa-regular fa-address-book  p-1 me-1"></i>
+                    </div>
+                    <a class="link_css" href="/customer">Danh sách</a>
                 </li>
             </ul>
         </li>
@@ -203,13 +216,13 @@
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-solid fa-list-check p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Loại bài viết</a>
+                    <a class="link_css" href="/PostType">Loại bài viết</a>
                 </li>
                 <li class="menu-option d-flex fw-bold">
                     <div style="width:50px" class="d-flex justify-content-center">
                         <i class="fa-regular fa-file-word p-1 me-1"></i>
                     </div>
-                    <a class="link_css" href="/roombooking">Bài viết</a>
+                    <a class="link_css" href="/Post">Bài viết</a>
                 </li>
             </ul>
         </li>

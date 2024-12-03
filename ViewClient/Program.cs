@@ -30,6 +30,7 @@ namespace ViewClient
             builder.Services.AddTransient<ICustomer, Customer>();
             builder.Services.AddTransient<IRoomBookingDetail, RoomBookingDetail>();
             builder.Services.AddTransient<IRoombooking, RoomBooking>();
+            builder.Services.AddTransient<IServiceOderDetail, ServiceOrderDetail>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/Authoration/Login");
@@ -83,7 +84,10 @@ namespace ViewClient
                  name: "register",
                  pattern: "register",
                  defaults: new { controller = "Authoration", action = "Register" });
-
+            app.MapControllerRoute(
+                name: "roombooking",
+                pattern: "roombooking",
+                defaults: new { controller = "RoomBooking", action = "RoomBooking" });
 
             app.Run();
         }

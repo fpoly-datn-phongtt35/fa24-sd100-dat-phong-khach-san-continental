@@ -16,14 +16,12 @@
     <header>
         <div class="navbar">
             <div class="navbar-left">
-                <a href="/Home/index" class="navbar-link d-flex align-items-center">
-                    <img src="~/img/2.png" style="width: 100px; height: 100px;" alt="Logo" />
+                <a href="/Home/index" class="navbar-link d-flex align-items-center" style="width: 100px; height: 100px;">
                     <h1 class="unifrakturmaguntia-regular ms-2">Continental</h1>
                 </a>
             </div>
 
             <div class="navbar-center">
-                <a href="/room/searchRooms">Khách Sạn</a>
                 <a href="@Url.Action("GroupedServices", "Service")">Dịch vụ</a>
             </div>
             <div class="navbar-right">
@@ -45,7 +43,7 @@
     </header>
 
     <div class="container-fluid">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3" style="min-height:90vh;">
             @RenderBody()
         </main>
     </div>

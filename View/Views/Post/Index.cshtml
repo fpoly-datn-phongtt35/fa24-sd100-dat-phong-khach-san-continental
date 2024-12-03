@@ -1,8 +1,12 @@
 ﻿@using Domain.DTO.Paging
+@using Domain.Models
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.Models.Post>
 
 @{
     ViewData["Title"] = "Index";
+    var postTypeList = ViewBag.postTypeList as List<PostType>;
+    var staffList = ViewBag.StaffList as List<Domain.Models.Staff>;
 }
 
 <h3>Trang chủ bài đăng</h3>
@@ -30,10 +34,10 @@
     <thead>
         <tr>
             <th>
-                Id Loại bài đăng
+               Loại bài đăng
             </th>
             <th>
-                Id Nhân viên
+               Nhân viên
             </th>
             <th>
                Tiêu đề
@@ -50,12 +54,20 @@
     <tbody>
 @foreach (var item in Model.data) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostTypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffId)
-            </td>
+                <td>
+                    @{
+                        var postType = postTypeList.FirstOrDefault(pt => pt.Id == item.PostTypeId);
+                        var postTypeName = postType != null ? postType.TitleOfType : "Unknown";
+                        @Html.DisplayFor(modelItem => postTypeName)
+                    }
+                </td>
+                <td>
+                    @{
+                        var staff = staffList.FirstOrDefault(s => s.Id == item.StaffId);
+                        var staffName = staff != null ? staff.FirstName + " " + staff.LastName : "Unknown";
+                        @Html.DisplayFor(modelItem => staffName)
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -63,7 +75,7 @@
                 @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @StatusHelper.DisplayStatusBadge(item.Status)
             </td>
             <td>
                     @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },

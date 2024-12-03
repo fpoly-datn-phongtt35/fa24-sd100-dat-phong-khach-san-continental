@@ -267,7 +267,10 @@ body {
         height: 80px;
         margin-bottom: 10px;
     }
-
+.service-list {
+    max-height: 200px;
+    overflow-y: auto; 
+}
 
 
 .page-content {
@@ -891,7 +894,23 @@ footer p {
     padding: 0.5rem 1rem;
     border-radius: 5px;
 }
+.toast {
+    background-color: #f8f9fa; 
+    border: 1px solid #007bff; 
+    border-radius: 5px;
+    color: #333; 
+}
 
+.toast-header {
+    background-color: #47d055; 
+    color: white;
+    border-bottom: 1px solid #0056b3;
+}
+
+.toast-body {
+    background-color: #f8f9fa;
+    color: #333; 
+}
 
 
 
