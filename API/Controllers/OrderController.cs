@@ -51,7 +51,7 @@ namespace API.Controllers
         {
             var urls = "https://my.payos.vn/ff1f9d29a95211ef964c0242ac110002/payment-link";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
-            var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
+            //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
 
             try
             {

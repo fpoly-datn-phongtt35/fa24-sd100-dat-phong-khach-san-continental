@@ -47,9 +47,18 @@ public class RoomBookingRepository : IRoomBookingRepository
 
             foreach (DataRow row in dataTable.Rows)
             {
-                var roomBooking = ConvertToRoomBookingRow(row);
-                var roomBookingResponse = roomBooking.ToRoomBookingResponse();
-                roomBookings.Add(roomBookingResponse);
+                try
+                {
+                    var roomBooking = ConvertToRoomBookingRow(row);
+                    var roomBookingResponse = roomBooking.ToRoomBookingResponse();
+                    roomBookings.Add(roomBookingResponse);
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi nếu một dòng bị lỗi và tiếp tục xử lý các dòng còn lại
+                    Console.WriteLine($"Error converting row: {ex.Message}");
+                    continue;
+                }
             }
 
             model.data = roomBookings;
@@ -74,9 +83,6 @@ public class RoomBookingRepository : IRoomBookingRepository
 
         return model;
     }
-
-
-
 
     public async Task<RoomBooking?> GetRoomBookingById(Guid roomBookingId)
     {
