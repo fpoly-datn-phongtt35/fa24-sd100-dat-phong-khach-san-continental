@@ -73,12 +73,18 @@
             contentType: 'application/json',
             data: JSON.stringify(bookingDetails),
             success: function (response) {
-                $('#modalContainer').html(response);
-                $('#bookingModal').modal('hide');
-                showToast("Đặt phòng thành công!");
-                setTimeout(function () {
-                    window.location.href = '/Home/Index';
-                }, 2000);
+                if (response.success) {
+                    var roomBookingId = response.roomBookingId; // Lấy RoomBookingId từ response
+                    showToast("Đặt phòng thành công!");
+
+                    // Tạo form ẩn và tự động submit để chuyển hướng sang CreatePaymentLink
+                    var form = $('<form action="/RoomBooking/CreatePaymentLink" method="POST"></form>');
+                    form.append('<input type="hidden" name="RoomBookingId" value="' + roomBookingId + '">');
+                    $('body').append(form);
+                    form.submit();
+                } else {
+                    $('#validationMessage').html("Đã xảy ra lỗi: " + (response.message || "Không thể đặt phòng.")).show();
+                }
             },
             error: function (xhr, status, error) {
                 console.log("Error: " + error); // In ra thông tin lỗi
