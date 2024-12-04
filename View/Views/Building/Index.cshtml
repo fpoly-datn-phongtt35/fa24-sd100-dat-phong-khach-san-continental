@@ -7,10 +7,10 @@
 }
 
 
-<h3>List of Buildings</h3>
+<h3>Danh sách tòa</h3>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Tạo mới</a>
 </p>
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
@@ -40,9 +40,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.data.First().Name)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
-            <th></th>
+            <th>Tên tòa</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
         </tr>
     </thead>
     <tbody>

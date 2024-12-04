@@ -61,19 +61,19 @@
         <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
     </form>
 
-<table class="table table-striped" style="color: whitesmoke">
+<table class="table table-striped" style="color: black">
     <thead>
         <tr>
-            <th>@Html.DisplayName("Name")</th>
-            <th>@Html.DisplayName("Price")</th>
-            <th>@Html.DisplayName("Address")</th>
-            <th>@Html.DisplayName("Description")</th>
+            <th>Phòng</th>
+            <th>Giá tiền</th>
+            @* <th>Địa chỉ</th> *@
+            @* <th>Mô tả</th> *@
             <th>@Html.DisplayName("Room Size")</th>
-            <th>@Html.DisplayName("Images")</th>
-            <th>@Html.DisplayName("Floor")</th>
-            <th>@Html.DisplayName("Room Type")</th>
-            <th>@Html.DisplayName("Status")</th>
-            <th>@Html.DisplayName("Options")</th>
+            <th>Ảnh</th>
+            <th>Tầng</th>
+            <th>Loại phòng</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
         </tr>
     </thead>
     <tbody>
@@ -82,8 +82,8 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                @* <td>@Html.DisplayFor(modelItem => item.Address)</td> *@
+                @* <td>@Html.DisplayFor(modelItem => item.Description)</td> *@
                 <td>@Html.DisplayFor(modelItem => item.RoomSize)</td>
                 <td>
                     <div class="d-flex justify-content-center">
