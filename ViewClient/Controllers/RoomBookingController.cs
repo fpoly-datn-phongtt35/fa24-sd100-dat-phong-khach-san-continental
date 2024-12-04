@@ -18,112 +18,101 @@ namespace ViewClient.Controllers
         private readonly IRoomBookingDetail _roomBookingDetailRepo;
         private readonly IRoom _roomRepo;
         private readonly IServiceOderDetail _serviceOderDetailRepo;
-        public RoomBookingController(IRoombooking roomBookingRepo, 
-            IRoomBookingDetail roomBookingDetailRepo, 
+        private readonly ICustomer _customerRepo;
+        public RoomBookingController(IRoombooking roomBookingRepo,
+            IRoomBookingDetail roomBookingDetailRepo,
             IRoom roomRepo,
-            IServiceOderDetail serviceOderDetailRepo)
+            IServiceOderDetail serviceOderDetailRepo,
+            ICustomer customerRepo)
         {
             _roomBookingRepo = roomBookingRepo;
             _roomBookingDetailRepo = roomBookingDetailRepo;
             _roomRepo = roomRepo;
             _serviceOderDetailRepo = serviceOderDetailRepo;
+            _customerRepo = customerRepo;
         }
-        //public IActionResult ModalPartial(Guid roomId, RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
-        //{
-        //    var room = _roomRepo.GetRoomById(roomId);
-
-        //    var model = new { Room = room, BookingDetails = roomBookingDetailCreateRequest };
-        //    return PartialView("ModalPartial", model);
-        //}
 
         [HttpPost]
         public async Task<IActionResult> RoomBooking([FromBody] RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
             try
             {
-                if (HttpContext.Session.GetString("UserName") == null)
+                var _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+                
+
+                var room = await _roomRepo.GetRoomById(roomBookingDetailCreateRequest.RoomId);
+                if (room == null)
                 {
-                    TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt phòng.";
-                    return RedirectToAction("Login", "Authoration");
+                    return NotFound();
                 }
-
-
-                var _UserLogin = Guid.Empty;
-                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
-
-                if (_UserLogin != Guid.Empty)
+                if (_UserLogin == null)
                 {
-                    var room = await _roomRepo.GetRoomById(roomBookingDetailCreateRequest.RoomId);
-                    if (room == null)
-                    {
-                        return NotFound();
-                    }
 
-                    // Tạo đối tượng đặt phòng
-                    var roomBookingCreate = new RoomBookingCreateRequestForCustomer
-                    {
-                        CustomerId = _UserLogin,
-                        BookingType = Domain.Enums.BookingType.Online,
-                        TotalPrice = room.Price,
-                        TotalRoomPrice = room.Price,
-                        TotalServicePrice = 0,
-                        Status = Domain.Enums.RoomBookingStatus.PENDING,
-                        StaffId = null,
-                        CreatedBy = _UserLogin,
-                        NewId = null
-                    };
+                }
+                // Tạo đối tượng đặt phòng
+                var roomBookingCreate = new RoomBookingCreateRequestForCustomer
+                {
+                    CustomerId = _UserLogin,
+                    BookingType = Domain.Enums.BookingType.Online,
+                    TotalPrice = room.Price,
+                    TotalRoomPrice = room.Price,
+                    TotalServicePrice = 0,
+                    TotalExtraPrice = 0,
+                    Status = Domain.Enums.RoomBookingStatus.PENDING,
+                    StaffId = null,
+                    CreatedBy = _UserLogin,
+                    NewId = null
+                };
 
-                    var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
+                var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
 
-                    if (roomBookingDetailCreateRequest.SelectedServices != null && roomBookingDetailCreateRequest.SelectedServices.Count > 0)
+                if (roomBookingDetailCreateRequest.SelectedServices != null && roomBookingDetailCreateRequest.SelectedServices.Count > 0)
+                {
+                    foreach (var service in roomBookingDetailCreateRequest.SelectedServices)
                     {
-                        foreach (var service in roomBookingDetailCreateRequest.SelectedServices)
+                        var serviceOrderDetail = new Domain.Models.ServiceOrderDetail
                         {
-                            var serviceOrderDetail = new Domain.Models.ServiceOrderDetail
-                            {
-                                RoomBookingId = roomBooking,
-                                ServiceId = service.ServiceId,
-                                Amount = Convert.ToDouble((service.Quantity) * (service.Price)),
-                                Description = null,
-                                Quantity = service.Quantity,
-                                Price = service.Price,
-                                Status = Domain.Enums.EntityStatus.Active,
-                                CreatedTime = DateTime.Now,
-                                CreatedBy = _UserLogin,
-                                ExtraPrice = 0,
-                                Deleted = false
-                            };
-                            await _serviceOderDetailRepo.AddServiceOrderDetail(serviceOrderDetail);
-                        }
+                            RoomBookingId = roomBooking,
+                            ServiceId = service.ServiceId,
+                            Amount = Convert.ToDouble((service.Quantity) * (service.Price)),
+                            Description = null,
+                            Quantity = service.Quantity,
+                            Price = service.Price,
+                            Status = Domain.Enums.EntityStatus.Active,
+                            CreatedTime = DateTime.Now,
+                            CreatedBy = _UserLogin,
+                            ExtraPrice = 0,
+                            Deleted = false
+                        };
+                        await _serviceOderDetailRepo.AddServiceOrderDetail(serviceOrderDetail);
                     }
-                    roomBookingDetailCreateRequest.RoomId = room.Id;
-                    roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
-                    roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
-                    roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
-                    roomBookingDetailCreateRequest.CreatedBy = _UserLogin;
-                    roomBookingDetailCreateRequest.Status = Domain.Enums.RoomBookingStatus.PENDING;
-                    roomBookingDetailCreateRequest.Deposit = room.Price * 20 / 100;
-                    roomBookingDetailCreateRequest.Price = room.Price;
-                    roomBookingDetailCreateRequest.ExtraPrice = 0;
-                    roomBookingDetailCreateRequest.SelectedServices = null;
-                    var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
-
-                    var roomStatus = new RoomUpdateStatusRequest
-                    {
-                        Id = room.Id,
-                        Status = Domain.Enums.RoomStatus.AwaitingConfirmation,
-                        ModifiedBy = _UserLogin,
-                        ModifiedTime = DateTime.Now
-                    };
-                    await _roomRepo.UpdateRoomStatus(roomStatus);
-
-                    return RedirectToAction("Index", "Home");
                 }
+                roomBookingDetailCreateRequest.RoomId = room.Id;
+                roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
+                roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
+                roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
+                roomBookingDetailCreateRequest.CreatedBy = _UserLogin;
+                roomBookingDetailCreateRequest.Status = Domain.Enums.RoomBookingStatus.PENDING;
+                roomBookingDetailCreateRequest.Deposit = room.Price * 20 / 100;
+                roomBookingDetailCreateRequest.Price = room.Price;
+                roomBookingDetailCreateRequest.ExtraPrice = 0;
+                roomBookingDetailCreateRequest.SelectedServices = null;
+                var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
 
-                return View("Details", "Room");
+                var roomStatus = new RoomUpdateStatusRequest
+                {
+                    Id = room.Id,
+                    Status = Domain.Enums.RoomStatus.AwaitingConfirmation,
+                    ModifiedBy = _UserLogin,
+                    ModifiedTime = DateTime.Now
+                };
+                await _roomRepo.UpdateRoomStatus(roomStatus);
+
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
+                return View("Details", "Room");
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình đặt phòng.");
             }
         }

@@ -7,28 +7,38 @@
 @{
     ViewData["Title"] = "Details";
 }
-@{
-    var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
-    var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
-}
-<h4 style="margin-top:50px;">Đặt phòng của bạn</h4>
+<h4 style="margin-top:10px;">Đặt phòng của bạn</h4>
 
 <div class="d-flex" style="padding:10px;">
     <div class="img-column me-3">
         @if (Model.Room.Images != null && Model.Room.Images.Any())
         {
-            @foreach (var img in Model.Room.Images)
-            {
-                var extension = System.IO.Path.GetExtension(img);
-                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
-                {
-                    var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+            <div id="roomImageCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Room.Images.Count; i++)
+                    {
+                        var img = Model.Room.Images[i];
+                        var extension = System.IO.Path.GetExtension(img);
+                        if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                        {
+                            var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+                            var activeClass = (i == 0) ? "active" : ""; 
 
-                    <div class="img-container-details">
-                        <img src="@imagePath" alt="" />
-                    </div>
-                }
-            }
+                            <div class="carousel-item @activeClass">
+                                <img src="@imagePath" class="d-block w-100" alt="" />
+                            </div>
+                        }
+                    }
+                </div>
+                <a class="carousel-control-prev" href="#roomImageCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#roomImageCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
         }
         else
         {
@@ -82,15 +92,15 @@
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Số lượng người có thể ở")</dt>
-                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.Room.RoomTypeId)?.MaximumOccupancy người</dd>
+                <dd>@Model.RoomType.MaximumOccupancy người</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Tầng của phòng")</dt>
-                <dd>@floorList?.FirstOrDefault(f => f.Id == Model.Room.FloorId)?.Name</dd>
+                <dd>@Model.Floor.Name</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Loại phòng")</dt>
-                <dd>@roomtypeList?.FirstOrDefault(rt => rt.Id == Model.Room.RoomTypeId)?.Name</dd>
+                <dd>@Model.RoomType.Name</dd>
             </div>
         </dl>
     </div>
@@ -119,8 +129,45 @@
                 <br />
                 <dt>@Model.Room.Name</dt>
                 <p class="font-monospace">Giá: @Model.Room.Price VNĐ/đêm</p>
-                <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Bạn có muốn đặt thêm dịch vụ không ?</dt>
+                
+                <div>
+                    @if (Context.Session.GetString("UserName") == null)
+                    {
+                        <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Vui lòng nhập thông tin cá nhân đặt phòng ?</dt>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="firstName">Họ</label>
+                                        <input type="text" class="form-control" name="FirstName" id="firstName" placeholder="Nhập họ">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="lastName">Tên</label>
+                                        <input type="text" class="form-control" name="LastName" id="lastName" placeholder="Nhập tên">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" name="Email" id="email" placeholder="Nhập email" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="phone">Số điện thoại</label>
+                                        <input type="tel" class="form-control" name="PhoneNumber" id="phone" placeholder="Nhập số điện thoại" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
 
+                <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Bạn có muốn đặt thêm dịch vụ không ?</dt>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <label class="form-label">Chọn Dịch Vụ</label>
                     <label class="form-label" style="margin-left: auto;">Chọn số lượng</label>
@@ -135,7 +182,7 @@
                                 <label class="form-check-label" for="service_@service.Id" style="flex-grow: 1;">
                                     <strong>@service.Name</strong> - <span style="color: green;">@service.Price VNĐ</span> / @service.Unit
                                 </label>
-                                <input type="number" class="form-control quantity-input" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
+                                <input type="number" class="form-control quantity-input service-quantity" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
                             </div>
                         }
                     }
@@ -146,10 +193,12 @@
                 </div>
 
                 <hr />
-                <p style="font-weight: 600;" id="depositPayment">Đặt cọc: 0 VNĐ</p>
-                <p style="font-weight: 600;" id="totalRoomPayment">Tiền phòng: 0 VNĐ</p>
-                <p style="font-weight: 600;" id="totalServicePayment">Tiền dịch vụ: 0 VNĐ</p>
-                <p style="font-weight: 600;" id="totalPrice">Tổng tiền: 0 VNĐ</p>
+                <div style="text-align: end;">
+                    <p style="font-weight: 600;" id="depositPayment">Đặt cọc: 0 VNĐ</p>
+                    <p style="font-weight: 600;" id="totalRoomPayment">Tiền phòng: 0 VNĐ</p>
+                    <p style="font-weight: 600;" id="totalServicePayment">Tiền dịch vụ: 0 VNĐ</p>
+                    <p style="font-weight: 600;" id="totalPrice">Tổng tiền sau khi đặt cọc: 0 VNĐ</p>
+                </div>
             </div>
 
             <div class="modal-footer">
