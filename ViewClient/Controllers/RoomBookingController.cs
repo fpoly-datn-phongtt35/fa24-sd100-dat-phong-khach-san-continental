@@ -167,7 +167,7 @@ namespace ViewClient.Controllers
                     roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
                     roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
                     roomBookingDetailCreateRequest.CreatedBy = _UserLogin;
-                    roomBookingDetailCreateRequest.Status = Domain.Enums.RoomBookingStatus.NEW;
+                    roomBookingDetailCreateRequest.Status = Domain.Enums.RoomBookingStatus.PENDING;
                     roomBookingDetailCreateRequest.Deposit = room.Price * 20 / 100;
                     roomBookingDetailCreateRequest.Price = room.Price;
                     roomBookingDetailCreateRequest.ExtraPrice = 0;
