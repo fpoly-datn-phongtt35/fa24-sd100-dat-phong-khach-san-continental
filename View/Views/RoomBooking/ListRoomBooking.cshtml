@@ -8,14 +8,16 @@
 @{
     Layout = null;
 }
-<table class="table" style="color: dark">
+<table class="table" style="color: black">
     <thead>
         <tr>
             <th>STT</th>
             <th>Khách hàng</th>
             <th>Nhân viên</th>
             <th>Loại đặt phòng</th>
-            <th>Trạng thái</th>
+            <th>Thanh toán</th>
+            <th>Số tiền</th>
+            <th>Ngày tạo</th>
             <th>Chức năng</th>
         </tr>
     </thead>
@@ -41,6 +43,8 @@
                         <td>@i.StaffFullName</td>
                         <td>@i.BookingType</td>
                         <td>@i.Status</td>
+                        <td>@String.Format("{0:N0}", i.TotalPrice)</td>
+                        <td>@i.CreatedTime</td>
                         <td class="d-flex">
                             <a class="text-decoration-underline" onclick="_roomBooking.RedirecDetail('@i.Id','@i.CustomerId')" style="color:deepskyblue;cursor:pointer">Update</a>
                             <a class="ms-2 text-decoration-underline" style="color:darkred;cursor:pointer">Delete</a>

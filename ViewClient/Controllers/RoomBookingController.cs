@@ -1,12 +1,17 @@
-﻿using Domain.DTO.Room;
+﻿using Domain.DTO.Order;
+using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
 using Domain.DTO.ServiceOrderDetail;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using ViewClient.Repositories.IRepository;
 using ViewClient.Repositories.Repository;
 
@@ -19,19 +24,78 @@ namespace ViewClient.Controllers
         private readonly IRoom _roomRepo;
         private readonly IServiceOderDetail _serviceOderDetailRepo;
         private readonly ICustomer _customerRepo;
-        public RoomBookingController(IRoombooking roomBookingRepo,
-            IRoomBookingDetail roomBookingDetailRepo,
+        private readonly HttpClient _httpClient;
+        public RoomBookingController(IRoombooking roomBookingRepo, 
+            IRoomBookingDetail roomBookingDetailRepo, 
             IRoom roomRepo,
-            IServiceOderDetail serviceOderDetailRepo,
-            ICustomer customerRepo)
+            ICustomer customerRepo,
+            HttpClient httpClient,
+            IServiceOderDetail serviceOderDetailRepo)
         {
             _roomBookingRepo = roomBookingRepo;
             _roomBookingDetailRepo = roomBookingDetailRepo;
             _roomRepo = roomRepo;
+            _httpClient = httpClient;
             _serviceOderDetailRepo = serviceOderDetailRepo;
             _customerRepo = customerRepo;
         }
 
+        //    var model = new { Room = room, BookingDetails = roomBookingDetailCreateRequest };
+        //    return PartialView("ModalPartial", model);
+        //}
+
+        [HttpGet]
+        public IActionResult CreatePaymentLink()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
+        {
+            var apiUrl = "https://localhost:7130/api/Order/create";
+
+            var requestData = new PaymentLinkCreateRequest
+            {
+                RoomBookingId = request.RoomBookingId,
+                PaymentType = PaymentType.Deposit,
+                Money = null
+            };
+
+
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await _httpClient.PostAsync(apiUrl, jsonContent);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = JsonConvert.DeserializeObject<PaymentLinkResponse>(responseContent);
+
+                    if (result != null && result.Error == 0)
+                    {
+                        return Redirect(result.Data);
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = result?.Message ?? "Failed to create payment link.";
+                        return View("Error");
+                    }
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "API call failed.";
+                    return View("Error");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> RoomBooking([FromBody] RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
@@ -48,21 +112,19 @@ namespace ViewClient.Controllers
                 if (_UserLogin == null)
                 {
 
-                }
-                // Tạo đối tượng đặt phòng
-                var roomBookingCreate = new RoomBookingCreateRequestForCustomer
-                {
-                    CustomerId = _UserLogin,
-                    BookingType = Domain.Enums.BookingType.Online,
-                    TotalPrice = room.Price,
-                    TotalRoomPrice = room.Price,
-                    TotalServicePrice = 0,
-                    TotalExtraPrice = 0,
-                    Status = Domain.Enums.RoomBookingStatus.PENDING,
-                    StaffId = null,
-                    CreatedBy = _UserLogin,
-                    NewId = null
-                };
+                    // Tạo đối tượng đặt phòng
+                    var roomBookingCreate = new RoomBookingCreateRequestForCustomer
+                    {
+                        CustomerId = _UserLogin,
+                        BookingType = Domain.Enums.BookingType.Online,
+                        TotalPrice = room.Price,
+                        TotalRoomPrice = room.Price,
+                        TotalServicePrice = 0,
+                        Status = Domain.Enums.RoomBookingStatus.PENDING,
+                        StaffId = null,
+                        CreatedBy = _UserLogin,
+                        NewId = null
+                    };
 
                 var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
 
@@ -108,7 +170,10 @@ namespace ViewClient.Controllers
                 };
                 await _roomRepo.UpdateRoomStatus(roomStatus);
 
-                return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
+                }
+
+                return View("Details", "Room");
             }
             catch (Exception ex)
             {

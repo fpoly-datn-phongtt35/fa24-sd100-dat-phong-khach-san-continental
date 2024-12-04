@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using Domain.Services.IServices;
 using Domain.Enums;
 using Domain.DTO.PaymentHistory;
+using Domain.DTO.Order;
 
 
 namespace API.Controllers
@@ -47,11 +48,11 @@ namespace API.Controllers
 
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePaymentLink(Guid roomBookingId, PaymentType? paymentType, int? money)
+        public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
-            var urls = "https://my.payos.vn/ff1f9d29a95211ef964c0242ac110002/payment-link";
-            var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
-            var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
+            var urls = "https://localhost:7173/";
+            var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
+            //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
 
             try
             {
@@ -59,9 +60,9 @@ namespace API.Controllers
                 int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
                 string description = "1";
 
-                int amount = paymentType switch
+                int amount = request.PaymentType switch
                 {
-                    PaymentType.Bill => money ?? 0,
+                    PaymentType.Bill => request.Money ?? 0,
                     PaymentType.Deposit => (int)(roomBooking.TotalRoomPrice * 20 / 100)
                 };
 
@@ -69,10 +70,10 @@ namespace API.Controllers
                 var paymentHistory = new PaymentHistoryCreateRequest
                 {
                     OrderCode = orderCode,
-                    RoomBookingId = roomBookingId,
+                    RoomBookingId = request.RoomBookingId,
                     Amount = 0,
                     PaymentTime = DateTime.Now,
-                    Note = paymentType,
+                    Note = request.PaymentType,
                     PaymentMethod =  0
                 };
                 await _paymentHistoryService.AddPaymentHistory(paymentHistory);
@@ -86,7 +87,7 @@ namespace API.Controllers
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-                return Ok(new Response(0, "success", createPayment));
+                return Ok(new Response(0, "success", createPayment.checkoutUrl));
             }
             catch (System.Exception exception)
             {

@@ -5,10 +5,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>List of Floor</h1>
+<h1>Danh sách tầng</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Tạo mới</a>
 </p>
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
@@ -54,11 +54,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.data.First().Name)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().NumberOfRoom)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
-            <th>Building Name</th>
-            <th></th>
+            <th>Tầng</th>
+            <th>Số lượng phòng</th>
+            <th>Trạng thái</th>
+            <th>Tên tòa</th>
+            <th>Chức năng</th>
         </tr>
     </thead>
     <tbody>
