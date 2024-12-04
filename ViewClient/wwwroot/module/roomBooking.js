@@ -28,18 +28,45 @@
 
             $('#depositPayment').text("Đặt cọc: " + depositPayment.toLocaleString() + " VNĐ");
             $('#totalRoomPayment').text("Tiền phòng: " + totalPayment.toLocaleString() + " VNĐ");
+            updateTotalServicePayment();
         } else {
             $('#depositPayment').text("Đặt cọc: 0 VNĐ");
             $('#totalRoomPayment').text("Tiền phòng: 0 VNĐ");
         }
     }
 
-    $('#checkIn, #checkOut').change(function () {
-        var checkIn = new Date($('#checkIn').text().replace("Từ 14:00 ", ""));
-        var checkOut = new Date($('#checkOut').text().replace("Trước 12:00 ", ""));
-        localStorage.setItem("CheckIn", checkIn);
-        localStorage.setItem("CheckOut", checkOut);
-        updateBookingDates(checkIn, checkOut);
+    // Function to calculate total service payment
+    function updateTotalServicePayment() {
+        var totalServicePayment = 0;
+
+        $('.service-checkbox:checked').each(function () {
+            var servicePrice = parseFloat($(this).closest('.form-check').find('span').text().replace(' VNĐ', '').replace(/,/g, ""));
+            var quantity = parseInt($('#quantity_' + $(this).val()).val(), 10);
+            totalServicePayment += servicePrice * quantity;
+        });
+
+        $('#totalServicePayment').text("Tiền dịch vụ: " + totalServicePayment.toLocaleString() + " VNĐ");
+        updateTotalPrice();
+    }
+
+    function updateTotalPrice() {
+        var depositPaymentText = $('#depositPayment').text();
+        var depositPayment = parseFloat(depositPaymentText.replace("Đặt cọc: ", "").replace(" VNĐ", "").replace(/,/g, ""));
+        var roomPriceText = $('#totalRoomPayment').text();
+        var roomPrice = parseFloat(roomPriceText.replace("Tiền phòng: ", "").replace(" VNĐ", "").replace(/,/g, ""));
+        var servicePriceText = $('#totalServicePayment').text();
+        var servicePrice = parseFloat(servicePriceText.replace("Tiền dịch vụ: ", "").replace(" VNĐ", "").replace(/,/g, ""));
+
+        var totalPrice = roomPrice + servicePrice - depositPayment;
+        $('#totalPrice').text("Tổng tiền sau khi đặt cọc: " + totalPrice.toLocaleString() + " VNĐ");
+    }
+
+    $('.service-checkbox').change(function () {
+        updateTotalServicePayment();
+    });
+
+    $('.service-quantity').on('input change', function () {
+        updateTotalServicePayment();
     });
 
     $('#confirmBookingButton').click(function () {
@@ -55,7 +82,8 @@
             CheckInBooking: new Date(localStorage.getItem("CheckIn")).toISOString(),
             CheckOutBooking: new Date(localStorage.getItem("CheckOut")).toISOString(),
             Price: price,
-            SelectedServices: []
+            SelectedServices: [],
+            Customer: Customer
         };
 
         // Lấy danh sách dịch vụ đã chọn
@@ -92,6 +120,7 @@
             }
         });
     });
+
     function showToast(message) {
         var toastHTML = `
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 100px; right: 10px; z-index: 1050;">

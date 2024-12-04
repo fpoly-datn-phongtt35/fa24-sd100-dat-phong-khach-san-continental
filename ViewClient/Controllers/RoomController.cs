@@ -169,12 +169,13 @@ namespace ViewClient.Controllers
                 {
                     // Lấy danh sách dịch vụ
                     var services = await IndexService();
-
+                    var roomType = roomTypesTask?.data?.FirstOrDefault(rt => rt.Id == room.RoomTypeId);
+                    var floor = floorList?.data?.FirstOrDefault(f => f.Id == room.FloorId);
                     var viewModel = new RoomDetailViewModel
                     {
                         Room = room,
-                        Floors = floorList.data,
-                        RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>(),
+                        Floor = floor,
+                        RoomType = roomType,
                         Services = services
                     };
 

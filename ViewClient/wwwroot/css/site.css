@@ -554,7 +554,9 @@ body {
         }
 }
 
-
+.form-group {
+    margin-bottom: 15px; 
+}
 .alert-custom {
     background-color: #f8d7da; /* Nền màu đỏ nhạt */
     color: #721c24; /* Màu chữ đỏ đậm */
@@ -895,21 +897,35 @@ footer p {
     border-radius: 5px;
 }
 .toast {
-    background-color: #f8f9fa; 
-    border: 1px solid #007bff; 
-    border-radius: 5px;
+    background-color: #ffffff; 
+    border: none; 
+    border-radius: 8px; 
     color: #333; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bóng đổ mềm mại */
+    transition: transform 0.3s ease, opacity 0.3s ease; 
 }
 
+    .toast.show {
+        transform: translateY(0);
+        opacity: 1; /* Độ mờ */
+    }
+
+    .toast.hide {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
 .toast-header {
-    background-color: #47d055; 
+    background-color: #007bff; 
     color: white;
-    border-bottom: 1px solid #0056b3;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px; 
+    padding: 10px; 
 }
 
 .toast-body {
-    background-color: #f8f9fa;
-    color: #333; 
+    padding: 10px; 
+    font-size: 14px; 
 }
 
 
