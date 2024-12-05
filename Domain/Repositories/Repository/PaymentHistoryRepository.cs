@@ -67,9 +67,13 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                new SqlParameter("@Amount", request.Amount),
                 new SqlParameter("@RoomBookingId", request.RoomBookingId != null ? request.RoomBookingId : (object)DBNull.Value),
+                new SqlParameter("@CustomerId", request.CustomerId != null ? request.CustomerId : (object)DBNull.Value),
                 new SqlParameter("@Note", request.Note),
+                new SqlParameter("@Amount", request.Amount),
+                new SqlParameter("@PaymentMethod", request.PaymentMethod),
+                new SqlParameter("@FromAmount", request.FromAmount),
+                new SqlParameter("@ToAmount", request.ToAmount),
                 new SqlParameter("@PageSize", request.PageSize),
                 new SqlParameter("@PageIndex", request.PageIndex)
                 };

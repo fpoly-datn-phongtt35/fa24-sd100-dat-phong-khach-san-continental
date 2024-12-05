@@ -65,19 +65,6 @@ namespace API.Controllers
                     PaymentType.Bill => request.Money ?? 0,
                     PaymentType.Deposit => (int)(roomBooking.TotalRoomPrice * 20 / 100)
                 };
-
-                // Thêm bản ghi vào PaymentHistory
-                var paymentHistory = new PaymentHistoryCreateRequest
-                {
-                    OrderCode = orderCode,
-                    RoomBookingId = request.RoomBookingId,
-                    Amount = 0,
-                    PaymentTime = DateTime.Now,
-                    Note = request.PaymentType,
-                    PaymentMethod =  0
-                };
-                await _paymentHistoryService.AddPaymentHistory(paymentHistory);
-
                 ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, amount);
 
 
@@ -87,7 +74,26 @@ namespace API.Controllers
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-                return Ok(new Response(0, "success", createPayment.checkoutUrl));
+                // Nếu tạo liên kết thanh toán thành công
+                if (createPayment != null && !string.IsNullOrEmpty(createPayment.checkoutUrl))
+                {
+                    var paymentHistory = new PaymentHistoryCreateRequest
+                    {
+                        OrderCode = orderCode,
+                        RoomBookingId = request.RoomBookingId,
+                        Amount = 0,
+                        PaymentTime = DateTime.Now,
+                        Note = request.PaymentType,
+                        PaymentMethod = (PaymentMethod)1
+                    };
+
+                    await _paymentHistoryService.AddPaymentHistory(paymentHistory);
+                    return Ok(new Response(0, "success", createPayment.checkoutUrl));
+                }
+                else
+                {
+                    return Ok(new Response(-1, "fail", null));
+                }
             }
             catch (System.Exception exception)
             {
@@ -129,7 +135,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("{orderId}")]
+        [HttpPut("CancelOrder{orderId}")]
         public async Task<IActionResult> CancelOrder([FromRoute] int orderId)
         {
             try

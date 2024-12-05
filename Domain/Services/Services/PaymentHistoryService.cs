@@ -89,7 +89,6 @@ namespace Domain.Services.Services
             }
             return model;
         }
-
         public async Task<PaymentHistory> GetPaymentHistoryById(Guid id)
         {
             PaymentHistory ph = new();
