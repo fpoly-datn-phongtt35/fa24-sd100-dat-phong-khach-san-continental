@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Client;
+using Domain.Enums;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,6 @@ namespace Domain.DTO.RoomBookingDetail
         public RoomBookingStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
         public List<Domain.Models.ServiceOrderDetail>? SelectedServices { get; set; }
+        public ClientInsertCustomerViewModel? Customer { get; set; }
     }
 }

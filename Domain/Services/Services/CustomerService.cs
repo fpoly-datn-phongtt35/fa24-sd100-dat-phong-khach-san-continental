@@ -34,6 +34,30 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request)
+        {
+            var model = new ClientInsertCustomerViewModel();
+            try
+            {
+                DataTable table = await _customerRepo.ClientInsertCustomer(request);
+                if (table != null && table.Rows.Count > 0)
+                {
+                    model = (from row in table.AsEnumerable()
+                             select
+                             new ClientInsertCustomerViewModel
+                             {
+                                 Id = row.Field<Guid>("ExistingCustomerId"),
+
+                             }).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                model.Messenger = ex.InnerException.Message.ToString();
+            }
+            return model;
+        }
+
         public async Task<ClientAuthenicationViewModel> ClientLogin(LoginSubmitModel request)
         {
             var model = new ClientAuthenicationViewModel();
