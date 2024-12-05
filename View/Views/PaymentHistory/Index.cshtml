@@ -1,0 +1,184 @@
+﻿@using Domain.DTO.Paging
+@model ResponseData<Domain.Models.PaymentHistory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Lịch sử giao vịt</h1>
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <select name="paymentType" id="paymentType" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Loại thanh toán --</option>
+            @foreach (var paymentType in ViewBag.PaymentTypeList)
+            {
+                string displayText;
+
+                if (paymentType == Domain.Enums.PaymentType.Deposit)
+                {
+                    displayText = "Đặt cọc";
+                }
+                else if (paymentType == Domain.Enums.PaymentType.Bill)
+                {
+                    displayText = "Thanh toán hóa đơn";
+                }
+                else
+                {
+                    displayText = "Khác";
+                }
+
+                <option value="@((int)paymentType)"
+                        selected="@(Context.Request.Query["paymentType"].ToString() == ((int)paymentType).ToString())">
+                    @displayText
+                </option>
+            }
+        </select>
+
+        <select name="paymentMethod" id="paymentMethod" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Phương thức thanh toán --</option>
+            @foreach (var paymentMethod in ViewBag.PaymentMethodList)
+            {
+                string displayText;
+
+                if (paymentMethod == Domain.Enums.PaymentMethod.Cash)
+                {
+                    displayText = "Tiền mặt";
+                }
+                else if (paymentMethod == Domain.Enums.PaymentMethod.BankTransfer)
+                {
+                    displayText = "Chuyển khoản";
+                }
+                else
+                {
+                    displayText = "Khác";
+                }
+
+                <option value="@((int)paymentMethod)"
+                        selected="@(Context.Request.Query["paymentMethod"].ToString() == ((int)paymentMethod).ToString())">
+                    @displayText
+                </option>
+            }
+        </select>
+
+@*         <select name="roomBookingId" id="roomBookingId" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- RoomBooking --</option>
+            @foreach (var roomBookingId in ViewBag.RoomBookingList)
+            {
+                <option value="@((Guid)roomBookingId)"
+                        selected="@(Context.Request.Query["roomBookingId"].ToString() == ((Guid)roomBookingId).ToString())">
+                    @roomBookingId
+                </option>
+            }
+        </select> *@
+        <select name="customerId" id="customerId" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Khách hàng --</option>
+            @foreach (var customer in ViewBag.CustomerList as List<(Guid, string)>)
+            {
+                <option value="@customer.Item1" selected="@(Context.Request.Query["customerId"].ToString() == customer.Item1.ToString())">
+                    @customer.Item2
+                </option>
+            }
+        </select>
+
+        <input type="number" name="fromAmount" id="fromAmount" class="form-control" value="@Context.Request.Query["fromAmount"]" placeholder="Từ" style="max-width: 100px;" />
+        <input type="number" name="toAmount" id="toAmount" class="form-control" value="@Context.Request.Query["toAmount"]" placeholder="Đến" style="max-width: 100px;" />
+
+        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('paymentType').selectedIndex = 0;
+        document.getElementById('paymentMethod').selectedIndex = 0;
+        document.getElementById('roomBookingId').selectedIndex = 0;
+        document.getElementById('customerId').selectedIndex = 0;
+        document.getElementById('fromAmount').value = '';
+        document.getElementById('toAmount').value = '';
+    }
+</script>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã thanh toán</th>
+            <th>Id đặt phòng</th>
+            <th>Khách hàng</th>
+            <th>Phương thức thanh toán</th>
+            <th>Số tiền</th>
+            <th>Thời gian thanh toán</th>
+            <th>Loại thanh toán</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            var customerName = string.Empty;
+
+            var customerInfos = (List<(Guid roomBookingId, string customerName)>)ViewBag.CustomerList;
+
+            var customerInfo = customerInfos.FirstOrDefault(x => x.roomBookingId == item.RoomBookingId);
+
+            if (customerInfo != default)
+            {
+                customerName = customerInfo.customerName;
+            }
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                <td>@Html.DisplayFor(modelItem => item.RoomBookingId)</td>
+                <td>@customerName</td>
+                <td>
+                    @if (item.PaymentMethod == Domain.Enums.PaymentMethod.BankTransfer)
+                    {
+                        @:Chuyển khoản
+                    }
+                    else if (item.PaymentMethod == Domain.Enums.PaymentMethod.Cash)
+                    {
+                        @:Tiền mặt
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                <td>@Html.DisplayFor(modelItem => item.PaymentTime)</td>
+                <td>
+                    @if (item.Note == Domain.Enums.PaymentType.Deposit)
+                    {
+                        @:Đặt cọc
+                    }
+                    else if (item.Note == Domain.Enums.PaymentType.Bill)
+                    {
+                        @:Thanh toán hóa đơn
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Thanh toán", "Index", new { id = item.Id }, new { @class = "btn btn-success" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                         pageIndex = i,
+                         pageSize = Model.PageSize,
+                         roomBookingId = Context.Request.Query["roomBookingId"].ToString(),
+                         customerId = Context.Request.Query["customerId"].ToString(),
+                         note = Context.Request.Query["note"].ToString(),
+                         amount = Context.Request.Query["amount"].ToString(),
+                         paymentMethod = Context.Request.Query["paymentMethod"].ToString(),
+                         fromAmount = Context.Request.Query["fromAmount"].ToString(),
+                         toAmount = Context.Request.Query["toAmount"].ToString()
+                     })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
