@@ -49,6 +49,7 @@ namespace ViewClient
                 };
 
             });
+            builder.Services.AddMvc().AddSessionStateTempDataProvider();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
