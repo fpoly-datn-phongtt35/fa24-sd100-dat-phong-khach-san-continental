@@ -1,6 +1,8 @@
 ﻿
 using Domain.DTO.RoomBooking;
+using Domain.Enums;
 using Domain.Repositories.IRepository;
+using Domain.Repositories.Repository;
 using Domain.Services.IServices.IRoomBooking;
 
 namespace Domain.Services.Services.RoomBooking;
@@ -33,5 +35,17 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
 
         await _roomBookingRepository.UpdateRoomBooking(existingRoomBooking);
         return existingRoomBooking.ToRoomBookingResponse();
+    }
+
+    public Task<int> UpdateRoomBookingStatus(Guid id, int status)
+    {
+        try
+        {
+            return _roomBookingRepository.UpdateRoomBookingStatus(id, status);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }

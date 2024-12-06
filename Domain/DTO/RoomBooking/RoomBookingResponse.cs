@@ -12,9 +12,10 @@ public class RoomBookingResponse
     public decimal? TotalRoomPrice { get; set; }
     public decimal? TotalServicePrice { get; set; }
     public decimal? TotalExtraPrice { get; set; }
-    public EntityStatus Status { get; set; } = EntityStatus.Active;
+    public RoomBookingStatus Status { get; set; }
     public string? StaffFullName { get; set; }
     public string? CustomerFullName { get; set; }
+    public string? RoomName { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
@@ -101,6 +102,9 @@ public static class RoomBookingResponseExtensions
             // Kiểm tra null trước khi ghép
             StaffFullName = roomBooking.Staff.LastName + " " + roomBooking.Staff.FirstName,
             CustomerFullName = roomBooking.Customer.LastName + " " + roomBooking.Customer.FirstName,
+            RoomName = string.Join(", ", roomBooking.RoomBookingDetails?
+                .Where(detail => detail.Room != null)
+                .Select(detail => detail.Room.Name) ?? new List<string>())
         };
     }
 }

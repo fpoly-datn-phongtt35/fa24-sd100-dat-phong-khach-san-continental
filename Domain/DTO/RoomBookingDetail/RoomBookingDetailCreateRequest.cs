@@ -1,4 +1,6 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.Client;
+using Domain.DTO.Customer;
+using Domain.Enums;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -19,8 +21,11 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Price { get; set; }
         public decimal? ExtraPrice { get; set; }
         public decimal? Deposit { get; set; }
-        public EntityStatus? Status { get; set; }
+        public RoomBookingStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
         public List<Domain.Models.ServiceOrderDetail>? SelectedServices { get; set; }
+        public ClientCreateCustomerRequest? Customer { get; set; }
+        public long? ServicePrice { get; set; }
+        public long? TotalPrice { get; set; }
     }
 }

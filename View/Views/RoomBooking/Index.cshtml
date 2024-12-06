@@ -21,12 +21,12 @@
             <div class="ms-2" style="width:330px">
                 <select name="status" onchange="_roomBooking.OnChangeStatus()" class="form-select p-lg-1" id="status">
                     <option value="">Chọn trạng thái</option>
-                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                    @foreach (var status in Enum.GetValues(typeof(RoomBookingStatus)))
                     {
                         // Ép kiểu status về EntityStatus
-                        var statusEnum = (EntityStatus)status;
+                        var statusEnum = (RoomBookingStatus)status;
                         <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                            @StatusHelper.DisplayNameForEnum(statusEnum)
+                            @StatusHelper.DisplayRoomBookingStatusBadge(statusEnum)
                         </option>
                     }
                 </select>

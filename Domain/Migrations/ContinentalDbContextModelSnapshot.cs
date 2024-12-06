@@ -332,6 +332,37 @@ namespace Domain.Migrations
                     b.ToTable("Floor", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.PaymentHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Note")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("PaymentTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RoomBookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomBookingId");
+
+                    b.ToTable("PaymentHistory");
+                });
+
             modelBuilder.Entity("Domain.Models.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -485,8 +516,8 @@ namespace Domain.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -524,8 +555,8 @@ namespace Domain.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
                         .IsRequired()
@@ -1190,6 +1221,17 @@ namespace Domain.Migrations
                     b.Navigation("Building");
                 });
 
+            modelBuilder.Entity("Domain.Models.PaymentHistory", b =>
+                {
+                    b.HasOne("Domain.Models.RoomBooking", "RoomBooking")
+                        .WithMany("PaymentHistorys")
+                        .HasForeignKey("RoomBookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RoomBooking");
+                });
+
             modelBuilder.Entity("Domain.Models.Post", b =>
                 {
                     b.HasOne("Domain.Models.PostType", "PostType")
@@ -1383,6 +1425,8 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Models.RoomBooking", b =>
                 {
                     b.Navigation("FeedBacks");
+
+                    b.Navigation("PaymentHistorys");
 
                     b.Navigation("RoomBookingDetails");
 

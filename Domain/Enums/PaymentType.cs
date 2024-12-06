@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTO.RoomBooking
+namespace Domain.Enums
 {
-    public record Response(
-    int error,
-    String message,
-    object? data
-);
+    public enum PaymentType
+    {
+        Bill = 0,
+        Deposit = 1
+    }
 }

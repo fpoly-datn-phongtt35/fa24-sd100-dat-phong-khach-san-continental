@@ -17,11 +17,11 @@
     <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
         <div class="me-2">
             <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
-            <input type="date" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+            <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
         </div> 
         <div class="me-2">
             <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
-            <input type="date" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+            <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
         </div>
         <div class="me-2">
             <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
@@ -81,7 +81,7 @@
         }
     }
 </div>
-<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="500">
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img src="~/img/banner1.jpg" class="d-block w-100" alt="...">
@@ -95,16 +95,9 @@
     </div>
 </div>
 
-<h3 style="text-align: center; margin-top: 20px;">Dịch Vụ Của Chúng Tôi</h3>
-<div class="services">
-    <div class="service">
-        <img src="https://example.com/hotel_icon.png" alt="Khách Sạn">
-        <h4>Khách Sạn</h4>
-        <p>Trải nghiệm khách sạn với dịch vụ chuyên nghiệp và hiện đại nhất.</p>
-    </div>
-    <!-- Bạn có thể thêm các dịch vụ khác vào đây -->
-</div>
-
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
 }
+<script>
+  
+</script>

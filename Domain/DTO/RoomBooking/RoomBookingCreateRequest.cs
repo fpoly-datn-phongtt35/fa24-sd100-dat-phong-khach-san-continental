@@ -7,7 +7,7 @@ public class RoomBookingCreateRequest
     public BookingType BookingType { get; set; } = BookingType.Offline;
     public Guid CustomerId { get; set; }
     public Guid? StaffId { get; set; }
-    public EntityStatus Status { get; set; }
+    public RoomBookingStatus Status { get; set; }
     public decimal TotalPrice { get; set; }
     public decimal TotalRoomPrice { get; set; }
     public decimal? TotalServicePrice { get; set; }

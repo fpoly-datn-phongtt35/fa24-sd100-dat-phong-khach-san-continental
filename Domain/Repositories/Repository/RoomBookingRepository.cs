@@ -47,9 +47,18 @@ public class RoomBookingRepository : IRoomBookingRepository
 
             foreach (DataRow row in dataTable.Rows)
             {
-                var roomBooking = ConvertToRoomBookingRow(row);
-                var roomBookingResponse = roomBooking.ToRoomBookingResponse();
-                roomBookings.Add(roomBookingResponse);
+                try
+                {
+                    var roomBooking = ConvertToRoomBookingRow(row);
+                    var roomBookingResponse = roomBooking.ToRoomBookingResponse();
+                    roomBookings.Add(roomBookingResponse);
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi nếu một dòng bị lỗi và tiếp tục xử lý các dòng còn lại
+                    Console.WriteLine($"Error converting row: {ex.Message}");
+                    continue;
+                }
             }
 
             model.data = roomBookings;
@@ -74,9 +83,6 @@ public class RoomBookingRepository : IRoomBookingRepository
 
         return model;
     }
-
-
-
 
     public async Task<RoomBooking?> GetRoomBookingById(Guid roomBookingId)
     {
@@ -147,7 +153,7 @@ public class RoomBookingRepository : IRoomBookingRepository
             Id = Guid.Parse(row["Id"].ToString()!),
             CustomerId = Guid.Parse(row["CustomerId"].ToString()!),
             StaffId = Guid.Parse(row["StaffId"].ToString()!),
-            Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
+            Status = (RoomBookingStatus)Enum.Parse(typeof(RoomBookingStatus), row["Status"].ToString()!),
             TotalExtraPrice = row["TotalExtraPrice"] != DBNull.Value ? (decimal)row["TotalExtraPrice"] : null,
             TotalPrice = row["TotalPrice"] != DBNull.Value ? (decimal)row["TotalPrice"] : null,
             TotalRoomPrice = row["TotalRoomPrice"] != DBNull.Value ? (decimal)row["TotalRoomPrice"] : null,
@@ -246,6 +252,27 @@ public class RoomBookingRepository : IRoomBookingRepository
         catch (Exception ex)
         {
             throw ex;
+        }
+    }
+
+    public async Task<int> UpdateRoomBookingStatus(Guid id, int status)
+    {
+        try
+        {
+            var existingRoomBooking = GetRoomBookingById(id);
+            if (existingRoomBooking == null)
+                throw new Exception("Room booking not found");
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", id) ,
+                new SqlParameter("@Status", status) ,
+            };
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingStatus, parameters);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while updating the room booking", e);
         }
     }
 }

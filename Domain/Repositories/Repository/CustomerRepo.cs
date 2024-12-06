@@ -183,5 +183,28 @@ namespace Domain.Repositories.Repository
                 throw;
             }
         }
+
+        public async Task<DataTable> ClientInsertCustomer(ClientCreateCustomerRequest request)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@UserName", request.UserName),
+                    new SqlParameter("@Password", ! string.IsNullOrEmpty(request.Password) ? PasswordHashingHelper.HashPassword(request.Password) : PasswordHashingHelper.HashPassword("123456")),
+                    new SqlParameter("@FirstName", string.IsNullOrEmpty(request.FirstName) ? DBNull.Value : (object)request.FirstName),
+                    new SqlParameter("@LastName", string.IsNullOrEmpty(request.LastName) ? DBNull.Value : (object)request.LastName),
+                    new SqlParameter("@Email", request.Email),
+                    new SqlParameter("@PhoneNumber", string.IsNullOrEmpty(request.PhoneNumber) ? DBNull.Value : (object)request.PhoneNumber),
+                    new SqlParameter("@CreatedTime", request.CreatedTime)
+                };
+
+                return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_ClientInsertCustomer, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

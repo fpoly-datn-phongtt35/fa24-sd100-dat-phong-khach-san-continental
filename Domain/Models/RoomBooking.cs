@@ -20,7 +20,7 @@ namespace Domain.Models
         public decimal? TotalRoomPrice { get; set; }
         public decimal? TotalServicePrice { get; set; }
         public decimal? TotalExtraPrice { get; set; }
-        public EntityStatus Status { get; set; } = EntityStatus.Active;
+        public RoomBookingStatus Status { get; set; } = RoomBookingStatus.PENDING;
 
         public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
@@ -36,5 +36,6 @@ namespace Domain.Models
         public ICollection<FeedBack> FeedBacks { get; set; }
         public List<VoucherDetail> VoucherDetails { get; set; }
         public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
+        public virtual List<PaymentHistory> PaymentHistorys { get; set; }
     }
 }

@@ -7,6 +7,9 @@ using API.Types;
 using System.Text;
 using System.Security.Cryptography;
 using Domain.Services.IServices;
+using Domain.Enums;
+using Domain.DTO.PaymentHistory;
+using Domain.DTO.Order;
 
 
 namespace API.Controllers
@@ -17,14 +20,15 @@ namespace API.Controllers
     {
         private readonly IRoomBookingGetService _roomBookingGetService;
         private readonly ICustomerService _customerService;
+        private readonly IPaymentHistoryService _paymentHistoryService;
         private readonly PayOS _payOS;
-        public OrderController(IRoomBookingGetService roomBookingGetService, ICustomerService customerService, PayOS payOS)
+        public OrderController(IRoomBookingGetService roomBookingGetService, ICustomerService customerService, IPaymentHistoryService paymentHistoryService, PayOS payOS)
         {
             _roomBookingGetService = roomBookingGetService;
             _customerService = customerService;
+            _paymentHistoryService = paymentHistoryService;
             _payOS = payOS;
         }
-
 
         public static int GenerateOrderCode(Guid roomBookingId)
         {
@@ -44,26 +48,52 @@ namespace API.Controllers
 
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePaymentLink(Guid roomBookingId)
+        public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
-            var urls = "https://localhost:7114/";
-            var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
-            var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
-
+            var urls = "https://localhost:7173/";
+            var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
+            //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
 
             try
             {
-                int orderCode = GenerateOrderCode(roomBookingId);
-                var description = customer.PhoneNumber + 'x' + orderCode;
-                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, (int)(roomBooking?.TotalPrice ?? 0));
+                //int orderCode = GenerateOrderCode(roomBookingId);
+                int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+                string description = "1";
 
-                List<ItemData> items = new List<ItemData>() ;
-                items.Add(item);
-                PaymentData paymentData = new PaymentData(orderCode, (int)roomBooking.TotalPrice, description, items, urls, urls);
+                int amount = request.PaymentType switch
+                {
+                    PaymentType.Bill => request.Money ?? 0,
+                    PaymentType.Deposit => (int)(roomBooking.TotalRoomPrice * 20 / 100)
+                };
+                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, amount);
+
+
+                List<ItemData> items = new List<ItemData>() { item };
+                PaymentData paymentData = new PaymentData(orderCode, (int)amount, description, items,
+                    urls, urls);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
-                return Ok(new Response(0, "success", createPayment));
+                // Nếu tạo liên kết thanh toán thành công
+                if (createPayment != null && !string.IsNullOrEmpty(createPayment.checkoutUrl))
+                {
+                    var paymentHistory = new PaymentHistoryCreateRequest
+                    {
+                        OrderCode = orderCode,
+                        RoomBookingId = request.RoomBookingId,
+                        Amount = 0,
+                        PaymentTime = DateTime.Now,
+                        Note = request.PaymentType,
+                        PaymentMethod = (PaymentMethod)1
+                    };
+
+                    await _paymentHistoryService.AddPaymentHistory(paymentHistory);
+                    return Ok(new Response(0, "success", createPayment.checkoutUrl));
+                }
+                else
+                {
+                    return Ok(new Response(-1, "fail", null));
+                }
             }
             catch (System.Exception exception)
             {
@@ -83,11 +113,9 @@ namespace API.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
-
         }
 
         [HttpGet("GetOrderLink/{orderId}")]
@@ -102,14 +130,12 @@ namespace API.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
-
         }
 
-        [HttpPut("{orderId}")]
+        [HttpPut("CancelOrder{orderId}")]
         public async Task<IActionResult> CancelOrder([FromRoute] int orderId)
         {
             try
@@ -119,7 +145,6 @@ namespace API.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }

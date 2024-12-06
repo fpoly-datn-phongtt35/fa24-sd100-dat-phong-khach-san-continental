@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Create Payment Link";
+}
+
+<h2>Create Payment Link</h2>
+
+<form method="post" asp-controller="RoomBooking" asp-action="CreatePaymentLink">
+    <div class="form-group">
+        <label for="roomBookingId">Room Booking ID:</label>
+        <input type="text" class="form-control" id="roomBookingId" name="roomBookingId" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Create Payment Link</button>
+</form>
