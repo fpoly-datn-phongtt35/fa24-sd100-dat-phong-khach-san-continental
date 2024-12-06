@@ -80,7 +80,7 @@
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Giá phòng(VNĐ/đêm)")</dt>
-                <dd>@Html.DisplayFor(model => model.Room.Price)</dd>
+                <dd>@Math.Round(Model.Room.Price ?? 0)</dd>
             </div>
             <div class="info-row">
                 <dt>@Html.DisplayName("Địa chỉ của khách sạn/phòng")</dt>
@@ -121,6 +121,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div id="validationMessage" style="color: red;"></div>
+            @* if (TempData["ErrorCreate"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorCreate"]
+                </div>
+            } *@
             <div class="modal-body">
                 <div style="display: flex; flex-direction: column; align-items: flex-start;">
                     <h6 style="margin: 0;"><i class="fa-regular fa-clock"></i> Giờ nhận phòng: <strong id="checkIn">Từ 14:00</strong></h6>
@@ -128,7 +134,7 @@
                 </div>
                 <br />
                 <dt>@Model.Room.Name</dt>
-                <p class="font-monospace">Giá: @Model.Room.Price VNĐ/đêm</p>
+                <p class="font-monospace">Giá: @Math.Round(Model.Room.Price ?? 0) VNĐ/đêm</p>
                 
                 <div>
                     @if (Context.Session.GetString("UserName") == null)
@@ -180,7 +186,9 @@
                             <div class="form-check" style="display: flex; align-items: center; margin-bottom: 10px;">
                                 <input class="form-check-input service-checkbox" type="checkbox" value="@service.Id" id="service_@service.Id" style="margin-right: 10px;">
                                 <label class="form-check-label" for="service_@service.Id" style="flex-grow: 1;">
-                                    <strong>@service.Name</strong> - <span style="color: green;">@service.Price VNĐ</span> / @service.Unit
+                                    <strong>@service.Name</strong> - <span style="color: green;" data-price="@service.Price">
+                                        @(Math.Round(@service.Price).ToString("N0")) VNĐ
+                                    </span> / @service.Unit
                                 </label>
                                 <input type="number" class="form-control quantity-input service-quantity" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
                             </div>
@@ -209,7 +217,7 @@
     </div>
 </div>
 <script>
-    var isUserLoggedIn = @User.Identity.IsAuthenticated.ToString().ToLower();
+    var isUserLoggedIn = '@User.Identity.IsAuthenticated.ToString().ToLower()';
     var roomId = '@Model.Room.Id';
     var roomPrice = '@Model.Room.Price';
     var bookingUrl = '@Url.Action("RoomBooking", "RoomBooking")';

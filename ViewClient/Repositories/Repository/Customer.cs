@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Customer;
+﻿using Domain.DTO.Client;
+using Domain.DTO.Customer;
 using Newtonsoft.Json;
 using System.Data;
 using ViewClient.Models.DTO.Login;
@@ -15,14 +16,14 @@ namespace ViewClient.Repositories.Repository
             _httpClient = httpClient;
         }
 
-        public async Task<DataTable> ClientInsertCustomer(ClientCreateCustomerRequest request)
+        public async Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request)
         {
             string url = $"https://localhost:7130/api/Customer/ClientCreateCustomer";
             var response = await _httpClient.PostAsJsonAsync(url, request);
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<DataTable>(resultString);
+                var result = JsonConvert.DeserializeObject<ClientInsertCustomerViewModel>(resultString);
                 return result;
             }
 
