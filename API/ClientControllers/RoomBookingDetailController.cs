@@ -8,7 +8,6 @@ namespace API.ClientControllers
     [ApiController]
     public class RoomBookingDetailController : ControllerBase
     {
-
         private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailService;
         public RoomBookingDetailController(IRoomBookingDetailServiceForCustomer roomBookingDetailService)
         {

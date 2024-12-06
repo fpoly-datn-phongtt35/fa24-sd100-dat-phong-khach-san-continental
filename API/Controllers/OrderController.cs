@@ -50,7 +50,8 @@ namespace API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
-            var urls = "https://localhost:7173/";
+            var cancelUrl = "https://www.google.com/";
+            var successUrl = "https://www.google.com/";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
             //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
 
@@ -70,7 +71,7 @@ namespace API.Controllers
 
                 List<ItemData> items = new List<ItemData>() { item };
                 PaymentData paymentData = new PaymentData(orderCode, (int)amount, description, items,
-                    urls, urls);
+                    cancelUrl, successUrl);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
 
