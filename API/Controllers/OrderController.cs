@@ -50,8 +50,8 @@ namespace API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
-            var cancelUrl = "https://www.google.com/";
-            var successUrl = "https://www.google.com/";
+            var cancelUrl = "https://localhost:7130/api/PaymentHistory/payment/callback";
+            var successUrl = "https://localhost:7130/api/PaymentHistory/payment/callback";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
             //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
 

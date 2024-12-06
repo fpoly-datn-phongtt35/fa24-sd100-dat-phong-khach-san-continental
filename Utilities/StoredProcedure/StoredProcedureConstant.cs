@@ -160,6 +160,6 @@ namespace Utilities.StoredProcedure
         public const string SP_GetListPaymentHistory = "SP_GetListPaymentHistory";
         public const string SP_UpdatePaymentHistoryAmount = "SP_UpdatePaymentHistoryAmount";
         public const string SP_DeletePaymentHistory = "SP_DeletePaymentHistory";
-        
+        public const string SP_GetPaymentHistoryByOrderCode = "SP_GetPaymentHistoryByOrderCode";
     }
 }

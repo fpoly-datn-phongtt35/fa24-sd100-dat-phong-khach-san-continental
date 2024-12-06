@@ -61,6 +61,24 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<DataTable> GetPaymentHistoryByOrderCode(long orderCode)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new ("@OrderCode", orderCode != null ? orderCode : DBNull.Value ),
+                };
+
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetPaymentHistoryByOrderCode, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
         public async Task<DataTable> GetListPaymentHistory(PaymentHistoryGetRequest request)
         {
             try
