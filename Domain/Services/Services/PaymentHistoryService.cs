@@ -113,6 +113,33 @@ namespace Domain.Services.Services
             }
             return ph;
         }
+        
+        public async Task<PaymentHistory> GetPaymentHistoryByOrderCode(long orderCode)
+        {
+            PaymentHistory paymentHistory = new();
+            try
+            {   
+                DataTable table = await _paymentHistoryRepo.GetPaymentHistoryByOrderCode(orderCode);
+                paymentHistory = (from row in table.AsEnumerable()
+                    select new PaymentHistory
+                    {
+                        Id = row.Field<Guid>("Id"),
+                        OrderCode = row.Field<int>("OrderCode"),
+                        RoomBookingId = row.Field<Guid>("RoomBookingId"),
+                        PaymentMethod = row.Field<PaymentMethod>("PaymentMethod"),
+                        Amount = row.Field<decimal>("Amount"),
+                        PaymentTime = row.Field<DateTimeOffset>("PaymentTime"),
+                        Note = row.Field<PaymentType>("Note")
+                    }).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return paymentHistory;
+        }
 
         public Task<int> UpdatePaymentHistoryAmount(Guid id, decimal amount)
         {
