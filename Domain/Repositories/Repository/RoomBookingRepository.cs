@@ -152,7 +152,9 @@ public class RoomBookingRepository : IRoomBookingRepository
         {
             Id = Guid.Parse(row["Id"].ToString()!),
             CustomerId = Guid.Parse(row["CustomerId"].ToString()!),
-            StaffId = Guid.Parse(row["StaffId"].ToString()!),
+            StaffId = row["StaffId"] != DBNull.Value && Guid.TryParse(row["StaffId"].ToString(), out var staffGuid) 
+                ? staffGuid 
+                : (Guid?)null,
             Status = (RoomBookingStatus)Enum.Parse(typeof(RoomBookingStatus), row["Status"].ToString()!),
             TotalExtraPrice = row["TotalExtraPrice"] != DBNull.Value ? (decimal)row["TotalExtraPrice"] : null,
             TotalPrice = row["TotalPrice"] != DBNull.Value ? (decimal)row["TotalPrice"] : null,
@@ -172,12 +174,14 @@ public class RoomBookingRepository : IRoomBookingRepository
                 FirstName = customerFirstName,
                 LastName = customerLastName
             },
-            Staff = new Staff()
-            {
-                Id = Guid.Parse(row["StaffId"].ToString()!),
-                FirstName = staffFirstName,
-                LastName = staffLastName
-            }
+            Staff = row["StaffId"] != DBNull.Value
+                ? new Staff
+                {
+                    Id = Guid.Parse(row["StaffId"].ToString()!),
+                    FirstName = staffFirstName,
+                    LastName = staffLastName
+                }
+                : null
         };
     }
 

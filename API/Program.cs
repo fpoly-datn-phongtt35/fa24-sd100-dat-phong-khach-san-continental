@@ -18,6 +18,7 @@ using Utilities.StoredProcedure;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomTypeService;
+using Domain.Services.Services.Email;
 using Domain.Services.Services.Room;
 using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomTypeService;
@@ -40,6 +41,9 @@ namespace API
             builder.Services.AddSingleton(payOS);
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+            builder.Services.AddTransient<SendMailService>();
+            
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: "abc", builder =>

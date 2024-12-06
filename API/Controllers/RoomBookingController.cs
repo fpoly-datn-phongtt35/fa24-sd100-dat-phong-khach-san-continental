@@ -38,6 +38,7 @@ public class RoomBookingController : Controller
         _paymentHistoryService = paymentHistoryService;
         _payOS = payOS;
     }
+    
     [HttpPost("CreateRoomBooking")]
     public async Task<int> CreateRoomBooking(RoomBookingCreateRequest request)
     {
@@ -50,6 +51,7 @@ public class RoomBookingController : Controller
             throw ex;
         }
     }
+    
     [HttpPost(nameof(GetFilteredRoomBookings))]
     public async Task<ResponseData<RoomBookingResponse>> GetFilteredRoomBookings
         (RoomBookingGetRequest roomBookingGetRequest)

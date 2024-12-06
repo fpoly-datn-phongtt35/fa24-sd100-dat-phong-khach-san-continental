@@ -58,8 +58,6 @@ namespace API.Controllers
             }
         }
 
-
-
         [HttpPut("UpdateFloor")]
         public async Task<int> UpdateFloor(FloorUpdateRequest request)
         {
