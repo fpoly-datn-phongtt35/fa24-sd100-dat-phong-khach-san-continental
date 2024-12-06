@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Customer;
+﻿using Domain.DTO.Client;
+using Domain.DTO.Customer;
 using System.Data;
 
 namespace ViewClient.Repositories.IRepository
@@ -6,6 +7,6 @@ namespace ViewClient.Repositories.IRepository
     public interface ICustomer
     {
         Task<DataTable> GetCustomerById(Guid id);
-        Task<DataTable> ClientInsertCustomer(ClientCreateCustomerRequest request);
+        Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request);
     }
 }

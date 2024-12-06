@@ -17,11 +17,11 @@
     <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
         <div class="me-2">
             <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
-            <input type="date" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+            <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
         </div> 
         <div class="me-2">
             <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
-            <input type="date" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+            <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
         </div>
         <div class="me-2">
             <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
@@ -98,3 +98,6 @@
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
 }
+<script>
+  
+</script>

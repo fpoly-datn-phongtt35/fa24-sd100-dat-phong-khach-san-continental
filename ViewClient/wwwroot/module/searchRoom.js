@@ -87,6 +87,20 @@ function validateDates() {
     document.getElementById('checkOut').setAttribute('min', checkInValue);
     return true;
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    flatpickr("#checkIn", {
+        plugins: [new rangePlugin({ input: "#checkOut" })],
+        dateFormat: "Y-m-d",
+        minDate: today
+    });
+    flatpickr("#checkOut", {
+        dateFormat: "Y-m-d",
+        minDate: tomorrow
+    });
+});
 function showToast(message) {
     var toastHTML = `
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 120px; right: 10px; z-index: 1050;">

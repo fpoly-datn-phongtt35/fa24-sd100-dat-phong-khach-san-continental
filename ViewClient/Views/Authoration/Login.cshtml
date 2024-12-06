@@ -15,12 +15,12 @@
             {
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     @Html.ValidationSummary(true, "", new { @class = "mb-0" })
-                   
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
             <div class="form-row">
                 <label for="username">Tài khoản</label>
-                <input type="text" class="form-control" id="username" name="Username" placeholder="Nhập vào tài khoản..." required />
+                <input type="text" class="form-control" id="username" name="Username" placeholder="Nhập vào tài khoản hoặc email..." required />
             </div>
             @Html.ValidationMessage("Username")
             <div class="form-row">
