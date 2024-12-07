@@ -176,7 +176,7 @@ namespace API.Controllers
                     await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
                     // Có thể cập nhật trạng thái RoomBooking nếu cần
                     await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
-                        1); // Trạng thái hủy
+                        3); // Trạng thái hủy
                 }
 
                 return Ok(new Response(0, "Cập nhật thanh toán thành công", null));

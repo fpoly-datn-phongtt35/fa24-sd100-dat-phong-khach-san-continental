@@ -161,5 +161,11 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdatePaymentHistoryAmount = "SP_UpdatePaymentHistoryAmount";
         public const string SP_DeletePaymentHistory = "SP_DeletePaymentHistory";
         public const string SP_GetPaymentHistoryByOrderCode = "SP_GetPaymentHistoryByOrderCode";
+
+        //residence registration
+        public const string SP_InsertResidenceRegistration = "SP_InsertResidenceRegistration";
+        public const string SP_GetListResidence = "SP_GetListResidence";
+        public const string SP_DeleteResidence = "SP_DeleteResidence";
+        public const string SP_UpdateResidence = "SP_UpdateResidence";
     }
 }
