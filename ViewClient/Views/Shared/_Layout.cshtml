@@ -28,7 +28,7 @@
             <div class="navbar-right">
                 @if (Context.Session.GetString("UserName") == null)
                 {
-                    <button class="nav-button"><a href="/login">Đăng Nhập</a></button>
+                    <button class="nav-button-another"><a href="/login">Đăng Nhập</a></button>
                     <button class="nav-button"><a href="/register">Đăng ký</a></button>
                 }
                 else
@@ -67,9 +67,11 @@
                     <img src="~/img/cer2.svg" alt="Certificate 2">
                     <img src="~/img/cer3.webp" alt="Certificate 3">
                 </div>
+                <span class="ps-5 fs-3 fw-bold">Đối tác thanh toán</span>
+                <div class="footer-certificates ps-5">
+                    <img src="~/img/images.png" alt="Certificate 1">
+                </div>
             </div>
-
-
 
             <!-- Links Section -->
             <div class="footer-links">
@@ -99,7 +101,7 @@
 
             <!-- Social Medias -->
             <div class="social-media-section">
-                <h4>Follow us on</h4>
+                <h4>Theo dõi</h4>
                 <div class="social-media-logos">
                     <a href="#">
                         <img src="~/img/instagram.png" alt="Insta">
