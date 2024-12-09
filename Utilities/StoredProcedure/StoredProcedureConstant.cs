@@ -138,8 +138,8 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomBooking = "SP_UpdateRoomBooking";
         public const string SP_InsertRoomBookingForCustomer = "SP_InsertRoomBookingForCustomer";
         public const string SP_InsertRoomBooking = "SP_InsertRoomBooking";
-
         public const string SP_UpdateRoomBookingStatus = "SP_UpdateRoomBookingStatus";
+        public const string SP_GetCheckinRoomBookingByRoomBookingId = "SP_GetCheckinRoomBookingByRoomBookingId";
 
 
         // RoomBookingDetail
@@ -161,5 +161,8 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdatePaymentHistoryAmount = "SP_UpdatePaymentHistoryAmount";
         public const string SP_DeletePaymentHistory = "SP_DeletePaymentHistory";
         public const string SP_GetPaymentHistoryByOrderCode = "SP_GetPaymentHistoryByOrderCode";
+        public const string SP_GetTotalPaidAmountByRoomBookingId = "SP_GetTotalPaidAmountByRoomBookingId";
+
+        
     }
 }

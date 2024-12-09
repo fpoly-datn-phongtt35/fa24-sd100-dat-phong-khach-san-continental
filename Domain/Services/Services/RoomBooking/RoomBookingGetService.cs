@@ -75,4 +75,9 @@ public class RoomBookingGetService : IRoomBookingGetService
             return null;
         }
     }
+
+    public async Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId)
+    {
+        return await _roomBookingRepository.GetCheckinRoomBookingByRoomBookingId(roomBookingId);
+    }
 }

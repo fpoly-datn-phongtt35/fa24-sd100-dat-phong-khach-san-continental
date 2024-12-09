@@ -265,7 +265,71 @@ namespace Utilities.StoredProcedure
                 return null;
             }
         }
+        
+        public async Task<object> ExecuteScalarAsync(string storedProcedureName, SqlParameter[] parameters)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connection))
+                {
+                    await connection.OpenAsync();
 
+                    using (var command = new SqlCommand(storedProcedureName, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        if (parameters != null && parameters.Length > 0)
+                        {
+                            command.Parameters.AddRange(parameters);
+                        }
+
+                        var result = await command.ExecuteScalarAsync();
+
+                        return result ?? DBNull.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi và ném lại lỗi nếu cần
+                Console.WriteLine($"Error in ExecuteScalarAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<SqlDataReader> ExecuteReaderAsync(string storedProcedureName, SqlParameter[] sqlParameters)
+        {
+            SqlDataReader reader = null;
+            try
+            {
+                // Mở kết nối đến cơ sở dữ liệu
+                var connection = new SqlConnection(_connection); // Đảm bảo _connection được cấu hình chính xác
+                await connection.OpenAsync(); // Mở kết nối bất đồng bộ
+
+                // Tạo đối tượng command để thực thi stored procedure
+                using (var command = new SqlCommand(storedProcedureName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure; // Chỉ rõ đây là một stored procedure
+
+                    // Thêm các tham số vào command
+                    if (sqlParameters != null && sqlParameters.Length > 0)
+                    {
+                        command.Parameters.AddRange(sqlParameters);
+                    }
+
+                    // Thực thi stored procedure và trả về SqlDataReader
+                    reader = await command.ExecuteReaderAsync();
+                }
+                return reader; // Trả về SqlDataReader để xử lý kết quả
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing SQL query: " + ex.Message);
+                throw;
+            }
+        }
+
+        
         public int ExecuteNonQuery(string procedureName, SqlParameter[] parameters = null)
         {
             try
