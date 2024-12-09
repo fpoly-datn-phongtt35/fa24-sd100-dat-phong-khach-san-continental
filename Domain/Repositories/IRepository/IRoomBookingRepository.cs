@@ -16,4 +16,5 @@ public interface IRoomBookingRepository
     Task<Guid> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request);
     Task<int> CreateRoomBooking(RoomBookingCreateRequest request);
     Task<int> UpdateRoomBookingStatus(Guid id, int status);
+    Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId);
 }

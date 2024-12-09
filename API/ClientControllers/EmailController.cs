@@ -14,14 +14,14 @@ public class EmailController : Controller
         _sendMailService = sendMailService;
     }
 
-    [HttpPost("send-email")]
+    [HttpPost("send-email-test")]
     public async Task<IActionResult> SendEmail(EmailRequest? emailRequest)
     {
         if (emailRequest == null || string.IsNullOrEmpty(emailRequest.ToEmail))
         {
             return BadRequest("Invalid email request");
         }
-        
+
         string subject;
         string body;
 
@@ -30,24 +30,31 @@ public class EmailController : Controller
             case 1: // Nhắc nhở khi có lịch đặt phòng đến hẹn
                 subject = "Nhắc nhở lịch đặt phòng";
                 body = $@"
-                    <h3>Xin chào,</h3>
-                    <p>Đây là nhắc nhở rằng bạn có một lịch đặt phòng sắp đến hạn.</p>
-                    <p>Chi tiết lịch hẹn:</p>
-                    <ul>
-                        <li>Phòng: P808</li>
-                        <li>Thời gian: 14:00, ngày 5/12/2024</li>
-                    </ul>
-                    <p>Xin vui lòng đảm bảo đến đúng giờ. Xin cảm ơn!</p>";
+                <h3>Xin chào,</h3>
+                <p>Đây là nhắc nhở rằng bạn có một lịch đặt phòng sắp đến hạn.</p>
+                <p>Chi tiết đặt phòng:</p>
+                <ul>
+                    <li>Phòng: {emailRequest.RoomDetails}</li>
+                    <li>Thời gian đặt: {emailRequest.BookingTime}</li>
+                </ul>
+                <p>Xin vui lòng đảm bảo đến đúng giờ. Xin cảm ơn!</p>";
                 break;
 
             case 2: // Xác nhận đặt phòng
                 subject = "Xác nhận đặt phòng";
                 body = $@"
                     <h3>Xin chào,</h3>
-                    <p>Bạn đã đặt phòng P808 thành công.</p>
-                    <p>Thời gian: 14:00, ngày 5/12/2024</p>
+                    <p>Bạn đã đặt phòng thành công.</p>
+                    <p>Chi tiết đặt phòng:</p>
+                    <ul style='font-family: Arial, sans-serif;'>
+                        <li><strong>Phòng:</strong>     {emailRequest.RoomDetails}</li>
+                        <li><strong>Thời gian đặt:</strong>     {emailRequest.BookingTime}</li>
+                        <li><strong>Tổng tiền phòng:</strong>      {FormatCurrency(emailRequest.TotalPrice)} VND</li>
+                        <li><strong>Số tiền đã thanh toán:</strong>     {FormatCurrency(emailRequest.PaidAmount)} VND</li>
+                    </ul>
                     <p>Nếu bạn không thực hiện đặt phòng này, hãy bỏ qua email này. Xin cảm ơn!</p>";
                 break;
+
 
             default:
                 return BadRequest("Invalid email type.");
@@ -69,10 +76,24 @@ public class EmailController : Controller
 
         return StatusCode(500, "Failed to send email.");
     }
+
+    private string FormatCurrency(decimal? amount)
+    {
+        if (amount.HasValue)
+        {
+            return string.Format("{0:N0}", amount.Value); // Định dạng với dấu phẩy hàng nghìn
+        }
+
+        return "0"; // Nếu không có giá trị, trả về "0"
+    }
 }
 
 public class EmailRequest
 {
     public string ToEmail { get; set; } // Email người nhận
     public int EmailType { get; set; } // 1: Nhắc nhở, 2: Xác nhận
+    public string? RoomDetails { get; set; }
+    public string? BookingTime { get; set; }
+    public decimal? TotalPrice { get; set; }
+    public decimal? PaidAmount { get; set; }
 }

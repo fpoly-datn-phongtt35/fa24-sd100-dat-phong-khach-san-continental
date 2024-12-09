@@ -108,4 +108,29 @@ public static class RoomBookingResponseExtensions
                 : "No Customer Assigned", 
         };
     }
+    
+    public static Models.RoomBooking ToRoomBooking(this RoomBookingResponse response)
+    {
+        return new Models.RoomBooking()
+        {
+            Id = response.Id,
+            BookingType = response.BookingType,
+            CustomerId = response.CustomerId,
+            StaffId = response.StaffId,
+            TotalServicePrice = response.TotalServicePrice,
+            TotalExtraPrice = response.TotalExtraPrice,
+            TotalRoomPrice = response.TotalRoomPrice,
+            TotalPrice = response.TotalPrice,
+            Status = response.Status,
+            CreatedTime = response.CreatedTime,
+            CreatedBy = response.CreatedBy,
+            ModifiedTime = response.ModifiedTime,
+            ModifiedBy = response.ModifiedBy,
+            Deleted = response.Deleted,
+            DeletedTime = response.DeletedTime,
+            DeletedBy = response.DeletedBy,
+            // Nếu cần thêm các trường khác, ánh xạ chúng tại đây
+        };
+    }
+
 }

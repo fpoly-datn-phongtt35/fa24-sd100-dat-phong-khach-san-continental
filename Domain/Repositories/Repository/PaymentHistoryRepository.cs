@@ -61,6 +61,30 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<decimal> GetTotalPaidAmountByRoomBookingId(Guid roomBookingId)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new ("@Id", roomBookingId),
+                };
+                var result = await _DbWorker.ExecuteScalarAsync(StoredProcedureConstant
+                    .SP_GetTotalPaidAmountByRoomBookingId, sqlParameters);
+                return result != null && decimal.TryParse(result.ToString(), out var amount) ? amount : 0m;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        
+
+
+
+        
         public async Task<DataTable> GetPaymentHistoryByOrderCode(long orderCode)
         {
             try
