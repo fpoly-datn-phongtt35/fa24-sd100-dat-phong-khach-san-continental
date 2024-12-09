@@ -268,6 +268,11 @@ namespace API.Controllers
                 }
                 else if (paymentInfo.status == "CANCELLED")
                 {
+                    // Nếu thanh toán bị hủy, xóa lịch sử thanh toán
+                    await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
+                    // Có thể cập nhật trạng thái RoomBooking nếu cần
+                    await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
+                        3); // Trạng thái hủy
                     await HandleCancelledStatus(paymentHistory);
                 }
 

@@ -92,6 +92,9 @@ namespace API
             builder.Services.AddTransient<IVoucherDetailRepo, VoucherDetailRepo>();
             builder.Services.AddTransient<IVoucherDetailService, VoucherDetailService>();
 
+            builder.Services.AddTransient<IResidenceRegistrationRepo, ResidenceRegistrationRepo>();
+            builder.Services.AddTransient<IResidenceRegistrationService, ResidenceRegistrationService>();
+
             builder.Services.AddTransient<IPaymentHistoryRepository, PaymentHistoryRepository>();
             builder.Services.AddTransient<IPaymentHistoryService, PaymentHistoryService>();
 

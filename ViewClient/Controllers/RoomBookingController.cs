@@ -197,8 +197,8 @@ namespace ViewClient.Controllers
                 };
                 await _roomRepo.UpdateRoomStatus(roomStatus);
 
-                return RedirectToAction("Index", "Home");
-                //return Json(new { success = true, roomBookingId = roomBooking });
+                //return RedirectToAction("Index", "Home");
+                return Json(new { success = true, roomBookingId = roomBooking });
             }
             catch (Exception ex)
             {

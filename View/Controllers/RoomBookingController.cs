@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
 using Domain.DTO.Floor;
 using Domain.DTO.Paging;
+using Domain.DTO.ResidenceRegistration;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
@@ -42,6 +43,7 @@ public class RoomBookingController : Controller
     private readonly IServiceOrderDetailService _serviceOrderDetailService;
     private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
+    private readonly IResidenceRegistrationService _residenceRegistrationService;
 
     public RoomBookingController(IRoomTypeGetService roomTypeServiceGetService, IFloorService floorService, IRoomBookingUpdateService roomBookingUpdateService, IServiceOrderDetailService serviceOrderDetailService, IServiceTypeService serviceTypeService, IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService, ICustomerService customerService, IRoomGetService roomGetService, IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
