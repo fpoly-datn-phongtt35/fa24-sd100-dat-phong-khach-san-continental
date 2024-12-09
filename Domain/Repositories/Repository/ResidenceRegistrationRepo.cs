@@ -34,8 +34,8 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Gender", request.Gender),
                     new SqlParameter("@IdentityNumber", request.IdentityNumber),
                     new SqlParameter("@PhoneNumber", request.PhoneNumber),
-                    new SqlParameter("@CreatedTime", DateTimeOffset.Now),
-                    new SqlParameter("@CreatedBy", request.CreatedBy)
+                    //new SqlParameter("@CreatedTime", DateTimeOffset.Now),
+                    //new SqlParameter("@CreatedBy", request.CreatedBy)
                 };
                 return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertResidenceRegistration, sqlParameters);
             }
@@ -109,9 +109,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@DateOfBirth", request.DateOfBirth),
                     new SqlParameter("@Gender", request.Gender),
                     new SqlParameter("@IdentityNumber", request.IdentityNumber),
-                    new SqlParameter("@PhoneNumber", request.PhoneNumber),
-                    new SqlParameter("@ModifiedTime", DateTimeOffset.Now),
-                    new SqlParameter("@ModifiedBy", request.ModifiedBy)
+                    new SqlParameter("@PhoneNumber", request.PhoneNumber) 
                 };
 
                 return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateResidence, sqlParameters);

@@ -15,7 +15,7 @@ namespace Domain.DTO.ResidenceRegistration
         public GenderType? Gender { get; set; }
         public string? IdentityNumber { get; set; }
         public string? PhoneNumber { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public DateTimeOffset? CreatedTime { get; set; } = DateTimeOffset.Now;
+        //public Guid? CreatedBy { get; set; }
+        //public DateTimeOffset? CreatedTime { get; set; } = DateTimeOffset.Now;
     }
 }
