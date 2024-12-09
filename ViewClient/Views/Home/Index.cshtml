@@ -13,7 +13,7 @@
 }
 
 <div class="search-box">
-    <h3 style="text-align: center;">Tìm Kiếm Phòng</h3>
+@*     <h3 style="text-align: center;">Tìm Kiếm Phòng</h3> *@
     <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
         <div class="me-2">
             <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
@@ -31,7 +31,7 @@
             <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
             <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
         </div>
-        <button type="submit" id="validateButton" class="btn btn-primary">Tìm Kiếm</button>
+        <button type="submit" id="validateButton" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
     </form>
 </div>
 <div class="container">
@@ -48,7 +48,7 @@
             {
                 <h3 class="room-type-title d-flex">
                     Loại phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.Name</p> -
-                    Số lượng người: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.MaximumOccupancy</p>
+                    Số lượng người/phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.MaximumOccupancy</p>
                 </h3>
                 <div class="row mb-2">
                     @foreach (var room in group)
@@ -70,7 +70,7 @@
                                             }
                                         }
                                     </div>
-                                    <p>Giá: @Html.DisplayFor(modelItem => room.Price)</p>
+                                    <p>đ @String.Format("{0:N0}", room.Price) / ngày</p>
                                   
                                 </div>
                             </a>
@@ -98,6 +98,3 @@
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
 }
-<script>
-  
-</script>

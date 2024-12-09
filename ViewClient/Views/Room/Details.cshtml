@@ -7,7 +7,7 @@
 @{
     ViewData["Title"] = "Details";
 }
-<h4 style="margin-top:10px;">Đặt phòng của bạn</h4>
+<div class="room-info">@Html.DisplayFor(model => model.Room.Name)</div>
 
 <div class="d-flex" style="padding:10px;">
     <div class="img-column me-3">
@@ -106,9 +106,9 @@
     </div>
 </div>
 
-<div>
+<div style="padding:10px;">
     <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Quay lại</a>
-    <button type="button" class="btn btn-primary" id="openModalButton">
+    <button type="button" class="btn btn-primary" id="openModalButton" style="font-weight:600; padding:10px;">
         Đặt phòng
     </button>
 </div>
