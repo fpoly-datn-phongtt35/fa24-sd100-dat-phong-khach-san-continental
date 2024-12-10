@@ -874,7 +874,7 @@ var _roombooking_detail = {
                         <select id="gender" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;">
                             <option value="1" ${gender === 'Nam' ? 'selected' : ''}>Nam</option>
                             <option value="2" ${gender === 'Nữ' ? 'selected' : ''}>Nữ</option>
-                            <option value="3" ${gender === 'Khác' ? 'selected' : ''}>Khác</option>
+                            <option value="0" ${gender === 'Khác' ? 'selected' : ''}>Khác</option>
                         </select>
                     </div>
 
