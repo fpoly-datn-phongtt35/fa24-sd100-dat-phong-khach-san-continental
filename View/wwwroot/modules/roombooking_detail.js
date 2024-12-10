@@ -1089,7 +1089,7 @@ var _roombooking_detail = {
             const saveButton = document.createElement('button');
             saveButton.innerText = 'Lưu';
             saveButton.style.backgroundColor = '#008CBA';  
-            saveButton.style.color = 'white';  /
+            saveButton.style.color = 'white';  
             saveButton.style.padding = '8px 16px';
             saveButton.style.marginRight = '8px';
             saveButton.style.border = 'none';
@@ -1121,7 +1121,7 @@ var _roombooking_detail = {
             $.ajax({
                 url: '/ResidenceRegistration/AddResidenceRegistration', 
                 type: 'POST',
-                data: newRecord, /
+                data: newRecord, 
                 success: function (response) {
                     if (response === 1) {
                         alert('Thêm bản ghi thành công!');
@@ -1191,11 +1191,12 @@ var _roombooking_detail = {
         cancelButton.style.fontSize = '14px';
         cancelButton.style.transition = 'background-color 0.3s';
 
-        cancelButton.addEventListener('mouseover', function() {
-            cancelButton.style.backgroundColor = '#e60000';  
-        cancelButton.addEventListener('mouseout', function() {
-            cancelButton.style.backgroundColor = '#f44336';  
-        });
+            cancelButton.addEventListener('mouseover', function () {
+                cancelButton.style.backgroundColor = '#e60000';
+            });
+            cancelButton.addEventListener('mouseout', function() {
+                cancelButton.style.backgroundColor = '#f44336';  
+            });
 
         cancelButton.onclick = function () {
             addFormContainer.remove(); 
