@@ -121,9 +121,10 @@ body {
             }
 
 .nav-button {
-    background-color: #108AB1;
+    background-color: #00b1ff;
     color: white;
     border: none;
+    border: 2px groove #ddd;
     border-radius: 5px;
     padding: 10px 15px;
     text-align: center;
@@ -133,11 +134,33 @@ body {
 }
 
     .nav-button:hover {
-        background-color: #0056b3;
+        background-color: #1341f6;
         cursor: pointer;
     }
 
     .nav-button a {
+        color: white;
+        text-decoration: none;
+    }
+.nav-button-another {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+    border: none;
+    border: 2px groove #ddd;
+    border-radius: 5px;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+    .nav-button-another:hover {
+        background-color: #1341f6;
+        cursor: pointer;
+    }
+
+    .nav-button-another a {
         color: white;
         text-decoration: none;
     }
@@ -183,12 +206,17 @@ body {
 
 /* Ô tìm kiếm */
 .search-box {
-    margin: 20px auto;
-    max-width: 1000px;
+    width: 100%;
+    min-width: 1000px;
+    max-width: 100%;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+    margin-bottom:15px;
 }
 
     .search-box input[type="date"],
@@ -211,10 +239,9 @@ body {
         }
 
     .search-box button {
-        margin-top: 14px;
+        margin-top: 10px;
         padding: 12px;
-        width: 20%;
-        background-color: #06D7A0;
+        background-color: #f15353;
         color: white;
         border: none;
         border-radius: 5px;
@@ -224,8 +251,8 @@ body {
     }
 
         .search-box button:hover {
-            background-color: #1b5e20;
-            transform: scale(1.02); /* Tăng kích thước nút khi hover */
+            background-color: red;
+            transform: scale(1.05); /* Tăng kích thước nút khi hover */
         }
 
         .search-box button:active {
@@ -654,9 +681,7 @@ h3{
     font-weight:bold;
 }
 h4 {
-    color: #FFD167;
     margin-bottom: 20px;
-    text-align: center;
 }
 
 hr {
@@ -691,7 +716,13 @@ div.info-row:hover {
     background-color: #e7f1ff; /* Màu nền khi hover */
     transform: scaleY(0.85);
 }
-
+.room-info{
+    margin-top:30px;
+    padding-left:10px;
+    font-size: xx-large;
+    font-weight: 700;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
 .img-container-details {
     width: 100%; /* Chiếm toàn bộ chiều rộng */
     height: 350px; /* Chiều cao cố định cho hình ảnh */
@@ -718,6 +749,7 @@ dt {
 
 dd {
     margin: 0; /* Remove default margin */
+    font-weight:500;
 }
 img {
     object-fit: cover;
@@ -803,7 +835,7 @@ footer p {
 }
 
 .footer-certificates img {
-    width: 50px;
+    width: 70px;
     margin: 5px;
 }
 

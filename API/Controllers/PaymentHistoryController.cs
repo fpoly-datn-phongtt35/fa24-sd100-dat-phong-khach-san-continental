@@ -1,12 +1,16 @@
-﻿using API.Types;
+﻿using API.ClientControllers;
+using API.Types;
 using Domain.DTO.Paging;
 using Domain.DTO.PaymentHistory;
+using Domain.DTO.RoomBooking;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IRoomBooking;
+using Domain.Services.Services.Email;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS;
+using Net.payOS.Types;
 
 namespace API.Controllers
 {
@@ -18,13 +22,22 @@ namespace API.Controllers
         private readonly IRoomBookingGetService _roomBookingGetService;
         private readonly IPaymentHistoryService _paymentHistoryService;
         private readonly IRoomBookingUpdateService _roomBookingUpdateService;
+        private readonly ICustomerService _customerService;
+        private readonly SendMailService _sendMailService;
+        private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
 
-        public PaymentHistoryController(IPaymentHistoryService paymentHistoryService, IRoomBookingGetService roomBookingGetService, IRoomBookingUpdateService roomBookingUpdateService, PayOS payOS)
+        public PaymentHistoryController(IPaymentHistoryService paymentHistoryService,
+            IRoomBookingGetService roomBookingGetService, IRoomBookingUpdateService roomBookingUpdateService,
+            ICustomerService customerService, SendMailService sendMailService,
+            PayOS payOS, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
         {
             _paymentHistoryService = paymentHistoryService;
             _roomBookingGetService = roomBookingGetService;
             _roomBookingUpdateService = roomBookingUpdateService;
-            _payOS = payOS; 
+            _customerService = customerService;
+            _sendMailService = sendMailService;
+            _payOS = payOS;
+            _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         }
 
         [HttpPost(nameof(AddPaymentHistory))]
@@ -69,7 +82,6 @@ namespace API.Controllers
         }
 
 
-        
         [HttpDelete(nameof(DeletePaymentHistory))]
         public async Task<int> DeletePaymentHistory(Guid id)
         {
@@ -79,7 +91,6 @@ namespace API.Controllers
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -111,7 +122,8 @@ namespace API.Controllers
                     }
                     else if (paymentHistory.Note == PaymentType.Deposit)
                     {
-                        await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, (int)roomBooking.TotalRoomPrice * 20 / 100);
+                        await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id,
+                            (int)roomBooking.TotalRoomPrice * 20 / 100);
                         await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
                     }
                 }
@@ -122,6 +134,305 @@ namespace API.Controllers
             }
         }
 
+        // [HttpGet("payment/callback")]
+        // public async Task<IActionResult> HandlePaymentCallback(string code, string id, string status, long orderCode,
+        //     bool cancel)
+        // {
+        //     try
+        //     {
+        //         // Kiểm tra các tham số trả về từ PayOS.
+        //         if (orderCode == 0 || string.IsNullOrEmpty(id))
+        //         {
+        //             return BadRequest(new Response(-1, "Tham số không hợp lệ", null));
+        //         }
+        //
+        //         // Lấy thông tin PaymentHistory dựa trên orderCode.
+        //         var paymentHistory = await _paymentHistoryService.GetPaymentHistoryByOrderCode(orderCode);
+        //         if (paymentHistory == null)
+        //         {
+        //             return NotFound(new Response(-1, "Không tìm thấy lịch sử thanh toán", null));
+        //         }
+        //
+        //         // Lấy thông tin trạng thái thanh toán từ PayOS.
+        //         var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode);
+        //
+        //         // Nếu thanh toán thành công (status == "PAID")
+        //         if (paymentInfo.status == "PAID")
+        //         {
+        //             // Lấy thông tin RoomBooking
+        //             var roomBooking = await _roomBookingGetService.GetRoomBookingById(paymentHistory.RoomBookingId);
+        //             if (roomBooking == null)
+        //                 return NotFound(new Response(-1, "Không tìm thấy thông tin RoomBooking", null));
+        //
+        //             // Lấy thông tin Customer
+        //             var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
+        //             if (customer == null)
+        //                 return NotFound(new Response(-1, "Không tìm thấy thông tin Customer", null));
+        //
+        //             // Lấy thông tin RoomBookingDetail
+        //             var roomBookingDetails = await _roomBookingDetailServiceForCustomer
+        //                 .GetListRoomBookingDetailByRoomBookingId(roomBooking.Id);
+        //             if (roomBookingDetails == null || !roomBookingDetails.Any())
+        //             {
+        //                 return NotFound(new Response(-1, "Không tìm thấy thông tin chi tiết phòng", null));
+        //             }
+        //             string roomDetails = string.Join(", ", roomBookingDetails.Select(d => $"Phòng {d.Name}"));
+        //             
+        //             // Tổng số tiền đã thanh toán
+        //             var totalPaidAmount = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(roomBooking.Id);
+        //             
+        //             // Lấy tất cả thời gian check-in
+        //             var checkinTimes = await _roomBookingGetService
+        //                 .GetCheckinRoomBookingByRoomBookingId(roomBooking.Id);
+        //
+        //             // Định dạng các thời gian check-in
+        //             string checkinDetails = string.Join(", ", checkinTimes.Select(t => 
+        //                 t.ToString("HH:mm, 'ngày' dd/MM/yyyy")));
+        //             
+        //             decimal? totalPrice = roomBooking.TotalPrice ?? 0;
+        //
+        //             // Cập nhật số tiền trong PaymentHistory dựa trên loại PaymentType
+        //             if (paymentHistory.Note == PaymentType.Bill)
+        //             {
+        //                 await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, paymentInfo.amount);
+        //                 await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
+        //                     2);
+        //             }
+        //             else if (paymentHistory.Note == PaymentType.Deposit)
+        //             {
+        //                 int depositAmount = (int)(roomBooking.TotalRoomPrice * 20 / 100);
+        //                 await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, depositAmount);
+        //                 await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
+        //                     5);
+        //             }
+        //             
+        //             totalPaidAmount = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(roomBooking.Id);
+        //             
+        //             // Gửi email xác nhận đặt phòng
+        //             var emailRequest = new EmailRequest
+        //             {
+        //                 ToEmail = customer.Email,
+        //                 EmailType = 2,
+        //                 RoomDetails = roomDetails,
+        //                 BookingTime = checkinDetails,
+        //                 TotalPrice = totalPrice,
+        //                 PaidAmount = totalPaidAmount
+        //             };
+        //
+        //             await SendEmail(emailRequest);
+        //         }
+        //         else if (paymentInfo.status == "CANCELLED")
+        //         {
+        //             // Nếu thanh toán bị hủy, xóa lịch sử thanh toán
+        //             await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
+        //             // Có thể cập nhật trạng thái RoomBooking nếu cần
+        //             await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
+        //                 1); // Trạng thái hủy
+        //         }
+        //
+        //         return Ok(new Response(0, "Cập nhật thanh toán thành công", null));
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         // Xử lý lỗi nếu có
+        //         return BadRequest(new Response(-1, "Đã xảy ra lỗi: " + ex.Message, null));
+        //     }
+        // }
+
+        [HttpGet("payment/callback-refactor")]
+        public async Task<IActionResult> HandlePaymentCallBack(string code, string id, string status, long orderCode,
+            bool cancel)
+        {
+            try
+            {
+                // Kiểm tra tham số đầu vào
+                if (!IsValidCallBackRequest(orderCode, id))
+                {
+                    return BadRequest(new Response(-1, "Tham số không hợp lệ", null));
+                }
+
+                // Lấy thông tin PaymentHistory
+                var paymentHistory = await _paymentHistoryService.GetPaymentHistoryByOrderCode(orderCode);
+                if (paymentHistory == null)
+                {
+                    return NotFound(new Response(-1, "Không tìm thấy lịch sử thanh toán", null));
+                }
+
+                // Lấy thông tin trạng thái thanh toán từ PayOS
+                var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode);
+
+                // Xử lý theo trạng thái thanh toán
+                if (paymentInfo.status == "PAID")
+                {
+                    await HandlePaidStatus(paymentHistory, paymentInfo);
+                }
+                else if (paymentInfo.status == "CANCELLED")
+                {
+                    // Nếu thanh toán bị hủy, xóa lịch sử thanh toán
+                    await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
+                    // Có thể cập nhật trạng thái RoomBooking nếu cần
+                    await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
+                        3); // Trạng thái hủy
+                    await HandleCancelledStatus(paymentHistory);
+                }
+
+                return Ok(new Response(0, "Cập nhật thanh toán thành công", null));
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                return BadRequest(new Response(-1, "Đã xảy ra lỗi: " + ex.Message, null));
+            }
+        }
+
+        private bool IsValidCallBackRequest(long orderCode, string id)
+        {
+            return orderCode != 0 && !string.IsNullOrEmpty(id);
+        }
+
+        private async Task HandlePaidStatus(PaymentHistory paymentHistory,
+            PaymentLinkInformation paymentLinkInformation)
+        {
+            var roomBookingResponse = await _roomBookingGetService
+                .GetRoomBookingById(paymentHistory.RoomBookingId);
+            if (roomBookingResponse == null)
+                throw new Exception("Không tìm thấy thông tin RoomBooking");
+
+            var roomBooking = roomBookingResponse.ToRoomBooking();
+            
+            var customer = await _customerService.GetCustomerById(roomBookingResponse.CustomerId);
+            if (customer == null)
+                throw new Exception("Không tìm thấy thông tin Customer");
+
+            var roomDetails = await GetRoomDetails(roomBookingResponse.Id);
+            var checkinDetails = await GetFormattedCheckinDetails(roomBookingResponse.Id);
+            var totalPaidAmount = await UpdatePaymentHistory2(paymentHistory, roomBooking, paymentLinkInformation);
+
+            var emailRequest = new EmailRequest
+            {
+                ToEmail = customer.Email,
+                EmailType = 2,
+                RoomDetails = roomDetails,
+                BookingTime = checkinDetails,
+                TotalPrice = roomBookingResponse.TotalPrice ?? 0,
+                PaidAmount = totalPaidAmount
+            };
+
+            await SendEmail(emailRequest);
+        }
+
+        private async Task HandleCancelledStatus(PaymentHistory paymentHistory)
+        {
+            await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
+            await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
+        }
+
+        private async Task<string> GetRoomDetails(Guid roomBookingId)
+        {
+            var roomBookingDetails = await _roomBookingDetailServiceForCustomer
+                .GetListRoomBookingDetailByRoomBookingId(roomBookingId);
+            if (roomBookingDetails == null || !roomBookingDetails.Any())
+                throw new Exception("Không tìm thấy thông tin chi tiết phòng");
+
+            return string.Join(", ", roomBookingDetails.Select(d => $"Phòng {d.Name}"));
+        }
+
+        private async Task<string> GetFormattedCheckinDetails(Guid roomBookingId)
+        {
+            var checkinTimes = await _roomBookingGetService
+                .GetCheckinRoomBookingByRoomBookingId(roomBookingId);
+            return string.Join(", ", checkinTimes.Select(t => t.ToString("HH:mm, 'ngày' dd/MM/yyyy")));
+        }
+
+        private async Task<decimal> UpdatePaymentHistory2(PaymentHistory paymentHistory, RoomBooking roomBooking,
+            PaymentLinkInformation paymentLinkInformation)
+        {
+            if (paymentHistory.Note == PaymentType.Bill)
+            {
+                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, paymentLinkInformation.amount);
+                await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 2);
+            }
+            else if (paymentHistory.Note == PaymentType.Deposit)
+            {
+                int depositAmount = (int)(roomBooking.TotalRoomPrice * 20 / 100);
+                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, depositAmount);
+                await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
+            }
+            
+            return await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(roomBooking.Id);
+        }
+        
+        [HttpPost("send-email")]
+        public async Task<IActionResult> SendEmail(EmailRequest? emailRequest)
+        {
+            if (emailRequest == null || string.IsNullOrEmpty(emailRequest.ToEmail))
+            {
+                return BadRequest("Invalid email request");
+            }
+
+            string subject;
+            string body;
+
+            switch (emailRequest.EmailType)
+            {
+                case 1: // Nhắc nhở khi có lịch đặt phòng đến hẹn
+                    subject = "Nhắc nhở lịch đặt phòng";
+                    body = $@"
+                <h3>Xin chào,</h3>
+                <p>Đây là nhắc nhở rằng bạn có một lịch đặt phòng sắp đến hạn.</p>
+                <p>Chi tiết đặt phòng:</p>
+                <ul>
+                    <li><strong>Phòng:</strong>  {emailRequest.RoomDetails}</li>
+                    <li><strong>Thời gian đặt:</strong>    {emailRequest.BookingTime}</li>
+                </ul>
+                <p>Xin vui lòng đảm bảo đến đúng giờ. Xin cảm ơn!</p>";
+                    break;
+
+                case 2: // Xác nhận đặt phòng
+                    subject = "Xác nhận đặt phòng";
+                    body = $@"
+                    <h3>Xin chào,</h3>
+                    <p>Bạn đã đặt phòng thành công.</p>
+                    <p>Chi tiết đặt phòng:</p>
+                    <ul style='font-family: Arial, sans-serif;'>
+                        <li><strong>Phòng:  </strong>{emailRequest.RoomDetails}</li>
+                        <li><strong>Thời gian đặt:  </strong>{emailRequest.BookingTime}</li>
+                        <li><strong>Tổng tiền phòng:  </strong>{FormatCurrency(emailRequest.TotalPrice)} VND</li>
+                        <li><strong>Số tiền đã thanh toán:  </strong>{FormatCurrency(emailRequest.PaidAmount)} VND</li>
+                    </ul>
+                    <p>Nếu bạn không thực hiện đặt phòng này, hãy bỏ qua email này. Xin cảm ơn!</p>";
+                    break;
+
+                default:
+                    return BadRequest("Invalid email type.");
+            }
+
+            var mailContent = new MailContent
+            {
+                To = emailRequest.ToEmail,
+                Subject = subject,
+                Body = body
+            };
+
+            var result = await _sendMailService.SendMail(mailContent);
+
+            if (result == "Success")
+            {
+                return Ok("Email sent successfully.");
+            }
+
+            return StatusCode(500, "Failed to send email.");
+        }
+
+        private string FormatCurrency(decimal? amount)
+        {
+            if (amount.HasValue)
+            {
+                return string.Format("{0:N0}", amount.Value); // Định dạng với dấu phẩy hàng nghìn
+            }
+
+            return "0"; // Nếu không có giá trị, trả về "0"
+        }
 
         //[HttpPut("update-payment-history")]
         //public async Task<IActionResult> UpdatePaymentHistory()
@@ -170,7 +481,5 @@ namespace API.Controllers
         //        return StatusCode(500, new Response(-1, ex.Message, null));
         //    }
         //}
-
-
     }
 }

@@ -47,6 +47,8 @@ namespace View
             builder.Services.AddTransient<IBuildingRepo, BuildingRepo>();
             builder.Services.AddTransient<IRoomTypeGetService, RoomTypeGetService>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
+            builder.Services.AddTransient<IResidenceRegistrationRepo, ResidenceRegistrationRepo>();
+            builder.Services.AddTransient<IResidenceRegistrationService, ResidenceRegistrationService>();
 
             builder.Services.AddSession(option =>
             {

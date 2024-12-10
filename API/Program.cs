@@ -18,6 +18,7 @@ using Utilities.StoredProcedure;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomTypeService;
+using Domain.Services.Services.Email;
 using Domain.Services.Services.Room;
 using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomTypeService;
@@ -40,6 +41,9 @@ namespace API
             builder.Services.AddSingleton(payOS);
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+            builder.Services.AddTransient<SendMailService>();
+            
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: "abc", builder =>
@@ -87,6 +91,9 @@ namespace API
             //builder.Services.AddTransient<IServiceTypeRepo, ServiceTypeRepo>();
             builder.Services.AddTransient<IVoucherDetailRepo, VoucherDetailRepo>();
             builder.Services.AddTransient<IVoucherDetailService, VoucherDetailService>();
+
+            builder.Services.AddTransient<IResidenceRegistrationRepo, ResidenceRegistrationRepo>();
+            builder.Services.AddTransient<IResidenceRegistrationService, ResidenceRegistrationService>();
 
             builder.Services.AddTransient<IPaymentHistoryRepository, PaymentHistoryRepository>();
             builder.Services.AddTransient<IPaymentHistoryService, PaymentHistoryService>();

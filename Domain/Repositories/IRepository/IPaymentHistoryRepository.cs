@@ -12,8 +12,10 @@ namespace Domain.Repositories.IRepository
     {
         Task<int> AddPaymentHistory(PaymentHistoryCreateRequest request);
         Task<DataTable> GetPaymentHistoryById(Guid id);
+        Task<DataTable> GetPaymentHistoryByOrderCode(long orderCode);
         Task<DataTable> GetListPaymentHistory(PaymentHistoryGetRequest request);
         Task<int> UpdatePaymentHistoryAmount(Guid id, decimal amount);
         Task<int> DeletePaymentHistory(Guid id);
+        Task<decimal> GetTotalPaidAmountByRoomBookingId(Guid roomBookingId);
     }
 }
