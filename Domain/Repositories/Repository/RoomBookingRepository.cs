@@ -137,6 +137,41 @@ public class RoomBookingRepository : IRoomBookingRepository
             throw new Exception("An error occurred while updating the room booking", e);
         }
     }
+    
+    public async Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId)
+    {
+        List<DateTimeOffset> checkinTimes = new List<DateTimeOffset>();
+        try
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[] 
+            {
+                new SqlParameter("@RoomBookingId", roomBookingId)
+            };
+
+            // Thực thi stored procedure và lấy dữ liệu với ExecuteReaderAsync trong phạm vi using
+            using (var reader = await _worker.ExecuteReaderAsync(StoredProcedureConstant
+                       .SP_GetCheckinRoomBookingByRoomBookingId, sqlParameters))
+            {
+                // Đảm bảo reader còn mở khi gọi ReadAsync
+                while (await reader.ReadAsync())
+                {
+                    if (reader["CheckInBooking"] != DBNull.Value)
+                    {
+                        checkinTimes.Add((DateTimeOffset)reader["CheckInBooking"]);
+                    }
+                }
+            }
+
+            return checkinTimes;
+        }
+        catch (Exception e)
+        {
+            // In lỗi để debug
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
 
     private RoomBooking ConvertToRoomBookingRow(DataRow row)
     {

@@ -10,4 +10,5 @@ public interface IRoomBookingGetService
         (RoomBookingGetRequest bookingGetRequest);
     Task<RoomBookingResponse?> GetRoomBookingById(Guid? roomBookingId);
     Task<Guid?> GetRoomBookingIdByOrderCode(int orderCode);
+    Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId);
 }

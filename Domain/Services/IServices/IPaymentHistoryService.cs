@@ -18,5 +18,6 @@ namespace Domain.Services.IServices
         Task<int> UpdatePaymentHistoryAmount(Guid id, decimal amount);
         Task<int> DeletePaymentHistory(Guid id);
         Task<PaymentHistory> GetPaymentHistoryByOrderCode(long orderCode);
+        Task<decimal> GetTotalPaidAmountByRoomBookingId(Guid roomBookingId);
     }
 }

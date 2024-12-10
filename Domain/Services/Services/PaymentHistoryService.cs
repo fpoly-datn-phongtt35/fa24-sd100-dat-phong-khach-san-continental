@@ -141,6 +141,11 @@ namespace Domain.Services.Services
             return paymentHistory;
         }
 
+        public async Task<decimal> GetTotalPaidAmountByRoomBookingId(Guid roomBookingId)
+        {
+            return await _paymentHistoryRepo.GetTotalPaidAmountByRoomBookingId(roomBookingId);
+        }
+
         public Task<int> UpdatePaymentHistoryAmount(Guid id, decimal amount)
         {
             try
