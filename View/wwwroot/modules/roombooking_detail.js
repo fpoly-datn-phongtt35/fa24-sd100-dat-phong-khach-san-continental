@@ -265,6 +265,10 @@ var IdAdd = -1;
 var LstIdAdd = [];
 var LstIdUpdate = [];
 var STT = 1;
+let dataRessidence = [];
+var residenceCount = 0;
+var maximumOccupancy = 0;
+
 
 var listIdService = [];
 var lstServiceOrderDetail = [];
@@ -704,7 +708,6 @@ var _roombooking_detail = {
     },
 
 
-
     showResidenceModal: function (data, roomBookingDetailId) {
         //#region modal
         const existingModal = document.getElementById('customModal');
@@ -737,7 +740,7 @@ var _roombooking_detail = {
         modalHeader.style.marginBottom = '16px';
 
         const title = document.createElement('h3');
-        title.innerText = 'Danh sách cư trú';
+        title.innerText = 'Danh sách khách hàng ' + residenceCount + '/' + maximumOccupancy;
         modalHeader.appendChild(title);
 
         // Tạo nút "Thêm"
@@ -775,16 +778,53 @@ var _roombooking_detail = {
         }//bắt đầu = 0, + 9 số đằng sau
         function isIdentityNumberValid(identityNumber) {
             const identityRegex = /^\d{12}$/;
-            return identityRegex.test(identityNumber);
+            return identityNumber === "" || identityRegex.test(identityNumber);
         }// 12 số
         function isFullNameValid(name) {
             const nameRegex = /^[A-ZÁÀẢÃẠĂẮẰẲẴẠÂẦẤẨẪẬÔỒỔỖỘƠỚỜỞỠỢÍÌỈĨỊÚÙỦŨỤƠỚỜỞỠỢÉÈẺẼẸÔỒỔỖỘƠỚỜỞỠỢÝỲỶỸỴa-záàảãạăắằẳẵặâầấẩẫậôồổỗộơớờởỡợíìỉĩịúùủũụơớờởỡợéèẻẽẹôồổỗộơớờởỡợýỳỷỹỵ\s]+$/i;
             return nameRegex.test(name) && name.trim().split(/\s+/).length >= 2;
         }// có ít nhất 2 chữ, và ko đc có số
+        function isPhoneNumberExisted(phoneNumber) {
+            return dataRessidence.some(item => item.phoneNumber === phoneNumber);
+        }
+        function isIdentityNumberExisted(identityNumber) {
+            return dataRessidence.some(item => item.identityNumber === identityNumber);
+        }
+        function isDateOfBirthValid(dateOfBirth) {
+            const today = new Date();
+            const birthDate = new Date(dateOfBirth);
+
+            // Kiểm tra nếu ngày sinh hợp lệ (theo chuẩn yyyy-mm-dd)
+            if (isNaN(birthDate.getTime())) {
+                return false; // Ngày sinh không hợp lệ
+            }
+
+            // Kiểm tra nếu ngày sinh trống
+            if (!dateOfBirth) {
+                return false; // Nếu ngày sinh trống
+            }
+
+            // Kiểm tra ngày sinh không lớn hơn ngày hiện tại
+            if (birthDate > today) {
+                return false; // Ngày sinh không được lớn hơn ngày hiện tại
+            }
+
+            // Tính tuổi
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            // Kiểm tra tuổi từ 0 đến 150
+            return age <= 150;
+        }
+
 
 
         // Hàm hiển thị form thêm bản ghi
         function showAddForm() {
+            //#region formContainer
             const addFormContainer = document.createElement('div');
             addFormContainer.style.marginTop = '16px';
             addFormContainer.style.padding = '20px';
@@ -805,8 +845,10 @@ var _roombooking_detail = {
                 { label: 'Căn cước', type: 'number', id: 'identityNumber', placeholder: 'Nhập số căn cước' },
                 { label: 'SĐT', type: 'number', id: 'phoneNumber', placeholder: 'Nhập số điện thoại' }
             ];  
+            //#endregion
 
             formFields.forEach(field => {
+                //#region tạo các trường
                 const fieldContainer = document.createElement('div');
                 fieldContainer.style.marginBottom = '16px';
 
@@ -853,6 +895,7 @@ var _roombooking_detail = {
                 input.style.color = '#333';
                 input.style.outline = 'none';
                 input.style.transition = 'border-color 0.3s';
+                //#endregion
 
                 // thông báo lỗi dưới các trường
                 if (field.id === 'phoneNumber') {
@@ -860,7 +903,7 @@ var _roombooking_detail = {
                     errorMessagePhoneNumber.style.color = 'red';
                     errorMessagePhoneNumber.style.fontSize = '12px';
                     errorMessagePhoneNumber.style.display = 'none';
-                    errorMessagePhoneNumber.innerText = 'Sai định dạng số điện thoại';
+                    errorMessagePhoneNumber.innerText = ' ';
                     fieldContainer.appendChild(errorMessagePhoneNumber);
                 }
                 if (field.id === 'identityNumber') {
@@ -868,7 +911,7 @@ var _roombooking_detail = {
                     errorMessageIdentityNumber.style.color = 'red';
                     errorMessageIdentityNumber.style.fontSize = '12px';
                     errorMessageIdentityNumber.style.display = 'none';
-                    errorMessageIdentityNumber.innerText = 'Sai định dạng số căn cước công dân';
+                    errorMessageIdentityNumber.innerText = ' ';
                     fieldContainer.appendChild(errorMessageIdentityNumber);
                 }
                 if (field.id === 'fullName') {
@@ -876,25 +919,60 @@ var _roombooking_detail = {
                     errorMessage.style.color = 'red';
                     errorMessage.style.fontSize = '12px';
                     errorMessage.style.display = 'none';
-                    errorMessage.innerText = 'Tên không hợp lệ';
+                    errorMessage.innerText = ' ';
                     fieldContainer.appendChild(errorMessage);
+                }
+                if (field.id === 'dateOfBirth') {
+                    errorMessageDob = document.createElement('div');
+                    errorMessageDob.style.color = 'red';
+                    errorMessageDob.style.fontSize = '12px';
+                    errorMessageDob.style.display = 'none';
+                    errorMessageDob.innerText = ' ';
+                    fieldContainer.appendChild(errorMessageDob);
+                }
+
+                if (field.id === 'dateOfBirth') {
+                    input.addEventListener('change', function () {
+                        if (!isDateOfBirthValid(input.value)) {
+                            errorMessageDob.innerText = 'Ngày sinh không hợp lệ!';
+                            errorMessageDob.style.display = 'block';
+                            saveButton.disabled = true;
+                        } else {
+                            errorMessageDob.style.display = 'none';
+                            saveButton.disabled = false;
+                        }
+                    });
                 }
 
                 input.addEventListener('input', function () {
                     if (field.id === 'phoneNumber') {
                         if (!isPhoneNumberValid(input.value)) {
+                            errorMessagePhoneNumber.innerText = 'Sai định dạng số điện thoại!';
                             errorMessagePhoneNumber.style.display = 'block';
                             saveButton.disabled = true;
-                        } else {
+                        }
+                        else if (isPhoneNumberExisted(input.value)) {
+                            errorMessagePhoneNumber.innerText = 'Số điện thoại đã tồn tại! ';
+                            errorMessagePhoneNumber.style.display = 'block';
+                            saveButton.disabled = true;
+                        }
+                        else {
                             errorMessagePhoneNumber.style.display = 'none';
                             saveButton.disabled = false;
                         }
                     }
                     if (field.id === 'identityNumber') {
                         if (!isIdentityNumberValid(input.value)) {
+                            errorMessageIdentityNumber.innerText = 'Sai định dạng số căn cước!';
                             errorMessageIdentityNumber.style.display = 'block';
                             saveButton.disabled = true;
-                        } else {
+                        }
+                        else if (isIdentityNumberExisted(input.value)) {
+                            errorMessageIdentityNumber.innerText = 'Số căn cước đã tồn tại! ';
+                            errorMessageIdentityNumber.style.display = 'block';
+                            saveButton.disabled = true;
+                        }
+                        else {
                             errorMessageIdentityNumber.style.display = 'none';
                             saveButton.disabled = false;
                         }
@@ -907,7 +985,7 @@ var _roombooking_detail = {
                             errorMessage.style.display = 'none';
                             saveButton.disabled = false;
                         }
-                    }
+                    } 
                 });
 
                 input.addEventListener('focus', function () {
@@ -922,7 +1000,7 @@ var _roombooking_detail = {
                 addFormContainer.appendChild(fieldContainer);
             });  
 
-            //#region css save button
+            //#region css saveButton
             const saveButton = document.createElement('button');
             saveButton.innerText = 'Lưu';
             saveButton.style.backgroundColor = '#008CBA';
@@ -984,7 +1062,7 @@ var _roombooking_detail = {
                                     row.appendChild(td);
                                 });
 
-                                // Tạo cột Actions
+                                //#region Tạo cột Actions
                                 const actionsTd = document.createElement('td');
                                 actionsTd.style.border = '1px solid #ddd';
                                 actionsTd.style.padding = '8px';
@@ -1018,9 +1096,12 @@ var _roombooking_detail = {
                                 row.appendChild(actionsTd);
 
                                 tbody.appendChild(row);
+                                //#endregion
+                                var temp = dataRessidence.length;
+                                title.innerText = 'Danh sách khách hàng ' + temp + '/' + maximumOccupancy;
                             });
                         } else {
-                            alert('Có lỗi xảy ra, vui lòng thử lại!');
+                            alert('Có lỗi xảy ra, vui lòng thử lại!');  
                         }
                     },
                     error: function (xhr, status, error) {
@@ -1030,7 +1111,7 @@ var _roombooking_detail = {
 
                 // Đóng form
                 addFormContainer.remove();
-            };
+            }; //save button onclick
 
             //#region css cancel button
             const cancelButton = document.createElement('button');
@@ -1111,6 +1192,7 @@ var _roombooking_detail = {
             actionsTd.style.border = '1px solid #ddd';
             actionsTd.style.padding = '8px';
 
+            //#region Sửa
             //#region css button sửa
             const editButton = document.createElement('button');
             editButton.innerText = 'Sửa';
@@ -1126,11 +1208,10 @@ var _roombooking_detail = {
             editButton.setAttribute('data-id', item.id);
             //#endregion
 
-
-
             editButton.addEventListener('mouseover', function () {
                 editButton.style.backgroundColor = '#45a049';
             });
+
             editButton.addEventListener('mouseout', function () {
                 editButton.style.backgroundColor = '#4CAF50';
             });
@@ -1164,12 +1245,13 @@ var _roombooking_detail = {
                     <h3 style="text-align: center; font-size: 20px; font-weight: 600;">Sửa thông tin cư trú</h3>
                     <div style="margin-bottom: 16px;">
                         <label for="fullName" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Tên:</label>
-                        <span id="fullNameError" style="color: red; font-size: 12px; display: none;">Tên không hợp lệ</span>
+                        <span id="fullNameError" style="color: red; font-size: 12px; display: none;"></span>
                         <input type="text" id="fullName" value="${fullName}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
                     </div>
 
                     <div style="margin-bottom: 16px;">
                         <label for="dateOfBirth" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Ngày sinh:</label>
+                        <span id="dateOfBithError" style="color: red; font-size: 12px; display: none;"></span>
                         <input type="date" id="dateOfBirth" value="${dateOfBirth}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
                     </div>
 
@@ -1184,14 +1266,14 @@ var _roombooking_detail = {
 
                     <div style="margin-bottom: 16px;">
                         <label for="identityNumber" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Căn cước:</label>
-                        <span id="identityNumberError" style="color: red; font-size: 12px; display: none;">Sai định dạng số căn cước</span>
-                        <input type="text" id="identityNumber" value="${identityNumber}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
+                        <span id="identityNumberError" style="color: red; font-size: 12px; display: none;"></span>
+                        <input type="number" id="identityNumber" value="${identityNumber}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
                     </div>
 
                     <div style="margin-bottom: 16px;">
                         <label for="phoneNumber" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Số điện thoại:</label>
-                        <span id="phoneNumberError" style="color: red; font-size: 12px; display: none;">Sai định dạng số điện thoại</span>
-                        <input type="text" id="phoneNumber" value="${phoneNumber}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
+                        <span id="phoneNumberError" style="color: red; font-size: 12px; display: none;"></span>
+                        <input type="number" id="phoneNumber" value="${phoneNumber}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
                     </div>
 
                     <div style="display: flex; justify-content: space-between;">
@@ -1209,21 +1291,34 @@ var _roombooking_detail = {
                 const saveButton = document.getElementById('saveButton');
                 // số điện thoại
                 const phoneNumberInput = document.getElementById('phoneNumber');
+                var tempPhoneNumber = phoneNumberInput.value;
                 const phoneNumberError = document.getElementById('phoneNumberError');
                 phoneNumberInput.addEventListener('input', function () {
                     if (!isPhoneNumberValid(phoneNumberInput.value)) {
+                        phoneNumberError.innerText = 'Sai định dạng số điện thoại!';
                         phoneNumberError.style.display = 'block';
                         saveButton.disabled = true;
-                    } else {
+                    } else if (phoneNumberInput.value != tempPhoneNumber && isPhoneNumberExisted(phoneNumberInput.value)) {
+                        phoneNumberError.innerText = ' Số điện thoại đã tồn tại!';
+                        phoneNumberError.style.display = 'block';
+                        saveButton.disabled = true;
+                    }
+                    else {
                         phoneNumberError.style.display = 'none';
                         saveButton.disabled = false;
                     }
                 });
                 // số căn cước
                 const identityNumberInput = document.getElementById('identityNumber');
+                var tempIdentityNumber = identityNumberInput.value;
                 const identityNumberError = document.getElementById('identityNumberError');
                 identityNumberInput.addEventListener('input', function () {
                     if (!isIdentityNumberValid(identityNumberInput.value)) {
+                        identityNumberError.innerText = 'Sai định dạng số căn cước!';
+                        identityNumberError.style.display = 'block';
+                        saveButton.disabled = true;
+                    } else if (identityNumberInput.value != tempIdentityNumber && isIdentityNumberExisted(identityNumberInput.value)) {
+                        identityNumberError.innerText = 'Số căn cước đã tồn tại!';
                         identityNumberError.style.display = 'block';
                         saveButton.disabled = true;
                     } else {
@@ -1240,6 +1335,18 @@ var _roombooking_detail = {
                         saveButton.disabled = true;
                     } else {
                         fullNameError.style.display = 'none';
+                        saveButton.disabled = false;
+                    }
+                }); 
+                // DoB
+                const dateOfBirthInput = document.getElementById('dateOfBirth');
+                const dateOfBithError = document.getElementById('dateOfBithError');
+                dateOfBirthInput.addEventListener('change', function () {
+                    if (!isDateOfBirthValid(dateOfBirthInput.value)) {
+                        dateOfBithError.style.display = 'block';
+                        saveButton.disabled = true;
+                    } else {
+                        dateOfBithError.style.display = 'none';
                         saveButton.disabled = false;
                     }
                 });
@@ -1282,8 +1389,11 @@ var _roombooking_detail = {
                 document.getElementById('cancelButton').addEventListener('click', function () {
                     editForm.remove();
                 });
-            });//sửa
+            });
+            //#endregion
 
+
+            //#region Xóa
             //#region css button "Xóa"
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Xóa';
@@ -1306,7 +1416,7 @@ var _roombooking_detail = {
             });
             //#endregion
 
-            //#region ajax thực hiện xóa
+            //#region thực hiện xóa
             deleteButton.addEventListener('click', function () {
                 const id = deleteButton.getAttribute('data-id');
                 const confirmation = confirm('Bạn có chắc chắn muốn xóa bản ghi này?');
@@ -1321,6 +1431,10 @@ var _roombooking_detail = {
                                 alert('Xóa thành công');
                                 const rowToDelete = deleteButton.closest('tr');
                                 rowToDelete.remove();
+
+                                dataRessidence = dataRessidence.filter(item => item.id !== id);
+                                temp = dataRessidence.length;
+                                title.innerText = 'Danh sách khách hàng ' + temp + '/' + maximumOccupancy;
                             } else {
                                 alert('Xóa thất bại: ' + response.message);
                             }
@@ -1331,6 +1445,7 @@ var _roombooking_detail = {
                     });
                 }
             });
+            //#endregion
             //#endregion
 
 
@@ -1365,17 +1480,45 @@ var _roombooking_detail = {
         document.body.appendChild(overlay);
         //#endregion
     },
-    getResidenceRegistrations: function (Id) {
-        $.ajax({
-            url: '/ResidenceRegistration/GetResidenceRegistrationByRoomBookingDetailId',
-            type: 'POST',
-            data: { Id: Id },
-            success: function (response) {
-                console.log(response);
-                _roombooking_detail.showResidenceModal(response, Id);
-
-            }
+    getMaximumOccupancyByRoomBookingDetailId: function (Id) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: '/ResidenceRegistration/GetMaximumOccupancyByRoomBookingDetailId',
+                type: 'POST',
+                data: { Id: Id },
+                success: function (response) {
+                    maximumOccupancy = response.maximumOccupancy;
+                    resolve(maximumOccupancy); // Trả về maximumOccupancy sau khi thành công
+                },
+                error: function (error) {
+                    reject(error); // Nếu có lỗi, reject Promise
+                }
+            });
         });
+
+    },
+    getResidenceRegistrations: async function (Id) {
+        try {
+            // Đợi cho việc lấy maximumOccupancy hoàn thành
+            let maximumOccupancy = await _roombooking_detail.getMaximumOccupancyByRoomBookingDetailId(Id);
+
+            $.ajax({
+                url: '/ResidenceRegistration/GetResidenceRegistrationByRoomBookingDetailId',
+                type: 'POST',
+                data: { Id: Id },
+                success: function (response) {
+                    dataRessidence = response;
+                    residenceCount = response.length;
+
+                    // Hiển thị danh sách với maximumOccupancy
+                    titlee = 'Danh sách khách hàng ' + residenceCount + '/' + maximumOccupancy;
+
+                    _roombooking_detail.showResidenceModal(response, Id);
+                }
+            });
+        } catch (error) {
+            console.error("Error fetching maximumOccupancy:", error);
+        }
     },
 
     LoadDetailCustomer: function (Id) {
