@@ -42,6 +42,20 @@ namespace API.Controllers
                 throw ex;
             }
         }
+
+        [HttpPost("GetMaximumOccupancyByRoomBookingDetailId")]
+        public async Task<int> GetMaximumOccupancyByRoomBookingDetailId(Guid Id)
+        {
+            try
+            {
+                return await _residenceRegistrationService.GetMaximumOccupancyByRoomBookingDetailId(Id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost("GetResidenceRegistrationById")]
         public async Task<ResidenceRegistration> GetResidenceRegistrationById(Guid Id)
         {

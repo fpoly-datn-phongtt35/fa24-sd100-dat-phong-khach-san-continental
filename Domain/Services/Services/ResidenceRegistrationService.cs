@@ -52,6 +52,19 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<int> GetMaximumOccupancyByRoomBookingDetailId(Guid roomBookingDetailId)
+        {
+            try
+            {
+                int rs = await _residenceRegistrationRepo.GetMaximumOccupancyByRoomBookingDetailId(roomBookingDetailId);
+                return rs;
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+        }
+
         public async Task<ResidenceRegistration> GetResidenceById(Guid id)
         {
             ResidenceRegistration rr = new ResidenceRegistration();

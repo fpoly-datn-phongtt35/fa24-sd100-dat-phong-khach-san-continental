@@ -26,6 +26,18 @@ namespace View.Controllers
                 throw ex;
             }
         }
+        public async Task<IActionResult> GetMaximumOccupancyByRoomBookingDetailId(Guid Id)
+        {
+            try
+            {
+                var result = await _residenceRegistrationService.GetMaximumOccupancyByRoomBookingDetailId(Id);
+                return Ok(new { maximumOccupancy = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddResidenceRegistration(ResidenceAddRequest request)
