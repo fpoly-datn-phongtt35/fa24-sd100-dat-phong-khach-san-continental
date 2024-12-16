@@ -467,9 +467,9 @@ var _roombooking_detail = {
                     if (result != null) {
                         $("#room-related").append(`
 
-                        <tr class="">
+                        <tr id="Element_` + IdAdd + `" class="">
                            <td style="display:none"><input id="Idroom_`+ IdAdd + `" value="${result.id}"></input></td>
-                           <td style="display:none"><input id="Id_`+ IdAdd + `" value=""></input></td>
+                           <td style="display:none"><input id="Id_`+ IdAdd + `" value="`+Id+`"></input></td>
                            <td style="display:none"><input id="Status_`+ IdAdd + `" value="1"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${result.name}</td>
@@ -494,6 +494,7 @@ var _roombooking_detail = {
                            <td id="StatusRBD_`+ IdAdd + `">Tạo mới</td>
                            <td></td>
                            <td class="d-flex">
+                               <button onclick="_roombooking_detail.RemoveOutList(` + IdAdd +`)">Xóa</button>
                            </td>
                         </tr>
                         `)
