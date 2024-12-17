@@ -32,7 +32,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@FullName", request.FullName),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth),
                     new SqlParameter("@Gender", request.Gender),
-                    new SqlParameter("@IdentityNumber", request.IdentityNumber),
+                    new SqlParameter("@IdentityNumber", string.IsNullOrEmpty(request.IdentityNumber) ? (object)DBNull.Value : request.IdentityNumber),
                     new SqlParameter("@PhoneNumber", request.PhoneNumber),
                     //new SqlParameter("@CreatedTime", DateTimeOffset.Now),
                     //new SqlParameter("@CreatedBy", request.CreatedBy)
@@ -59,6 +59,29 @@ namespace Domain.Repositories.Repository
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+        public async Task<int> GetMaximumOccupancyByRoomBookingDetailId(Guid roomBookingDetailId)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@RoomBookingDetailId", roomBookingDetailId)
+                };
+
+                var dataTable = await _dbWorker.GetDataTableAsync(StoredProcedureConstant.SP_GetMaximumOccupancyByRoomBookingDetailId, sqlParameters);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    return Convert.ToInt32(dataTable.Rows[0][0]);
+                }
+
+                return -1; 
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
@@ -109,7 +132,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@DateOfBirth", request.DateOfBirth),
                     new SqlParameter("@Gender", request.Gender),
                     new SqlParameter("@IdentityNumber", request.IdentityNumber),
-                    new SqlParameter("@PhoneNumber", request.PhoneNumber) 
+                    new SqlParameter("@PhoneNumber", request.PhoneNumber)
                 };
 
                 return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateResidence, sqlParameters);

@@ -52,6 +52,19 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<int> GetMaximumOccupancyByRoomBookingDetailId(Guid roomBookingDetailId)
+        {
+            try
+            {
+                int rs = await _residenceRegistrationRepo.GetMaximumOccupancyByRoomBookingDetailId(roomBookingDetailId);
+                return rs;
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+        }
+
         public async Task<ResidenceRegistration> GetResidenceById(Guid id)
         {
             ResidenceRegistration rr = new ResidenceRegistration();
@@ -67,14 +80,7 @@ namespace Domain.Services.Services
                           DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                           Gender = row.Field<GenderType?>("Gender"),
                           IdentityNumber = row.Field<string>("IdentityNumber"),
-                          PhoneNumber = row.Field<string>("PhoneNumber"),
-                          CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
-                          CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
-                          ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
-                          ModifiedBy = row.Field<Guid?>("ModifiedBy") != null ? row.Field<Guid>("ModifiedBy") : Guid.Empty,
-                          Deleted = row.Field<bool>("Deleted"),
-                          DeletedBy = row.Field<Guid?>("DeletedBy") != null ? row.Field<Guid>("DeletedBy") : Guid.Empty,
-                          DeletedTime = row.Field<DateTimeOffset?>("DeletedTime")
+                          PhoneNumber = row.Field<string>("PhoneNumber") 
                       }).FirstOrDefault();
             }
             catch (Exception ex)
@@ -104,14 +110,7 @@ namespace Domain.Services.Services
                                   DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                                   Gender = row.Field<GenderType?>("Gender"),
                                   IdentityNumber = row.Field<string>("IdentityNumber"),
-                                  PhoneNumber = row.Field<string>("PhoneNumber"),
-                                  CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
-                                  CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
-                                  ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
-                                  ModifiedBy = row.Field<Guid?>("ModifiedBy") != null ? row.Field<Guid>("ModifiedBy") : Guid.Empty,
-                                  Deleted = row.Field<bool>("Deleted"),
-                                  DeletedBy = row.Field<Guid?>("DeletedBy") != null ? row.Field<Guid>("DeletedBy") : Guid.Empty,
-                                  DeletedTime = row.Field<DateTimeOffset?>("DeletedTime")
+                                  PhoneNumber = row.Field<string>("PhoneNumber") 
                               }).ToList();
                 model.CurrentPage = request.PageIndex;
                 model.PageSize = request.PageSize;
@@ -150,14 +149,7 @@ namespace Domain.Services.Services
                                   DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                                   Gender = row.Field<GenderType?>("Gender"),
                                   IdentityNumber = row.Field<string>("IdentityNumber"),
-                                  PhoneNumber = row.Field<string>("PhoneNumber"),
-                                  CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
-                                  CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
-                                  ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
-                                  ModifiedBy = row.Field<Guid?>("ModifiedBy") != null ? row.Field<Guid>("ModifiedBy") : Guid.Empty,
-                                  Deleted = row.Field<bool>("Deleted"),
-                                  DeletedBy = row.Field<Guid?>("DeletedBy") != null ? row.Field<Guid>("DeletedBy") : Guid.Empty,
-                                  DeletedTime = row.Field<DateTimeOffset?>("DeletedTime")
+                                  PhoneNumber = row.Field<string>("PhoneNumber") 
                               }).ToList();
                 model.CurrentPage = request.PageIndex;
                 model.PageSize = request.PageSize;
