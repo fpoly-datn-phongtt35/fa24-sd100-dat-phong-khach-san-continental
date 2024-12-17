@@ -37,7 +37,7 @@
                     {
                     var statusEnum = (EntityStatus)status;
                     <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                        @StatusHelper.DisplayNameForEnum(statusEnum)
+                        @StatusHelper.DisplayNameEntityStatus(statusEnum)
                     </option>
                     }
                 </select>

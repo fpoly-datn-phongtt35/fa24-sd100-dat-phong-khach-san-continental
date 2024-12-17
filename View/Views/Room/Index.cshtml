@@ -3,6 +3,7 @@
 @using Domain.DTO.RoomType
 @using Domain.Enums
 @using Domain.DTO.Paging
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.DTO.Room.RoomResponse>
 
 
@@ -46,14 +47,14 @@
         </div>
 
         <div>
-            <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
-                <option value="">-- Status --</option>
-                @foreach (var status in ViewBag.StatusList)
+            <select name="status" class="form-select" id="status">
+                <option hidden>-- Chọn trạng thái --</option>
+                @foreach (var status in Enum.GetValues(typeof(RoomStatus)))
                 {
-                    <option value="@((int)status)"
-                            selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                        @status
-                    </option>
+                var statusEnum = (RoomStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameRoomStatus(statusEnum)
+                </option>
                 }
             </select>
         </div>
@@ -114,7 +115,7 @@
                     }
                     @roomtype1?.Name
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@StatusHelper.DisplayRoomStatusBadge(item.Status)</td>
                 
                 <td>
                     <div class="dropdown">
