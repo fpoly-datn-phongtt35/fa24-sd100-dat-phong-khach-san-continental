@@ -49,7 +49,8 @@ namespace View
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
             builder.Services.AddTransient<IResidenceRegistrationRepo, ResidenceRegistrationRepo>();
             builder.Services.AddTransient<IResidenceRegistrationService, ResidenceRegistrationService>();
-
+            builder.Services.AddTransient<IPaymentHistoryRepository, PaymentHistoryRepository>();
+            builder.Services.AddTransient<IPaymentHistoryService, PaymentHistoryService>();
             builder.Services.AddSession(option =>
             {
                 option.IdleTimeout = TimeSpan.FromSeconds(100);

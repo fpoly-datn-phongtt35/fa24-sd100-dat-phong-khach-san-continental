@@ -3,6 +3,8 @@ using Domain.DTO.PaymentHistory;
 using Domain.DTO.RoomBooking;
 using Domain.Enums;
 using Domain.Models;
+using Domain.Services.IServices;
+using Domain.Services.IServices.IRoomBooking;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -12,11 +14,40 @@ namespace View.Controllers
     public class PaymentHistoryController : Controller
     {
         HttpClient _client;
+        IPaymentHistoryService _paymentHistoryService;
+        IRoomBookingGetService _roomBookingGetService;
 
-        public PaymentHistoryController(HttpClient client)
+        public PaymentHistoryController(HttpClient client, IPaymentHistoryService paymentHistoryService, IRoomBookingGetService roomBookingGetService )
         {
             _client = client;
+            _paymentHistoryService = paymentHistoryService;
             _client.BaseAddress = new Uri("https://localhost:7130/");
+            _roomBookingGetService = roomBookingGetService;
+        }
+
+/*        public Task<IActionResult> PaymentForm() 
+        {
+
+        }*/
+
+        [Route("/PaymentHistory/Id={IdRoomBooking}")]
+        public async Task<IActionResult> PaymentHistoryByBooking(Guid IdRoomBooking) 
+        {
+            try
+            {
+                PaymentHistoryGetRequest request = new PaymentHistoryGetRequest() 
+                {
+                    RoomBookingId = IdRoomBooking,
+                };
+                var data = await _paymentHistoryService.GetListPaymentHistory(request);
+                var roomBooking = await _roomBookingGetService.GetRoomBookingById(IdRoomBooking);
+                ViewBag.RoomBooking = roomBooking;
+                return View(data);
+            }
+            catch (Exception ex) 
+            {
+                throw ex;
+            }
         }
 
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null, Guid? customerId = null, PaymentType? note = null, decimal? amount = null, PaymentMethod? paymentMethod = null, decimal? fromAmount = null, decimal? toAmount = null)

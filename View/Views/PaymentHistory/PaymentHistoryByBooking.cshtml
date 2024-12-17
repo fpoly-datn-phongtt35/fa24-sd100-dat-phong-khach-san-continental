@@ -1,0 +1,70 @@
+﻿@using Domain.DTO.Paging
+@using Domain.DTO.RoomBooking
+@using Domain.Models
+@model ResponseData<PaymentHistory>
+
+@{
+    var roombooking = (RoomBookingResponse)ViewBag.RoomBooking;
+}
+
+<style>
+    .bag-shadow{
+        box-shadow: 1px 2px 3px;
+    }
+    .p-m0{
+        margin: 0px;
+    }
+</style>
+<div class="d-flex m-3" style="width:">
+    <h2>Lịch sử thanh toán</h2>
+</div>
+<div class="d-flex justify-content-between align-items-center mt-3" style="width:100%">
+    <div class="ms-4 rounded-2 d-flex align-items-center" style="min-width: 200px">
+        <p class="p-m0 fw-bold text-info">Tổng hóa đơn: </p>
+        <p class="p-m0 ms-1">@roombooking.TotalPrice</p>
+    </div>
+    <div class="ms-4 rounded-2 d-flex align-items-center" style="min-width: 200px">
+        <p class="p-m0 fw-bold text-success">Đã thanh toán: </p>
+        <p class="p-m0 ms-1"> 0</p>
+    </div>
+    <div class="ms-4 rounded-2 d-flex align-items-center" style="min-width: 200px">
+        <p class="p-m0 fw-bold text-danger">Chưa thanh toán: </p>
+        <p class="p-m0 ms-1"> 0</p>
+    </div>
+    <div class="ms-4 rounded-2 d-flex align-items-center justify-content-end" style="min-width: 200px">
+        <button class="btn btn-success me-3">Thêm thanh toán +</button>
+    </div>
+</div>
+<hr class="mt-0" />
+<div class="m-3 bag-shadow">
+    <table class="" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid rgb(221, 221, 221); padding: 8px; background-color: rgb(242, 242, 242); text-align: left;">STT</th>
+                <th style="border: 1px solid rgb(221, 221, 221); padding: 8px; background-color: rgb(242, 242, 242); text-align: left;">Mã Hóa đơn</th>
+                <th style="border: 1px solid rgb(221, 221, 221); padding: 8px; background-color: rgb(242, 242, 242); text-align: left;">Số tiền</th>
+                <th style="border: 1px solid rgb(221, 221, 221); padding: 8px; background-color: rgb(242, 242, 242); text-align: left;">Loại thanh toán</th>
+                <th style="border: 1px solid rgb(221, 221, 221); padding: 8px; background-color: rgb(242, 242, 242); text-align: left;">Phương thức thanh toán</th>
+                <th style="border: 1px solid rgb(221, 221, 221); padding: 8px; background-color: rgb(242, 242, 242); text-align: left;">Thời gian thanh toán</th>
+            </tr>
+        </thead>
+        @if (Model.data != null && Model.data.Count > 0)
+        {
+            var STT = 1;
+            <tbody>
+                @foreach (var i in Model.data)
+                {
+                    <tr>
+                        <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">@STT</td>
+                        <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">@i.OrderCode</td>
+                        <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">@i.Amount</td>
+                        <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">@i.Note</td>
+                        <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">@i.PaymentMethod</td>
+                        <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">@i.PaymentTime</td>
+                    </tr>
+                    STT++;
+                }
+            </tbody>
+        }
+    </table>
+</div>

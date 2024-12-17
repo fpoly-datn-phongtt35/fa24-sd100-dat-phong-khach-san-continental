@@ -607,7 +607,7 @@ var _roombooking_detail = {
             const element = lstEleDeposit[i];
             TotalDeposit = TotalDeposit + parseInt(element.innerHTML.replaceAll(',', ''));
         }
-        TotalBill = TotalRoomPrice + TotalExtraPrice - TotalDeposit + parseInt($("#total_service_extra_price").text().replaceAll(',', '')) + parseInt($("#total_service_price").text().replaceAll(',', ''));
+        TotalBill = TotalRoomPrice + TotalExtraPrice + parseInt($("#total_service_extra_price").text().replaceAll(',', '')) + parseInt($("#total_service_price").text().replaceAll(',', ''));
         $("#total_price").text(global.NumberVNFormated(TotalBill));
         $("#total_roomprice").text(global.NumberVNFormated(TotalRoomPrice));
         $("#total_deposit").text(global.NumberVNFormated(TotalDeposit));
