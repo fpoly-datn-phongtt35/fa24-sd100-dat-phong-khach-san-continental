@@ -1,4 +1,5 @@
 ﻿@using Domain.Enums
+@using View.Views.Shared.Helper
 @model Domain.DTO.RoomTypeService.RoomTypeServiceAddRequest
 
 @{
@@ -6,16 +7,17 @@
 }
 
 <h3>Tạo mới</h3>
-
-<hr/>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="RoomTypeId" class="control-label">Loại phòng</label>
+    <form asp-action="Create" class="row mt-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="RoomTypeId" class="control-label1">Loại phòng</label>
                 <select asp-for="RoomTypeId" class="form-control">
-                    <option value="">-- Chọn loại phòng --</option>
+                    <option hidden>-- Chọn loại phòng --</option>
                     @foreach (var roomType in ViewBag.RoomTypes)
                     {
                         <option value="@roomType.Id">@roomType.Name</option>
@@ -23,49 +25,52 @@
                 </select>
                 <span asp-validation-for="RoomTypeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ServiceId" class="control-label">Dịch vụ</label>
+
+            <div class="form-group mb-3">
+                <label asp-for="ServiceId" class="control-label1">Dịch vụ</label>
                 <select asp-for="ServiceId" class="form-control">
-                    <option value="">-- Chọn dịch vụ --</option>
+                    <option hidden>-- Chọn dịch vụ --</option>
                     @foreach (var service in ViewBag.ServiceList)
                     {
-                        <option value="@service.Id">@service.Name</option>
+                    <option value="@service.Id">@service.Name</option>
                     }
                 </select>
                 <span asp-validation-for="ServiceId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label">Số lượng</label>
-                <input asp-for="Amount" class="form-control"/>
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label">Trạng thái</label>
-                <select asp-for="Status" class="form-control">
-                    @{
-                        string[] status = (string[])Enum.GetNames(typeof(EntityStatus));
-                    }
-                    @foreach (string item in status)
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="control-label1">Trạng thái</label>
+                <select name="status" class="form-select" id="status">
+                    <option hidden>Chọn trạng thái</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
-                        <option value="@item">@item</option>
+                        var statusEnum = (EntityStatus)status;
+                        <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                            @StatusHelper.DisplayNameForEnum(statusEnum)
+                        </option>
                     }
                 </select>
             </div>
-            <div class="form-group" hidden>
-                <label asp-for="CreatedTime" class="control-label">Thời gian tạo</label>
-                <input asp-for="CreatedTime" class="form-control"/>
-                <span asp-validation-for="CreatedTime" class="text-danger"></span>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Amount" class="control-label1">Số lượng</label>
+                <input asp-for="Amount" class="form-control"/>
+                <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
+        </div>
+        
+        <div class="form-group" hidden>
+            <label asp-for="CreatedTime" class="control-label">Thời gian tạo</label>
+            <input asp-for="CreatedTime" class="form-control"/>
+            <span asp-validation-for="CreatedTime" class="text-danger"></span>
+        </div>
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Tạo" class="btn btn-success"/>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+        <div class="form-group mt-3">
+            <input type="submit" value="Tạo" class="btn btn-success"/>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

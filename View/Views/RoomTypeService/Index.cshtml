@@ -9,21 +9,20 @@
 
 @{
     ViewData["Title"] = "Index";
-    // var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
-    // var services = ViewBag.ServiceList as List<Service>;
 }
 
-<h1>Danh sách dịch vụ loại phòng</h1>
+<h3 class="p-3">Danh sách dịch vụ loại phòng</h3>
 
-<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })"
+      class="d-flex align-items-center button-group">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["searchString"]" />
     </div>
-    <!-- Dropdown chọn RoomType -->
+   
     <div class="form-group me-2">
         <select name="RoomTypeId" class="form-select" id="RoomTypeId">
-            <option value="">Chọn loại phòng</option>
+            <option hidden>-- Chọn loại phòng --</option>
             @foreach (var roomType in ViewBag.RoomTypes)
             {
                 <option value="@roomType.Id" selected="@(Context.Request.Query["RoomTypeId"] == roomType.Id.ToString())">
@@ -32,52 +31,63 @@
             }
         </select>
     </div>
-    <!-- Dropdown chọn trạng thái -->
+
     <div class="form-group me-2">
         <select name="status" class="form-select" id="status">
-            <option value="">Chọn trạng thái</option>
+            <option hidden>-- Chọn trạng thái --</option>
             @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
             {
-            // Ép kiểu status về EntityStatus
-            var statusEnum = (EntityStatus)status;
-            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
-            </option>
+                var statusEnum = (EntityStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameForEnum(statusEnum)
+                </option>
             }
         </select>
     </div>
-    <button type="submit" class="btn btn-light">Tìm kiếm</button>
-    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa bộ lọc</a>
 </form>
 
-<p>
+<p class="button-group">
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
-    <a asp-action="RoomTypeServicesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
-    <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
+    <a asp-action="RoomTypesPdf" class="btn btn-danger mt-2 ms-1">Xem file PDF</a>
+    <a asp-action="Trash" class="button1 button-trash">
+        <img src="@Url.Content("~/images/icons/bin.png")">
+        Thùng rác
+    </a>
 </p>
 
 <table class="table" >
     <thead>
     <tr>
-        <th >@Html.DisplayName("Loại phòng")</th>
-        <th >@Html.DisplayName("Dịch vụ sử dụng")</th>
-        <th >@Html.DisplayName("Số lượng")</th>
-        <th >@Html.DisplayName("Trạng thái")</th>
-        <th >@Html.DisplayName("Chức năng")</th>
+        <th style="width: 25%">Loại phòng</th>
+        <th style="width: 25%">Dịch vụ sử dụng</th>
+        <th style="width: 10%">Số lượng</th>
+        <th style="width: 15%">Trạng thái</th>
+        <th style="width: 10%">Chức năng</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var roomTypeService in Model.data)
     {
         <tr>
-            <td style="width: 15%">@roomTypeService.RoomTypeName</td>
-            <td style="width: 15%">@roomTypeService.ServiceName</td>
-            <td style="width: 10%">@roomTypeService.Amount</td>
-            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
-            <td style="width: 30%">
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Delete", "Delete", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-danger" })
+            <td>@roomTypeService.RoomTypeName</td>
+            <td>@roomTypeService.ServiceName</td>
+            <td>@roomTypeService.Amount</td>
+            <td>@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
+            <td>
+                <div class="dropdown">
+                    <button class="button1" type="button" id="dropdownMenuButton-@roomTypeService.Id"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="@Url.Content("~/images/icons/menu.png")">
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@roomTypeService.Id">
+                        @Html.ActionLink("Chỉnh sửa", "Edit", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Chi tiết", "Details", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Delete", "Delete", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "dropdown-item text-danger" })
+                    </ul>
+                </div>
             </td>
         </tr>
     }

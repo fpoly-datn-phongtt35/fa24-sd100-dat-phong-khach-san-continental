@@ -1,26 +1,48 @@
-﻿@model Domain.Models.Building
+﻿@using Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model Domain.Models.Building
 
-<h3>Edit Building</h3>
+<h3>Chỉnh sửa tòa</h3>
 
-<form asp-action="Edit" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<form asp-action="Edit" method="post" class="row mt-3">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="control-label1"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Deleted" class="control-label1"></label>
+            <input asp-for="Deleted" type="checkbox"/>
+            <span asp-validation-for="Deleted" class="text-danger"></span>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses, Model.Status))"></select>
-        <span asp-validation-for="Status" class="text-danger"></span>
+    
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Status" class="control-label1">Trạng thái</label>
+            <select name="status" class="form-select" id="status">
+                <option disabled>-- Chọn trạng thái --</option>
+                @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                {
+                var statusEnum = (EntityStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameForEnum(statusEnum)
+                </option>
+                }
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Deleted"></label>
-        <input asp-for="Deleted" type="checkbox" />
-        <span asp-validation-for="Deleted" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+   
 </form>
+<button type="submit" class="btn btn-warning">Cập nhật</button>
 
 @section Scripts {
     @{

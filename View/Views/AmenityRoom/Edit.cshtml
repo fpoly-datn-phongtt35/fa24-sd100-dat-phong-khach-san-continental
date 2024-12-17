@@ -7,79 +7,76 @@
 }
 
 <h3>Chỉnh sửa tiện nghi</h3>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                <label asp-for="AmenityId" class="control-label">Tên tiện nghi</label>
-                <select asp-for="AmenityId" class="form-control">
-                    <option value="">-- Chọn tiện nghi --</option>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<div class="row">
+    <form asp-action="Edit" class="row mt-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id"/>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="AmenityId" class="control-label1">Tên tiện nghi</label>
+                <select asp-for="AmenityId" class="form-select">
+                    <option disabled>-- Chọn tiện nghi --</option>
                     @foreach (var amenity in ViewBag.Amenities)
                     {
-                    <option value="@amenity.Id">@amenity.Name</option>
+                        <option value="@amenity.Id">@amenity.Name</option>
                     }
                 </select>
                 <span asp-validation-for="AmenityId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RoomTypeId" class="control-label">Loại phòng</label>
-                <select asp-for="RoomTypeId" class="form-control">
-                    <option value="">-- Chọn loại phòng --</option>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomTypeId" class="control-label1">Loại phòng</label>
+                <select asp-for="RoomTypeId" class="form-select">
+                    <option disabled>-- Chọn loại phòng --</option>
                     @foreach (var roomType in ViewBag.RoomTypes)
                     {
-                        <option value="@roomType.Id">@roomType.Name</option>
+                    <option value="@roomType.Id">@roomType.Name</option>
                     }
                 </select>
                 <span asp-validation-for="RoomTypeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label">Số lượng</label>
-                <input asp-for="Amount" class="form-control"/>
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label">Trạng thái</label>
-                @* <select name="status" class="form-select" id="status"> *@
-                @*     <option disabled selected>Chọn trạng thái</option> *@
-                @*     @foreach (var status in Enum.GetValues(typeof(EntityStatus))) *@
-                @*     { *@
-                @*         // Ép kiểu status về EntityStatus *@
-                @*         var statusEnum = (EntityStatus)status; *@
-                @*         <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())"> *@
-                @*             @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt --> *@
-                @*         </option> *@
-                @*     } *@
-                @* </select> *@
-                <select asp-for="Status" class="form-control">
-                    @{
-                    string[] status = (string[])Enum.GetNames(typeof(EntityStatus));
-                    }
-                    @foreach (string item in status)
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="control-label1">Trạng thái</label>
+                <select name="status" class="form-select" id="status">
+                    <option disabled>-- Chọn trạng thái --</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
-                    <option value="@item">@item</option>
+                    var statusEnum = (EntityStatus)status;
+                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                        @StatusHelper.DisplayNameForEnum(statusEnum)
+                    </option>
                     }
                 </select>
             </div>
-            <div class="form-group" hidden>
+
+            <div class="form-group mb-3">
+                <label asp-for="Amount" class="control-label1">Số lượng</label>
+                <input asp-for="Amount" class="form-control"/>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3" hidden>
                 <label asp-for="ModifiedTime" class="control-label">Thời gian sửa</label>
-                <input asp-for="ModifiedTime" class="form-control" />
+                <input asp-for="ModifiedTime" class="form-control"/>
                 <span asp-validation-for="ModifiedTime" class="text-danger"></span>
             </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Cập nhật" class="btn btn-warning" />
-            </div>
-
-        </form>
-    </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+        </div>
+        
+        <div class="form-group mt-3">
+            <input type="submit" value="Cập nhật" class="btn btn-warning"/>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-

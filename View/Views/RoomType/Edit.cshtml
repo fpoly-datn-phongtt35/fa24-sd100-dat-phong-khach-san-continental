@@ -7,64 +7,61 @@
 }
 
 <h3>Chỉnh sửa loại phòng</h3>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id"/>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Tên loại phòng</label>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<div class="row">
+    <form asp-action="Edit" class="row mt-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id"/>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label1">Tên loại phòng</label>
                 <input asp-for="Name" class="form-control"/>
                 <span asp-validation-for="Name" class="text-danger pt-3 d-block"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label">Mô tả</label>
-                <input asp-for="Description" class="form-control"/>
-                <span asp-validation-for="Description" class="text-danger pt-3 d-block"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaximumOccupancy" class="control-label">Số lượng tối đa người ở</label>
+
+            <div class="form-group mb-3">
+                <label asp-for="MaximumOccupancy" class="control-label1">Số lượng tối đa người ở</label>
                 <input asp-for="MaximumOccupancy" class="form-control"/>
                 <span asp-validation-for="MaximumOccupancy" class="text-danger pt-3 d-block"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label">Trạng thái</label>
-                @* <select name="status" class="form-select" id="status"> *@
-                @*     <option disabled selected>Chọn trạng thái</option> *@
-                @*     @foreach (var status in Enum.GetValues(typeof(EntityStatus))) *@
-                @*     { *@
-                @*         // Ép kiểu status về EntityStatus *@
-                @*         var statusEnum = (EntityStatus)status; *@
-                @*         <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())"> *@
-                @*             @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt --> *@
-                @*         </option> *@
-                @*     } *@
-                @* </select> *@
-                <select asp-for="Status" class="form-control">
-                    @{
-                    string[] status = (string[])Enum.GetNames(typeof(EntityStatus));
-                    }
-                    @foreach (string item in status)
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="control-label1">Trạng thái</label>
+                <select name="status" class="form-select" id="status">
+                    <option disabled>-- Chọn trạng thái --</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
-                    <option value="@item">@item</option>
+                    var statusEnum = (EntityStatus)status;
+                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                        @StatusHelper.DisplayNameForEnum(statusEnum)
+                    </option>
                     }
                 </select>
             </div>
-            <div class="form-group" hidden>
-                <label asp-for="ModifiedTime" class="control-label">Thời gian sửa</label>
-                <input asp-for="ModifiedTime" class="form-control"/>
-                <span asp-validation-for="ModifiedTime" class="text-danger"></span>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label1">Mô tả</label>
+                <textarea asp-for="Description" class="form-control w-100" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Cập nhật" class="btn btn-warning"/>
-            </div>
-
-        </form>
-    </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-outline-secondary mt-3">Quay lại</a>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="ModifiedTime" class="control-label1">Thời gian sửa</label>
+            <input asp-for="ModifiedTime" class="form-control1"/>
+            <span asp-validation-for="ModifiedTime" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group mt-3">
+            <input type="submit" value="Cập nhật" class="btn btn-warning"/>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

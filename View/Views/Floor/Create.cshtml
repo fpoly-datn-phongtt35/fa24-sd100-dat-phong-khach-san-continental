@@ -4,31 +4,39 @@
     ViewData["Title"] = "Create";
 }
 
-<h3>Create</h3>
+<h3>Tạo mới</h3>
 
-<h4>FloorCreateRequest</h4>
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<form asp-action="Create" method="post" class="row mt-3">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="control-label1">Tên tầng</label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="NumberOfRoom" class="control-label1">Số lượng phòng</label>
+            <input asp-for="NumberOfRoom" class="form-control"/>
+            <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="NumberOfRoom"></label>
-        <input asp-for="NumberOfRoom" class="form-control" />
-        <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="BuildingId" class="control-label1">Tòa</label>
+            <select asp-for="BuildingId" class="form-control" asp-items="@(new SelectList(ViewBag.Buildings, "Id", "Name"))">
+                <option hidden>-- Chọn tòa --</option>
+            </select>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="BuildingId">Building</label>
-        <select asp-for="BuildingId" class="form-control" asp-items="@(new SelectList(ViewBag.Buildings, "Id", "Name"))">
-            <option value="">-- Select Building --</option>
-        </select>
-    </div>
-    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
+    
+    <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow"/>
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
-
-    <button type="submit" class="btn btn-primary">Create</button>
 </form>
+<button type="submit" class="btn btn-success">Tạo</button>
 
 @section Scripts {
     @{

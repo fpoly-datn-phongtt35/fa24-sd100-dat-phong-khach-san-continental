@@ -115,10 +115,19 @@
                     @roomtype1?.Name
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                
                 <td>
-                    @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "btn btn-warning" })
-                    @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "btn btn-info" })
-                    @Html.ActionLink("Delete", "Delete", new { roomId = item.Id }, new { @class = "btn btn-danger" })
+                    <div class="dropdown">
+                        <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@Url.Content("~/images/icons/menu.png")">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Delete", "Delete", new { roomId = item.Id }, new { @class = "dropdown-item text-danger" })
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }
