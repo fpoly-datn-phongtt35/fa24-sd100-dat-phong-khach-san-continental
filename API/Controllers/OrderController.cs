@@ -54,7 +54,7 @@ namespace API.Controllers
             var successUrl = "https://localhost:7130/api/PaymentHistory/payment/callback-refactor";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
             //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
-
+            
             try
             {
                 //int orderCode = GenerateOrderCode(roomBookingId);

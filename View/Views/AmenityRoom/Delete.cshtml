@@ -6,15 +6,20 @@
 }
 
 <h3>Xác nhận xóa</h3>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Delete">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                <label asp-for="AmenityId" class="control-label">Tên tiện nghi</label>
-                <select asp-for="AmenityId" class="form-control" disabled>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<div class="row">
+    <form asp-action="Delete" class="row mt-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id"/>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="AmenityId" class="control-label1">Tên tiện nghi</label>
+                <select asp-for="AmenityId" class="form-select" disabled>
                     <option value="">-- Chọn tiện nghi --</option>
                     @foreach (var amenity in ViewBag.Amenities)
                     {
@@ -23,39 +28,38 @@
                 </select>
                 <span asp-validation-for="AmenityId" class="text-danger"></span>
             </div>
+        </div>
+
+        <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="RoomTypeId" class="control-label">Loại phòng</label>
-                <select asp-for="RoomTypeId" class="form-control" disabled>
+                <label asp-for="RoomTypeId" class="control-label1">Loại phòng</label>
+                <select asp-for="RoomTypeId" class="form-select" disabled>
                     <option value="">-- Chọn loại phòng --</option>
                     @foreach (var roomType in ViewBag.RoomTypes)
                     {
-                    <option value="@roomType.Id">@roomType.Name</option>
+                        <option value="@roomType.Id">@roomType.Name</option>
                     }
                 </select>
                 <span asp-validation-for="RoomTypeId" class="text-danger"></span>
             </div>
-            <div class="form-group" hidden>
-                <label asp-for="Deleted" class="control-label">Đã xóa</label>
-                <input asp-for="Deleted" class="form-control" />
-                <span asp-validation-for="Deleted" class="text-danger"></span>
-            </div>
-            <div class="form-group" hidden>
-                <label asp-for="DeletedTime" class="control-label">Thời gian xóa</label>
-                <input asp-for="DeletedTime" class="form-control" />
-                <span asp-validation-for="DeletedTime" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-            </div>
+        </div>
 
-        </form>
-    </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+        <div class="form-group" hidden>
+            <label asp-for="Deleted" class="control-label">Đã xóa</label>
+            <input asp-for="Deleted" class="form-control"/>
+            <span asp-validation-for="Deleted" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="DeletedTime" class="control-label">Thời gian xóa</label>
+            <input asp-for="DeletedTime" class="form-control"/>
+            <span asp-validation-for="DeletedTime" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <input type="submit" value="Xóa" class="btn btn-danger"/>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-

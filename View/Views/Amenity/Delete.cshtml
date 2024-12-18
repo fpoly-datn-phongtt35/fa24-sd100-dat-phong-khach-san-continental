@@ -6,6 +6,11 @@
 }
 
 <h3>Xác nhận xóa tiện nghi</h3>
+
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Delete">
@@ -14,7 +19,7 @@
 
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Tên tiện nghi</label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" disabled />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
@@ -27,20 +32,11 @@
                 <input asp-for="DeletedTime" class="form-control" />
                 <span asp-validation-for="DeletedTime" class="text-danger"></span>
             </div>
-            @* <div class="form-group"> *@
-            @*     <label asp-for="DeletedBy" class="control-label">Được xóa bởi</label> *@
-            @*     <input asp-for="DeletedBy" class="form-control" /> *@
-            @*     <span asp-validation-for="DeletedBy" class="text-danger"></span> *@
-            @* </div> *@
             <div class="form-group mt-3">
                 <input type="submit" value="Xóa" class="btn btn-danger" />
             </div>
-
         </form>
     </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
 </div>
 
 @section Scripts {

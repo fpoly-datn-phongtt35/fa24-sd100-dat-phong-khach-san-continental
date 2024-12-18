@@ -23,7 +23,6 @@
                     <option value="">Chọn trạng thái</option>
                     @foreach (var status in Enum.GetValues(typeof(RoomBookingStatus)))
                     {
-                        // Ép kiểu status về EntityStatus
                         var statusEnum = (RoomBookingStatus)status;
                         <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
                             @StatusHelper.DisplayRoomBookingStatusBadge(statusEnum)

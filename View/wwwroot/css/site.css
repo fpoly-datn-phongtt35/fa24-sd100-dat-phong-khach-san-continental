@@ -20,3 +20,204 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.button1 {
+  color: #444;
+  background: none;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-weight: 400;
+  transition: all 0.2s;
+  text-decoration: none;
+  gap: 0.5rem; /* Khoảng cách giữa icon và text */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  display: inline-flex;
+
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.1);
+}
+
+.button1 img {
+  height: 1.6rem;
+  width: auto;
+}
+
+.button1 {
+  top: 4rem;
+}
+
+.button1:active {
+  transform: translateY(3px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.button1:hover {
+  border-color: #888;
+  text-decoration: none;
+  background-color: #f7f7f7;
+  color: #444;
+}
+
+.button1:focus {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+  color: #444;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;   /* Tạo khoảng cách giữa các nút */
+  margin-top: 1rem;
+}
+
+.button-trash {
+  margin-left: auto;
+  margin-right: 2rem;
+}
+
+.form-control1 {
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  width: 20rem;
+}
+
+.form-control1:focus {
+  outline: none;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+.form-control1:hover {
+  background-color: #f7f7f7;
+}
+
+/* Thiết kế dropdown */
+.form-select1 {
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.8rem; /* Bo góc giống các nút */
+  box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  appearance: none; /* Loại bỏ mũi tên mặc định */
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.5rem;
+  width: 15rem;
+  max-width: 300px;
+  height: auto;
+  cursor: pointer;
+}
+
+.form-select1 {
+  background-image: url('../images/icons/arrows.png');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1.5rem;
+}
+
+.form-select1:hover {
+  background-color: #f7f7f7;
+}
+
+.form-select1:focus {
+  outline: none;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+.form-select1 {
+  max-height: 12rem; /* Giới hạn chiều cao */
+  overflow-y: auto;  /* Hiển thị thanh cuộn khi cần */
+}
+
+.button1.button-warning {
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.button1.button-warning:hover {
+  background-color: #e0a800;
+  color: white;
+}
+
+.button1.button-success {
+  background-color: #0f8d34;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.button1.button-success:hover {
+  background-color: #0f8d34;
+  color: white;
+}
+
+.button1.button-danger {
+  background-color: #c00404;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.button1.button-danger:hover {
+  background-color: #c00404;
+  color: white;
+}
+
+.button1.button-primary {
+  background-color: #178dc7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.button1.button-primary:hover {
+  background-color: #178dc7;
+  color: white;
+}
+
+.textarea-description {
+  width: 100%;     
+  max-width: 400px;
+  resize: none;
+  height: auto;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.control-label1 {
+  display: block;      /* Đảm bảo label nằm trên input */
+  margin-bottom: 0.5rem; /* Khoảng cách giữa label và input */
+  font-weight: bold;   /* Làm nổi bật tiêu đề */
+}

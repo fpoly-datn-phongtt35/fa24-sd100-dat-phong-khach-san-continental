@@ -141,13 +141,13 @@ namespace Domain.Services.Services
                                   Gender = row.Field<GenderType?>("Gender"),
                                   DateOfBirth = row.Field<DateTime?>("DateOfBirth"),
                                   Status = row.Field<EntityStatus>("Status"),
-                                  CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
+                                  CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
-                                  ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
+                                  ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
                                   ModifiedBy = row.Field<Guid?>("ModifiedBy") != null ? row.Field<Guid>("ModifiedBy") : Guid.Empty,
                                   Deleted = row.Field<bool>("Deleted"),
                                   DeletedBy = row.Field<Guid?>("DeletedBy") != null ? row.Field<Guid>("DeletedBy") : Guid.Empty,
-                                  DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
+                                  DeletedTime = row.Field<DateTimeOffset?>("DeletedTime")
                               }).ToList();
                 model.CurrentPage = customer.PageIndex;
                 model.PageSize = customer.PageSize;

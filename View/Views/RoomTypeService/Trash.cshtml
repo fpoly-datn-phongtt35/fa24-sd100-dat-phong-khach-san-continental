@@ -8,17 +8,18 @@
     ViewData["Title"] = "Index";
 }
 
-<h3>Danh sách dịch vụ thuộc loại phòng đã xóa</h3>
+<h3 class="p-3">Danh sách dịch vụ thuộc loại phòng đã xóa</h3>
 
-<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })"
+      class="d-flex align-items-center button-group">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["searchString"]" />
     </div>
-    <!-- Dropdown chọn RoomType -->
+    
     <div class="form-group me-2">
         <select name="roomTypeId" class="form-select" id="roomType">
-            <option value="">Chọn loại phòng</option>
+            <option hidden>-- Chọn loại phòng --</option>
             @foreach (var roomType in ViewBag.RoomTypes)
             {
             <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
@@ -28,34 +29,34 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-light">Tìm kiếm</button>
-    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa bộ lọc</a>
 </form>
 
-<p>
-    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
-</p>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
 
 <table class="table" style="color: black">
     <thead>
     <tr>
-        <th>@Html.DisplayName("Loại phòng")</th>
-        <th>@Html.DisplayName("Dịch vụ sử dụng")</th>
-        <th>@Html.DisplayName("Số lượng")</th>
-        <th>@Html.DisplayName("Trạng thái")</th>
-        <th>@Html.DisplayName("Chức năng")</th>
+        <th style="width: 25%">Loại phòng</th>
+        <th style="width: 25%">Dịch vụ sử dụng</th>
+        <th style="width: 10%">Số lượng</th>
+        <th style="width: 15%">Trạng thái</th>
+        <th style="width: 10%">Chức năng</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var roomTypeService in Model.data)
     {
         <tr>
-            <td style="width: 15%">@roomTypeService.RoomTypeName</td>
-            <td style="width: 15%">@roomTypeService.ServiceName</td>
-            <td style="width: 10%">@roomTypeService.Amount</td>
-            <td style="width: 15%">@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
-            <td style="width: 30%">
-                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "btn btn-warning" })
+            <td>@roomTypeService.RoomTypeName</td>
+            <td>@roomTypeService.ServiceName</td>
+            <td>@roomTypeService.Amount</td>
+            <td>@StatusHelper.DisplayStatusBadge(roomTypeService.Status)</td>
+            <td>
+                @Html.ActionLink("Phục hồi", "Recover", new { roomTypeServiceId = roomTypeService.Id }, new { @class = "button1 button-warning" })
             </td>
         </tr>
     }
