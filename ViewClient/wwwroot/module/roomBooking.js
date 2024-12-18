@@ -83,28 +83,25 @@
         var servicePriceText = $('#totalServicePayment').text();
         var servicePrice = parseFloat(servicePriceText.replace("Tiền dịch vụ: ", "").replace(" VNĐ", "").replace(/,/g, ""));
 
-        var firstName = $('#firstName').val();
-        var lastName = $('#lastName').val();
-        var email = $('#email').val();
-        var phoneNumber = $('#phone').val();
-
 
         // Tạo đối tượng bookingDetails
-        var bookingDetails = {
-            RoomId: roomId,
-            CheckInBooking: new Date(localStorage.getItem("CheckIn")).toISOString(),
-            CheckOutBooking: new Date(localStorage.getItem("CheckOut")).toISOString(),
-            Price: Math.round(price),
-            SelectedServices: [],
-            Customer: {
-                FirstName: firstName,
-                LastName: lastName,
-                Email: email,
-                PhoneNumber: phoneNumber
-            },
-            Deposit: Math.round(deposit),
-            ServicePrice: Math.round(servicePrice)
-        };
+        if (Context.Session.GetString("UserName") == null) {
+            var bookingDetails = {
+                RoomId: roomId,
+                CheckInBooking: new Date(localStorage.getItem("CheckIn")).toISOString(),
+                CheckOutBooking: new Date(localStorage.getItem("CheckOut")).toISOString(),
+                Price: Math.round(price),
+                SelectedServices: [],
+                Customer: {
+                    FirstName: $('#firstName').val(),
+                    LastName: $('#lastName').val(), // Đã sửa lỗi chính tả ở đây
+                    Email: $('#email').val(),
+                    PhoneNumber: $('#phone').val()
+                },
+                Deposit: Math.round(deposit),
+                ServicePrice: Math.round(servicePrice)
+            };
+        }
 
         // Lấy danh sách dịch vụ đã chọn
         $('.service-checkbox:checked').each(function () {
@@ -136,7 +133,21 @@
             },
             error: function (xhr, status, error) {
                 showToast("Hãy kiểm tra lại thông tin cá nhân, thông tin đặt phòng!");
-                console.log("Error: " + error); // In ra thông tin lỗi
+                console.log("Error: " + error);
+                if (xhr.status === 422) {
+                    $('#firstName').val('');
+                    $('#lastName').val('');
+                    $('#phone').val('');
+
+                    var email = $('#email').val();
+                    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    if (!regex.test(email)) {
+                        event.preventDefault();
+                        $('#firstName').focus();
+                    }
+                }
+
                 $('#validationMessage').html("Đã xảy ra lỗi trong quá trình đặt phòng: " + xhr.responseText).show();
             }
         });
@@ -144,7 +155,7 @@
 
     function showToast(message) {
         var toastHTML = `
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 100px; right: 10px; z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 100px; right: 10px; z-index: 2050;">
                 <div class="toast-header">
                     <strong class="mr-auto">Thông báo</strong>
                 </div>

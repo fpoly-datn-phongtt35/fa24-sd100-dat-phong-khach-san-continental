@@ -42,13 +42,15 @@ namespace Domain.Services.Services
                 DataTable table = await _customerRepo.ClientInsertCustomer(request);
                 if (table != null && table.Rows.Count > 0)
                 {
-                    model = (from row in table.AsEnumerable()
-                             select
-                             new ClientInsertCustomerViewModel
-                             {
-                                 Id = row.Field<Guid>("ExistingCustomerId"),
-
-                             }).FirstOrDefault();
+                    var row = table.Rows[0];
+                    if (table.Columns.Contains("Id"))
+                    {
+                        model.Id = row.Field<Guid>("Id");
+                    }
+                    else
+                    {
+                        model.Messenger = "Thông tin người dùng cần xem lại.";
+                    }
                 }
             }
             catch (Exception ex)

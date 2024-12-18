@@ -9,6 +9,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
@@ -101,6 +102,11 @@ namespace ViewClient.Controllers
         [HttpPost]
         public async Task<IActionResult> RoomBooking([FromBody] RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var _UserLogin = Guid.Empty;
@@ -127,8 +133,7 @@ namespace ViewClient.Controllers
                     customerId = insertCustomer.Id;
                     if (customerId == Guid.Empty)
                     {
-                        TempData["ErrorCreate"] = insertCustomer.Messenger;
-                        return View("Details", "Room");
+                        return StatusCode(422, new { error = "Thông tin của bạn cần chính xác.", message = insertCustomer.Messenger });
                     }
                 }
                 var room = await _roomRepo.GetRoomById(roomBookingDetailCreateRequest.RoomId);
@@ -164,7 +169,7 @@ namespace ViewClient.Controllers
                             Description = null,
                             Quantity = service.Quantity,
                             Price = service.Price,
-                            Status = Domain.Enums.EntityStatus.Active,
+                            Status = EntityStatus.Active,
                             CreatedTime = DateTime.Now,
                             CreatedBy = customerId,
                             ExtraPrice = 0,
@@ -175,10 +180,10 @@ namespace ViewClient.Controllers
                 }
                 roomBookingDetailCreateRequest.RoomId = room.Id;
                 roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
-                roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
+                roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking.;
                 roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
                 roomBookingDetailCreateRequest.CreatedBy = customerId;
-                roomBookingDetailCreateRequest.Status = Domain.Enums.RoomBookingStatus.PENDING;
+                roomBookingDetailCreateRequest.Status = RoomBookingStatus.PENDING;
                 roomBookingDetailCreateRequest.Deposit = roomBookingDetailCreateRequest.Deposit;
                 roomBookingDetailCreateRequest.Price = roomBookingDetailCreateRequest.Price;
                 roomBookingDetailCreateRequest.ExtraPrice = 0;
@@ -191,7 +196,7 @@ namespace ViewClient.Controllers
                 var roomStatus = new RoomUpdateStatusRequest
                 {
                     Id = room.Id,
-                    Status = Domain.Enums.RoomStatus.AwaitingConfirmation,
+                    Status = RoomStatus.AwaitingConfirmation,
                     ModifiedBy = customerId,
                     ModifiedTime = DateTime.Now
                 };
