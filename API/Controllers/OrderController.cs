@@ -47,12 +47,72 @@ namespace API.Controllers
         }
 
 
-        [HttpPost("create")]
+        [HttpPost("create")] // create cho bên client
         public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
             var cancelUrl = "https://localhost:7130/api/PaymentHistory/payment/callback-refactor";
             var successUrl = "https://localhost:7130/api/PaymentHistory/payment/callback-refactor";
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
+            
+
+            //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
+
+            try
+            {
+                //int orderCode = GenerateOrderCode(roomBookingId);
+                int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+                string description = "1";
+
+                int amount = request.PaymentType switch
+                {
+                    PaymentType.Bill => request.Money ?? 0,
+                    PaymentType.Deposit => (int)(roomBooking.TotalRoomPrice * 20 / 100)
+                };
+                ItemData item = new ItemData(roomBooking?.Id.ToString() ?? Guid.Empty.ToString(), 1, amount);
+
+
+                List<ItemData> items = new List<ItemData>() { item };
+                PaymentData paymentData = new PaymentData(orderCode, (int)amount, description, items,
+                    cancelUrl, successUrl);
+
+                CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
+
+                // Nếu tạo liên kết thanh toán thành công
+                if (createPayment != null && !string.IsNullOrEmpty(createPayment.checkoutUrl))
+                {
+                    var paymentHistory = new PaymentHistoryCreateRequest
+                    {
+                        OrderCode = orderCode,
+                        RoomBookingId = request.RoomBookingId,
+                        Amount = 0,
+                        PaymentTime = DateTime.Now,
+                        Note = request.PaymentType,
+                        PaymentMethod = (PaymentMethod)1
+                    };
+
+                    await _paymentHistoryService.AddPaymentHistory(paymentHistory);
+                    return Ok(new Response(0, "success", createPayment.checkoutUrl));
+                }
+                else
+                {
+                    return Ok(new Response(-1, "fail", null));
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Console.WriteLine(exception);
+                return Ok(new Response(-1, "fail", null));
+            }
+        }
+
+
+        [HttpPost("admin-create")] 
+        public async Task<IActionResult> CreatePaymentLinkAdmin(PaymentLinkCreateRequest request)
+        {           
+            var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
+            var cancelUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
+            var successUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
+
             //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
 
             try

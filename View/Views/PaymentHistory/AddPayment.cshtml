@@ -1,0 +1,47 @@
+﻿@using Domain.DTO.RoomBooking
+@model decimal
+
+@{
+    var roomBooking = (RoomBookingResponse)ViewBag.RoomBooking;
+    var message = (string)ViewBag.Message;
+    var amountToPay = (decimal)ViewBag.AmountToPay;
+    var totalPaid = (decimal)ViewBag.TotalPaid;
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Thêm Thanh Toán</h2>
+    <div class="card shadow mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Thông Tin Phòng</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Tên khách hàng:</strong> @roomBooking.CustomerFullName</p>
+            <p><strong>Tổng giá trị hóa đơn:</strong> @roomBooking.TotalPrice VND</p>
+            <p><strong>Đã thanh toán:</strong> @totalPaid VND</p>
+            <p><strong>Cần thanh toán:</strong> @amountToPay VND</p>
+            <p class="text-info"><strong>@message</strong></p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h5>Nhập thông tin thanh toán:</h5>
+        <form id="paymentForm" method="post" action="/PaymentHistory/ProcessPayment">
+            <input type="hidden" name="RoomBookingId" value="@roomBooking.Id" />
+            <div class="form-group mb-3">
+                <label for="amount">Số tiền thanh toán:</label>
+                <input type="number" class="form-control" id="amount" name="Amount" min="2000" max="@amountToPay" value="@amountToPay" required />
+            </div>
+            <div class="form-group mb-3">
+                <label for="paymentMethod">Phương thức thanh toán:</label>
+                <select class="form-control" name="PaymentMethod" required>
+                    <option value="Cash">Tiền mặt</option>
+                    <option id="paymentMethod" value="BankTransfer">Chuyển khoản</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Thanh toán</button>
+            <a href="/PaymentHistory/Id=@roomBooking.Id" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>
+
+
