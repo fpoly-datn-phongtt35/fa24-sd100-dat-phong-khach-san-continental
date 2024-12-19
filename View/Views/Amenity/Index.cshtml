@@ -6,60 +6,70 @@
     ViewData["Title"] = "Index";
 }
 
-<h3 class="p-3">Danh sách tiện nghi</h3>
+<h3>Danh sách tiện nghi</h3>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" 
       class="d-flex align-items-center">
     <div class="form-group me-2">
-        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm tiện nghi..."
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@Context.Request.Query["searchString"]" />
     </div>
-    <!-- Dropdown chọn trạng thái -->
+    
     <div class="form-group me-2">
         <select name="status" class="form-select" id="status">
-            <option value="">Chọn trạng thái</option>
+            <option hidden>-- Chọn trạng thái --</option>
             @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
             {
-            // Ép kiểu status về EntityStatus
             var statusEnum = (EntityStatus)status;
             <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                @StatusHelper.DisplayNameForEnum(statusEnum) <!-- Hiển thị tên tiếng Việt -->
+                @StatusHelper.DisplayNameEntityStatus(statusEnum)
             </option>
             }
         </select>
     </div>
 
-    <button type="submit" class="btn btn-light">Tìm kiếm</button>
-    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa bộ lọc</a>
 </form>
 
-<p class="">
+<p class="button-group">
     <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
-    <a asp-action="AmenitiesPdf" class="btn btn-danger mt-2 ms-1">Tải file PDF</a>
-    <a asp-action="Trash" class="btn btn-outline-danger mt-2 ms-1">Thùng rác</a>
+    <a asp-action="AmenitiesPdf" class="btn btn-danger mt-2 ms-1">Xem file PDF</a>
+    <a asp-action="Trash" class="button1 button-trash">
+        <img src="@Url.Content("~/images/icons/bin.png")">
+        Thùng rác
+    </a>
 </p>
 <table class="table">
     <thead>
     <tr>
-        <th>Tên tiện nghi</th>
-        <th>Mô tả</th>
-        <th>Trạng thái</th>
-        <th>Chức năng</th>
+        <th style="width: 20%">Tên tiện nghi</th>
+        <th style="width: 30%">Mô tả</th>
+        <th style="width: 20%">Trạng thái</th>
+        <th style="width: 15%">Chức năng</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var amenity in Model.data)
     {
-        <tr>
-            <td style="width: 20%">@amenity.Name</td>
-            <td style="width: 20%">@amenity.Description</td>
-            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
-            <td style="width: 30%">
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { amenityId = amenity.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Chi tiết", "Details", new { amenityId = amenity.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Xóa", "Delete", new { amenityId = amenity.Id }, new { @class = "btn btn-danger" })
-            </td>
-        </tr>
+    <tr>
+        <td>@amenity.Name</td>
+        <td>@amenity.Description</td>
+        <td>@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
+        <td>
+            <div class="dropdown">
+                <button class="button1" type="button" id="dropdownMenuButton-@amenity.Id"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="@Url.Content("~/images/icons/menu.png")">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@amenity.Id">
+                    <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { amenityId = amenity.Id }, new { @class = "dropdown-item" })</li>
+                    <li>@Html.ActionLink("Chi tiết", "Details", new { amenityId = amenity.Id }, new { @class = "dropdown-item" })</li>
+                    <li>@Html.ActionLink("Xóa", "Delete", new { amenityId = amenity.Id }, new { @class = "dropdown-item text-danger" })</li>
+                </ul>
+            </div>
+        </td>
+    </tr>
     }
     </tbody>
 </table>
