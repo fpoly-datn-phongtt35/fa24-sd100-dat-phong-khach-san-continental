@@ -8,57 +8,84 @@
     ViewData["Title"] = "Details";
 }
 
-<h4>Chi tiết tiện nghi</h4>
+<h3>Chi tiết tiện nghi</h3>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
 
-<div>
-    <hr/>
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayName("Tên tiện nghi")</dt>
-        <dd class="col-sm-10">
-            @{
-                var amenities = ViewBag.Amenities as List<AmenityResponse>;
-                var amenity = amenities?.FirstOrDefault(a => a.Id == Model.AmenityId);
-            }
-            @amenity?.Name
-        </dd>
-        <dt class="col-sm-2">@Html.DisplayName("Loại phòng")</dt>
-        <dd class="col-sm-10">
-            @{
-                var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
-                var roomType = roomTypes?.FirstOrDefault(r => r.Id == Model.RoomTypeId);
-            }
-            @roomType?.Name
-        </dd>
-        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
-        <dd class="col-sm-10">@StatusHelper.DisplayStatusBadge(Model.Status)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Số lượng")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Amount)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
-        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
-    </dl>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Tên tiện nghi</label>
+            <dd class="col-sm-10">
+                @{
+                    var amenities = ViewBag.Amenities as List<AmenityResponse>;
+                    var amenity = amenities?.FirstOrDefault(a => a.Id == Model.AmenityId);
+                }
+                @amenity?.Name
+            </dd>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Loại phòng</label>
+            <dd class="col-sm-10">
+                @{
+                    var roomTypes = ViewBag.RoomTypes as List<RoomTypeResponse>;
+                    var roomType = roomTypes?.FirstOrDefault(r => r.Id == Model.RoomTypeId);
+                }
+                @roomType?.Name
+            </dd>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Trạng thái</label>
+            <dd class="col-sm-10">@StatusHelper.DisplayStatusBadge(Model.Status)</dd>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label class="control-label1">Số lượng</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.Amount)</dd>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian tạo</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Được tạo bởi</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian sửa</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label class="control-label1">Được sửa bởi</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Xóa</label>
+            <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian xóa</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Được xóa bởi</label>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
+        </div>
+    </div>
 </div>
 <div>
-    @Html.ActionLink("Sửa", "Edit", new { amenityRoomId = Model.Id }, new { @class = "btn btn-warning" })
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+    @Html.ActionLink("Sửa", "Edit", new { amenityRoomId = Model.Id }, 
+    new { @class = "btn btn-warning" })
 </div>
-
-<style>
-    dt {
-        margin-bottom: 10px;
-    }
-    dd {
-        margin-bottom: 20px;
-    }
-</style>

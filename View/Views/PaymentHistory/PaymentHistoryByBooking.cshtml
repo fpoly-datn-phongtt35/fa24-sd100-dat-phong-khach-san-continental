@@ -5,6 +5,8 @@
 
 @{
     var roombooking = (RoomBookingResponse)ViewBag.RoomBooking;
+    var totalPaid = (decimal)ViewBag.TotalPaid;
+    var remaining = roombooking.TotalPrice - totalPaid;
 }
 
 <style>
@@ -15,7 +17,7 @@
         margin: 0px;
     }
 </style>
-<div class="d-flex m-3" style="width:">
+<div class="d-flex m-3">
     <h2>Lịch sử thanh toán</h2>
 </div>
 <div class="d-flex justify-content-between align-items-center mt-3" style="width:100%">
@@ -25,15 +27,16 @@
     </div>
     <div class="ms-4 rounded-2 d-flex align-items-center" style="min-width: 200px">
         <p class="p-m0 fw-bold text-success">Đã thanh toán: </p>
-        <p class="p-m0 ms-1"> 0</p>
+        <p class="p-m0 ms-1"> @totalPaid</p>
     </div>
     <div class="ms-4 rounded-2 d-flex align-items-center" style="min-width: 200px">
         <p class="p-m0 fw-bold text-danger">Chưa thanh toán: </p>
-        <p class="p-m0 ms-1"> 0</p>
+        <p class="p-m0 ms-1"> @remaining</p>
     </div>
     <div class="ms-4 rounded-2 d-flex align-items-center justify-content-end" style="min-width: 200px">
-        <button class="btn btn-success me-3">Thêm thanh toán +</button>
+        <a href="/PaymentHistory/AddPayment/@roombooking.Id" class="btn btn-success me-3">Thêm thanh toán +</a>
     </div>
+
 </div>
 <hr class="mt-0" />
 <div class="m-3 bag-shadow">

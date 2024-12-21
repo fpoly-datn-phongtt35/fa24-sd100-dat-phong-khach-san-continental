@@ -169,6 +169,7 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateResidence = "SP_UpdateResidence";
         public const string SP_GetTotalPaidAmountByRoomBookingId = "SP_GetTotalPaidAmountByRoomBookingId";
         public const string SP_GetMaximumOccupancyByRoomBookingDetailId = "SP_GetMaximumOccupancyByRoomBookingDetailId";
+        public const string SP_CheckOut1Residence = "SP_CheckOut1Residence";
 
     }
 }

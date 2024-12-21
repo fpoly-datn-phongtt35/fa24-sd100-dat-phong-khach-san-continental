@@ -12,40 +12,41 @@
 
 <h3>Danh sách tiện nghi thuộc loại phòng đã xóa</h3>
 
-<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" 
+      class="d-flex align-items-center button-group">
     <div class="form-group me-2">
         <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
                value="@ViewContext.HttpContext.Request.Query["searchString"]"/>
     </div>
-    <!-- Dropdown chọn RoomType -->
+    
     <div class="form-group me-2">
         <select name="roomTypeId" class="form-select" id="roomType">
-            <option value="">Chọn loại phòng</option>
+            <option hidden>Chọn loại phòng</option>
             @foreach (var roomType in ViewBag.RoomTypes)
             {
                 <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
-                    @roomType.Name <!-- Hiển thị tên loại phòng -->
+                    @roomType.Name
                 </option>
             }
         </select>
     </div>
 
-    <button type="submit" class="btn btn-light">Tìm kiếm</button>
-    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa bộ lọc</a>
 </form>
 
-<p>
-    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
-</p>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
 
 <table class="table" style="color: black">
     <thead>
     <tr>
-        <th style="width: 150px">@Html.DisplayName("Loại phòng")</th>
-        <th style="width: 150px">@Html.DisplayName("Tiện nghi sử dụng")</th>
-        <th style="width: 100px">@Html.DisplayName("Số lượng")</th>
-        <th style="width: 150px">@Html.DisplayName("Trạng thái")</th>
-        <th style="width: 200px">@Html.DisplayName("Chức năng")</th>
+        <th style="width: 20%">Loại phòng</th>
+        <th style="width: 20%">Tiện nghi sử dụng</th>
+        <th style="width: 20%">Số lượng</th>
+        <th style="width: 20%">Trạng thái</th>
+        <th style="width: 20%">Chức năng</th>
     </tr>
     </thead>
     <tbody>
@@ -57,7 +58,8 @@
             <td>@amenityRoom.Amount</td>
             <td>@StatusHelper.DisplayStatusBadge(amenityRoom.Status)</td>
             <td>
-                @Html.ActionLink("Phục hồi", "Recover", new { amenityRoomId = amenityRoom.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Phục hồi", "Recover", new { amenityRoomId = amenityRoom.Id }, 
+    new { @class = "button1 button-warning" })
             </td>
         </tr>
     }

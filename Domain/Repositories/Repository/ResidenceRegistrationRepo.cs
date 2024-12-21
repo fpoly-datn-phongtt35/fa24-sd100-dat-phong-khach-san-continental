@@ -46,6 +46,23 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<int> CheckOut1Residence(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter(@"Id", id)
+                };
+
+                return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_CheckOut1Residence, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<int> DeleteResidence(Guid id)
         {
             try
@@ -131,8 +148,8 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@FullName", request.FullName),
                     new SqlParameter("@DateOfBirth", request.DateOfBirth),
                     new SqlParameter("@Gender", request.Gender),
-                    new SqlParameter("@IdentityNumber", request.IdentityNumber),
-                    new SqlParameter("@PhoneNumber", request.PhoneNumber)
+                    new SqlParameter("@IdentityNumber", (object)request.IdentityNumber ?? DBNull.Value),
+                    new SqlParameter("@PhoneNumber", (object)request.PhoneNumber ?? DBNull.Value)
                 };
 
                 return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateResidence, sqlParameters);
