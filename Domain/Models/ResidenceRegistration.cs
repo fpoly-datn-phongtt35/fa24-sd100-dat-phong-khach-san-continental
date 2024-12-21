@@ -18,6 +18,8 @@ namespace Domain.Models
         public GenderType? Gender { get; set; }
         public string? IdentityNumber { get; set; }
         public string? PhoneNumber { get; set; }
+        public bool? IsCheckOut { get; set; }
+        public DateTimeOffset? CheckOutTime { get; set; }
 
 
 

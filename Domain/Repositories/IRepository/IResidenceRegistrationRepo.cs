@@ -11,5 +11,6 @@ namespace Domain.Repositories.IRepository
         Task<DataTable> GetResidences(ResidenceGetRequest request);
         Task<DataTable> GetResidenceById(Guid id);
         Task<int> GetMaximumOccupancyByRoomBookingDetailId(Guid roomBookingDetailId);
+        Task<int> CheckOut1Residence(Guid id);  
     }
 }
