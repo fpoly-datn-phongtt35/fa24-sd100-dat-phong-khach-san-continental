@@ -5,39 +5,42 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Danh sách tiện nghi đã xóa</h1>
+<h3>Danh sách tiện nghi đã xóa</h3>
 
-<form method="get" asp-action="Trash" class="d-flex align-items-center">
+<form method="get" action="@Url.Action("Trash", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })"  
+      class="d-flex align-items-center button-group">
     <div class="form-group me-2">
-        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm tiện nghi..."
-               value="@ViewContext.HttpContext.Request.Query["searchString"]" />
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm..."
+               value="@Context.Request.Query["searchString"]" />
     </div>
-    <button type="submit" class="btn btn-light">Tìm kiếm</button>
-    <a href="@Url.Action("Trash")" class="btn btn-secondary ms-2">Xóa lọc</a>
+
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa bộ lọc</a>
 </form>
 
-<p>
-    <a asp-action="Index" class="btn btn-outline-secondary mt-2">Quay lại</a>
-</p>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
 
 <table class="table" style="color: black">
     <thead>
     <tr>
-        <th>Tên tiện nghi</th>
-        <th>Mô tả</th>
-        <th>Trạng thái</th>
-        <th>Chức năng</th>
+        <th style="width: 20%">Tên tiện nghi</th>
+        <th style="width: 30%">Mô tả</th>
+        <th style="width: 20%">Trạng thái</th>
+        <th style="width: 15%">Chức năng</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var amenity in Model.data)
     {
         <tr>
-            <td style="width: 20%">@amenity.Name</td>
-            <td style="width: 20%">@amenity.Description</td>
-            <td style="width: 10%">@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
-            <td style="width: 30%">
-                @Html.ActionLink("Phục hồi", "Recover", new { amenityId = amenity.Id }, new { @class = "btn btn-warning" })
+            <td>@amenity.Name</td>
+            <td>@amenity.Description</td>
+            <td>@StatusHelper.DisplayStatusBadge(amenity.Status)</td>
+            <td>
+                @Html.ActionLink("Phục hồi", "Recover", new { amenityId = amenity.Id }, 
+    new { @class = "button1 button-warning" })
             </td>
         </tr>
     }

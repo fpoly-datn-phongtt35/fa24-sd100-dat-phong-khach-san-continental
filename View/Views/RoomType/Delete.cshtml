@@ -5,37 +5,39 @@
     ViewData["Title"] = "Delete";
 }
 
-<h3>Xác nhận xóa loại phòng</h3>
+<h3 class="p-3">Xác nhận xóa loại phòng</h3>
+
+<p class="button-group">
+    <a asp-action="Index" class="button1">
+        <img src="@Url.Content("~/images/icons/left-arrow.png")">
+        Quay lại
+    </a>
+</p>
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Delete">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+    <form asp-action="Delete">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Tên loại phòng</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group" hidden>
-                <label asp-for="Deleted" class="control-label">Đã xóa</label>
-                <input asp-for="Deleted" class="form-control" />
-                <span asp-validation-for="Deleted" class="text-danger"></span>
-            </div>
-            <div class="form-group" hidden>
-                <label asp-for="DeletedTime" class="control-label">Thời gian xóa</label>
-                <input asp-for="DeletedTime" class="form-control" />
-                <span asp-validation-for="DeletedTime" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-            </div>
-
-        </form>
-    </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label1">Tên loại phòng</label>
+            <input asp-for="Name" class="form-control1" disabled />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="Deleted" class="control-label">Đã xóa</label>
+            <input asp-for="Deleted" class="form-control" />
+            <span asp-validation-for="Deleted" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="DeletedTime" class="control-label">Thời gian xóa</label>
+            <input asp-for="DeletedTime" class="form-control" />
+            <span asp-validation-for="DeletedTime" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <input type="submit" value="Xóa" class="button1 button-danger" />
+        </div>
+    </form>
 </div>
 
 @section Scripts {

@@ -109,15 +109,15 @@ public class AmenityRoomController : Controller
         EntityStatus? status = null, int pageIndex = 1, int pageSize = 10)
     {
         await LoadAmenitiesAndRoomTypes();
+        string requestUrl = "AmenityRoom/GetFilteredAmenityRooms";
         var amenityRoomGetRequest = new AmenityRoomGetRequest()
         {
             PageSize = pageSize,
             PageIndex = pageIndex,
             SearchString = searchString,
-            Status = null,
+            Status = status,
             RoomTypeId = roomTypeId
         };
-        string requestUrl = "AmenityRoom/GetFilteredAmenityRooms";
 
         var amenityRooms = await SendHttpRequest<ResponseData<AmenityRoomResponse>>
             (requestUrl, HttpMethod.Post, amenityRoomGetRequest);

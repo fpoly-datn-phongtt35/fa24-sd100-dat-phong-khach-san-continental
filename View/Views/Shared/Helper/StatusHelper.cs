@@ -48,7 +48,7 @@ public static class StatusHelper
         }
     }
     
-    public static IHtmlContent DisplayNameForEnum(this EntityStatus status)
+    public static IHtmlContent DisplayNameEntityStatus(this EntityStatus status)
     {
         return status switch
         {
@@ -56,12 +56,64 @@ public static class StatusHelper
             EntityStatus.InActive =>  new HtmlString("Không hoạt động"),
             EntityStatus.Deleted =>  new HtmlString("Đã xóa"),
             EntityStatus.Pending => new HtmlString("Hoãn"),
-            EntityStatus.PendingForActivation => new HtmlString("Đang chờ kích hoạt"),
-            EntityStatus.PendingForConfirmation => new HtmlString("Đang chờ xác nhận"),
-            EntityStatus.PendingForApproval => new HtmlString("Đang chờ phê duyệt"),
+            EntityStatus.PendingForActivation => new HtmlString("Chờ kích hoạt"),
+            EntityStatus.PendingForConfirmation => new HtmlString("Chờ xác nhận"),
+            EntityStatus.PendingForApproval => new HtmlString("Chờ phê duyệt"),
             EntityStatus.Locked => new HtmlString("Khóa"),
             _ => new HtmlString("null")
         };
+    }
+    
+    public static IHtmlContent DisplayNameRoomStatus(this RoomStatus status)
+    {
+        return status switch
+        {
+            RoomStatus.Vacant => new HtmlString("Trống"),
+            RoomStatus.OutOfOrder=>  new HtmlString("Hết phòng"),
+            RoomStatus.Deleted =>  new HtmlString("Đã xóa"),
+            RoomStatus.Occupied => new HtmlString("Không trống"),
+            RoomStatus.Reserved => new HtmlString("Đạng dọn dẹp"),
+            RoomStatus.Cleaned => new HtmlString("Sạch sẽ"),
+            RoomStatus.Dirty => new HtmlString("Bẩn"),
+            RoomStatus.Inspected => new HtmlString("Đã kiểm tra"),
+            RoomStatus.DoNotDisturb => new HtmlString("Đừng làm phiền"),
+            RoomStatus.CheckIn => new HtmlString("Check In"),
+            RoomStatus.CheckOut => new HtmlString("Check Out"),
+            RoomStatus.AwaitingConfirmation => new HtmlString("Chờ xác nhận"),
+            _ => new HtmlString("null")
+        };
+    }
+    public static IHtmlContent DisplayRoomStatusBadge(RoomStatus roomStatus)
+    {
+        switch (roomStatus)
+        {
+            case RoomStatus.Vacant:
+                return new HtmlString("<span class='badge bg-success'>Trống</span>");
+            case RoomStatus.OutOfOrder:
+                return new HtmlString("<span class='badge bg-secondary'>Hết phòng</span>");
+            case RoomStatus.Deleted:
+                return new HtmlString("<span class='badge bg-danger'>Đã xóa</span>");
+            case RoomStatus.Occupied:
+                return new HtmlString("<span class='badge bg-secondary'>Không trống</span>");
+            case RoomStatus.Reserved:
+                return new HtmlString("<span class='badge bg-secondary'>Đạng dọn dẹp</span>");
+            case RoomStatus.Cleaned:
+                return new HtmlString("<span class='badge bg-secondary'>Sạch sẽ</span>");
+            case RoomStatus.Dirty:
+                return new HtmlString("<span class='badge bg-secondary'>Bẩn</span>");
+            case RoomStatus.Inspected:
+                return new HtmlString("<span class='badge bg-secondary'>Đã kiểm tra</span>");
+            case RoomStatus.DoNotDisturb:
+                return new HtmlString("<span class='badge bg-secondary'>Đừng làm phiền</span>");
+            case RoomStatus.CheckIn:
+                return new HtmlString("<span class='badge bg-secondary'>Check In/span>");
+            case RoomStatus.CheckOut:
+                return new HtmlString("<span class='badge bg-secondary'>Check Out/span>");
+            case RoomStatus.AwaitingConfirmation:
+                return new HtmlString("<span class='badge bg-secondary'>Chờ xác nhận</span>");
+            default:
+                return HtmlString.Empty;
+        }
     }
     public static IHtmlContent DisplayStatusBadge1(RoomStatus status)
     {
@@ -76,21 +128,21 @@ public static class StatusHelper
             case RoomStatus.Occupied:
                 return new HtmlString("<span class='badge bg-secondary'>Hoãn</span>");
             case RoomStatus.Reserved:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ kích hoạt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ kích hoạt</span>");
             case RoomStatus.Cleaned:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ xác nhận</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ xác nhận</span>");
             case RoomStatus.Dirty:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ phê duyệt</span>");
             case RoomStatus.Inspected:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ phê duyệt</span>");
             case RoomStatus.DoNotDisturb:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờphê duyệt</span>");
             case RoomStatus.CheckIn:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ phê duyệt</span>");
             case RoomStatus.CheckOut:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ phê duyệt</span>");
             case RoomStatus.AwaitingConfirmation:
-                return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Chờ phê duyệt</span>");
             default:
                 return HtmlString.Empty;
         }

@@ -3,6 +3,7 @@
 @using Domain.DTO.RoomType
 @using Domain.Enums
 @using Domain.DTO.Paging
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.DTO.Room.RoomResponse>
 
 
@@ -46,14 +47,14 @@
         </div>
 
         <div>
-            <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
-                <option value="">-- Status --</option>
-                @foreach (var status in ViewBag.StatusList)
+            <select name="status" class="form-select" id="status">
+                <option hidden>-- Chọn trạng thái --</option>
+                @foreach (var status in Enum.GetValues(typeof(RoomStatus)))
                 {
-                    <option value="@((int)status)"
-                            selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                        @status
-                    </option>
+                var statusEnum = (RoomStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameRoomStatus(statusEnum)
+                </option>
                 }
             </select>
         </div>
@@ -114,11 +115,20 @@
                     }
                     @roomtype1?.Name
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@StatusHelper.DisplayRoomStatusBadge(item.Status)</td>
+                
                 <td>
-                    @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "btn btn-warning" })
-                    @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "btn btn-info" })
-                    @Html.ActionLink("Delete", "Delete", new { roomId = item.Id }, new { @class = "btn btn-danger" })
+                    <div class="dropdown">
+                        <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@Url.Content("~/images/icons/menu.png")">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            @Html.ActionLink("Chỉnh sửa", "Edit", new { roomId = item.Id }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Chi tiết", "Details", new { roomId = item.Id }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Delete", "Delete", new { roomId = item.Id }, new { @class = "dropdown-item text-danger" })
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }
