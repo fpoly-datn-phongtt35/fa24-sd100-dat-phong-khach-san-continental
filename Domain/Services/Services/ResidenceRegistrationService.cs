@@ -39,6 +39,19 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<int> CheckOut1Residence(Guid id)
+        {
+            try
+            {
+                return await _residenceRegistrationRepo.CheckOut1Residence(id);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<int> DeleteResidence(Guid id)
         {
             try
@@ -80,7 +93,9 @@ namespace Domain.Services.Services
                           DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                           Gender = row.Field<GenderType?>("Gender"),
                           IdentityNumber = row.Field<string>("IdentityNumber"),
-                          PhoneNumber = row.Field<string>("PhoneNumber") 
+                          PhoneNumber = row.Field<string>("PhoneNumber"),
+                          CheckOutTime = row.IsNull("CheckOutTime") ? null : row.Field<DateTimeOffset?>("CheckOutTime"),
+                          IsCheckOut = row.Field<bool?>("IsCheckOut")
                       }).FirstOrDefault();
             }
             catch (Exception ex)
@@ -110,7 +125,9 @@ namespace Domain.Services.Services
                                   DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                                   Gender = row.Field<GenderType?>("Gender"),
                                   IdentityNumber = row.Field<string>("IdentityNumber"),
-                                  PhoneNumber = row.Field<string>("PhoneNumber") 
+                                  PhoneNumber = row.Field<string>("PhoneNumber"),
+                                  CheckOutTime = row.IsNull("CheckOutTime") ? null : row.Field<DateTimeOffset?>("CheckOutTime"),
+                                  IsCheckOut = row.Field<bool?>("IsCheckOut")
                               }).ToList();
                 model.CurrentPage = request.PageIndex;
                 model.PageSize = request.PageSize;
@@ -149,7 +166,9 @@ namespace Domain.Services.Services
                                   DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                                   Gender = row.Field<GenderType?>("Gender"),
                                   IdentityNumber = row.Field<string>("IdentityNumber"),
-                                  PhoneNumber = row.Field<string>("PhoneNumber") 
+                                  PhoneNumber = row.Field<string>("PhoneNumber"),
+                                  CheckOutTime = row.IsNull("CheckOutTime") ? null : row.Field<DateTimeOffset?>("CheckOutTime"),
+                                  IsCheckOut = row.Field<bool?>("IsCheckOut")
                               }).ToList();
                 model.CurrentPage = request.PageIndex;
                 model.PageSize = request.PageSize;
