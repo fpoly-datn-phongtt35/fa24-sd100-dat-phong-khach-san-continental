@@ -1559,7 +1559,7 @@ var _roombooking_detail = {
         $("#StatusRBD_" + Id).html("Đã nhận phòng");
         var newDate = global.createNewDateInVietnamTimezone();
         newDate = newDate.toISOString().slice(0, 16);
-        $("#StatusRBD_" + Id).css('color', 'yellow');
+        $("#StatusRBD_" + Id).css('color', 'green');
         $("#CheckInReal_" + Id).val(newDate);
         $("#btn-checkin-" + Id).remove();
         _roombooking_detail.CalculatingRoomPrice()
@@ -1637,7 +1637,7 @@ var _roombooking_detail = {
             type: "post",
             data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail, lstSerOrderDetail: lstServiceOrderDetail, ListDelete: LstDelete },
             success: function (result) {
-                window.location.reload();
+                window.location.href = "/roombooking";
             }
         });
     }
