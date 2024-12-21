@@ -1723,8 +1723,8 @@ var _roombooking_detail = {
             }
             lstRoomBookingDetail.push(obj);
         })
-        console.log(RoomBooking)
-        console.log(lstRoomBookingDetail)
+/*        console.log(RoomBooking)
+        console.log(lstRoomBookingDetail)*/
     },
 
     submit: function () {

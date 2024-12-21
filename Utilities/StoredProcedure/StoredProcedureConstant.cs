@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Bcpg.Sig;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -140,6 +141,7 @@ namespace Utilities.StoredProcedure
         public const string SP_InsertRoomBooking = "SP_InsertRoomBooking";
         public const string SP_UpdateRoomBookingStatus = "SP_UpdateRoomBookingStatus";
         public const string SP_GetCheckinRoomBookingByRoomBookingId = "SP_GetCheckinRoomBookingByRoomBookingId";
+        public const string SP_CheckDepositedRoomBooking = "SP_CheckDepositedRoomBooking";
 
 
         // RoomBookingDetail
