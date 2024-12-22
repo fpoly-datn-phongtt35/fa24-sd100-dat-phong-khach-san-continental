@@ -722,7 +722,7 @@ var _roombooking_detail = {
         modalContainer.style.left = '50%';
         modalContainer.style.transform = 'translate(-50%, -50%)';
         modalContainer.style.width = '80%';
-        modalContainer.style.maxWidth = '800px';
+        modalContainer.style.maxWidth = '1000px';
         modalContainer.style.backgroundColor = 'white';
         modalContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
         modalContainer.style.borderRadius = '8px';
@@ -772,10 +772,10 @@ var _roombooking_detail = {
         modalContainer.appendChild(modalHeader);
 
 
-        //validate residence
+        //#region validate residence
         function isPhoneNumberValid(phoneNumber) {
             const phoneRegex = /^(0\d{9})$/;
-            return phoneRegex.test(phoneNumber);
+            return phoneNumber === "" || phoneRegex.test(phoneNumber);
         }//bắt đầu = 0, + 9 số đằng sau
         function isIdentityNumberValid(identityNumber) {
             const identityRegex = /^\d{12}$/;
@@ -820,7 +820,7 @@ var _roombooking_detail = {
             // Kiểm tra tuổi từ 0 đến 150
             return age <= 150;
         }
-
+        //#endregion
 
 
         // Hàm hiển thị form thêm bản ghi
@@ -1043,6 +1043,8 @@ var _roombooking_detail = {
                         if (response === 1) {
                             alert('Thêm bản ghi thành công!');
                             data.push(newRecord);
+                            console.log(data);
+
                             tbody.innerHTML = ''; // Xóa bảng cũ
                             data.forEach(item => {
                                 const row = document.createElement('tr');
@@ -1052,7 +1054,8 @@ var _roombooking_detail = {
                                     moment(item.dateOfBirth).format("YYYY-MM-DD"),
                                     gender,
                                     item.identityNumber,
-                                    item.phoneNumber
+                                    item.phoneNumber,
+                                    item.checkOutTime ? moment(item.checkOutTime).format("YYYY-MM-DD HH:mm") : 'Chưa checkout'  
                                 ];
 
                                 cells.forEach(cellText => {
@@ -1092,8 +1095,39 @@ var _roombooking_detail = {
                                 deleteButton.style.fontSize = '14px';
                                 deleteButton.style.transition = 'background-color 0.3s';
 
+                                const leaveButton = document.createElement('button');
+                                leaveButton.innerText = 'Rời';
+                                leaveButton.style.backgroundColor = '#FF9800';
+                                leaveButton.style.color = 'white';
+                                leaveButton.style.padding = '8px 16px';
+                                leaveButton.style.marginRight = '8px';
+                                leaveButton.style.border = 'none';
+                                leaveButton.style.borderRadius = '4px';
+                                leaveButton.style.cursor = 'pointer';
+                                leaveButton.style.fontSize = '14px';
+                                leaveButton.style.transition = 'background-color 0.3s';
+
+                                if (item.checkOutTime) {
+                                    leaveButton.disabled = true;
+                                    leaveButton.style.backgroundColor = '#D3D3D3';
+                                    leaveButton.style.cursor = 'default';
+ 
+
+                                    deleteButton.disabled = true;
+                                    deleteButton.style.backgroundColor = '#D3D3D3';
+                                    deleteButton.style.cursor = 'default';
+ 
+
+                                    editButton.disabled = true;
+                                    editButton.style.backgroundColor = '#D3D3D3';
+                                    editButton.style.cursor = 'default';
+ 
+                                }
+
+
                                 actionsTd.appendChild(editButton);
                                 actionsTd.appendChild(deleteButton);
+                                actionsTd.appendChild(leaveButton);
                                 row.appendChild(actionsTd);
 
                                 tbody.appendChild(row);
@@ -1109,7 +1143,6 @@ var _roombooking_detail = {
                         alert('Có lỗi xảy ra khi thêm bản ghi: ' + error);
                     }
                 });//ajax Add
-
                 // Đóng form
                 addFormContainer.remove();
             }; //save button onclick
@@ -1150,7 +1183,7 @@ var _roombooking_detail = {
 
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
-        const headers = ['Tên', 'Ngày sinh', 'Giới tính', 'Căn cước', 'SDT', 'Hành động'];
+        const headers = ['Tên', 'Ngày sinh', 'Giới tính', 'Căn cước', 'SDT', 'Thời gian checkout', 'Hành động'];
 
         headers.forEach(headerText => {
             const th = document.createElement('th');
@@ -1170,14 +1203,15 @@ var _roombooking_detail = {
         data.forEach(item => {
             const row = document.createElement('tr');
 
-            const gender = item.gender === 1 ? 'Nam' : item.gender === 2 ? 'Nữ' : 'Khác';
+            const gender = item.gender === 1 ? 'Nam' : item.gender === 2 ? 'Nữ' : 'Khác';       
 
             const cells = [
                 item.fullName,
                 moment(item.dateOfBirth).format("YYYY-MM-DD"),
                 gender,
                 item.identityNumber,
-                item.phoneNumber
+                item.phoneNumber,
+                item.checkOutTime ? moment(item.checkOutTime).format("YYYY-MM-DD HH:mm") : 'Chưa checkout'  
             ];
 
             cells.forEach(cellText => {
@@ -1209,14 +1243,6 @@ var _roombooking_detail = {
             editButton.setAttribute('data-id', item.id);
             //#endregion
 
-            editButton.addEventListener('mouseover', function () {
-                editButton.style.backgroundColor = '#45a049';
-            });
-
-            editButton.addEventListener('mouseout', function () {
-                editButton.style.backgroundColor = '#4CAF50';
-            });
-
             editButton.addEventListener('click', function () {
                 const id = editButton.getAttribute('data-id');
                 const row = editButton.closest('tr');
@@ -1226,6 +1252,7 @@ var _roombooking_detail = {
                 const gender = row.cells[2].innerText;
                 const identityNumber = row.cells[3].innerText;
                 const phoneNumber = row.cells[4].innerText;
+                const checkOutTime = row.cells[5].innerText;
 
                 //#region tạo khung form chỉnh sửa
                 const editForm = document.createElement('div');
@@ -1276,6 +1303,12 @@ var _roombooking_detail = {
                         <span id="phoneNumberError" style="color: red; font-size: 12px; display: none;"></span>
                         <input type="number" id="phoneNumber" value="${phoneNumber}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
                     </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="checkOutTime" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Thời gian Check-Out:</label>
+                        <p id="checkOutTime" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; background-color: #f9f9f9; margin: 0;">${checkOutTime}</p>
+                    </div>
+
 
                     <div style="display: flex; justify-content: space-between;">
                         <button id="saveButton" style="background-color: #008CBA; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s;">Lưu</button>
@@ -1392,8 +1425,6 @@ var _roombooking_detail = {
                 });
             });
             //#endregion
-
-
             //#region Xóa
             //#region css button "Xóa"
             const deleteButton = document.createElement('button');
@@ -1408,13 +1439,7 @@ var _roombooking_detail = {
             deleteButton.style.fontSize = '14px';
             deleteButton.style.transition = 'background-color 0.3s';
             deleteButton.setAttribute('data-id', item.id);
-
-            deleteButton.addEventListener('mouseover', function () {
-                deleteButton.style.backgroundColor = '#e53935';
-            });
-            deleteButton.addEventListener('mouseout', function () {
-                deleteButton.style.backgroundColor = '#f44336';
-            });
+ 
             //#endregion
 
             //#region thực hiện xóa
@@ -1434,6 +1459,7 @@ var _roombooking_detail = {
                                 rowToDelete.remove();
 
                                 dataRessidence = dataRessidence.filter(item => item.id !== id);
+                                //temp = dataRessidence.filter(item => item.checkOutTime === null).length;
                                 temp = dataRessidence.length;
                                 title.innerText = 'Danh sách khách hàng ' + temp + '/' + maximumOccupancy;
                             } else {
@@ -1448,12 +1474,82 @@ var _roombooking_detail = {
             });
             //#endregion
             //#endregion
+            //#region Rời
+            const leaveButton = document.createElement('button');
+            leaveButton.innerText = 'Rời';
+            leaveButton.style.backgroundColor = '#FF9800'; 
+            leaveButton.style.color = 'white';
+            leaveButton.style.padding = '8px 16px';
+            leaveButton.style.marginRight = '8px';
+            leaveButton.style.border = 'none';
+            leaveButton.style.borderRadius = '4px';
+            leaveButton.style.cursor = 'pointer';
+            leaveButton.style.fontSize = '14px';
+            leaveButton.style.transition = 'background-color 0.3s';
+            leaveButton.setAttribute('data-id', item.id); 
+
+            if (item.checkOutTime) {
+                leaveButton.disabled = true; 
+                leaveButton.style.backgroundColor = '#D3D3D3';  
+                leaveButton.style.cursor = 'default'; 
+
+                deleteButton.disabled = true;
+                deleteButton.style.backgroundColor = '#D3D3D3';   
+                deleteButton.style.cursor = 'default'; 
+
+                editButton.disabled = true;
+                editButton.style.backgroundColor = '#D3D3D3';
+                editButton.style.cursor = 'default';
+            }
+
+            //thực hiện rời
+            leaveButton.addEventListener('click', function () {
+                const id = leaveButton.getAttribute('data-id');
+                const confirmation = confirm('Bạn có chắc chắn muốn check out khách hàng này?');
+
+                if (confirmation) {
+                    $.ajax({
+                        url: '/ResidenceRegistration/CheckOut1Residence',
+                        type: 'put', 
+                        data: { id: id },
+                        success: function (response) {
+                            if (response === 1) {
+                                alert('Check Out thành công');
+                                leaveButton.disabled = true;
+                                leaveButton.style.backgroundColor = '#D3D3D3';
+                                leaveButton.style.cursor = 'default';
+
+                                deleteButton.disabled = true;
+                                deleteButton.style.backgroundColor = '#D3D3D3';
+                                deleteButton.style.cursor = 'default';
+
+                                editButton.disabled = true;
+                                editButton.style.backgroundColor = '#D3D3D3';
+                                editButton.style.cursor = 'default';
+
+                                const checkOutTime = moment().format("YYYY-MM-DD HH:mm");
+                                row.cells[5].innerText = checkOutTime;
+
+                                dataRessidence = dataRessidence.map(item =>
+                                    item.id === id ? { ...item, checkOutTime: new Date().toISOString() } : item
+                                );
+                            } else {
+                                alert('Check Out thất bại: ' + response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Có lỗi xảy ra: ' + error);
+                        }
+                    });
+                }
+            });
+            //#endregion
 
 
             actionsTd.appendChild(editButton);
             actionsTd.appendChild(deleteButton);
+            actionsTd.appendChild(leaveButton);
             row.appendChild(actionsTd);
-
             tbody.appendChild(row);
         }); //hết bảng
 
@@ -1492,7 +1588,7 @@ var _roombooking_detail = {
                     resolve(maximumOccupancy); // Trả về maximumOccupancy sau khi thành công
                 },
                 error: function (error) {
-                    reject(error); // Nếu có lỗi, reject Promise
+                    reject(error);  
                 }
             });
         });
@@ -1509,6 +1605,8 @@ var _roombooking_detail = {
                 data: { Id: Id },
                 success: function (response) {
                     dataRessidence = response;
+                    console.log(response)
+                    //residenceCount = response.filter(item => item.checkOutTime === null).length;
                     residenceCount = response.length;
 
                     // Hiển thị danh sách với maximumOccupancy
@@ -1559,7 +1657,7 @@ var _roombooking_detail = {
         $("#StatusRBD_" + Id).html("Đã nhận phòng");
         var newDate = global.createNewDateInVietnamTimezone();
         newDate = newDate.toISOString().slice(0, 16);
-        $("#StatusRBD_" + Id).css('color', 'yellow');
+        $("#StatusRBD_" + Id).css('color', 'green');
         $("#CheckInReal_" + Id).val(newDate);
         $("#btn-checkin-" + Id).remove();
         _roombooking_detail.CalculatingRoomPrice()
@@ -1625,8 +1723,8 @@ var _roombooking_detail = {
             }
             lstRoomBookingDetail.push(obj);
         })
-        console.log(RoomBooking)
-        console.log(lstRoomBookingDetail)
+/*        console.log(RoomBooking)
+        console.log(lstRoomBookingDetail)*/
     },
 
     submit: function () {
@@ -1637,7 +1735,7 @@ var _roombooking_detail = {
             type: "post",
             data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail, lstSerOrderDetail: lstServiceOrderDetail, ListDelete: LstDelete },
             success: function (result) {
-                window.location.reload();
+                window.location.href = "/roombooking";
             }
         });
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Bcpg.Sig;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -140,6 +141,7 @@ namespace Utilities.StoredProcedure
         public const string SP_InsertRoomBooking = "SP_InsertRoomBooking";
         public const string SP_UpdateRoomBookingStatus = "SP_UpdateRoomBookingStatus";
         public const string SP_GetCheckinRoomBookingByRoomBookingId = "SP_GetCheckinRoomBookingByRoomBookingId";
+        public const string SP_CheckDepositedRoomBooking = "SP_CheckDepositedRoomBooking";
 
 
         // RoomBookingDetail
@@ -169,6 +171,7 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateResidence = "SP_UpdateResidence";
         public const string SP_GetTotalPaidAmountByRoomBookingId = "SP_GetTotalPaidAmountByRoomBookingId";
         public const string SP_GetMaximumOccupancyByRoomBookingDetailId = "SP_GetMaximumOccupancyByRoomBookingDetailId";
+        public const string SP_CheckOut1Residence = "SP_CheckOut1Residence";
 
     }
 }

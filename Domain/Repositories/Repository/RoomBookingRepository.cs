@@ -314,4 +314,17 @@ public class RoomBookingRepository : IRoomBookingRepository
             throw new Exception("An error occurred while updating the room booking", e);
         }
     }
+
+    public async Task<int> CheckDepositRoomBooking()
+    {
+        try
+        {
+            SqlParameter[] sqlParams = new SqlParameter[] {};
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_CheckDepositedRoomBooking, sqlParams);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while checking the roombooking status", e);
+        }
+    }
 }

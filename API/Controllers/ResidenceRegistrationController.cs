@@ -104,5 +104,17 @@ namespace API.Controllers
                 throw ex;
             }
         }
+        [HttpPut("CheckOut1")]
+        public async Task<int> CheckOut1(Guid id)
+        {
+            try
+            {
+                return await _residenceRegistrationService.CheckOut1Residence(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

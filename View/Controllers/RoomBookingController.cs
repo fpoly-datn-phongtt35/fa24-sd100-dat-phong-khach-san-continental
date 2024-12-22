@@ -173,6 +173,19 @@ public class RoomBookingController : Controller
         }
     }
 
+    public async Task<int> CheckDepositRoomBooking() 
+    {
+        try
+        {
+            return await _roomBookingUpdateService.CheckDepositRoomBooking();
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+
     public async Task<int> submit(RoomBooking bookingcreaterequest,
         List<RoomBookingDetail> lstupsert,
         List<ServiceOrderDetail> lstSerOrderDetail, List<Guid> ListDelete)

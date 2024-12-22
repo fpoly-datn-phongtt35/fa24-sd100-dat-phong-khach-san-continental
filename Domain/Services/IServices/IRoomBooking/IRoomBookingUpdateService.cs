@@ -8,4 +8,5 @@ public interface IRoomBookingUpdateService
 {
     Task<RoomBookingResponse?> UpdateRoomBookingAsync(RoomBookingUpdateRequest roomBookingUpdateRequest);
     Task<int> UpdateRoomBookingStatus(Guid id, int status);
+    Task<int> CheckDepositRoomBooking();
 }
