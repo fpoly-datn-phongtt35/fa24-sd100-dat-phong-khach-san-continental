@@ -5,36 +5,70 @@
     ViewData["Title"] = "Details";
 }
 
-<h4>Chi tiết tiện nghi</h4>
+<h3>Chi tiết tiện nghi</h3>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Tên tiện nghi</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.Name)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Trạng thái</label>
+            <p class="form-control-static">@StatusHelper.DisplayStatusBadge(Model.Status)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian tạo</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.CreatedTime)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Được tạo bởi</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.CreatedBy)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian sửa</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.ModifiedTime)</p>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Mô tả</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.Description)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Được sửa bởi</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.ModifiedBy)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Trạng thái Xóa</label>
+            <p class="form-control-static">@((Model.Deleted ? "Đã xóa" : "Chưa xóa"))</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian xóa</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.DeletedTime)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Được xóa bởi</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.DeletedBy)</p>
+        </div>
+    </div>
+</div>
+
 
 <div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayName("Tên tện nghi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Mô tả")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Trạng thái")</dt>
-        <dd class="col-sm-10">@StatusHelper.DisplayStatusBadge(Model.Status)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian tạo")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được tạo bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian sửa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được sửa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Xóa")</dt>
-        <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Thời gian xóa")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayName("Được xóa bởi")</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Sửa", "Edit", new { amenityId = Model.Id }, new { @class = "btn btn-warning" })
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+    @Html.ActionLink("Sửa", "Edit", new { amenityId = Model.Id }, new { @class = "button1 button-warning" })
 </div>
 
 <style>

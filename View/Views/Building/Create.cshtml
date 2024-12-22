@@ -1,18 +1,21 @@
 ﻿@model Domain.DTO.Building.BuildingCreateRequest
 
-<h3>Create</h3>
+<h3>Tạo mới</h3>
 
-<h4>FloorCreateRequest</h4>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name" class="control-label1">Tên tòa</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-success mt-3">Tạo</button>
 </form>
 
 @section Scripts {

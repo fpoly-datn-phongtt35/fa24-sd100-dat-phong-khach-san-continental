@@ -1,38 +1,62 @@
-﻿@model Domain.Models.Floor
+﻿@using Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model Domain.Models.Floor
 
-<h3>Edit Service</h3>
+<h3>Chỉnh sửa tầng</h3>
 
-<form asp-action="Edit" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<form asp-action="Edit" method="post" class="row mt-3">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="control-label1">Tên tầng</label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="NumberOfRoom" class="control-label1">Số lượng phòng</label>
+            <input asp-for="NumberOfRoom" class="form-control"/>
+            <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Deleted" class="control-label1">Trạng thái xoá</label>
+            <input asp-for="Deleted" type="checkbox"/>
+            <span asp-validation-for="Deleted" class="text-danger"></span>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="NumberOfRoom"></label>
-        <input asp-for="NumberOfRoom" class="form-control" />
-        <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Status" class="control-label1">Trạng thái</label>
+            <select name="status" class="form-select" id="status">
+                <option disabled>-- Chọn trạng thái --</option>
+                @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                {
+                    var statusEnum = (EntityStatus)status;
+                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                        @StatusHelper.DisplayNameEntityStatus(statusEnum)
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label asp-for="BuildingId" class="control-label1">Tòa</label>
+            <select asp-for="BuildingId" class="form-control" asp-items="@(new SelectList(ViewBag.Buildings, "Id", "Name", Model.BuildingId))">
+                <option disabled>-- Chọn tòa --</option>
+            </select>
+        </div>
     </div>
-    <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow" />
-    <div class="form-group">
-        <label asp-for="BuildingId">Building</label>
-        <select asp-for="BuildingId" class="form-control" asp-items="@(new SelectList(ViewBag.Buildings, "Id", "Name", Model.BuildingId))">
-            <option value="">-- Select Building --</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses, Model.Status))"></select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Deleted"></label>
-        <input asp-for="Deleted" type="checkbox" />
-        <span asp-validation-for="Deleted" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow"/>
 </form>
+
+<button type="submit" class="btn btn-warning">Cập nhật</button>
 
 @section Scripts {
     @{

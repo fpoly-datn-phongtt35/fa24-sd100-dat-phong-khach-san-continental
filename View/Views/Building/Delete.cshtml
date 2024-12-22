@@ -1,11 +1,15 @@
 ﻿@model Domain.Models.Building
 
 <div>
-    <h4>Are you sure you want to delete this building?</h4>
+    <h3>Xác nhận xóa tòa</h3>
     <h5>@Model.Name</h5>
     <p>Id: @Model.Id</p>
     <p>Status: @Model.Status</p>
 </div>
+
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
 
 <form asp-action="DeleteConfirmed" method="post">
     <input type="hidden" asp-for="Id" />

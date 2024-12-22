@@ -114,7 +114,7 @@ namespace API.Controllers
             var successUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
 
             //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
-
+            
             try
             {
                 //int orderCode = GenerateOrderCode(roomBookingId);

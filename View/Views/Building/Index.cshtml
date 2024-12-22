@@ -1,36 +1,36 @@
 ﻿﻿@using Domain.DTO.Paging
+@using Domain.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
 @model Domain.DTO.Paging.ResponseData<Domain.Models.Building>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-
 <h3>Danh sách tòa</h3>
 
-<p>
-    <a asp-action="Create">Tạo mới</a>
-</p>
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
-        <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Name" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
+        <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Tìm kiếm" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
 
-        <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
-            <option value="">-- Status --</option>
-            @foreach (var status in ViewBag.StatusList)
-            {
-                    <option value="@((int)status)"
-                            selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                    @status
-                    </option>
-            }
-        </select>
-        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
-        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+        <div class="form-group me-2">
+            <select name="status" class="form-select" id="status">
+                <option hidden>-- Chọn trạng thái --</option>
+                @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                {
+                var statusEnum = (EntityStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameEntityStatus(statusEnum)
+                </option>
+                }
+            </select>
+        </div>
+        <button class="btn btn-outline-success ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-secondary ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
 </form>
-
+<a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
 <script>
     function clearFilters() {
         document.getElementById('Name').value = '';
@@ -40,9 +40,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Tên tòa</th>
-            <th>Trạng thái</th>
-            <th>Chức năng</th>
+            <th style="width: 20%">Tên tòa</th>
+            <th style="width: 30%">Trạng thái</th>
+            <th style="width: 20%">Chức năng</th>
         </tr>
     </thead>
     <tbody>
@@ -50,11 +50,19 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@StatusHelper.DisplayStatusBadge(item.Status)</td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    <div class="dropbown">
+                        <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@Url.Content("~/images/icons/menu.png")">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id }, new { @class = "dropdown-item"})</li>
+                            <li>@Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "dropdown-item"})</li>
+                            <li>@Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "dropdown-item text-danger"})</li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }
