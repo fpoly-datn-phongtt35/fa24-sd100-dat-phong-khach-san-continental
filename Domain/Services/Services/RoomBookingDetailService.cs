@@ -78,6 +78,8 @@ namespace Domain.Services.Services
                                 Price = row.Field<decimal?>("Price"),
                                 ExtraPrice = row.Field<decimal>("ExtraPrice"),
                                 Deposit = row.Field<decimal>("Deposit"),
+                                Expenses = row.Field<decimal?>("Expenses"),
+                                Note = row.Field<string>("Note"),
                                 Status = row.Field<EntityStatus>("Status"),
                                 Deleted = row.Field<bool>("Deleted")
                                 //CreatedTime = row.Field<DateTime>("CreatedTime"),
@@ -114,6 +116,8 @@ namespace Domain.Services.Services
                                          CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),
                                          ExtraPrice = row.Field<decimal?>("ExtraPrice"),
+                                         Expenses = row.Field<decimal?>("Expenses"),
+                                         Note = row.Field<string>("Note"),
                                          Name = row.Field<string>("Name")
                                      }).ToList();
             }

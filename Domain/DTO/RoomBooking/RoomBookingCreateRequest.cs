@@ -12,6 +12,9 @@ public class RoomBookingCreateRequest
     public decimal TotalRoomPrice { get; set; }
     public decimal? TotalServicePrice { get; set; }
     public decimal? TotalExtraPrice { get; set; }
+    public decimal? TotalExpenses { get; set; }
+    public decimal? TotalPriceReality { get; set; }
+    public BookingBy? BookingBy { get; set; }
     public Guid? CreatedBy { get; set; }
 
     /// <summary>
@@ -30,6 +33,9 @@ public class RoomBookingCreateRequest
             TotalPrice = TotalPrice,
             TotalRoomPrice = TotalRoomPrice,
             TotalServicePrice = TotalServicePrice,
+            TotalExpenses = TotalExpenses,
+            TotalPriceReality = TotalPriceReality,
+            BookingBy = BookingBy,
             CreatedBy = CreatedBy
         };
     }

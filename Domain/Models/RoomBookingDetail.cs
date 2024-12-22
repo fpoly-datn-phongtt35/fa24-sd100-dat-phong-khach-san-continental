@@ -16,6 +16,8 @@ namespace Domain.Models
         public decimal? Price { get; set; }
         public decimal Deposit { get; set; } = 0;
         public decimal ExtraPrice { get; set; }
+        public decimal? Expenses { get; set; } = 0;
+        public string? Note { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
         public DateTimeOffset? CreatedTime { get; set; }
