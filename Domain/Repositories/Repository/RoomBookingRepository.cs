@@ -38,7 +38,10 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new("@SearchString", roomBookingGetRequest.SearchString),
                 new("@StaffId", roomBookingGetRequest.StaffId),
                 new("@BookingType", roomBookingGetRequest.BookingType),
-                new("@Status", roomBookingGetRequest.Status)
+                new("@Status", roomBookingGetRequest.Status),
+                new("@CustomerId", roomBookingGetRequest.CustomerId),
+                new("@BookingBy", roomBookingGetRequest.BookingBy)
+
             };
 
             var dataTable = await _worker.GetDataTableAsync
@@ -127,6 +130,8 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@TotalPrice", roomBooking.TotalPrice.HasValue ? roomBooking.TotalPrice : DBNull.Value),
                 new SqlParameter("@TotalExtraPrice", roomBooking.TotalExtraPrice.HasValue ? roomBooking.TotalExtraPrice : DBNull.Value),
                 new SqlParameter("@TotalServicePrice", roomBooking.TotalServicePrice.HasValue ? roomBooking.TotalServicePrice : DBNull.Value),
+                new SqlParameter("@TotalExpenses", roomBooking.TotalExpenses.HasValue ? roomBooking.TotalExpenses : DBNull.Value),
+                new SqlParameter("@TotalPriceReality", roomBooking.TotalPriceReality.HasValue ? roomBooking.TotalPriceReality : DBNull.Value),
             };
             await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoomBooking, parameters);
 
@@ -195,6 +200,9 @@ public class RoomBookingRepository : IRoomBookingRepository
             TotalPrice = row["TotalPrice"] != DBNull.Value ? (decimal)row["TotalPrice"] : null,
             TotalRoomPrice = row["TotalRoomPrice"] != DBNull.Value ? (decimal)row["TotalRoomPrice"] : null,
             TotalServicePrice = row["TotalServicePrice"] != DBNull.Value ? (decimal)row["TotalServicePrice"] : null,
+            TotalExpenses = row["TotalExpenses"] != DBNull.Value ? (decimal)row["TotalExpenses"] : null,
+            TotalPriceReality = row["TotalPriceReality"] != DBNull.Value ? (decimal)row["TotalPriceReality"] : null,
+            BookingBy = row["BookingBy"] != DBNull.Value ? (BookingBy)Enum.Parse(typeof(BookingBy), row["BookingBy"].ToString()!) : null,
             BookingType = (BookingType)Enum.Parse(typeof(BookingType), row["BookingType"].ToString()!),
             CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),
             CreatedBy = ConvertGuidToString(row, "CreatedBy"),
@@ -255,13 +263,16 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice.HasValue ? (object)request.TotalRoomPrice.Value : DBNull.Value),
                 new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice.HasValue ? (object)request.TotalExtraPrice.Value : DBNull.Value),
                 new SqlParameter("@TotalServicePrice", request.TotalServicePrice.HasValue ? (object)request.TotalServicePrice.Value : DBNull.Value),
+                new SqlParameter("@TotalExpenses", request.TotalExpenses.HasValue ? (object)request.TotalExpenses.Value : DBNull.Value),    
+                new SqlParameter("@TotalPriceReality", request.TotalPriceReality.HasValue ? (object)request.TotalPriceReality.Value : DBNull.Value),
+                new SqlParameter("@BookingBy", SqlDbType.Int) { Value = request.BookingBy },
                 new SqlParameter("@NewId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
 
             await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_InsertRoomBookingForCustomer, sqlParameters);
 
             // Trả về ID được tạo ra
-            return (Guid)sqlParameters[9].Value;
+            return (Guid)sqlParameters[11].Value;
         }
         catch (Exception ex)
         {
@@ -283,6 +294,9 @@ public class RoomBookingRepository : IRoomBookingRepository
                     new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice),
                     new SqlParameter("@TotalServicePrice", request.TotalServicePrice),
                     new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice.HasValue ? (object)request.TotalExtraPrice.Value : DBNull.Value),
+                    new SqlParameter("@TotalExpenses", request.TotalExpenses.HasValue ? (object)request.TotalExpenses.Value : DBNull.Value),
+                    new SqlParameter("@TotalPriceReality", request.TotalPriceReality.HasValue ? (object)request.TotalPriceReality.Value : DBNull.Value),
+                    new SqlParameter("@BookingBy", SqlDbType.Int) { Value = request.BookingBy },
                     new SqlParameter("@CreatedBy",request.CreatedBy)
             };
 
