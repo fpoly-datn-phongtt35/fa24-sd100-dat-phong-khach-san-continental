@@ -85,24 +85,21 @@
 
 
         // Tạo đối tượng bookingDetails
-        if (Context.Session.GetString("UserName") == null) {
             var bookingDetails = {
                 RoomId: roomId,
                 CheckInBooking: new Date(localStorage.getItem("CheckIn")).toISOString(),
                 CheckOutBooking: new Date(localStorage.getItem("CheckOut")).toISOString(),
                 Price: Math.round(price),
                 SelectedServices: [],
-                Customer: {
+                Customer: isUserLoggedIn ? false : {
                     FirstName: $('#firstName').val(),
-                    LastName: $('#lastName').val(), // Đã sửa lỗi chính tả ở đây
+                    LastName: $('#lastName').val(),
                     Email: $('#email').val(),
                     PhoneNumber: $('#phone').val()
                 },
                 Deposit: Math.round(deposit),
                 ServicePrice: Math.round(servicePrice)
             };
-        }
-
         // Lấy danh sách dịch vụ đã chọn
         $('.service-checkbox:checked').each(function () {
             var serviceId = $(this).val();
@@ -138,14 +135,7 @@
                     $('#firstName').val('');
                     $('#lastName').val('');
                     $('#phone').val('');
-
-                    var email = $('#email').val();
-                    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                    if (!regex.test(email)) {
-                        event.preventDefault();
-                        $('#firstName').focus();
-                    }
+                    $('#email').val();
                 }
 
                 $('#validationMessage').html("Đã xảy ra lỗi trong quá trình đặt phòng: " + xhr.responseText).show();

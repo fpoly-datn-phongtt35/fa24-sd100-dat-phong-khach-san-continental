@@ -145,11 +145,11 @@ namespace ViewClient.Controllers
                 var roomBookingCreate = new RoomBookingCreateRequestForCustomer
                 {
                     CustomerId = customerId,
-                    BookingType = Domain.Enums.BookingType.Online,
+                    BookingType = BookingType.Online,
                     TotalPrice = Math.Round(roomBookingDetailCreateRequest.Price + roomBookingDetailCreateRequest.ServicePrice - roomBookingDetailCreateRequest.Deposit ?? 0),
                     TotalRoomPrice = Math.Round(roomBookingDetailCreateRequest.Price ?? 0),
                     TotalServicePrice = roomBookingDetailCreateRequest.ServicePrice,
-                    Status = Domain.Enums.RoomBookingStatus.PENDING,
+                    Status = RoomBookingStatus.PENDING,
                     StaffId = null,
                     CreatedBy = customerId,
                     NewId = null
@@ -180,7 +180,7 @@ namespace ViewClient.Controllers
                 }
                 roomBookingDetailCreateRequest.RoomId = room.Id;
                 roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
-                roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking.;
+                roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
                 roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
                 roomBookingDetailCreateRequest.CreatedBy = customerId;
                 roomBookingDetailCreateRequest.Status = RoomBookingStatus.PENDING;
