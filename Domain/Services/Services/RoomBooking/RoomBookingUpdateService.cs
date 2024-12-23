@@ -16,6 +16,18 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
         _roomBookingRepository = roomBookingRepository;
     }
 
+    public async Task<int> CheckDepositRoomBooking()
+    {
+        try
+        {
+           return await _roomBookingRepository.CheckDepositRoomBooking();
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
+    }
+
     public async Task<RoomBookingResponse?> UpdateRoomBookingAsync(RoomBookingUpdateRequest roomBookingUpdateRequest)
     {
         if (roomBookingUpdateRequest is null)
@@ -32,6 +44,8 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
         existingRoomBooking.TotalServicePrice = roomBookingUpdateRequest.TotalServicePrice;
         existingRoomBooking.TotalPrice = roomBookingUpdateRequest.TotalPrice;
         existingRoomBooking.TotalExtraPrice = roomBookingUpdateRequest.TotalExtraPrice;
+        existingRoomBooking.TotalExpenses = roomBookingUpdateRequest.TotalExpenses;
+        existingRoomBooking.TotalPriceReality = roomBookingUpdateRequest.TotalPriceReality;
 
         await _roomBookingRepository.UpdateRoomBooking(existingRoomBooking);
         return existingRoomBooking.ToRoomBookingResponse();

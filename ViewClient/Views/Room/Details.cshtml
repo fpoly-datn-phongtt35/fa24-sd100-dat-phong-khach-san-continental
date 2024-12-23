@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    bool isUserLoggedIn = Context.Session.GetString("UserName") != null;
 }
 <div class="room-info">@Html.DisplayFor(model => model.Room.Name)</div>
 
@@ -137,7 +138,7 @@
                 <p class="font-monospace">Giá: @Math.Round(Model.Room.Price ?? 0) VNĐ/đêm</p>
                 
                 <div>
-                    @if (Context.Session.GetString("UserName") == null)
+                    @if (!isUserLoggedIn)
                     {
                         <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Vui lòng nhập thông tin cá nhân đặt phòng ?</dt>
                         <div class="container">
@@ -165,7 +166,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="phone">Số điện thoại</label>
-                                        <input type="tel" class="form-control" name="PhoneNumber" id="phone" placeholder="Nhập số điện thoại" required>
+                                        <input type="text" class="form-control" name="PhoneNumber" id="phone" placeholder="Nhập số điện thoại" required>
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +218,7 @@
     </div>
 </div>
 <script>
-    var isUserLoggedIn = '@User.Identity.IsAuthenticated.ToString().ToLower()';
+    var isUserLoggedIn = @isUserLoggedIn.ToString().ToLower();
     var roomId = '@Model.Room.Id';
     var roomPrice = '@Model.Room.Price';
     var bookingUrl = '@Url.Action("RoomBooking", "RoomBooking")';

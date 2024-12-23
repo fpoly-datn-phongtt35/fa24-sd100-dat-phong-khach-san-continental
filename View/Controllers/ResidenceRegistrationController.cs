@@ -19,6 +19,7 @@ namespace View.Controllers
             try
             {
                 var model = await _residenceRegistrationService.GetResidenceByRoomBookingDetailId(Id);
+ 
                 return model.data;
             }
             catch (Exception ex)
@@ -26,6 +27,20 @@ namespace View.Controllers
                 throw ex;
             }
         }
+
+        public async Task<IActionResult> CheckOut1Residence(Guid id)
+        {
+            try
+            {
+                var result = await _residenceRegistrationService.CheckOut1Residence(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<IActionResult> GetMaximumOccupancyByRoomBookingDetailId(Guid Id)
         {
             try

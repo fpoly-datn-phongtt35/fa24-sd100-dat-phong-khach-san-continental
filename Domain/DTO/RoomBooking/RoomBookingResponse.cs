@@ -12,6 +12,9 @@ public class RoomBookingResponse
     public decimal? TotalRoomPrice { get; set; }
     public decimal? TotalServicePrice { get; set; }
     public decimal? TotalExtraPrice { get; set; }
+    public decimal? TotalExpenses { get; set; }
+    public decimal? TotalPriceReality { get; set; }
+    public BookingBy? BookingBy { get; set; }
     public RoomBookingStatus Status { get; set; }
     public string? StaffFullName { get; set; }
     public string? CustomerFullName { get; set; }
@@ -36,6 +39,8 @@ public class RoomBookingResponse
                CustomerId == roomBookingResponse.CustomerId && StaffId == roomBookingResponse.StaffId &&
                TotalPrice == roomBookingResponse.TotalPrice && TotalRoomPrice == roomBookingResponse.TotalRoomPrice &&
                TotalServicePrice == roomBookingResponse.TotalServicePrice && TotalExtraPrice == roomBookingResponse.TotalExtraPrice &&
+               TotalExpenses == roomBookingResponse.TotalExpenses && TotalPriceReality == roomBookingResponse.TotalPriceReality &&
+               BookingBy == roomBookingResponse.BookingBy &&
                Status == roomBookingResponse.Status && CreatedTime == roomBookingResponse.CreatedTime &&
                CreatedBy == roomBookingResponse.CreatedBy && ModifiedTime == roomBookingResponse.ModifiedTime &&
                ModifiedBy == roomBookingResponse.ModifiedBy && Deleted == roomBookingResponse.Deleted &&
@@ -91,6 +96,9 @@ public static class RoomBookingResponseExtensions
             TotalExtraPrice = roomBooking.TotalExtraPrice,
             TotalRoomPrice = roomBooking.TotalRoomPrice,
             TotalPrice = roomBooking.TotalPrice,
+            TotalExpenses = roomBooking.TotalExpenses,
+            TotalPriceReality = roomBooking.TotalPriceReality,
+            BookingBy = roomBooking.BookingBy,
             Status = roomBooking.Status,
             CreatedTime = roomBooking.CreatedTime,
             CreatedBy = roomBooking.CreatedBy,
@@ -121,6 +129,9 @@ public static class RoomBookingResponseExtensions
             TotalExtraPrice = response.TotalExtraPrice,
             TotalRoomPrice = response.TotalRoomPrice,
             TotalPrice = response.TotalPrice,
+            TotalExpenses = response.TotalExpenses,
+            TotalPriceReality = response.TotalPriceReality,
+            BookingBy = response.BookingBy,
             Status = response.Status,
             CreatedTime = response.CreatedTime,
             CreatedBy = response.CreatedBy,

@@ -609,7 +609,8 @@ body {
     margin-top: 10px;
 }
     .card:hover {
-        transform: scale(1.2);
+        transform: scale(1.1);
+        transition: transform 0.3s ease;
     }
     h5.card-title.p{
         text-decoration:none;

@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ContinentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241220095255_checkOutIndividually")]
+    partial class checkOutIndividually
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -469,7 +472,7 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("CheckOutTime")
+                    b.Property<DateTimeOffset>("CheckOutTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -624,9 +627,6 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("BookingBy")
-                        .HasColumnType("int");
-
                     b.Property<int>("BookingType")
                         .HasColumnType("int");
 
@@ -660,16 +660,10 @@ namespace Domain.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("TotalExpenses")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("TotalExtraPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("TotalPriceReality")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("TotalRoomPrice")
@@ -727,9 +721,6 @@ namespace Domain.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
 
-                    b.Property<decimal?>("Expenses")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("ExtraPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -738,9 +729,6 @@ namespace Domain.Migrations
 
                     b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
                         .IsRequired()

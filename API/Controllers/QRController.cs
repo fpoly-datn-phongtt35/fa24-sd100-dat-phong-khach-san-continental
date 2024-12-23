@@ -37,9 +37,7 @@ namespace API.Controllers
             var qrImageBytes = Base64ToImage(dataResult.data.qrDataURL.Replace("data:image/png;base64,", ""));
 
             return File(qrImageBytes, "image/png");
-
-            //chuyển về json
-            //return Ok(dataResult);
+ 
         }
 
         private byte[] Base64ToImage(string base64String)
