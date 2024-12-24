@@ -4,6 +4,7 @@ using Domain.DTO.RoomBooking;
 using Domain.Enums;
 using Domain.Models;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Data;
 
 namespace Domain.Repositories.IRepository;
 
@@ -18,4 +19,5 @@ public interface IRoomBookingRepository
     Task<int> UpdateRoomBookingStatus(Guid id, int status);
     Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId);
     Task<int> CheckDepositRoomBooking();
+    Task<List<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request);
 }
