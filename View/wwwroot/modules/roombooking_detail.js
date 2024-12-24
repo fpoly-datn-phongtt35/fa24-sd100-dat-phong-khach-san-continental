@@ -297,7 +297,7 @@ var _Service_OrderDetail =
     },
     AddServiceToList: function (Id) {
         if (listIdService.indexOf(Id) < 0) {
-            listIdService.push(Id)
+            listIdService.push(Id);
             $.ajax({
                 url: "/RoomBooking/GetServiceById",
                 type: "post",
@@ -305,7 +305,7 @@ var _Service_OrderDetail =
                 success: function (result) {
                     if (result != null) {
                         var formattedprice = parseFloat(result.price).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',')
+                        formattedprice = formattedprice.replaceAll('.', ',');
                         $("#service-related").append(`
                         <tr class="align-items-center" id="ElementSer_`+ IdSerAdd + `">
                             <td style="display:none"><input id="IdSer_`+ IdSerAdd + `" value="${result.id}"></input></td>
@@ -333,7 +333,7 @@ var _Service_OrderDetail =
                                 <a class="btn btn-danger" onclick="_Service_OrderDetail.RemoveServiceOut('`+ IdSerAdd + `')">Xóa</a>
                             </td>
                         </tr>
-                        `)
+                        `);
                         LstIdSerAdd.push(IdSerAdd);
                         IdSerAdd = IdSerAdd - 1;
                         _Service_OrderDetail.CalculatingTotalPriceSer();
@@ -397,7 +397,7 @@ var _Service_OrderDetail =
                 if (result != null) {
                     result.forEach(item => {
                         var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',')
+                        formattedprice = formattedprice.replaceAll('.', ',');
                         $("#service-related").append(`
                         <tr class="align-items-center" id="ElementSer_`+ item.id + `">
                             <td style="display:none"><input id="IdSerOrder_`+ item.id + `" value="${item.id}"></input></td>

@@ -21,6 +21,8 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Price { get; set; }
         public decimal? ExtraPrice { get; set; }
         public decimal? Deposit { get; set; }
+        public decimal? Expenses { get; set; } = 0;
+        public string? Note { get; set; }
         public RoomBookingStatus? Status { get; set; }
         public Guid? CreatedBy { get; set; }
         public List<Domain.Models.ServiceOrderDetail>? SelectedServices { get; set; }
