@@ -40,6 +40,18 @@ namespace View.Controllers
                 throw ex;
             }
         }
+        public async Task<IActionResult> CheckOutResideecByRBD(Guid roomBookingDetailId)
+        {
+            try
+            {
+                var result = await _residenceRegistrationService.CheckOutResidenceByRBD(roomBookingDetailId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<IActionResult> GetMaximumOccupancyByRoomBookingDetailId(Guid Id)
         {
