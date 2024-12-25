@@ -63,6 +63,23 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<int> CheckOutByRBD(Guid roomBookingDetailId)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter(@"RoomBookingDetailId", roomBookingDetailId)
+                };
+                return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_CheckOutResidencesByRoomBookingDetail, sqlParameters);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<int> DeleteResidence(Guid id)
         {
             try
