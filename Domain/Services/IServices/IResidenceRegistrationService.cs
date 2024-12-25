@@ -17,6 +17,7 @@ namespace Domain.Services.IServices
         Task<int> UpdateResidence(ResidenceUpdateRequest request);
         Task<int> DeleteResidence(Guid id);
         Task<int> CheckOut1Residence(Guid id);
+        Task<int> CheckOutResidenceByRBD(Guid roomBookingDetailId);
         Task<ResponseData<ResidenceRegistration>> GetResidences(ResidenceGetRequest request);
         Task<ResidenceRegistration> GetResidenceById(Guid id);
         Task<ResponseData<ResidenceRegistration>> GetResidenceByRoomBookingDetailId(Guid roomBookingDetailId);

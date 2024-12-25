@@ -52,6 +52,19 @@ namespace Domain.Services.Services
             }
         }
 
+        public async Task<int> CheckOutResidenceByRBD(Guid roomBookingDetailId)
+        {
+            try
+            {
+                return await _residenceRegistrationRepo.CheckOutByRBD(roomBookingDetailId);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<int> DeleteResidence(Guid id)
         {
             try
