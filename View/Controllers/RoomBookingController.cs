@@ -173,6 +173,19 @@ public class RoomBookingController : Controller
         }
     }
 
+    public async Task<int> CheckDepositRoomBooking() 
+    {
+        try
+        {
+            return await _roomBookingUpdateService.CheckDepositRoomBooking();
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+
     public async Task<int> submit(RoomBooking bookingcreaterequest,
         List<RoomBookingDetail> lstupsert,
         List<ServiceOrderDetail> lstSerOrderDetail, List<Guid> ListDelete)
@@ -188,8 +201,9 @@ public class RoomBookingController : Controller
                     StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     CustomerId = bookingcreaterequest.CustomerId,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
-                    TotalPrice = bookingcreaterequest.TotalPrice,
+                    TotalPrice = bookingcreaterequest.TotalPrice != 0 ? bookingcreaterequest.TotalPrice : bookingcreaterequest.TotalPriceReality,
                     Status = RoomBookingStatus.PENDING,
+                    BookingBy = BookingBy.Day,
                     TotalServicePrice = bookingcreaterequest.TotalServicePrice,
                     TotalRoomPrice = bookingcreaterequest.TotalRoomPrice,
                     CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
@@ -202,8 +216,10 @@ public class RoomBookingController : Controller
                 {
                     Id = bookingcreaterequest.Id,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
-                    TotalPrice = bookingcreaterequest.TotalPrice,
+                    TotalPrice = bookingcreaterequest.TotalPrice != 0 ? bookingcreaterequest.TotalPrice : bookingcreaterequest.TotalPriceReality,
                     TotalServicePrice = bookingcreaterequest.TotalServicePrice,
+                    TotalExpenses = bookingcreaterequest.TotalExpenses,
+                    TotalPriceReality = bookingcreaterequest.TotalPriceReality,
                     Status = bookingcreaterequest.Status,
                     ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     ModifiedTime = DateTime.Now,
@@ -258,18 +274,6 @@ public class RoomBookingController : Controller
                 };
                 await _serviceOrderDetailService.DeleteServiceOrderDetail(request);
             }
-
-
-            /* if (idroombooking != Guid.Empty) 
-             {
-                 foreach (var i in lstSerOrderDetail)
-                 {
-                     i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                     i.Status = EntityStatus.Active;
-                     i.RoomBookingId = idroombooking;
-                     await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
-                 }
-             }*/
 
             return 1;
         }
@@ -381,6 +385,11 @@ public class RoomBookingController : Controller
         ViewBag.IdRoomBooking = null;
         ViewBag.IdClient = null;
         ViewBag.Client = null;
+        var RB = await _roomBookingService.GetRoomBookingById(IdRoomBooking);
+        if(RB != null)
+        {
+            ViewBag.RB = RB;
+        }
         if (IdRoomBooking != Guid.Empty)
         {
             ViewBag.IdRoomBooking = IdRoomBooking;

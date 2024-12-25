@@ -263,16 +263,16 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@TotalRoomPrice", request.TotalRoomPrice.HasValue ? (object)request.TotalRoomPrice.Value : DBNull.Value),
                 new SqlParameter("@TotalExtraPrice", request.TotalExtraPrice.HasValue ? (object)request.TotalExtraPrice.Value : DBNull.Value),
                 new SqlParameter("@TotalServicePrice", request.TotalServicePrice.HasValue ? (object)request.TotalServicePrice.Value : DBNull.Value),
-                new SqlParameter("@TotalExpenses", request.TotalExpenses.HasValue ? (object)request.TotalExpenses.Value : DBNull.Value),    
+                new SqlParameter("@TotalExpense", request.TotalExpenses.HasValue ? (object)request.TotalExpenses.Value : DBNull.Value),    
                 new SqlParameter("@TotalPriceReality", request.TotalPriceReality.HasValue ? (object)request.TotalPriceReality.Value : DBNull.Value),
-                new SqlParameter("@BookingBy", SqlDbType.Int) { Value = request.BookingBy },
+                new SqlParameter("@BookingBy", SqlDbType.Int) { Value = (int)request.BookingBy },
                 new SqlParameter("@NewId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
             };
 
             await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_InsertRoomBookingForCustomer, sqlParameters);
 
             // Trả về ID được tạo ra
-            return (Guid)sqlParameters[11].Value;
+            return (Guid)sqlParameters[12].Value;
         }
         catch (Exception ex)
         {
@@ -326,6 +326,19 @@ public class RoomBookingRepository : IRoomBookingRepository
         catch (Exception e)
         {
             throw new Exception("An error occurred while updating the room booking", e);
+        }
+    }
+
+    public async Task<int> CheckDepositRoomBooking()
+    {
+        try
+        {
+            SqlParameter[] sqlParams = new SqlParameter[] {};
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_CheckDepositedRoomBooking, sqlParams);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while checking the roombooking status", e);
         }
     }
 }

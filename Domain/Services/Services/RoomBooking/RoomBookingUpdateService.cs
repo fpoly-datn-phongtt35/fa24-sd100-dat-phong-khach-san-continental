@@ -16,6 +16,18 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
         _roomBookingRepository = roomBookingRepository;
     }
 
+    public async Task<int> CheckDepositRoomBooking()
+    {
+        try
+        {
+           return await _roomBookingRepository.CheckDepositRoomBooking();
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
+    }
+
     public async Task<RoomBookingResponse?> UpdateRoomBookingAsync(RoomBookingUpdateRequest roomBookingUpdateRequest)
     {
         if (roomBookingUpdateRequest is null)
