@@ -91,15 +91,16 @@
                 CheckOutBooking: new Date(localStorage.getItem("CheckOut")).toISOString(),
                 Price: Math.round(price),
                 SelectedServices: [],
-                Customer: isUserLoggedIn ? false : {
-                    FirstName: $('#firstName').val(),
-                    LastName: $('#lastName').val(),
-                    Email: $('#email').val(),
-                    PhoneNumber: $('#phone').val()
+                Customer: {
+                    FirstName: $('#firstName').val() || null,
+                    LastName: $('#lastName').val() || null,
+                    Email: $('#email').val() || null,
+                    PhoneNumber: $('#phone').val() || null
                 },
                 Deposit: Math.round(deposit),
                 ServicePrice: Math.round(servicePrice)
-            };
+                };
+        console.log(isUserLoggedIn);
         // Lấy danh sách dịch vụ đã chọn
         $('.service-checkbox:checked').each(function () {
             var serviceId = $(this).val();
@@ -114,6 +115,7 @@
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(bookingDetails),
+           
             success: function (response) {
                 if (response.success) {
                     var roomBookingId = response.roomBookingId; // Lấy RoomBookingId từ response
@@ -129,6 +131,7 @@
                 }
             },
             error: function (xhr, status, error) {
+                console.log(bookingDetails);
                 showToast("Hãy kiểm tra lại thông tin cá nhân, thông tin đặt phòng!");
                 console.log("Error: " + error);
                 if (xhr.status === 422) {

@@ -102,11 +102,6 @@ namespace ViewClient.Controllers
         [HttpPost]
         public async Task<IActionResult> RoomBooking([FromBody] RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 var _UserLogin = Guid.Empty;
