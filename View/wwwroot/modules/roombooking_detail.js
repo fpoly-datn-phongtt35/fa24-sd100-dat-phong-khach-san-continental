@@ -122,7 +122,7 @@ $(document).ready(function () {
     }
 
     $("#room_Id").select2({
-        placeholder: "Tìm tên phòng",
+        placeholder: "Chọn phòng",
         maximumSelectionLength: 1,
         ajax: {
             url: "/RoomBooking/GetAvailableRooms",
@@ -139,6 +139,8 @@ $(document).ready(function () {
                 return query;
             },
             processResults: function (response) {
+                $("#room_num").text('Tổng số phòng trống: ' + response.totalRoom);
+                $("#ocupan").text('Tổng sức chứa: ' +response.totalOccupancy);
                 return {
                     results: $.map(response.lstRoom, function (item) {
                         return {
@@ -324,7 +326,7 @@ var _Service_OrderDetail =
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
                             <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
+                               <input id="ExtraSerPr_` + IdSerAdd + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
@@ -417,7 +419,7 @@ var _Service_OrderDetail =
                                 <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
                             <td class="">
-                               <input id="ExtraSerPr_` + item.id + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="${item.extraPrice}" min="0" type="number">
+                               <input id="ExtraSerPr_` + item.id + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="${item.extraPrice}" min="0" type="number">
                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ item.id + `" class="form-control text-start" placeholder="Thêm ghi chú">${item.description != null ? item.description : ""}</textarea>
@@ -474,7 +476,6 @@ var _roombooking_detail = {
                            <td scope="row">${STT}</td>
                            <td>${result.name}</td>
                            <td class="room_price" id="Price_` + IdAdd + `">${result.price}</td>
-                           <td class="deposit" id="Deposit_` + IdAdd + `"></td>
                            <td>
                                <input id="CheckIn_` + IdAdd + `" onchange="_roombooking_detail.OnchangeFromDateRow(` + IdAdd + `)" class="form-control checkin_time select_time" value="` + $("#fromDate").val() + `" type="date">
                            </td>
@@ -482,23 +483,13 @@ var _roombooking_detail = {
                                <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + IdAdd + `"></td>
-                           <td class="">
-                               <input id="ExtraPr_` + IdAdd + `" oninput="_roombooking_detail.OnchangeExTra('` + IdAdd + `','ExtraPr_')" class="form-control price_extra" value="0" min="0" type="text">
-                           </td>
                            <td>
                                <input id="CheckInReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
                            </td>
                            <td >
                                <input id="CheckOutReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
                            </td>
-                            <td>
-                               <input id="Expenses_`+ IdAdd + `" oninput="_roombooking_detail.OnchangeExTra('` + IdAdd + `','Expenses_')" class="form-control" value="0" type="text">
-                           </td>
-                           <td>
-                               <textarea id="NoteRBD_`+ IdAdd + `" class="form-control text-start" style="height:38px" placeholder="Thêm ghi chú"></textarea>
-                            </td>
                            <td id="StatusRBD_`+ IdAdd + `">Tạo mới</td>
-                           <td></td>
                            <td class="d-flex">
                                <button class="btn btn-danger" onclick="_roombooking_detail.RemoveOutList(` + IdAdd +`)">Xóa</button>
                            </td>
@@ -708,7 +699,6 @@ var _roombooking_detail = {
                            <td scope="row">${STT}</td>
                            <td>${item.name}</td>
                            <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.price)}</td>
-                           <td class="deposit" id="Deposit_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.deposit)}</td>
                            <td>
                                <input id="CheckIn_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
@@ -716,23 +706,13 @@ var _roombooking_detail = {
                                <input id="CheckOut_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + item.roomBookingDetailId + `"></td>
-                           <td class="">
-                               <input id="ExtraPr_` + item.roomBookingDetailId + `" oninput="_roombooking_detail.OnchangeExTra('` + item.roomBookingDetailId + `','ExtraPr_')" class="form-control price_extra" value="` + (item.extraPrice != null ? global.NumberVNFormated(item.extraPrice) : 0) + `" min="0" type="text">
-                           </td>
                            <td>
                                <input id="CheckInReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCIfrom + `" type="datetime-local">
                            </td>
                            <td>
                                <input id="CheckOutReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCOto + `" type="datetime-local">
                            </td>
-                            <td>
-                               <input id="Expenses_`+ item.roomBookingDetailId + `" oninput="_roombooking_detail.OnchangeExTra('` + item.roomBookingDetailId + `','Expenses_')" class="form-control" value="` + (item.expenses != null ? global.NumberVNFormated(item.expenses) : 0) + `" type="text">
-                           </td>
-                           <td>
-                               <textarea id="NoteRBD_`+ item.roomBookingDetailId + `" class="form-control text-start" style="height:38px" placeholder="Thêm ghi chú">`+ (item.note != null ? item.note : '') +`</textarea>
-                            </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
-                           <td>`+ global.getResponseStatus(item.roomStatus, constant.Room_Status) + `</td>
                            <td class="d-flex">
                                <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('` + item.roomBookingDetailId + `','` + item.roomId + `')">Hủy</a>
                                <a class="text-green btn btn-success ms-2 btn-checkin text-nowrap" id="btn-checkin-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('` + item.roomBookingDetailId + `')">Đã nhận</a>
@@ -1759,10 +1739,6 @@ var _roombooking_detail = {
                 CheckInReality: null,
                 CheckOutReality: null,
                 Price: $("#Price_"+item).text(),
-                ExtraPrice: $("#ExtraPr_" + item).val().replaceAll(',',''),
-                Expenses: $("#Expenses_" + item).val(),
-                Note: $("#NoteRBD_" + item).val(),
-                Deposit: $("#Deposit_" + item).text(),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
@@ -1777,10 +1753,6 @@ var _roombooking_detail = {
                 CheckInReality: $("#CheckInReal_" + item).val(),
                 CheckOutReality: $("#CheckOutReal_" + item).val(),
                 Price: $("#Price_" + item).text(),
-                ExtraPrice: $("#ExtraPr_" + item).val().replaceAll(',', ''),
-                Expenses: $("#Expenses_" + item).val(),
-                Note: $("#NoteRBD_" + item).val(),
-                Deposit: $("#Deposit_" + item).text(),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
