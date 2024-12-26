@@ -1707,7 +1707,20 @@ var _roombooking_detail = {
         $("#CheckOutReal_" + Id).val(newDate);
         $("#StatusRBD_" + Id).css('color', 'White');
         $("#btn-checkout-" + Id).remove();
-        _roombooking_detail.CalculatingRoomPrice()
+        _roombooking_detail.CalculatingRoomPrice();
+
+        $.ajax({
+            url: '/ResidenceRegistration/CheckOutResideecByRBD',
+            type: 'POST',
+            data: {roomBookingDetailId : Id},
+            success: function (response) {
+                console.log(response);
+                alert('CheckOut thành công!');
+            },
+            error: function (xhr, status, error) {
+                alert('Có lỗi xảy ra: ' + error);
+            }
+        });
     },
     OnchangeMinRoom: function () {
         getRoomRq.MinPrice = $("#min_room").val();
