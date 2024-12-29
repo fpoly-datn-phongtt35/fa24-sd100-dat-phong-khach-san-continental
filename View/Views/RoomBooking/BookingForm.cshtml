@@ -24,6 +24,10 @@
         max-width:100%;
     }
 
+    .hid{
+        display : none;
+    }
+
     .element-shadow{
         box-shadow: 1px 2px 3px;
     }
@@ -33,12 +37,25 @@
         <div id="list_room_add" class="rounded-2 p-2 element-shadow" style="min-height:300px;">
             <div class="d-flex justify-content-between mb-3">
                 <h2 class="text-color-blue">Danh sách phòng</h2>
-                @if(idRoomBooking != null){
-                    <a class="btn btn-outline-warning" href="~/PaymentHistory/Id=@idRoomBooking">Lịch sử thanh toán</a>
-                }
             </div>
             <div class="d-flex mb-3 justify-content-between">
-                <div class="d-flex justify-content-between" style="width:50%">
+                <div class="d-flex" style="width:49%">
+                    <button class="btn fw-bold" id="room_num" style="background-color:#afb2b4;color:#fff">Tổng số phòng trống: 0</button>
+                    <button class="btn color-blue ms-2 fw-bold" id="ocupan" style="background-color:#afb2b4;color:#fff">Tổng sức chứa: 0</button>
+                </div>
+            </div>
+            <div class="datepicker-wrap mt-3 mb-3 d-flex justify-content-between" style="width:100%">
+                <div style="width:49%" class="">
+                    <label for="" style="width:90px;" class="form-label">Ngày nhận : </label>
+                    <input id="fromDate" onchange="_roombooking_detail.OnchangeFromDate()" class="form-control" placeholder="Ngày nhận" type="date" name="fromDate">
+                </div>
+                <div style="width:49%" class="">
+                    <label for="" style="width:90px;" class="form-label">Ngày trả : </label>
+                    <input id="toDate" onchange="_roombooking_detail.OnchangetoDate()" class="form-control" placeholder="Ngày trả" type="date" name="toDateDate">
+                </div>
+            </div>
+            <div class="d-flex mb-3 justify-content-between">
+                <div class="d-flex justify-content-between" style="width:49%">
                     <select class="select2 m-2" id="RoomType_Id" style="width:49%">
                     </select>
                     <select class="select2 m-2" id="Floor_Id" style="width:49%">
@@ -52,16 +69,6 @@
             <input id="IdRoomBooking" style="display:none" value="@ViewBag.IdRoomBooking" />
             <select class="select2 m-2" id="room_Id" style="width:100%">
             </select>
-            <div class="datepicker-wrap mt-3 d-flex justify-content-between" style="width:100%">
-                <div style="width:50%" class="m-2">
-                    <label for="" style="width:90px;" class="form-label">Ngày nhận : </label>
-                    <input id="fromDate" onchange="_roombooking_detail.OnchangeFromDate()" class="form-control" placeholder="Ngày nhận" type="date" name="fromDate">
-                </div>
-                <div style="width:50%" class="m-2">
-                    <label for="" style="width:90px;" class="form-label">Ngày trả : </label>
-                    <input id="toDate" onchange="_roombooking_detail.OnchangetoDate()" class="form-control" placeholder="Ngày trả" type="date" name="toDateDate">
-                </div>
-            </div>
             <div class="table-responsive table-scroll">
                 <table class="table table-nowrap table-bordered mt-3 rounded-3">
                     <thead>
@@ -69,17 +76,17 @@
                             <th scope="col" style="min-width:50px">#</th>
                             <th scope="col" style="min-width:180px">Tên Phòng</th>
                             <th scope="col">Giá phòng (/ đêm)</th>
-                            <th scope="col">Tiền cọc</th>
+                            @* <th scope="col">Tiền cọc</th> *@
                             <th scope="col">Ngày nhận dự kiến</th>
                             <th scope="col">Ngày trả dự kiến</th>
                             <th scope="col">Thành tiền</th>
-                            <th scope="col" style="min-width:150px">Phụ thu</th>
+                            @* <th scope="col" style="min-width:150px">Phụ thu</th> *@
                             <th scope="col">Ngày nhận thực tế</th>
                             <th scope="col">Ngày trả thực tế</th>
-                            <th scope="col" style="min-width:150px">Phí hư tổn</th>
-                            <th scope="col" style="min-width:150px">Ghi chú</th>
+                            @* <th scope="col" style="min-width:150px">Phí hư tổn</th> *@
+                            @* <th scope="col" style="min-width:150px">Ghi chú</th> *@
                             <th scope="col" style="min-width:150px">Trạng thái</th>
-                            <th scope="col" style="min-width:150px">Trạng thái phòng</th>
+                            @* <th scope="col" style="min-width:150px">Trạng thái phòng</th> *@
                             <th scope="col" style="min-width:180px">Action</th>
                         </tr>
                     </thead>
@@ -97,19 +104,19 @@
                                     <div id="total_roomprice" class="me-1">0</div> ₫
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class="fw-bold">Tổng tiền cọc</div>
                                 <div class="text-right d-flex">
                                     <div id="total_deposit" class="me-1">0</div> ₫
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class="text-dark fw-bold">Phụ thu phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="TotalExtraPrice" class="me-1">0</div> ₫
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class="fw-bold" style="color:#00b0f9">Tổng giá ban đầu</div>
                                 @if (RB != null && decimal.TryParse(RB.TotalPrice?.ToString(), out totalPrice))
                                 {
@@ -128,7 +135,7 @@
                             </li>
                         </ul>
                         <ul class="w-100 my-3" style="text-decoration:none !important;">
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class="text-dark fw-bold">Phụ thu dịch vụ</div>
                                 <div class="text-right d-flex">
                                     <div id="total_service_extra_price" class="me-1">0</div> ₫
@@ -140,13 +147,13 @@
                                     <div id="total_service_price" class="me-1">0</div> ₫
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class="text-dark fw-bold">Tổng hư tổn</div>
                                 <div class="text-right d-flex">
                                     <div id="TotalExpense" class="me-1">0</div> ₫
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class=" fw-bold" style="color:rgb(244 168 175)">Tổng giá thực tế</div>
                                 <div class="text-right d-flex">
                                     <div id="total_price" class="me-1">0</div> ₫
