@@ -56,6 +56,7 @@ namespace View
             {
                 option.IdleTimeout = TimeSpan.FromSeconds(100);
             });
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHttpClient();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
