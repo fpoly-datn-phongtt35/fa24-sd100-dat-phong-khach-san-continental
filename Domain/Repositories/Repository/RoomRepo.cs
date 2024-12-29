@@ -419,5 +419,78 @@ namespace Domain.Repositories.Repository
             }
             return Response;
         }
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string filterType)
+        {
+            // Kiểm tra giá trị filterType hợp lệ
+            if (filterType != "Month" && filterType != "Year")
+            {
+                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(filterType));
+            }
+
+            // Tham số đầu vào cho stored procedure
+            SqlParameter[] parameters = new SqlParameter[] {
+                new("@FilterType", filterType)
+            };
+
+            // Gọi stored procedure và lấy dữ liệu
+            var dataTable = await _worker.GetDataTableAsync("SP_GetTop5MostBookedRoomsLastMonth", parameters);
+
+            // Khởi tạo danh sách các phòng top booking
+            var topRooms = new List<TopRoomBookingViewModel>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var topRoom = new TopRoomBookingViewModel
+                {
+                    Id = Guid.Parse(row["RoomId"].ToString()),
+                    Name = row["RoomName"]?.ToString(),
+                    RoomTypeName = row["RoomTypeName"]?.ToString(),
+                    Price = Convert.ToDecimal(row["Price"]),
+                    RoomSize = Convert.ToDouble(row["RoomSize"]),
+                    Address = row["Address"]?.ToString(),
+                    Images = row["Images"]?.ToString()?.Split(',').ToList() ?? new List<string>(),
+                    BookingCount = Convert.ToInt32(row["BookingCount"])
+                };
+
+                topRooms.Add(topRoom);
+            }
+
+            return topRooms;
+        }
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string filterType)
+        {
+            // Kiểm tra giá trị filterType hợp lệ
+            if (filterType != "Month" && filterType != "Year")
+            {
+                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(filterType));
+            }
+
+            // Tham số đầu vào cho stored procedure
+            SqlParameter[] parameters = new SqlParameter[] {
+                new("@FilterType", filterType)
+            };
+
+            // Gọi stored procedure và lấy dữ liệu
+            var dataTable = await _worker.GetDataTableAsync("SP_GetTopMostBookedRoomsCustomer", parameters);
+
+            // Khởi tạo danh sách các phòng top booking
+            var topRooms = new List<TopCustomerBooking>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var topRoom = new TopCustomerBooking
+                {
+                    Id = Guid.Parse(row["Id"].ToString()),
+                    FirstName = row["FirstName"]?.ToString(),
+                    LastName = row["LastName"]?.ToString(),
+                    Email = row["Email"]?.ToString(),
+                    PhoneNumber = row["PhoneNumber"]?.ToString(),
+                    Gender= Convert.ToInt32(row["Gender"]),
+                    BookingCount = Convert.ToInt32(row["BookingCount"])
+                };
+
+                topRooms.Add(topRoom);
+            }
+
+            return topRooms;
+        }
     }
 }
