@@ -18,5 +18,7 @@ namespace Domain.Services.IServices.IRoom
         Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest);
         //Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId);
         Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request);
+        Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string filterType);
+        Task<List<TopCustomerBooking>> GetTopCustomerBookings(string filterType);
     }
 }
