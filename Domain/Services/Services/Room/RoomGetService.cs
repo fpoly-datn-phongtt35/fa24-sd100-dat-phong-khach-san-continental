@@ -31,13 +31,17 @@ namespace Domain.Services.Services.Room
         {
             return await _roomRepository.GetAllRooms(roomRequest);
         }
-        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string filterType)
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string roomFilterType)
         {
-            return await _roomRepository.GetTopBookingRoomsAsync(filterType);
+            return await _roomRepository.GetTopBookingRoomsAsync(roomFilterType);
         }
-        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string filterType)
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string customerFilterType)
         {
-            return await _roomRepository.GetTopCustomerBookings(filterType);
+            return await _roomRepository.GetTopCustomerBookings(customerFilterType);
+        }
+        public async Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType)
+        {
+            return await _roomRepository.GetRevenueAsync(revenueFilterType);
         }
         public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest)
         {

@@ -7,6 +7,7 @@ using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -419,17 +420,17 @@ namespace Domain.Repositories.Repository
             }
             return Response;
         }
-        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string filterType)
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string roomFilterType)
         {
             // Kiểm tra giá trị filterType hợp lệ
-            if (filterType != "Month" && filterType != "Year")
+            if (roomFilterType != "Month" && roomFilterType != "Year" && roomFilterType != "month" && roomFilterType != "year")
             {
-                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(filterType));
+                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(roomFilterType));
             }
 
             // Tham số đầu vào cho stored procedure
             SqlParameter[] parameters = new SqlParameter[] {
-                new("@FilterType", filterType)
+                new("@roomFilterType", roomFilterType)
             };
 
             // Gọi stored procedure và lấy dữ liệu
@@ -456,17 +457,17 @@ namespace Domain.Repositories.Repository
 
             return topRooms;
         }
-        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string filterType)
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string customerFilterType)
         {
             // Kiểm tra giá trị filterType hợp lệ
-            if (filterType != "Month" && filterType != "Year")
+            if (customerFilterType != "Month" && customerFilterType != "Year" && customerFilterType != "month" && customerFilterType != "year")
             {
-                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(filterType));
+                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(customerFilterType));
             }
 
             // Tham số đầu vào cho stored procedure
             SqlParameter[] parameters = new SqlParameter[] {
-                new("@FilterType", filterType)
+                new("@customerFilterType", customerFilterType)
             };
 
             // Gọi stored procedure và lấy dữ liệu
@@ -491,6 +492,36 @@ namespace Domain.Repositories.Repository
             }
 
             return topRooms;
+        }
+        public async Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType)
+        {
+            if (revenueFilterType != "Month" && revenueFilterType != "Year" && revenueFilterType != "month" && revenueFilterType != "year")
+            {
+                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(revenueFilterType));
+            }
+
+            // Tham số đầu vào cho stored procedure
+            SqlParameter[] parameters = new SqlParameter[] {
+                new("@revenueFilterType", revenueFilterType)
+            };
+
+            // Gọi stored procedure và lấy dữ liệu
+            var dataTable = await _worker.GetDataTableAsync("SP_GetRevenue", parameters);
+
+            // Khởi tạo danh sách các phòng top booking
+            var revenueList = new List<GetRevenue>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var revenue = new GetRevenue
+                {
+                    Period = row["Period"].ToString(), // Ánh xạ cột Period
+                    TotalAmount = Convert.ToDecimal(row["TotalAmount"]) // Ánh xạ cột TotalAmount
+                };
+
+                revenueList.Add(revenue);
+            }
+
+            return revenueList;
         }
     }
 }
