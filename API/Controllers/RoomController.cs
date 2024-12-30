@@ -73,11 +73,11 @@ namespace API.Controllers
             }
         }
         [HttpPost(nameof(GetTopBookingRoomsAsync))]
-        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string filterType)
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string roomFilterType)
         {
             try
             {
-                return await _roomGetService.GetTopBookingRoomsAsync(filterType);
+                return await _roomGetService.GetTopBookingRoomsAsync(roomFilterType);
             }
             catch (Exception e)
             {
@@ -85,11 +85,23 @@ namespace API.Controllers
             }
         }
         [HttpPost(nameof(GetTopCustomerBookings))]
-        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string filterType)
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string customerFilterType)
         {
             try
             {
-                return await _roomGetService.GetTopCustomerBookings(filterType);
+                return await _roomGetService.GetTopCustomerBookings(customerFilterType);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("The list of  rooms could not be retrieved", e);
+            }
+        }
+        [HttpPost(nameof(GetRevenueAsync))]
+        public async Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType)
+        {
+            try
+            {
+                return await _roomGetService.GetRevenueAsync(revenueFilterType);
             }
             catch (Exception e)
             {

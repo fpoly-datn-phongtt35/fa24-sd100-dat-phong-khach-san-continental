@@ -58,58 +58,79 @@ namespace View.Controllers
                 return null;
             }
         }
-        public async Task<IActionResult> TopRoomBooking(string filterType = "Month")
+        public async Task<IActionResult> Revenue(string revenueFilterType = "Month")
         {
-            // Kiểm tra giá trị của filterType, nếu không phải "Month" hoặc "Year", sử dụng giá trị mặc định là "Month"
-            if (filterType != "Month" && filterType != "Year")
+            if (revenueFilterType != "Month" && revenueFilterType != "Year")
             {
-                filterType = "Month";
+                revenueFilterType = "Month"; // Đặt lại filterType nếu giá trị không hợp lệ
             }
 
             try
             {
-                // Tạo URL yêu cầu với tham số filterType
-                var requestUrl = $"api/Room/GetTopBookingRoomsAsync?filterType={filterType}";
+                var requestUrl = $"api/Room/GetRevenueAsync?revenueFilterType={revenueFilterType}";
+                var topRoomBooking = await SendHttpRequest<List<GetRevenue>>(requestUrl, HttpMethod.Post);
 
-                // Gửi yêu cầu GET thay vì POST
-                var topRoomBooking = await SendHttpRequest<List<TopRoomBookingViewModel>>(requestUrl, HttpMethod.Post);
+                // Chuyển dữ liệu thành các định dạng phù hợp cho biểu đồ
+                var periods = topRoomBooking.Select(x => x.Period).ToList();
+                var totalAmounts = topRoomBooking.Select(x => x.TotalAmount).ToList();
 
-                return View(topRoomBooking); // Trả về danh sách phòng
+                ViewBag.Periods = periods;
+                ViewBag.TotalAmounts = totalAmounts;
+
+                return View(topRoomBooking); // Trả về view với dữ liệu doanh thu
             }
             catch (Exception ex)
             {
-                // Nếu có lỗi, hiển thị trang Error với thông báo lỗi
                 return View("Error", ex);
             }
         }
-        public async Task<IActionResult> TopCustomerBooking(string filterType = "Month")
+        public async Task<IActionResult> Index(string revenueFilterType = "Month", string customerFilterType = "Month", string roomFilterType = "Month")
         {
-            // Kiểm tra giá trị của filterType, nếu không phải "Month" hoặc "Year", sử dụng giá trị mặc định là "Month"
-            if (filterType != "Month" && filterType != "Year")
-            {
-                filterType = "Month";
-            }
-
             try
             {
-                // Tạo URL yêu cầu với tham số filterType
-                var requestUrl = $"api/Room/GetTopCustomerBookings?filterType={filterType}";
+                if (revenueFilterType != "Month" && revenueFilterType != "Year")
+                {
+                    revenueFilterType = "Month"; // Đặt lại filterType nếu giá trị không hợp lệ
+                }
+                if (customerFilterType != "Month" && customerFilterType != "Year")
+                {
+                    customerFilterType = "Month"; // Đặt lại filterType nếu giá trị không hợp lệ
+                }
+                if (roomFilterType != "Month" && roomFilterType != "Year")
+                {
+                    roomFilterType = "Month"; // Đặt lại filterType nếu giá trị không hợp lệ
+                }
+                // Lấy dữ liệu doanh thu
+                var revenueRequestUrl = $"api/Room/GetRevenueAsync?revenueFilterType={revenueFilterType}";
+                var revenueData = await SendHttpRequest<List<GetRevenue>>(revenueRequestUrl, HttpMethod.Post);
 
-                // Gửi yêu cầu GET thay vì POST
-                var topRoomBooking = await SendHttpRequest<List<TopCustomerBooking>>(requestUrl, HttpMethod.Post);
+                var periods = revenueData.Select(x => x.Period).ToList();
+                var totalAmounts = revenueData.Select(x => x.TotalAmount).ToList();
 
-                return View(topRoomBooking); // Trả về danh sách phòng
+                // Lấy danh sách top khách hàng
+                var topCustomerRequestUrl = $"api/Room/GetTopCustomerBookings?customerFilterType={customerFilterType}";
+                var topCustomerData = await SendHttpRequest<List<TopCustomerBooking>>(topCustomerRequestUrl, HttpMethod.Post);
+
+                // Lấy danh sách top phòng
+                var topRoomRequestUrl = $"api/Room/GetTopBookingRoomsAsync?roomFilterType={roomFilterType}";
+                var topRoomData = await SendHttpRequest<List<TopRoomBookingViewModel>>(topRoomRequestUrl, HttpMethod.Post);
+
+                // Truyền dữ liệu vào ViewBag
+                ViewBag.Periods = periods;
+                ViewBag.TotalAmounts = totalAmounts;
+                ViewBag.TopCustomers = topCustomerData;
+                ViewBag.TopRooms = topRoomData;
+
+                return View();
             }
             catch (Exception ex)
             {
-                // Nếu có lỗi, hiển thị trang Error với thông báo lỗi
                 return View("Error", ex);
             }
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+
+
+
     }
 }

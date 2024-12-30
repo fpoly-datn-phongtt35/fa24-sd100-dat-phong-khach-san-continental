@@ -1,1 +1,174 @@
-﻿
+﻿@{
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+    var periods = ViewBag.Periods as List<string>;
+    var totalAmounts = ViewBag.TotalAmounts as List<decimal>;
+    var topCustomers = ViewBag.TopCustomers as List<Domain.DTO.Room.TopCustomerBooking>;
+    var topRooms = ViewBag.TopRooms as List<Domain.DTO.Room.TopRoomBookingViewModel>;
+    var revenueFilterType = HttpContextAccessor.HttpContext.Request.Query["revenueFilterType"].ToString();
+    var customerFilterType = HttpContextAccessor.HttpContext.Request.Query["customerFilterType"].ToString();
+    var roomFilterType = HttpContextAccessor.HttpContext.Request.Query["roomFilterType"].ToString();
+}
+
+<div style="display: flex; flex-direction: row; gap: 20px;">
+
+    <!-- Phần Biểu đồ Doanh Thu (bên trái) -->
+    <div style="flex: 1;">
+        <h2>Biểu Đồ Doanh Thu</h2>
+        <form method="get" action="@Url.Action("Index")">
+            <label for="revenueFilterType">Chọn thời gian:</label>
+            <select id="revenueFilterType" name="revenueFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
+                <option value="Month" selected="@(revenueFilterType == "Month" ? "selected" : null)">Tháng</option>
+                <option value="Year" selected="@(revenueFilterType == "Year" ? "selected" : null)">Năm</option>
+            </select>
+        </form>
+        <canvas id="revenueChart" width="400" height="200"></canvas>
+    </div>
+
+    <!-- Phần Top Khách Hàng (bên phải) -->
+    <div style="flex: 1;">
+        <h2>Top Khách Hàng</h2>
+        <form method="get" action="@Url.Action("Index")">
+            <label for="customerFilterType">Chọn thời gian:</label>
+            <select id="customerFilterType" name="customerFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
+                <option value="Month" selected="@(customerFilterType == "Month" ? "selected" : null)">Tháng</option>
+                <option value="Year" selected="@(customerFilterType == "Year" ? "selected" : null)">Năm</option>
+            </select>
+        </form>
+
+        @if (topCustomers == null || !topCustomers.Any())
+        {
+            <p>Không có dữ liệu để hiển thị.</p>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên Khách Hàng</th>
+                        <th>Email</th>
+                        <th>Số Điện Thoại</th>
+                        <th>Giới Tính</th>
+                        <th>Số Lần Đặt Phòng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < topCustomers.Count; i++)
+                    {
+                        var customer = topCustomers[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@($"{customer.FirstName} {customer.LastName}")</td>
+                            <td>@customer.Email</td>
+                            <td>@customer.PhoneNumber</td>
+                            <td>@(customer.Gender == 1 ? "Nam" : customer.Gender == 2 ? "Nữ" : "Khác")</td>
+                            <td>@customer.BookingCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+</div>
+
+<!-- Phần Top Phòng (bên dưới) -->
+<div style="margin-top: 30px;">
+    <h2>Top Phòng Đặt</h2>
+    <form method="get" action="@Url.Action("Index")">
+        <label for="roomFilterType">Chọn thời gian:</label>
+        <select id="roomFilterType" name="roomFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
+            <option value="Month" selected="@(roomFilterType == "Month" ? "selected" : null)">Tháng</option>
+            <option value="Year" selected="@(roomFilterType == "Year" ? "selected" : null)">Năm</option>
+        </select>
+    </form>
+
+    @if (topRooms == null || !topRooms.Any())
+    {
+        <p>Không có dữ liệu để hiển thị.</p>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên Phòng</th>
+                    <th>Loại Phòng</th>
+                    <th>Giá</th>
+                    <th>Địa chỉ</th>
+                    <th>Diện tích (m²)</th>
+                    <th>Số lần đặt</th>
+                    <th>Hình ảnh</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < topRooms.Count; i++)
+                {
+                    var room = topRooms[i];
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@room.Name</td>
+                        <td>@room.RoomTypeName</td>
+                        <td>@room.Price.ToString("C")</td>
+                        <td>@room.Address</td>
+                        <td>@room.RoomSize</td>
+                        <td>@room.BookingCount</td>
+                        <td>
+                            @if (room.Images != null && room.Images.Any())
+                            {
+                                <img src="@room.Images.First()" alt="Hình ảnh" style="width: 100px; height: 100px;" />
+                            }
+                            else
+                            {
+                                <p>Không có ảnh</p>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+    var revenueChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(periods)),
+            datasets: [{
+                label: 'Tổng Doanh Thu',
+                data: @Html.Raw(Json.Serialize(totalAmounts)),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Thời Gian'
+                    }
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+</script>
