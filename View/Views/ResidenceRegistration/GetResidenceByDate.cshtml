@@ -1,0 +1,77 @@
+﻿@using Domain.DTO.Paging
+@using View.Views.Shared.Helper
+@model ResponseData<Domain.DTO.ResidenceRegistration.ResidenceResponse>
+
+@{
+    ViewData["Title"] = "GetResidenceByDate";
+}
+
+<form method="get" action="@Url.Action("GetResidenceByDate")" class="p-3 bg-light rounded shadow-sm">
+    <div class="row g-2 align-items-center">
+        <!-- Label -->
+        <div class="col-auto">
+            <label for="dateFilter" class="form-label fw-bold mb-0">Chọn ngày:</label>
+        </div>
+        <!-- Input -->
+        <div class="col-auto w-50">
+            <input type="date" id="dateFilter" name="date" class="form-control"
+                   value="@Context.Request.Query["date"].ToString()" />
+        </div>
+        <!-- Button -->
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Lọc</button>
+        </div>
+    </div>
+</form>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Khách</th>
+            <th>Phòng</th>
+            <th>Ngày sinh</th>
+            <th>Giới tính</th>
+            <th>CCCD</th>
+            <th>SĐT</th>
+            <th>Giờ checkin</th>
+            <th>Giờ checkout</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                <td>@Html.DisplayFor(modelItem => item.RoomName)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateOfBirth)</td>
+                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
+                <td>@Html.DisplayFor(modelItem => item.IdentityNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.CheckInTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.CheckOutTime)</td>                
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("GetResidenceByDate", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        date = Context.Request.Query["date"].ToString()
+                    })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+
+

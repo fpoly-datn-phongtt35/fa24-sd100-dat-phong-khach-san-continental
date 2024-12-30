@@ -19,6 +19,7 @@ namespace Domain.Services.IServices
         Task<int> CheckOut1Residence(Guid id);
         Task<int> CheckOutResidenceByRBD(Guid roomBookingDetailId);
         Task<ResponseData<ResidenceRegistration>> GetResidences(ResidenceGetRequest request);
+        Task<ResponseData<ResidenceResponse>> GetResidencesByDate(ResidenceGetByDateRequest request);
         Task<ResidenceRegistration> GetResidenceById(Guid id);
         Task<ResponseData<ResidenceRegistration>> GetResidenceByRoomBookingDetailId(Guid roomBookingDetailId);
         Task<int> GetMaximumOccupancyByRoomBookingDetailId(Guid roomBookingDetailId);

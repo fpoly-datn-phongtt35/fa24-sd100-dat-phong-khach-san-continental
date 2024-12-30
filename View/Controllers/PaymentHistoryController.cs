@@ -71,7 +71,24 @@ namespace View.Controllers
             }
         }
 
-        
+        public async Task<List<PaymentHistory>> PaymentHistoryByBookingId(Guid IdRoomBooking)
+        {
+            try
+            {
+                PaymentHistoryGetRequest request = new()
+                {
+                    RoomBookingId = IdRoomBooking
+                };
+                var response = await _paymentHistoryService.GetListPaymentHistory(request);
+                return response.data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
 
         [Route("/PaymentHistory/AddPayment/{IdRoomBooking}")]
