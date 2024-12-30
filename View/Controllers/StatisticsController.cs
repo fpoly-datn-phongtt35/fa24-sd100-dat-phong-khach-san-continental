@@ -58,32 +58,6 @@ namespace View.Controllers
                 return null;
             }
         }
-        public async Task<IActionResult> Revenue(string revenueFilterType = "Month")
-        {
-            if (revenueFilterType != "Month" && revenueFilterType != "Year")
-            {
-                revenueFilterType = "Month"; // Đặt lại filterType nếu giá trị không hợp lệ
-            }
-
-            try
-            {
-                var requestUrl = $"api/Room/GetRevenueAsync?revenueFilterType={revenueFilterType}";
-                var topRoomBooking = await SendHttpRequest<List<GetRevenue>>(requestUrl, HttpMethod.Post);
-
-                // Chuyển dữ liệu thành các định dạng phù hợp cho biểu đồ
-                var periods = topRoomBooking.Select(x => x.Period).ToList();
-                var totalAmounts = topRoomBooking.Select(x => x.TotalAmount).ToList();
-
-                ViewBag.Periods = periods;
-                ViewBag.TotalAmounts = totalAmounts;
-
-                return View(topRoomBooking); // Trả về view với dữ liệu doanh thu
-            }
-            catch (Exception ex)
-            {
-                return View("Error", ex);
-            }
-        }
         public async Task<IActionResult> Index(string revenueFilterType = "Month", string customerFilterType = "Month", string roomFilterType = "Month")
         {
             try

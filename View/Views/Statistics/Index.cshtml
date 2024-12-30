@@ -8,11 +8,10 @@
     var customerFilterType = HttpContextAccessor.HttpContext.Request.Query["customerFilterType"].ToString();
     var roomFilterType = HttpContextAccessor.HttpContext.Request.Query["roomFilterType"].ToString();
 }
-
 <div style="display: flex; flex-direction: row; gap: 20px;">
 
-    <!-- Phần Biểu đồ Doanh Thu (bên trái) -->
-    <div style="flex: 1;">
+    <!-- Phần Biểu đồ Doanh Thu (chiếm 70%) -->
+    <div style="flex: 7; padding-right: 20px;">
         <h2>Biểu Đồ Doanh Thu</h2>
         <form method="get" action="@Url.Action("Index")">
             <label for="revenueFilterType">Chọn thời gian:</label>
@@ -24,8 +23,8 @@
         <canvas id="revenueChart" width="400" height="200"></canvas>
     </div>
 
-    <!-- Phần Top Khách Hàng (bên phải) -->
-    <div style="flex: 1;">
+    <!-- Phần Top Khách Hàng (chiếm 30%) -->
+    <div style="flex: 3;">
         <h2>Top Khách Hàng</h2>
         <form method="get" action="@Url.Action("Index")">
             <label for="customerFilterType">Chọn thời gian:</label>
@@ -41,45 +40,67 @@
         }
         else
         {
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tên Khách Hàng</th>
-                        <th>Email</th>
-                        <th>Số Điện Thoại</th>
-                        <th>Giới Tính</th>
-                        <th>Số Lần Đặt Phòng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < topCustomers.Count; i++)
-                    {
-                        var customer = topCustomers[i];
-                        <tr>
-                            <td>@(i + 1)</td>
-                            <td>@($"{customer.FirstName} {customer.LastName}")</td>
-                            <td>@customer.Email</td>
-                            <td>@customer.PhoneNumber</td>
-                            <td>@(customer.Gender == 1 ? "Nam" : customer.Gender == 2 ? "Nữ" : "Khác")</td>
-                            <td>@customer.BookingCount</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div class="top-customer-list">
+                @foreach (var customer in topCustomers)
+                {
+                    <div class="top-customer-card">
+                        <i class="fas fa-user-circle fa-3x"></i>
+                        <div class="top-customer-info">
+                            <h5>@($"{customer.FirstName} {customer.LastName}")</h5>
+                            <p>Số lần đặt: @customer.BookingCount</p>
+                        </div>
+                    </div>
+                }
+            </div>
         }
     </div>
 
 </div>
 
-<!-- Phần Top Phòng (bên dưới) -->
-<div style="margin-top: 30px;">
+<!-- Đảm bảo bạn đã thêm FontAwesome hoặc thư viện icon khác vào trang của bạn -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<!-- Thêm một số CSS để tạo kiểu cho các card -->
+<style>
+    .top-customer-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .top-customer-card {
+        background-color: #f7f7f7;
+        padding: 20px;
+        border-radius: 10px;
+        width: 200px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-customer-card i {
+        color: #4CAF50;
+    }
+
+    .top-customer-info h5 {
+        font-size: 18px;
+        margin-top: 10px;
+        color: #333;
+    }
+
+    .top-customer-info p {
+        font-size: 14px;
+        color: #555;
+    }
+</style>
+
+
+<div >
     <h2>Top Phòng Đặt</h2>
     <form method="get" action="@Url.Action("Index")">
         <label for="roomFilterType">Chọn thời gian:</label>
         <select id="roomFilterType" name="roomFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
-            <option value="Month" selected="@(roomFilterType == "Month" ? "selected" : null)">Tháng</option>
-            <option value="Year" selected="@(roomFilterType == "Year" ? "selected" : null)">Năm</option>
+                <option value="Month" selected="@(roomFilterType == "Month" ? "selected" : null)">Tháng</option>
+                <option value="Year" selected="@(roomFilterType == "Year" ? "selected" : null)">Năm</option>
         </select>
     </form>
 
@@ -89,9 +110,9 @@
     }
     else
     {
-        <table class="table table-bordered">
+        <table class="table table-striped table-bordered table-hover" style="width: 100%;  overflow: hidden;">
             <thead>
-                <tr>
+                <tr style="background-color: #073a4b; color: white;">
                     <th>#</th>
                     <th>Tên Phòng</th>
                     <th>Loại Phòng</th>
@@ -106,7 +127,7 @@
                 @for (int i = 0; i < topRooms.Count; i++)
                 {
                     var room = topRooms[i];
-                    <tr>
+                    <tr style="background-color: #f9f9f9; border-bottom: 1px solid #ddd;">
                         <td>@(i + 1)</td>
                         <td>@room.Name</td>
                         <td>@room.RoomTypeName</td>
@@ -115,14 +136,23 @@
                         <td>@room.RoomSize</td>
                         <td>@room.BookingCount</td>
                         <td>
-                            @if (room.Images != null && room.Images.Any())
-                            {
-                                <img src="@room.Images.First()" alt="Hình ảnh" style="width: 100px; height: 100px;" />
-                            }
-                            else
-                            {
-                                <p>Không có ảnh</p>
-                            }
+                            <div class="d-flex justify-content-center">
+                                @if (room.Images != null && room.Images.Any())
+                                {
+                                    var firstImage = room.Images.FirstOrDefault();
+                                    var extension = System.IO.Path.GetExtension(firstImage);
+                                    if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                                    {
+                                        <div class="img-container d-flex justify-content-start" style="width: 100px; height: 100px; margin: 5px;">
+                                            <img class="responsive-img" src="~/images/@firstImage" alt="@room.Name" style="object-fit: cover; width: 100%; height: 100%; border-radius: 10px;">
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Không có ảnh</p>
+                                }
+                            </div>
                         </td>
                     </tr>
                 }
@@ -130,6 +160,47 @@
         </table>
     }
 </div>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border: 1px solid #ddd; /* Thêm viền cho các ô */
+    }
+
+    th {
+        background-color: #073a4b;
+        color: white;
+        font-size: 16px;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+    }
+
+    td {
+        background-color: #f9f9f9;
+        font-size: 14px;
+        color: #333;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    img {
+        border-radius: 8px; /* Bỏ bo góc của ảnh */
+    }
+
+    table tr td, table tr th {
+        text-align: center;
+    }
+</style>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
