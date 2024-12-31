@@ -31,10 +31,10 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
         }
 
-        public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest) 
+        public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest)
         {
             var Response = new RoomAvailableResponse();
-            try 
+            try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                {
@@ -54,7 +54,7 @@ namespace Domain.Repositories.Repository
                     var roomResponse = room.ToRoomResponse();
                     roomlist.Add(roomResponse);
                 }
-                if(roomlist.Count > 0) 
+                if (roomlist.Count > 0)
                 {
                     Response.LstRoom = roomlist;
                     Response.TotalRoom = roomlist.Count;
@@ -62,7 +62,7 @@ namespace Domain.Repositories.Repository
                 }
 
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 throw new ArgumentNullException("An error occurred while getting available rooms", ex);
             }
@@ -420,17 +420,24 @@ namespace Domain.Repositories.Repository
             }
             return Response;
         }
-        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string roomFilterType)
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(int SelectedMonthRoom, int SelectedYearRoom)
         {
             // Kiểm tra giá trị filterType hợp lệ
-            if (roomFilterType != "Month" && roomFilterType != "Year" && roomFilterType != "month" && roomFilterType != "year")
+            if (SelectedMonthRoom < 1 || SelectedMonthRoom > 12)
             {
-                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(roomFilterType));
+                throw new ArgumentException("Selected month must be between 1 and 12.", nameof(SelectedMonthRoom));
+            }
+
+            if (SelectedYearRoom < 1900 || SelectedYearRoom > DateTime.Now.Year)
+            {
+                throw new ArgumentException("Selected year is not valid.", nameof(SelectedYearRoom));
             }
 
             // Tham số đầu vào cho stored procedure
-            SqlParameter[] parameters = new SqlParameter[] {
-                new("@roomFilterType", roomFilterType)
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@SelectedMonthRoom", SelectedMonthRoom),
+                new SqlParameter("@SelectedYearRoom", SelectedYearRoom)
             };
 
             // Gọi stored procedure và lấy dữ liệu
@@ -457,42 +464,51 @@ namespace Domain.Repositories.Repository
 
             return topRooms;
         }
-        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(string customerFilterType)
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(int SelectedMonthCustomer, int SelectedYearCustomer)
         {
-            // Kiểm tra giá trị filterType hợp lệ
-            if (customerFilterType != "Month" && customerFilterType != "Year" && customerFilterType != "month" && customerFilterType != "year")
+            // Kiểm tra giá trị tháng và năm hợp lệ
+            if (SelectedMonthCustomer < 1 || SelectedMonthCustomer > 12)
             {
-                throw new ArgumentException("FilterType must be 'Month' or 'Year'.", nameof(customerFilterType));
+                throw new ArgumentException("Selected month must be between 1 and 12.", nameof(SelectedMonthCustomer));
+            }
+
+            if (SelectedYearCustomer < 1900 || SelectedYearCustomer > DateTime.Now.Year)
+            {
+                throw new ArgumentException("Selected year is not valid.", nameof(SelectedYearCustomer));
             }
 
             // Tham số đầu vào cho stored procedure
-            SqlParameter[] parameters = new SqlParameter[] {
-                new("@customerFilterType", customerFilterType)
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@SelectedMonthCustomer", SelectedMonthCustomer),
+                new SqlParameter("@SelectedYearCustomer", SelectedYearCustomer)
             };
 
             // Gọi stored procedure và lấy dữ liệu
             var dataTable = await _worker.GetDataTableAsync("SP_GetTopMostBookedRoomsCustomer", parameters);
 
-            // Khởi tạo danh sách các phòng top booking
-            var topRooms = new List<TopCustomerBooking>();
+            // Khởi tạo danh sách các khách hàng top booking
+            var topCustomers = new List<TopCustomerBooking>();
             foreach (DataRow row in dataTable.Rows)
             {
-                var topRoom = new TopCustomerBooking
+                var customer = new TopCustomerBooking
                 {
                     Id = Guid.Parse(row["Id"].ToString()),
                     FirstName = row["FirstName"]?.ToString(),
                     LastName = row["LastName"]?.ToString(),
                     Email = row["Email"]?.ToString(),
                     PhoneNumber = row["PhoneNumber"]?.ToString(),
-                    Gender= Convert.ToInt32(row["Gender"]),
-                    BookingCount = Convert.ToInt32(row["BookingCount"])
+                    Gender = Convert.ToInt32(row["Gender"]),
+                    BookingCount = Convert.ToInt32(row["BookingCount"]),
+                    TotalPrice = Convert.ToDecimal(row["TotalPrice"])
                 };
 
-                topRooms.Add(topRoom);
+                topCustomers.Add(customer);
             }
 
-            return topRooms;
+            return topCustomers;
         }
+
         public async Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType)
         {
             if (revenueFilterType != "Month" && revenueFilterType != "Year" && revenueFilterType != "month" && revenueFilterType != "year")
