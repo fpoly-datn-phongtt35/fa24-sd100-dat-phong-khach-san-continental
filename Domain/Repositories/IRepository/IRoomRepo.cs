@@ -20,5 +20,8 @@ namespace Domain.Repositories.IRepository
         Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request);
         Task<Room?> DeleteRoom(Room Room);
         Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request);
+        Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(string roomFilterType);
+        Task<List<TopCustomerBooking>> GetTopCustomerBookings(string customerFilterType);
+        Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType);
     }
 }
