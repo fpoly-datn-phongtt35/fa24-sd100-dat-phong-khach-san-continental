@@ -18,7 +18,7 @@
 
 <form method="get" action="@Url.Action("SearchRooms")" class="d-flex align-items-center">
 
-    <div class="form-group me-2">
+   @*  <div class="form-group me-2">
         <select name="roomTypeId" class="form-select" id="roomTypeId">
             <option value="">Chọn loại phòng</option>
             @foreach (var roomType in ViewBag.RoomTypes)
@@ -40,7 +40,7 @@
                 </option>
             }
         </select>
-    </div>
+    </div> *@
     <div class="form-group me-2">
         <input type="date" name="checkIn" class="form-control" placeholder="Ngày nhận phòng"
                value="@ViewContext.HttpContext.Request.Query["checkIn"]" />
