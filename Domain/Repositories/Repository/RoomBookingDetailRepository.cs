@@ -175,6 +175,23 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+        
+        public async Task<DataTable> GetRoomBookingDetailById2(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new("@Id", id != null ? id : DBNull.Value ),
+                };
+
+                return _worker.GetDataTable(StoredProcedureConstant.SP_GetRoomBookingDetailById2, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request)
         {

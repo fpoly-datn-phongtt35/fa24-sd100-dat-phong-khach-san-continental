@@ -1,5 +1,5 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Mvc;
 using WEB.CMS.Customize;
 
 namespace View.Controllers;
+
 [CustomAuthorize]
 public class RoomBookingController : Controller
 {
@@ -45,7 +46,12 @@ public class RoomBookingController : Controller
     private readonly IRoomBookingDetailServiceForCustomer _roomBookingDetailServiceForCustomer;
     private readonly IResidenceRegistrationService _residenceRegistrationService;
 
-    public RoomBookingController(IRoomTypeGetService roomTypeServiceGetService, IFloorService floorService, IRoomBookingUpdateService roomBookingUpdateService, IServiceOrderDetailService serviceOrderDetailService, IServiceTypeService serviceTypeService, IRoomUpdateStatusService roomUpdateStatusService, IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService, ICustomerService customerService, IRoomGetService roomGetService, IRoomBookingGetService roomBookingGetService, IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
+    public RoomBookingController(IRoomTypeGetService roomTypeServiceGetService, IFloorService floorService,
+        IRoomBookingUpdateService roomBookingUpdateService, IServiceOrderDetailService serviceOrderDetailService,
+        IServiceTypeService serviceTypeService, IRoomUpdateStatusService roomUpdateStatusService,
+        IRoomBookingCreateForCustomerService roomBookingCreateService, IServiceService serviceService,
+        ICustomerService customerService, IRoomGetService roomGetService, IRoomBookingGetService roomBookingGetService,
+        IRoomBookingDetailServiceForCustomer roomBookingDetailServiceForCustomer)
     {
         _roomBookingDetailServiceForCustomer = roomBookingDetailServiceForCustomer;
         _customerService = customerService;
@@ -70,6 +76,7 @@ public class RoomBookingController : Controller
             {
                 request.Name = txt_search;
             }
+
             var response = await _serviceTypeService.GetServiceTypes(request);
             return response.data;
         }
@@ -95,6 +102,7 @@ public class RoomBookingController : Controller
         {
             Console.WriteLine(ex.Message);
         }
+
         return model.data;
     }
 
@@ -113,6 +121,7 @@ public class RoomBookingController : Controller
         {
             Console.WriteLine(ex.Message);
         }
+
         return model.data;
     }
 
@@ -173,13 +182,13 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<int> CheckDepositRoomBooking() 
+    public async Task<int> CheckDepositRoomBooking()
     {
         try
         {
             return await _roomBookingUpdateService.CheckDepositRoomBooking();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw ex;
         }
@@ -201,7 +210,9 @@ public class RoomBookingController : Controller
                     StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     CustomerId = bookingcreaterequest.CustomerId,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
-                    TotalPrice = bookingcreaterequest.TotalPrice != 0 ? bookingcreaterequest.TotalPrice : bookingcreaterequest.TotalPriceReality,
+                    TotalPrice = bookingcreaterequest.TotalPrice != 0
+                        ? bookingcreaterequest.TotalPrice
+                        : bookingcreaterequest.TotalPriceReality,
                     Status = RoomBookingStatus.PENDING,
                     BookingBy = BookingBy.Day,
                     TotalServicePrice = bookingcreaterequest.TotalServicePrice,
@@ -216,7 +227,9 @@ public class RoomBookingController : Controller
                 {
                     Id = bookingcreaterequest.Id,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
-                    TotalPrice = bookingcreaterequest.TotalPrice != 0 ? bookingcreaterequest.TotalPrice : bookingcreaterequest.TotalPriceReality,
+                    TotalPrice = bookingcreaterequest.TotalPrice != 0
+                        ? bookingcreaterequest.TotalPrice
+                        : bookingcreaterequest.TotalPriceReality,
                     TotalServicePrice = bookingcreaterequest.TotalServicePrice,
                     TotalExpenses = bookingcreaterequest.TotalExpenses,
                     TotalPriceReality = bookingcreaterequest.TotalPriceReality,
@@ -226,6 +239,7 @@ public class RoomBookingController : Controller
                 };
                 await _roomBookingUpdateService.UpdateRoomBookingAsync(roomBooking);
             }
+
             foreach (var i in lstupsert)
             {
                 i.RoomBookingId = idroombooking;
@@ -245,6 +259,7 @@ public class RoomBookingController : Controller
                 {
                     updateStatusRquest.Status = RoomStatus.Occupied;
                 }
+
                 await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
             }
 
@@ -349,6 +364,121 @@ public class RoomBookingController : Controller
         }
     }
 
+    public async Task<IActionResult> CheckIn2(Guid id, bool forceCheckIn = false)
+    {
+        try
+        {
+            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
+
+            // Nếu CheckInReality đã tồn tại và không có forceCheckIn
+            if (roomBookingDetail.CheckInReality.HasValue && !forceCheckIn)
+            {
+                return Json(new { success = false, message = "Phòng đã được Check-In." });
+            }
+
+            // Nếu đang check-in sớm hơn ngày đặt và không có forceCheckIn
+            if (roomBookingDetail.CheckInBooking.HasValue &&
+                DateTime.UtcNow < roomBookingDetail.CheckInBooking.Value && !forceCheckIn)
+            {
+                return Json(new { success = false, message = "Bạn đang check-in sớm hơn ngày đặt." });
+            }
+
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local);
+
+            var roomBookingDetailUpdate = new RoomBookingDetailUpdateRequest()
+            {
+                Id = id,
+                Status = EntityStatus.InActive,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                CheckInReality = localTime,
+                ModifiedTime = localTime
+            };
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(roomBookingDetailUpdate);
+
+            return Json(new { success = true, message = "Check-In thành công!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = "Lỗi: " + ex.Message });
+        }
+    }
+
+    public async Task<IActionResult> UpdateCheckInAndCheckOutReality(Guid id, string checkInTime, string checkoutTime,
+        string note, decimal? expenses)
+    {
+        try
+        {
+            if (expenses > 0 && string.IsNullOrWhiteSpace(note))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập ghi chú khi thêm phí hư tổn." });
+            }
+            
+            if (string.IsNullOrEmpty(checkInTime))
+            {
+                return Json(new { success = false, message = "Thời gian Check-In không hợp lệ." });
+            }
+
+            DateTimeOffset selectedCheckInTime;
+            if (!DateTimeOffset.TryParseExact(
+                    checkInTime,
+                    "d/M/yyyy h:mm tt",
+                    null,
+                    System.Globalization.DateTimeStyles.None,
+                    out selectedCheckInTime))
+            {
+                return Json(new { success = false, message = "Định dạng thời gian Check-In không hợp lệ." });
+            }
+            
+            DateTimeOffset? selectedCheckoutTime = null;
+            if (!string.IsNullOrEmpty(checkoutTime))
+            {
+                if (!DateTimeOffset.TryParseExact(
+                        checkoutTime,
+                        "d/M/yyyy h:mm tt",
+                        null,
+                        System.Globalization.DateTimeStyles.None,
+                        out DateTimeOffset checkoutTimeParsed))
+                {
+                    return Json(new { success = false, message = "Định dạng thời gian Check-Out không hợp lệ." });
+                }
+                selectedCheckoutTime = checkoutTimeParsed;  // Chỉ gán nếu checkoutTime có giá trị hợp lệ
+            }
+
+            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
+
+            if (roomBookingDetail == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy thông tin đặt phòng." });
+            }
+
+            decimal? finalExpenses = expenses ?? roomBookingDetail.Expenses;
+            var roomBookingDetailUpdate = new RoomBookingDetailUpdateRequest()
+            {
+                Id = id,
+                Status = EntityStatus.InActive,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                CheckInReality = selectedCheckInTime,
+                CheckOutReality = selectedCheckoutTime,
+                Expenses = finalExpenses,
+                Note = note,
+                ModifiedTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local)
+            };
+            
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(roomBookingDetailUpdate);
+            if (response == null)
+            {
+                return Json(new
+                    { success = false, message = "Cập nhật thất bại. Vui lòng thử lại sau." });
+            }
+
+            return Json(new { success = true, message = "Cập nhật thành công!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = "Lỗi: " + ex.Message });
+        }
+    }
+
     public async Task<int> CheckOut(Guid Id, Guid IdRoom)
     {
         try
@@ -379,6 +509,49 @@ public class RoomBookingController : Controller
         }
     }
 
+    public async Task<IActionResult> CheckOut2(Guid id, Guid roomId)
+    {
+        try
+        {
+            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
+
+            if (!roomBookingDetail.CheckInReality.HasValue)
+            {
+                return Json(new { success = false, message = "Phòng chưa được Check-In." });
+            }
+
+            if (roomBookingDetail.CheckOutReality.HasValue)
+            {
+                return Json(new { success = false, message = "Phòng đã được Check-Out." });
+            }
+
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local);
+
+            var roomBookingDetailUpdate = new RoomBookingDetailUpdateRequest()
+            {
+                Id = id,
+                Status = EntityStatus.Locked,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                CheckOutReality = localTime,
+                ModifiedTime = localTime
+            };
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(roomBookingDetailUpdate);
+            var updateStatusRquest = new RoomUpdateStatusRequest()
+            {
+                Id = roomId,
+                Status = RoomStatus.Vacant,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                ModifiedTime = DateTime.Now,
+            };
+            var rs = await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
+            return Json(new { success = true, message = "Check-Out thành công!" });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = "Lỗi: " + ex.Message });
+        }
+    }
+
     [Route("/BookingRoom/Id={IdRoomBooking}&&Client={IdClient}")]
     public async Task<IActionResult> BookingForm(Guid IdRoomBooking, Guid IdClient)
     {
@@ -386,21 +559,37 @@ public class RoomBookingController : Controller
         ViewBag.IdClient = null;
         ViewBag.Client = null;
         var RB = await _roomBookingService.GetRoomBookingById(IdRoomBooking);
-        if(RB != null)
+        if (RB != null)
         {
             ViewBag.RB = RB;
         }
+
         if (IdRoomBooking != Guid.Empty)
         {
             ViewBag.IdRoomBooking = IdRoomBooking;
         }
+
         if (IdClient != Guid.Empty)
         {
             ViewBag.IdClient = IdClient;
             var Client = await _customerService.GetCustomerById(IdClient);
             ViewBag.Client = Client;
         }
+
         return View();
+    }
+
+    [Route("RoomBooking/RoomBookingDetails/RoomBookingDetailId={roomBookingDetailId}")]
+    public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId)
+    {
+        var roomBookingDetail =
+            await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(roomBookingDetailId);
+
+        if (roomBookingDetail == null)
+            return View("Error");
+
+        var roomBookingDetailResponse = roomBookingDetail.ToRoomBookingDetailResponse();
+        return View(roomBookingDetailResponse);
     }
 
     public async Task<RoomResponse> GetRoomById(Guid Id)
@@ -431,6 +620,7 @@ public class RoomBookingController : Controller
         {
             Console.WriteLine(ex.Message);
         }
+
         return response;
     }
 
@@ -473,6 +663,7 @@ public class RoomBookingController : Controller
                 request.UserName = txt_search;
                 request.Email = null;
             }
+
             response = await _customerService.GetAllCustomer(request);
             return response;
         }
