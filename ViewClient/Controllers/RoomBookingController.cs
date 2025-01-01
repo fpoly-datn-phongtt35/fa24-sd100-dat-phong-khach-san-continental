@@ -43,10 +43,6 @@ namespace ViewClient.Controllers
             _customerRepo = customerRepo;
         }
 
-        //    var model = new { Room = room, BookingDetails = roomBookingDetailCreateRequest };
-        //    return PartialView("ModalPartial", model);
-        //}
-
         [HttpGet]
         public IActionResult CreatePaymentLink()
         {
@@ -100,7 +96,7 @@ namespace ViewClient.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> RoomBooking([FromBody] RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
+        public async Task<IActionResult> RoomBooking(RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
             try
             {

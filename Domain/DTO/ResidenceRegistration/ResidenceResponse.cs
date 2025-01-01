@@ -1,18 +1,17 @@
 ﻿using Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.DTO.ResidenceRegistration
 {
-    public class ResidenceRegistration
+    public class ResidenceResponse
     {
-        [Key]
         public Guid Id { get; set; }
-        public Guid RoomBookingDetailId{ get; set; }
+        public Guid RoomBookingDetailId { get; set; }
+        public string? RoomName { get; set; }
         public string? FullName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public GenderType? Gender { get; set; }
@@ -21,9 +20,5 @@ namespace Domain.Models
         public bool? IsCheckOut { get; set; }
         public DateTimeOffset? CheckOutTime { get; set; }
         public DateTimeOffset? CheckInTime { get; set; }
-
-
-
-        public virtual RoomBookingDetail RoomBookingDetail { get; set; }
     }
 }
