@@ -31,7 +31,18 @@ namespace Domain.Services.Services.Room
         {
             return await _roomRepository.GetAllRooms(roomRequest);
         }
-
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(int SelectedMonthRoom, int SelectedYearRoom)
+        {
+            return await _roomRepository.GetTopBookingRoomsAsync(SelectedMonthRoom, SelectedYearRoom);
+        }
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(int SelectedMonthCustomer, int SelectedYearCustomer)
+        {
+            return await _roomRepository.GetTopCustomerBookings(SelectedMonthCustomer, SelectedYearCustomer);
+        }
+        public async Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType)
+        {
+            return await _roomRepository.GetRevenueAsync(revenueFilterType);
+        }
         public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest)
         {
             return await _roomRepository.GetAvailableRooms(roomRequest);
@@ -40,7 +51,7 @@ namespace Domain.Services.Services.Room
         public async Task<RoomResponse?> GetRoomById(Guid roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId); // Lấy Room từ repository
-                                                                                     //    if (room == null) return null;
+                                                                  //    if (room == null) return null;
 
             // Chuyển đổi Room thành RoomResponse
             var roomResponse = room.ToRoomResponse(); // Cần sử dụng room, không phải roomType

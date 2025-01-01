@@ -43,6 +43,11 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomStatus = "SP_UpdateRoomStatus";
         public const string SP_GetAvailableRooms = "SP_GetAvailableRooms";
         public const string SP_SearchRooms = "SP_SearchRooms";
+
+        //statistics
+        public const string SP_GetTop5MostBookedRoomsLastMonth = "SP_GetTop5MostBookedRoomsLastMonth";
+        public const string SP_GetTopMostBookedRoomsCustomer = "SP_GetTopMostBookedRoomsCustomer";
+        public const string SP_GetRevenue = "SP_GetRevenue";
         ////public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
 
         //building
@@ -149,6 +154,7 @@ namespace Utilities.StoredProcedure
         public const string SP_InsertRoomBookingDetail = "SP_InsertRoomBookingDetail";
         public const string SP_UpdateRoomBookingDetail = "SP_UpdateRoomBookingDetail";
         public const string SP_GetRoomBookingDetailById = "SP_GetRoomBookingDetailById";
+        public const string SP_GetRoomBookingDetailById2 = "SP_GetRoomBookingDetailById2";
         public const string SP_GetListRoomBookingDetailByRoomBookingId = "SP_GetListRoomBookingDetailByRoomBookingId";
         public const string SP_GetRoomBookingDetailsByCustomerId = "SP_GetRoomBookingDetailsByCustomerId";
         //Client 

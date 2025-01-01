@@ -72,6 +72,42 @@ namespace API.Controllers
                 throw new NullReferenceException("The list of  rooms could not be retrieved", e);
             }
         }
+        [HttpPost(nameof(GetTopBookingRoomsAsync))]
+        public async Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(int SelectedMonthRoom, int SelectedYearRoom)
+        {
+            try
+            {
+                return await _roomGetService.GetTopBookingRoomsAsync(SelectedMonthRoom, SelectedYearRoom);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("The list of  rooms could not be retrieved", e);
+            }
+        }
+        [HttpPost(nameof(GetTopCustomerBookings))]
+        public async Task<List<TopCustomerBooking>> GetTopCustomerBookings(int SelectedMonthCustomer, int SelectedYearCustomer)
+        {
+            try
+            {
+                return await _roomGetService.GetTopCustomerBookings(SelectedMonthCustomer, SelectedYearCustomer);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("The list of  rooms could not be retrieved", e);
+            }
+        }
+        [HttpPost(nameof(GetRevenueAsync))]
+        public async Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType)
+        {
+            try
+            {
+                return await _roomGetService.GetRevenueAsync(revenueFilterType);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("The list of  rooms could not be retrieved", e);
+            }
+        }
         [HttpPost(nameof(SearchRooms))]
         public async Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request)
         {
