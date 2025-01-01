@@ -22,6 +22,52 @@ namespace View.Controllers
             _httpClient.BaseAddress = new Uri("https://localhost:7130/");
             _roomRepo = roomRepo;
         }
+        //[HttpGet]
+        //public IActionResult GetCustomerDetail(Guid id)
+        //{
+        //    // Lấy thông tin khách hàng từ cơ sở dữ liệu
+        //    var customer = _customerService.GetTopCustomerById(id); // Giả sử bạn có service để lấy thông tin khách hàng
+        //    if (customer == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Trả về thông tin dạng JSON
+        //    return Json(new
+        //    {
+        //        id = customer.Id,
+        //        firstName = customer.FirstName,
+        //        lastName = customer.LastName,
+        //        email = customer.Email,
+        //        phoneNumber = customer.PhoneNumber,
+        //        gender = customer.Gender,
+        //        bookingCount = customer.BookingCount,
+        //        totalPrice = customer.TotalPrice
+        //    });
+        //}
+        public async Task<IActionResult> Details(Guid id)
+        {
+            string requestUrl = $"https://localhost:7130/api/Customer/GetCustomerById?Id={id}";
+
+            try
+            {
+                var response = await _httpClient.GetAsync(requestUrl);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return View("Error");
+                }
+
+                var responseString = await response.Content.ReadAsStringAsync();
+                var customer = JsonConvert.DeserializeObject<Customer>(responseString);
+
+                return View(customer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
             where T : class

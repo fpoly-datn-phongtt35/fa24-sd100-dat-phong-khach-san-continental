@@ -14,12 +14,20 @@
     <!-- Phần Biểu đồ Doanh Thu (chiếm 70%) -->
     <div style="flex: 7; padding-right: 20px;margin-top:21px">
         <h3 style="display: inline-block;">Biểu Đồ Doanh Thu</h3>
-        <form method="get" action="@Url.Action("Index")" style="display: inline-block; margin-bottom:1px">
-            <select id="revenueFilterType" name="revenueFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
+        <form method="get" action="@Url.Action("Index")" style="display: inline-block; margin-bottom: 1px">
+            <!-- Hidden inputs để giữ giá trị lọc từ các form khác -->
+            <input type="hidden" name="SelectedMonthCustomer" value="@ViewBag.SelectedMonthCustomer" />
+            <input type="hidden" name="SelectedYearCustomer" value="@ViewBag.SelectedYearCustomer" />
+            <input type="hidden" name="SelectedMonthRoom" value="@ViewBag.SelectedMonthRoom" />
+            <input type="hidden" name="SelectedYearRoom" value="@ViewBag.SelectedYearRoom" />
+
+            <!-- Select để lọc kiểu biểu đồ doanh thu -->
+            <select id="revenueFilterType" name="revenueFilterType" class="form-control" onchange="this.form.submit()" style="width: auto">
                 <option value="Month" selected="@(revenueFilterType == "Month" ? "selected" : null)">Tháng</option>
                 <option value="Year" selected="@(revenueFilterType == "Year" ? "selected" : null)">Năm</option>
             </select>
         </form>
+
         <hr style="height: 0.1px">
 
 
@@ -30,6 +38,10 @@
     <!-- Phần Top Khách Hàng (chiếm 30%) -->
     <div style="flex: 3;">
         <form method="get" action="@Url.Action("Index")" style="margin-top:20px">
+            <input type="hidden" name="SelectedMonthRoom" value="@ViewBag.SelectedMonthRoom" />
+            <input type="hidden" name="SelectedYearRoom" value="@ViewBag.SelectedYearRoom" />
+            <input type="hidden" name="revenueFilterType" value="@revenueFilterType" />
+
             <label for="SelectedMonthCustomer">Tháng:</label>
             <select id="SelectedMonthCustomer" name="SelectedMonthCustomer" class="form-control" style="width: 80px; display: inline-block;">
                 @for (int i = 1; i <= 12; i++)
@@ -40,7 +52,7 @@
 
             <label for="SelectedYearCustomer">Năm:</label>
             <select id="SelectedYearCustomer" name="SelectedYearCustomer" class="form-control" style="width: 100px; display: inline-block;">
-                @for (int i = DateTime.Now.Year; i >= 2000; i--)
+                @for (int i = DateTime.Now.Year; i >= 2024; i--)
                 {
                     <option value="@i" selected="@(i == ViewBag.SelectedYearCustomer ? "selected" : null)">@i</option>
                 }
@@ -48,6 +60,7 @@
 
             <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-bottom:5px">Lọc</button>
         </form>
+
         <hr>
 
         @* Lấy tháng và năm từ query string, nếu không có thì sử dụng tháng/năm hiện tại *@
@@ -71,7 +84,7 @@
             <div class="top-customer-list">
                 @foreach (var customer in topCustomers)
                 {
-                    <div class="top-customer-card">
+                    <div class="top-customer-card" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Details", "Customer", new { id = customer.Id })'">
                         <div class="top-customer-icon">
                             <i class="fas fa-user-circle"></i>
                         </div>
@@ -82,7 +95,10 @@
                     </div>
                 }
             </div>
+
+
         }
+
     </div>
 
 
@@ -151,7 +167,6 @@
 
 </div>
 
-<!-- Đảm bảo bạn đã thêm FontAwesome hoặc thư viện icon khác vào trang của bạn -->
 @* <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
 <!-- Thêm một số CSS để tạo kiểu cho các card -->
@@ -201,19 +216,23 @@
     <h3>@filterTypeDisplay1</h3>
 
     <form method="get" action="@Url.Action("Index")">
+        <input type="hidden" name="SelectedMonthCustomer" value="@ViewBag.SelectedMonthCustomer" />
+        <input type="hidden" name="SelectedYearCustomer" value="@ViewBag.SelectedYearCustomer" />
+        <input type="hidden" name="revenueFilterType" value="@revenueFilterType" />
+
         <label for="SelectedMonthRoom">Tháng:</label>
         <select id="SelectedMonthRoom" name="SelectedMonthRoom" class="form-control" style="width: 80px; display: inline-block;">
             @for (int i = 1; i <= 12; i++)
             {
-                <option value="@i" selected="@(i == selectedMonth1 ? "selected" : null)">@i</option>
+                <option value="@i" selected="@(i == ViewBag.SelectedMonthRoom ? "selected" : null)">@i</option>
             }
         </select>
 
         <label for="SelectedYearRoom">Năm:</label>
         <select id="SelectedYearRoom" name="SelectedYearRoom" class="form-control" style="width: 100px; display: inline-block;">
-            @for (int i = DateTime.Now.Year; i >= 2000; i--)
+            @for (int i = DateTime.Now.Year; i >= 2024; i--)
             {
-                <option value="@i" selected="@(i == selectedYear1 ? "selected" : null)">@i</option>
+                <option value="@i" selected="@(i == ViewBag.SelectedYearRoom ? "selected" : null)">@i</option>
             }
         </select>
 
