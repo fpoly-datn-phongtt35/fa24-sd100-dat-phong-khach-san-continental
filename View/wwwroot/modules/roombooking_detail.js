@@ -718,6 +718,7 @@ var _roombooking_detail = {
                                <a class="text-green btn btn-success ms-2 btn-checkin text-nowrap" id="btn-checkin-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('` + item.roomBookingDetailId + `')">Đã nhận</a>
                                <a class="text-white btn btn-warning ms-2 btn-checkout text-nowrap" id="btn-checkout-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckOut('` + item.roomBookingDetailId + `','` + item.roomId + `')">Đã trả</a>
                                <a class="btn btn-info ms-2 btn-residence text-nowrap" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Danh sách</a>
+                               <a class="btn btn-primary ms-2 btn-detail text-nowrap" id="btn-detail-` + item.roomBookingDetailId + `" href="/RoomBooking/RoomBookingDetails/RoomBookingDetailId=` + item.roomBookingDetailId + `" style="cursor:pointer">Chi tiết</a>
                            </td>
                            
                         </tr>

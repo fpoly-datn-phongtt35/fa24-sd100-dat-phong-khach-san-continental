@@ -341,4 +341,42 @@ public class RoomBookingRepository : IRoomBookingRepository
             throw new Exception("An error occurred while checking the roombooking status", e);
         }
     }
+
+    public async Task<List<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@CustomerId", request.CustomerId),
+                new SqlParameter("@PageIndex", request.PageIndex),
+                new SqlParameter("@PageSize", request.PageSize),
+            };
+
+            var db = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetListRoomBookingsByCustomerId, parameters);
+            var roomBookings = db.AsEnumerable().Select(row => new RoomBookingResponseForCustomer
+            {
+                Id = row.Field<Guid>("Id"),
+                BookingType = (BookingType)row.Field<int?>("BookingType"),
+                CustomerId = row.Field<Guid>("CustomerId"),
+                StaffId = row.Field<Guid?>("StaffId"),
+                TotalPrice = row.Field<decimal?>("TotalPrice"),
+                TotalRoomPrice = row.Field<decimal?>("TotalRoomPrice"),
+                TotalServicePrice = row.Field<decimal?>("TotalServicePrice"),
+                TotalExtraPrice = row.Field<decimal?>("TotalExtraPrice"),
+                Status = row.Field<RoomBookingStatus>("Status"),
+                StaffName = row.Field<string>("StaffName"),
+                CustomerName = row.Field<string>("CustomerName"),
+                CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
+                CreatedBy = row.Field<Guid?>("CreatedBy"),
+                ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
+                ModifiedBy = row.Field<Guid?>("ModifiedBy"),
+            }).ToList();
+            return roomBookings;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while updating the room", e);
+        }
+    }
 }

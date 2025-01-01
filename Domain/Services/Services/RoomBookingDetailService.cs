@@ -23,6 +23,7 @@ namespace Domain.Services.Services
             _configuration = configuration;
             _roomBookingDetailRepository = roomBookingDetailRepository;
         }
+
         public async Task<int> UpSertRoomBookingDetail(RoomBookingDetail request)
         {
             try
@@ -97,6 +98,44 @@ namespace Domain.Services.Services
             }
             return roomBookingDetail;
         }
+        
+        public async Task<RoomBookingDetail> GetRoomBookingDetailById2(Guid id)
+        {
+            RoomBookingDetail roomBookingDetail = new RoomBookingDetail();
+            try
+            {
+                DataTable table = await _roomBookingDetailRepository.GetRoomBookingDetailById2(id);
+                roomBookingDetail = (from row in table.AsEnumerable()
+                            select new RoomBookingDetail
+                            {
+                                Id = row.Field<Guid>("Id"),
+                                RoomId = row.Field<Guid>("RoomId"),
+                                RoomBookingId = row.Field<Guid>("RoomBookingId"),
+                                CheckInBooking = row.Field<DateTimeOffset?>("CheckInBooking"),
+                                CheckOutBooking = row.Field<DateTimeOffset?>("CheckOutBooking"),
+                                CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
+                                CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
+                                Price = row.Field<decimal?>("Price"),
+                                ExtraPrice = row.Field<decimal>("ExtraPrice"),
+                                Deposit = row.Field<decimal>("Deposit"),
+                                Expenses = row.Field<decimal?>("Expenses"),
+                                Note = row.Field<string>("Note"),
+                                Status = row.Field<EntityStatus>("Status"),
+                                Deleted = row.Field<bool>("Deleted"),
+                                Room = new Models.Room()
+                                {
+                                    Id = row.Field<Guid>("RoomId"),
+                                    Name = table.Columns.Contains("Name") ? row.Field<string>("Name") : null
+                                }
+                            }).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return roomBookingDetail;
+        }
+        
         public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id)
         {
             List<RoomBookingDetailGetByIdRoomBooking> roomBookingDetail = new List<RoomBookingDetailGetByIdRoomBooking>();

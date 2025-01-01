@@ -98,12 +98,6 @@ namespace ViewClient.Controllers
         [HttpPost]
         public async Task<IActionResult> RoomBooking(RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
-            
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 var _UserLogin = Guid.Empty;
@@ -149,7 +143,11 @@ namespace ViewClient.Controllers
                     Status = RoomBookingStatus.PENDING,
                     StaffId = null,
                     CreatedBy = customerId,
-                    NewId = null
+                    NewId = null,
+                    TotalExpenses = 0,
+                    TotalPriceReality = 0,
+                    TotalExtraPrice = 0,
+                    BookingBy = BookingBy.Day
                 };
 
                 var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
@@ -188,6 +186,8 @@ namespace ViewClient.Controllers
                 roomBookingDetailCreateRequest.Customer = null;
                 roomBookingDetailCreateRequest.ServicePrice = null;
                 roomBookingDetailCreateRequest.TotalPrice = null;
+                roomBookingDetailCreateRequest.Expenses = null;
+                roomBookingDetailCreateRequest.Note = null;
                 var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
 
                 var roomStatus = new RoomUpdateStatusRequest

@@ -11,6 +11,7 @@
     <Content Remove="Pages\**" />
     <EmbeddedResource Remove="Pages\**" />
     <None Remove="Pages\**" />
+    <None Include="wwwroot\modules\RoomBookingDetail1.js" />
   </ItemGroup>
 
   <ItemGroup>

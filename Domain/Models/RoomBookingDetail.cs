@@ -9,8 +9,8 @@ namespace Domain.Models
         public Guid Id { get; set; }        
         public Guid RoomId { get; set; }
         public Guid RoomBookingId { get; set; }
-        public DateTimeOffset? CheckInBooking { get; set; }
-        public DateTimeOffset? CheckOutBooking { get; set; }
+        public DateTimeOffset? CheckInBooking { get; set; }= DateTimeOffset.UtcNow.Date.AddHours(14);
+        public DateTimeOffset? CheckOutBooking { get; set; } = DateTimeOffset.UtcNow.Date.AddHours(12);
         public DateTimeOffset? CheckInReality { get; set; }
         public DateTimeOffset? CheckOutReality { get; set; }        
         public decimal? Price { get; set; }

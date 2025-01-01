@@ -33,18 +33,18 @@ body {
     margin: 0;
     height: 100%;
 }
-
-
 .unifrakturmaguntia-regular {
     font-family: "UnifrakturMaguntia", cursive;
     font-weight: 400;
     font-style: normal;
+    color: black
 }
 
 .navbar, .navbar-left, .navbar-center, .navbar-right {
     box-sizing: border-box;
+    background-color: white !important;
 }
-
+  
 
 .navbar {
     /*position: fixed; 
@@ -56,7 +56,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #000000;
     color: white;
     padding: 10px 20px;
     width: 100%;
@@ -70,7 +69,7 @@ body {
 
     .navbar-left a {
         text-decoration: none; 
-        color: white;
+        color: black !important;   
     }
 
         .navbar-left a:hover,
@@ -93,85 +92,97 @@ body {
 .navbar-right {
     display: flex;
     align-items: center;
-    justify-content: end;
-    gap: 15px;
-    width: 30%;
+    gap: 8px;
 }
-    .navbar-center {
-        flex-grow: 1;
-        text-align: center;
+.navbar-center a{
+    text-decoration:none;
+    color: black;
+    font-weight:500;
+    
+}
+.profile-menu {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 5px 5px 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 21px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+    .profile-button:hover {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.18);
     }
 
-        .navbar-center a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            margin: 0 15px;
-            position: relative;
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 8px 0;
+    min-width: 200px;
+}
+
+    .profile-dropdown.show {
+        display: block;
+        z-index:1200;
+    }
+
+    .profile-dropdown a {
+        display: block;
+        padding: 8px 16px;
+        color: #222222;
+        text-decoration: none;
+    }
+
+        .profile-dropdown a:hover {
+            background-color: #F7F7F7;
         }
+.button {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
-            .navbar-center a:hover::after {
-                content: ""; 
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: -5px; 
-                height: 2px; 
-                background-color: white; 
-            }
+.button-outline {
+    border: 1px solid #DDDDDD;
+    color: #222222;
+    background-color: #FFFFFF;
+}
 
-.nav-button {
-    background-color: #00b1ff;
-    color: white;
+    .button-outline:hover {
+        border-color: #222222;
+    }
+
+.button-primary {
+    background-color: #FF385C;
+    color: #FFFFFF;
     border: none;
-    border: 2px groove #ddd;
-    border-radius: 5px;
-    padding: 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
-    .nav-button:hover {
-        background-color: #1341f6;
-        cursor: pointer;
+    .button-primary:hover {
+        background-color: #D70466;
     }
-
-    .nav-button a {
-        color: white;
-        text-decoration: none;
-    }
-.nav-button-another {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: white;
-    border: none;
-    border: 2px groove #ddd;
-    border-radius: 5px;
-    padding: 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-    .nav-button-another:hover {
-        background-color: #1341f6;
-        cursor: pointer;
-    }
-
-    .nav-button-another a {
-        color: white;
-        text-decoration: none;
-    }
-
-
-.navbar-right span {
-    font-size: 16px;
-    color: #eff91c;
-    font-size: 16px;
-    font-weight: bold;
-}
 /* Banner */
 .banner {
     background-image: url('../../wwwroot/img/2.png');
@@ -202,8 +213,34 @@ body {
         max-width: 90%;
         height: auto;
     }
+.button {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
+.button-outline {
+    border: 1px solid #DDDDDD;
+    color: #222222;
+    background-color: #FFFFFF;
+}
 
+    .button-outline:hover {
+        border-color: #222222;
+    }
+
+.button-primary {
+    background-color: #FF385C;
+    color: #FFFFFF;
+    border: none;
+}
+
+    .button-primary:hover {
+        background-color: #D70466;
+    }
 /* Ô tìm kiếm */
 .search-box {
     width: 100%;
@@ -609,7 +646,6 @@ body {
     margin-top: 10px;
 }
     .card:hover {
-        transform: scale(1.1);
         transition: transform 0.3s ease;
     }
     h5.card-title.p{
@@ -618,7 +654,7 @@ body {
 .card-title {
     font-size: 1.2rem;
     font-weight: bold;
-    margin: 10px;
+    margin: 10px 10px 0 10px;
 }
 
 .img-container {
@@ -692,12 +728,16 @@ hr {
 
 .d-flex {
     display: flex;
+    /* Đặt chiều của flex thành cột */
     align-items: flex-start; /* Căn chỉnh các phần tử theo chiều dọc */
 }
-
+.d-flex-column {
+    display: flex;
+    flex-direction: column;
+}
 .img-column {
-    flex: 1; /* Chiếm không gian còn lại */
-    margin-right: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    margin-bottom: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
 }
 
 dt {
@@ -718,7 +758,6 @@ div.info-row:hover {
     transform: scaleY(0.85);
 }
 .room-info{
-    margin-top:30px;
     padding-left:10px;
     font-size: xx-large;
     font-weight: 700;
@@ -731,14 +770,13 @@ div.info-row:hover {
     margin: 5px 0; /* Khoảng cách giữa các hình ảnh */
 }
 .info-column {
-    width: 300px; /* Adjust the width as needed */
-    padding: 10px; /* Reduce padding */
-    font-size: 14px; /* Make font size smaller */
-    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
-    border-radius: 5px; /* Optional: Rounded corners */
-    background-color: #f9f9f9; /* Optional: Light background color */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    padding: 10px; /* Giữ padding */
+    font-size: 14px; /* Kích thước chữ */
+    border: 1px solid #ccc; /* Viền cho phần thông tin */
+    border-radius: 5px; /* Bo góc */
+    background-color: #f9f9f9; /* Màu nền nhẹ */
 }
-
 .info-row {
     margin-bottom: 8px; /* Space between rows */
 }

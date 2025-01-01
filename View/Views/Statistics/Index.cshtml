@@ -1,64 +1,173 @@
 ﻿@{
+    @using Microsoft.Extensions.Primitives
+
     @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
     var periods = ViewBag.Periods as List<string>;
     var totalAmounts = ViewBag.TotalAmounts as List<decimal>;
     var topCustomers = ViewBag.TopCustomers as List<Domain.DTO.Room.TopCustomerBooking>;
     var topRooms = ViewBag.TopRooms as List<Domain.DTO.Room.TopRoomBookingViewModel>;
     var revenueFilterType = HttpContextAccessor.HttpContext.Request.Query["revenueFilterType"].ToString();
-    var customerFilterType = HttpContextAccessor.HttpContext.Request.Query["customerFilterType"].ToString();
-    var roomFilterType = HttpContextAccessor.HttpContext.Request.Query["roomFilterType"].ToString();
 }
-<div style="display: flex; flex-direction: row; gap: 20px;">
+
+<div style="display: flex; flex-direction: row; gap: 20px;margin-left: 23px">
 
     <!-- Phần Biểu đồ Doanh Thu (chiếm 70%) -->
-    <div style="flex: 7; padding-right: 20px;">
-        <h2>Biểu Đồ Doanh Thu</h2>
-        <form method="get" action="@Url.Action("Index")">
-            <label for="revenueFilterType">Chọn thời gian:</label>
-            <select id="revenueFilterType" name="revenueFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
+    <div style="flex: 7; padding-right: 20px;margin-top:21px">
+        <h3 style="display: inline-block;">Biểu Đồ Doanh Thu</h3>
+        <form method="get" action="@Url.Action("Index")" style="display: inline-block; margin-bottom: 1px">
+            <!-- Hidden inputs để giữ giá trị lọc từ các form khác -->
+            <input type="hidden" name="SelectedMonthCustomer" value="@ViewBag.SelectedMonthCustomer" />
+            <input type="hidden" name="SelectedYearCustomer" value="@ViewBag.SelectedYearCustomer" />
+            <input type="hidden" name="SelectedMonthRoom" value="@ViewBag.SelectedMonthRoom" />
+            <input type="hidden" name="SelectedYearRoom" value="@ViewBag.SelectedYearRoom" />
+
+            <!-- Select để lọc kiểu biểu đồ doanh thu -->
+            <select id="revenueFilterType" name="revenueFilterType" class="form-control" onchange="this.form.submit()" style="width: auto">
                 <option value="Month" selected="@(revenueFilterType == "Month" ? "selected" : null)">Tháng</option>
                 <option value="Year" selected="@(revenueFilterType == "Year" ? "selected" : null)">Năm</option>
             </select>
         </form>
+
+        <hr style="height: 0.1px">
+
+
+
         <canvas id="revenueChart" width="400" height="200"></canvas>
     </div>
 
     <!-- Phần Top Khách Hàng (chiếm 30%) -->
     <div style="flex: 3;">
-        <h2>Top Khách Hàng</h2>
-        <form method="get" action="@Url.Action("Index")">
-            <label for="customerFilterType">Chọn thời gian:</label>
-            <select id="customerFilterType" name="customerFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
-                <option value="Month" selected="@(customerFilterType == "Month" ? "selected" : null)">Tháng</option>
-                <option value="Year" selected="@(customerFilterType == "Year" ? "selected" : null)">Năm</option>
+        <form method="get" action="@Url.Action("Index")" style="margin-top:20px">
+            <input type="hidden" name="SelectedMonthRoom" value="@ViewBag.SelectedMonthRoom" />
+            <input type="hidden" name="SelectedYearRoom" value="@ViewBag.SelectedYearRoom" />
+            <input type="hidden" name="revenueFilterType" value="@revenueFilterType" />
+
+            <label for="SelectedMonthCustomer">Tháng:</label>
+            <select id="SelectedMonthCustomer" name="SelectedMonthCustomer" class="form-control" style="width: 80px; display: inline-block;">
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i" selected="@(i == ViewBag.SelectedMonthCustomer ? "selected" : null)">@i</option>
+                }
             </select>
+
+            <label for="SelectedYearCustomer">Năm:</label>
+            <select id="SelectedYearCustomer" name="SelectedYearCustomer" class="form-control" style="width: 100px; display: inline-block;">
+                @for (int i = DateTime.Now.Year; i >= 2024; i--)
+                {
+                    <option value="@i" selected="@(i == ViewBag.SelectedYearCustomer ? "selected" : null)">@i</option>
+                }
+            </select>
+
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-bottom:5px">Lọc</button>
         </form>
+
+        <hr>
+
+        @* Lấy tháng và năm từ query string, nếu không có thì sử dụng tháng/năm hiện tại *@
+        @{
+            var selectedMonth = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["SelectedMonthCustomer"].FirstOrDefault() ?? DateTime.Now.Month.ToString());
+            var selectedYear = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["SelectedYearCustomer"].FirstOrDefault() ?? DateTime.Now.Year.ToString());
+            var filterTypeDisplay = $"{selectedMonth}/{selectedYear}"; // Ví dụ: "5/2024"
+        }
 
         @if (topCustomers == null || !topCustomers.Any())
         {
+            <h3 style="margin-top:-4px">Top Khách hàng @filterTypeDisplay</h3>
+            <hr style="width: 85%; height: 1px; border: none; background-color: #ccc; margin: 10px 0;">
             <p>Không có dữ liệu để hiển thị.</p>
         }
         else
         {
+            <h3 style="margin-top:-4px">Top Khách hàng @filterTypeDisplay</h3>
+            <hr style="width: 85%; height: 1px; border: none; background-color: #ccc; margin: 10px 0;">
+
             <div class="top-customer-list">
                 @foreach (var customer in topCustomers)
                 {
-                    <div class="top-customer-card">
-                        <i class="fas fa-user-circle fa-3x"></i>
+                    <div class="top-customer-card" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Details", "Customer", new { id = customer.Id })'">
+                        <div class="top-customer-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
                         <div class="top-customer-info">
                             <h5>@($"{customer.FirstName} {customer.LastName}")</h5>
-                            <p>Số lần đặt: @customer.BookingCount</p>
+                            <p>Tiền: @customer.TotalPrice VND / Lần đặt: @customer.BookingCount</p>
                         </div>
                     </div>
                 }
             </div>
+
+
         }
+
     </div>
+
+
+
+
+    <style>
+
+        .top-customer-list {
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+        width: 85%; /* Chiếm 95% chiều ngang của phần chứa */
+        border-radius: 0; /* Làm góc nhọn */
+        }
+
+
+
+
+        .top-customer-card {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background-color: white;
+        border-radius: 0px;
+        transition: transform 0.2s;
+        }
+
+        .top-customer-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .top-customer-icon {
+        font-size: 40px;
+        color: #007bff;
+        margin-left: 11px;
+        }
+
+        .top-customer-info{
+        margin-left: 10px;
+        }
+        .top-customer-info h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        }
+
+        .top-customer-info p {
+        margin: 5px 0 0 0;
+        font-size: 14px;
+        color: #666;
+        }
+
+        .top-customer-card:nth-child(odd) {
+        background-color: white; /* Màu nền trắng cho các khách hàng lẻ (odd) */
+        }
+
+        .top-customer-card:nth-child(even) {
+        background-color: #f1f1f1; /* Màu nền xám cho các khách hàng chẵn (even) */
+        }
+    </style>
+
 
 </div>
 
-<!-- Đảm bảo bạn đã thêm FontAwesome hoặc thư viện icon khác vào trang của bạn -->
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</div>
+
+@* <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
 <!-- Thêm một số CSS để tạo kiểu cho các card -->
 <style>
@@ -91,17 +200,43 @@
         font-size: 14px;
         color: #555;
     }
-</style>
+</style> *@
 
 
-<div >
-    <h2>Top Phòng Đặt</h2>
+<div style="margin-left: 20px;margin-top: 20px">
+    <!-- Tiêu đề động theo tháng/năm -->
+    @{
+        // Lấy giá trị tháng và năm từ query string
+        var selectedMonth1 = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["SelectedMonthRoom"].FirstOrDefault() ?? DateTime.Now.Month.ToString());
+        var selectedYear1 = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["SelectedYearRoom"].FirstOrDefault() ?? DateTime.Now.Year.ToString());
+
+        // Cập nhật tiêu đề theo tháng và năm đã chọn
+        var filterTypeDisplay1 = $"Top Phòng Đặt {selectedMonth1}/{selectedYear1}";
+    }
+    <h3>@filterTypeDisplay1</h3>
+
     <form method="get" action="@Url.Action("Index")">
-        <label for="roomFilterType">Chọn thời gian:</label>
-        <select id="roomFilterType" name="roomFilterType" class="form-control" onchange="this.form.submit()" style="width: 80px">
-                <option value="Month" selected="@(roomFilterType == "Month" ? "selected" : null)">Tháng</option>
-                <option value="Year" selected="@(roomFilterType == "Year" ? "selected" : null)">Năm</option>
+        <input type="hidden" name="SelectedMonthCustomer" value="@ViewBag.SelectedMonthCustomer" />
+        <input type="hidden" name="SelectedYearCustomer" value="@ViewBag.SelectedYearCustomer" />
+        <input type="hidden" name="revenueFilterType" value="@revenueFilterType" />
+
+        <label for="SelectedMonthRoom">Tháng:</label>
+        <select id="SelectedMonthRoom" name="SelectedMonthRoom" class="form-control" style="width: 80px; display: inline-block;">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i" selected="@(i == ViewBag.SelectedMonthRoom ? "selected" : null)">@i</option>
+            }
         </select>
+
+        <label for="SelectedYearRoom">Năm:</label>
+        <select id="SelectedYearRoom" name="SelectedYearRoom" class="form-control" style="width: 100px; display: inline-block;">
+            @for (int i = DateTime.Now.Year; i >= 2024; i--)
+            {
+                <option value="@i" selected="@(i == ViewBag.SelectedYearRoom ? "selected" : null)">@i</option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-bottom:5px">Lọc</button>
     </form>
 
     @if (topRooms == null || !topRooms.Any())
@@ -110,7 +245,7 @@
     }
     else
     {
-        <table class="table table-striped table-bordered table-hover" style="width: 100%;  overflow: hidden;">
+        <table class="table table-striped table-bordered table-hover" style="width: 100%; overflow: hidden;">
             <thead>
                 <tr style="background-color: #073a4b; color: white;">
                     <th>#</th>
@@ -160,6 +295,7 @@
         </table>
     }
 </div>
+
 
 <style>
     table {
