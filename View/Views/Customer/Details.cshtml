@@ -3,12 +3,11 @@
 @{
     ViewData["Title"] = "Details";
 }
+<form style="margin-left:25px">
+    <h3>Thông tin chi tiết khách hàng</h3>
 
-<h3>Thông tin chi tiết khách hàng</h3>
-
-<div>
-    <h4>Khách hàng</h4>
-    <hr />
+    <div>
+    <hr style="height:100%"/>
     <dl class="row">
         <dt class = "col-sm-2">
             Tài khoản
@@ -59,8 +58,9 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
-</div>
-<div>
+    </div>
+    <div>
     @Html.ActionLink("Sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" }) |
     <a asp-action="Index" class="btn btn-info">Quay lại</a>
-</div>
+    </div>
+</form>

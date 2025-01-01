@@ -428,9 +428,9 @@ namespace Domain.Repositories.Repository
                 throw new ArgumentException("Selected month must be between 1 and 12.", nameof(SelectedMonthRoom));
             }
 
-            if (SelectedYearRoom < 1900 || SelectedYearRoom > DateTime.Now.Year)
+            if (SelectedYearRoom < 2024 || SelectedYearRoom > DateTime.Now.Year)
             {
-                throw new ArgumentException("Selected year is not valid.", nameof(SelectedYearRoom));
+                throw new ArgumentException("Select only from 2024 to present", nameof(SelectedYearRoom));
             }
 
             // Tham số đầu vào cho stored procedure
@@ -472,9 +472,9 @@ namespace Domain.Repositories.Repository
                 throw new ArgumentException("Selected month must be between 1 and 12.", nameof(SelectedMonthCustomer));
             }
 
-            if (SelectedYearCustomer < 1900 || SelectedYearCustomer > DateTime.Now.Year)
+            if (SelectedYearCustomer < 2024 || SelectedYearCustomer > DateTime.Now.Year)
             {
-                throw new ArgumentException("Selected year is not valid.", nameof(SelectedYearCustomer));
+                throw new ArgumentException("Select only from 2024 to present", nameof(SelectedYearCustomer));
             }
 
             // Tham số đầu vào cho stored procedure
@@ -498,7 +498,7 @@ namespace Domain.Repositories.Repository
                     LastName = row["LastName"]?.ToString(),
                     Email = row["Email"]?.ToString(),
                     PhoneNumber = row["PhoneNumber"]?.ToString(),
-                    Gender = Convert.ToInt32(row["Gender"]),
+                    Gender = row["Gender"] != DBNull.Value ? Enum.Parse<GenderType>(row["Gender"].ToString()) : (GenderType?)null,
                     BookingCount = Convert.ToInt32(row["BookingCount"]),
                     TotalPrice = Convert.ToDecimal(row["TotalPrice"])
                 };
