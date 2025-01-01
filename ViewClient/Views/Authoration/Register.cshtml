@@ -12,11 +12,18 @@
             <p class="text-2">Privaci policy & Term of service</p>
         </div>
         <form class="form-detail" asp-action="Register" asp-controller="Authoration" method="post" id="myform">
-          
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @Html.ValidationSummary(true, "", new { @class = "mb-0" })
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
             <div class="form-row">
                 <label for="username">Tài khoản</label>
                 <input type="text" name="UserName" id="username" class="input-text" required>
                 <span asp-validation-for="UserName" class="text-danger"></span>
+              
             </div>
             <div class="form-row">
                 <label for="phoneNumber">Số điện thoại</label>
@@ -32,10 +39,6 @@
                 <label for="password">Mật khẩu</label>
                 <input type="password" name="Password" id="password" class="input-text" aria-required="true" required>
                 <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-row">
-                <label for="confirm_password">Xác nhận mật khẩu</label>
-                <input type="password" name="ConfirmPassword" id="confirm_password" class="input-text" required>
             </div>
             <div class="form-row-last">
                 <button type="submit" class="btn btn-primary btn-block register">Đăng ký</button>

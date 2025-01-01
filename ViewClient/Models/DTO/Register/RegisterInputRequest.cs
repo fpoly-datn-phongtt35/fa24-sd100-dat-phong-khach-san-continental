@@ -8,12 +8,13 @@ namespace ViewClient.Models.DTO.Register
         [RegularExpression(@"^[a-zA-Z0-9]{3,10}$", ErrorMessage = "Tên người dùng phải từ 3-10 kí tự, không bao gồm kí tự đặc biệt!")]
         public string UserName { get; set; }
         [Required]
-        //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Mật khẩu gồm chữ viết hoa, chữ viết thường, chữ số và chỉ từ 8-15 kí tự!")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Mật khẩu gồm chữ viết hoa, chữ viết thường, chữ số và chỉ từ 8-15 kí tự!")]
         public string Password { get; set; }
         [Required]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Vui lòng nhập đúng định dạng: example@domain.com")]
         public string Email { get; set; }
         [MaxLength(13)]
+        [RegularExpression(@"^0[3-9]\d{8}$", ErrorMessage = "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ.")]
         public string? PhoneNumber { get; set; }
 
     }

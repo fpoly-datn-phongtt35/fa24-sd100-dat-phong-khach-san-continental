@@ -56,7 +56,6 @@
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                             <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link" style="text-decoration:none;">
                                 <div class="card">
-                                    <h5 class="card-title" style="color:black;">@room.Name</h5>
                                     <div class="d-flex justify-content-center">
                                         @foreach (var img in room.Images)
                                         {
@@ -70,6 +69,7 @@
                                             }
                                         }
                                     </div>
+                                    <h5 class="card-title" style="color:black;">@room.Name</h5>
                                     <p>đ @String.Format("{0:N0}", room.Price) / ngày</p>
                                   
                                 </div>

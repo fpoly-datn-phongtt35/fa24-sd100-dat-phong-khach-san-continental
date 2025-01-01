@@ -99,10 +99,10 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@CheckInReality", request.CheckInReality),
                     new SqlParameter("@CheckOutReality", request.CheckOutReality),
                     new SqlParameter("@Price", request.Price),
-                    new SqlParameter("@ExtraPrice", request.ExtraPrice),
-                    new SqlParameter("@Deposit", request.Deposit),
-                    new SqlParameter("@Expenses", request.Expenses),
-                    new SqlParameter("@Note", request.Note),
+                    new SqlParameter("@ExtraPrice", request.ExtraPrice ?? (object)DBNull.Value),
+                    new SqlParameter("@Deposit", request.Deposit ?? (object)DBNull.Value),
+                    new SqlParameter("@Expenses", request.Expenses ?? (object)DBNull.Value),
+                    new SqlParameter("@Note", request.Note ?? (object)DBNull.Value),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@CreatedBy",request.CreatedBy)
                 };
