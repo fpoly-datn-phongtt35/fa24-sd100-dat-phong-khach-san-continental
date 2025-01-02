@@ -162,6 +162,10 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Date", request.Date),
+                    new SqlParameter("@FullName", request.FullName),
+                    new SqlParameter("@IdentityNumber", request.IdentityNumber),
+                    new SqlParameter("@RoomName", request.RoomName),
+                    new SqlParameter("@IsCheckOut", request.IsCheckOut)
                 };
 
                 return _dbWorker.GetDataTable(StoredProcedureConstant.SP_GetResidenceRegistrationByDate, sqlParameters);

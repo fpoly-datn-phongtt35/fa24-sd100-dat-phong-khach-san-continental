@@ -110,8 +110,8 @@ namespace API.Controllers
         public async Task<IActionResult> CreatePaymentLinkAdmin(PaymentLinkCreateRequest request)
         {           
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
-            var cancelUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
-            var successUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
+            var cancelUrl = $"https://localhost:7114/BookingRoom/Id={request.RoomBookingId}";
+            var successUrl = $"https://localhost:7114/BookingRoom/Id={request.RoomBookingId}";
 
             //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
             
