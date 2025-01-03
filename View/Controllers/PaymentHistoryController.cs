@@ -57,6 +57,8 @@ namespace View.Controllers
                     var totalPaid = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(IdRoomBooking);
                     ViewBag.RoomBooking = roomBooking;
                     ViewBag.TotalPaid = totalPaid;
+
+
                     return View(data);
                 }
                 catch (Exception ex)
@@ -71,7 +73,40 @@ namespace View.Controllers
             }
         }
 
-        
+        public async Task<IActionResult> PaymentHistoryByBookingId(Guid IdRoomBooking)
+        {
+            try
+            {
+                string requestUrl = "api/PaymentHistory/GetListPaymentHistory";
+                PaymentHistoryGetRequest request = new PaymentHistoryGetRequest()
+                {
+                    RoomBookingId = IdRoomBooking
+                };
+                var jsonRequest = JsonConvert.SerializeObject(request);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await _client.PostAsync(requestUrl, content);
+
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<ResponseData<PaymentHistory>>(responseString);
+
+                    return Json(data.data);
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
 
         [Route("/PaymentHistory/AddPayment/{IdRoomBooking}")]
@@ -95,7 +130,13 @@ namespace View.Controllers
                     amountToPay = (decimal)(roomBooking.TotalPrice - totalPaid);
                     message = $"Số tiền cần thanh toán là: {amountToPay}";
                 }
+                var totalExpenses = roomBooking.TotalExpenses;
+                var totalServicePrice = roomBooking.TotalServicePrice;
+                var totalExtraPrice = roomBooking.TotalExtraPrice;
 
+                ViewBag.Expenses = totalExpenses;
+                ViewBag.Service = totalServicePrice;
+                ViewBag.Extra = totalExtraPrice;
                 ViewBag.Message = message;
                 ViewBag.AmountToPay = amountToPay;
                 ViewBag.TotalPaid = totalPaid;
@@ -114,6 +155,11 @@ namespace View.Controllers
         {
             try
             {
+                var roomBooking = await _roomBookingGetService.GetRoomBookingById(RoomBookingId);
+                var ClientId = roomBooking.CustomerId;
+                string url = $"https://localhost:7114/BookingRoom/Id={RoomBookingId}&&Client={ClientId}";
+
+
                 var totalPaid = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(RoomBookingId);
 
                 var paymentType = totalPaid == 0 ? PaymentType.Deposit : PaymentType.Bill;
@@ -134,7 +180,7 @@ namespace View.Controllers
 
                     if (result == 1)
                     {
-                        return RedirectToAction("PaymentHistoryByBooking", new { IdRoomBooking = RoomBookingId });
+                        return Redirect(url);
                     }
                     else
                     {

@@ -43,6 +43,9 @@
                     <button class="btn fw-bold" id="room_num" style="background-color:#afb2b4;color:#fff">Tổng số phòng trống: 0</button>
                     <button class="btn color-blue ms-2 fw-bold" id="ocupan" style="background-color:#afb2b4;color:#fff">Tổng sức chứa: 0</button>
                 </div>
+                <div>                  
+                    <button class="btn btn-outline-warning ms-auto" onclick="loadPaymentHistory('@idRoomBooking')">Lịch sử thanh toán</button>
+                </div>
             </div>
             <div class="datepicker-wrap mt-3 mb-3 d-flex justify-content-between" style="width:100%">
                 <div style="width:49%" class="">
@@ -244,10 +247,164 @@
         </div>
     </div>
 </div>
-<div class="container d-flex" style="width:100%">
-    <button class="btn btn-secondary" href="/BookingRoom">Quay lại</button>
-    <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+<div class="container d-flex justify-content-between align-items-center" style="width:100%">
+    <div>
+        <button class="btn btn-secondary" href="/BookingRoom">Quay lại</button>
+        <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+    </div>
+    <div>
+        @if (idRoomBooking != null)
+        {
+        @* <a class="btn btn-warning" href="~/PaymentHistory/Id=@idRoomBooking">Chuyển đến trang thanh toán</a> *@
+           <a href="/PaymentHistory/AddPayment/@idRoomBooking" class="btn btn-success me-3">Thanh toán</a>
+        }
+    </div>
 </div>
+<div class="modal fade" id="paymentHistoryModal" tabindex="-1" aria-labelledby="paymentHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentHistoryModalLabel">Lịch sử thanh toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="paymentHistoryContent">Đang tải...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showPaymentHistory(data) {
+        const existingModal = document.getElementById('customModal');
+        if (existingModal) existingModal.remove();
+
+        const modalContainer = document.createElement('div');
+        modalContainer.id = 'customModal';
+        modalContainer.style.position = 'fixed';
+        modalContainer.style.top = '50%';
+        modalContainer.style.left = '50%';
+        modalContainer.style.transform = 'translate(-50%, -50%)';
+        modalContainer.style.width = '80%';
+        modalContainer.style.maxWidth = '1000px';
+        modalContainer.style.backgroundColor = 'white';
+        modalContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        modalContainer.style.borderRadius = '8px';
+        modalContainer.style.padding = '16px';
+        modalContainer.style.zIndex = '1000';
+        modalContainer.style.maxHeight = '80vh';
+        modalContainer.style.overflowY = 'auto';
+
+        const modalHeader = document.createElement('div');
+        modalHeader.style.display = 'flex';
+        modalHeader.style.justifyContent = 'space-between';
+        modalHeader.style.alignItems = 'center';
+        modalHeader.style.marginBottom = '16px';
+
+        const modalTitle = document.createElement('h5');
+        modalTitle.innerText = 'Lịch sử thanh toán';
+        modalHeader.appendChild(modalTitle);
+
+        modalContainer.appendChild(modalHeader);
+
+        const table = document.createElement('table');
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        ['#', 'Ngày thanh toán', 'Số tiền'].forEach(headerText => {
+            const th = document.createElement('th');
+            th.innerText = headerText;
+            th.style.border = '1px solid #ddd';
+            th.style.padding = '8px';
+            th.style.textAlign = 'left';
+            th.style.backgroundColor = '#f2f2f2';
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        if (data && data.length > 0) {
+            data.forEach((payment, index) => {
+                const row = document.createElement('tr');
+
+                // Số thứ tự
+                const indexCell = document.createElement('td');
+                indexCell.innerText = index + 1;
+                indexCell.style.border = '1px solid #ddd';
+                indexCell.style.padding = '8px';
+                row.appendChild(indexCell);
+
+                // Ngày thanh toán
+                const dateCell = document.createElement('td');
+                dateCell.innerText = payment.paymentTime
+                    ? new Date(payment.paymentTime).toLocaleString('vi-VN')
+                    : 'Không có';
+                dateCell.style.border = '1px solid #ddd';
+                dateCell.style.padding = '8px';
+                row.appendChild(dateCell);
+
+                // Số tiền
+                const amountCell = document.createElement('td');
+                amountCell.innerText = payment.amount
+                    ? payment.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+                    : 'Không có';
+                amountCell.style.border = '1px solid #ddd';
+                amountCell.style.padding = '8px';
+                row.appendChild(amountCell);
+
+                tbody.appendChild(row);
+            });
+        } 
+        table.appendChild(tbody);
+        modalContainer.appendChild(table);
+
+        document.body.appendChild(modalContainer);
+
+        // Tạo overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'customModalOverlay';
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.zIndex = '998';
+        overlay.onclick = function () {
+            modalContainer.remove();
+            overlay.remove();
+        };
+
+        document.body.appendChild(overlay);
+    }
+
+
+
+    function loadPaymentHistory(IdRoomBooking) {
+        $.ajax({
+            url: '/PaymentHistory/PaymentHistoryByBookingId',
+            type: 'GET',
+            data: { IdRoomBooking: IdRoomBooking },
+            success: function (data) {
+                console.log(data);
+                showPaymentHistory(data); 
+            },
+            error: function () {
+                alert('Lỗi');
+            }
+        });
+    }
+
+</script>
+
+
 
 @section scripts {
     <script asp-append-version="true" src="~/modules/roombooking_detail.js"></script>
