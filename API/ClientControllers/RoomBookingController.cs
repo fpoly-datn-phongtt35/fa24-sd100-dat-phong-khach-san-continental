@@ -41,7 +41,7 @@ namespace API.ClientControllers
             }
         }
         [HttpPost("GetListRoomBookingByCustomerId")]
-        public async Task<List<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId
+        public async Task<ResponseData<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId
         (RoomBookingGetRequestByCustomer request)
         {
             try

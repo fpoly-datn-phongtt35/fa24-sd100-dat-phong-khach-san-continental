@@ -89,7 +89,10 @@ namespace ViewClient
                 name: "roombooking",
                 pattern: "roombooking",
                 defaults: new { controller = "RoomBooking", action = "RoomBooking" });
-
+            app.MapControllerRoute(
+               name: "bookingHistory",
+               pattern: "bookingHistory",
+               defaults: new { controller = "RoomBooking", action = "BookingHistory" });
             app.Run();
         }
     }
