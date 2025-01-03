@@ -104,7 +104,7 @@
         //var phoneNumber = document.getElementById('phone').value;
 
         // Lấy tên phòng
-        var roomName = document.querySelector('.room-info').innerText; // Sử dụng class để lấy tên phòng
+        var roomName = document.querySelector('.room-info').innerText;
 
         // Lấy tổng tiền
         var totalPrice = document.getElementById('totalPrice').innerText.replace(' Tổng tiền sau khi đặt cọc: ', '').replace(' VNĐ', '').trim();

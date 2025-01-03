@@ -1,0 +1,69 @@
+﻿@using Domain.DTO.Paging
+@using ViewClient.Models.Paging
+@model ResponseData<Domain.DTO.RoomBooking.RoomBookingResponseForCustomer>
+
+@{
+    ViewData["Title"] = "Lịch sử đặt phòng";
+}
+
+<h1>Lịch sử đặt phòng</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Nhân viên
+            </th>
+            <th>
+                Phương thức đặt phòng
+            </th>
+            <th>
+                Tổng tiền thanh toán
+            </th>
+            <th>
+                Tổng tiền phòng
+            </th>
+            <th>
+                Tổng tiền dịch vụ
+            </th>
+            <th>
+                Tổng tiền phụ thu
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Ngày tạo
+            </th>
+            <th>
+                Ngày cập nhật
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data != null && Model.data.Any())
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+                    <td>@item.StaffId</td>
+                    <td>@item.BookingType</td>
+                    <td>@item.TotalPrice</td>
+                    <td>@item.TotalRoomPrice</td>
+                    <td>@item.TotalServicePrice</td>
+                    <td>@item.TotalExtraPrice</td>
+                    <td>@item.Status</td>
+                    <td>@item.CreatedTime</td>
+                    <td>@item.ModifiedTime</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="13">Quý khách chưa có đặt bất kì phòng nào.</td>
+            </tr>
+        }
+    </tbody>
+</table>
