@@ -857,6 +857,9 @@ var _roombooking_detail = {
         modalHeader.appendChild(addButton);
 
         modalContainer.appendChild(modalHeader);  
+
+
+
         //#region thêm
 
         addButton.addEventListener('click', function () {
@@ -1009,25 +1012,26 @@ var _roombooking_detail = {
                     success: function (response) {
                         if (response === 1) {
                             alert('Thêm mới thành công');
-                            //const tableBody = document.querySelector('#table tbody');  
-                            const newRecord = document.createElement('tr');  
+                            console.log(response)
+                            const newData = {
+                                id: newResidence.id, 
+                                roomBookingDetailId: newResidence.roomBookingDetailId, 
+                                fullName: newResidence.fullName,  
+                                dateOfBirth: newResidence.dateOfBirth, 
+                                gender: parseInt(newResidence.gender),  
+                                identityNumber: newResidence.identityNumber, 
+                                phoneNumber: newResidence.phoneNumber, 
+                                isCheckOut: false,
+                                checkOutTime: null  
+                            };
 
-                            newRecord.innerHTML = `
-                                    <td>${document.getElementById('fullName').value}</td>
-                                    <td>${document.getElementById('dateOfBirth').value}</td>
-                                    <td>${document.getElementById('gender').options[document.getElementById('gender').selectedIndex].text}</td>
-                                    <td>${document.getElementById('identityNumber').value}</td>
-                                    <td>${document.getElementById('phoneNumber').value}</td>
-                                    <td>${newResidence.checkOutTime ? moment(newResidence.checkOutTime).format("YYYY-MM-DD HH:mm") : 'Chưa checkout'}</td>
-                                `;
-
-                            data.push(newRecord);
+                            data.push(newData);
                             console.log(data);
 
                             tbody.innerHTML = '';
                             data.forEach(item => {
                                 const row = document.createElement('tr');
-                                const gender = item.gender === 'Nam' ? 'Nam' : item.gender === 'Nữ' ? 'Nữ' : 'Khác';
+                                const gender = item.gender === 1 ? 'Nam' : item.gender === 2 ? 'Nữ' : 'Khác';
                                 const cells = [
                                     item.fullName,
                                     moment(item.dateOfBirth).format("YYYY-MM-DD"),
@@ -1132,360 +1136,6 @@ var _roombooking_detail = {
             });
         });
         //#endregion
-
-
-        // Hàm hiển thị form thêm bản ghi
-        function showAddForm() {
-            //#region formContainer
-            const addFormContainer = document.createElement('div');
-            addFormContainer.style.marginTop = '16px';
-            addFormContainer.style.padding = '20px';
-            addFormContainer.style.border = '1px solid #ddd';
-            addFormContainer.style.borderRadius = '8px';
-            addFormContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-            addFormContainer.style.backgroundColor = '#fff';
-
-            const formTitle = document.createElement('h3');
-            formTitle.innerText = 'Thêm bản ghi';
-            formTitle.style.textAlign = 'center';
-            addFormContainer.appendChild(formTitle);
-
-            const formFields = [
-                { label: 'Tên', type: 'text', id: 'fullName', placeholder: 'Nhập tên đầy đủ' },
-                { label: 'Ngày sinh', type: 'date', id: 'dateOfBirth' },
-                { label: 'Giới tính', type: 'select', id: 'gender', options: ['Nam', 'Nữ', 'Khác'] },
-                { label: 'Căn cước', type: 'number', id: 'identityNumber', placeholder: 'Nhập số căn cước' },
-                { label: 'SĐT', type: 'number', id: 'phoneNumber', placeholder: 'Nhập số điện thoại' }
-            ];  
-            //#endregion
-
-            formFields.forEach(field => {
-                //#region tạo các trường
-                const fieldContainer = document.createElement('div');
-                fieldContainer.style.marginBottom = '16px';
-
-                const label = document.createElement('label');
-                label.setAttribute('for', field.id);
-                label.innerText = field.label;
-                label.style.display = 'block';
-                label.style.fontWeight = '600';
-                label.style.fontSize = '14px';
-                label.style.color = '#333';
-                fieldContainer.appendChild(label);
-
-                // tạo thẻ input theo type
-                let input;
-                if (field.type === 'select') {
-                    input = document.createElement('select');
-                    field.options.forEach(optionText => {
-                        const option = document.createElement('option');
-                        option.value = optionText;
-                        option.innerText = optionText;
-                        input.appendChild(option);
-                    });
-                } else if (field.type === 'date') {
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'date');
-                } else if (field.id === 'identityNumber' || field.id === 'phoneNumber') {
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'number');
-                    input.setAttribute('placeholder', field.placeholder || '');
-                } else {
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'text');
-                    input.setAttribute('placeholder', field.placeholder || '');
-                }
-
-                // style cho input
-                input.id = field.id;
-                input.name = field.id;
-                input.style.width = '100%';
-                input.style.padding = '10px';
-                input.style.border = '1px solid #ddd';
-                input.style.borderRadius = '4px';
-                input.style.fontSize = '14px';
-                input.style.color = '#333';
-                input.style.outline = 'none';
-                input.style.transition = 'border-color 0.3s';
-                //#endregion
-
-                // thông báo lỗi dưới các trường
-                if (field.id === 'phoneNumber') {
-                    errorMessagePhoneNumber = document.createElement('div');
-                    errorMessagePhoneNumber.style.color = 'red';
-                    errorMessagePhoneNumber.style.fontSize = '12px';
-                    errorMessagePhoneNumber.style.display = 'none';
-                    errorMessagePhoneNumber.innerText = ' ';
-                    fieldContainer.appendChild(errorMessagePhoneNumber);
-                }
-                if (field.id === 'identityNumber') {
-                    errorMessageIdentityNumber = document.createElement('div');
-                    errorMessageIdentityNumber.style.color = 'red';
-                    errorMessageIdentityNumber.style.fontSize = '12px';
-                    errorMessageIdentityNumber.style.display = 'none';
-                    errorMessageIdentityNumber.innerText = ' ';
-                    fieldContainer.appendChild(errorMessageIdentityNumber);
-                }
-                if (field.id === 'fullName') {
-                    errorMessage = document.createElement('div');
-                    errorMessage.style.color = 'red';
-                    errorMessage.style.fontSize = '12px';
-                    errorMessage.style.display = 'none';
-                    errorMessage.innerText = ' ';
-                    fieldContainer.appendChild(errorMessage);
-                }
-                if (field.id === 'dateOfBirth') {
-                    errorMessageDob = document.createElement('div');
-                    errorMessageDob.style.color = 'red';
-                    errorMessageDob.style.fontSize = '12px';
-                    errorMessageDob.style.display = 'none';
-                    errorMessageDob.innerText = ' ';
-                    fieldContainer.appendChild(errorMessageDob);
-                }
-
-                if (field.id === 'dateOfBirth') {
-                    input.addEventListener('change', function () {
-                        if (!isDateOfBirthValid(input.value)) {
-                            errorMessageDob.innerText = 'Ngày sinh không hợp lệ!';
-                            errorMessageDob.style.display = 'block';
-                            saveButton.disabled = true;
-                        } else {
-                            errorMessageDob.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    });
-                }
-
-                input.addEventListener('input', function () {
-                    if (field.id === 'phoneNumber') {
-                        if (!isPhoneNumberValid(input.value)) {
-                            errorMessagePhoneNumber.innerText = 'Sai định dạng số điện thoại!';
-                            errorMessagePhoneNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else if (isPhoneNumberExisted(input.value)) {
-                            errorMessagePhoneNumber.innerText = 'Số điện thoại đã tồn tại! ';
-                            errorMessagePhoneNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else {
-                            errorMessagePhoneNumber.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    }
-                    if (field.id === 'identityNumber') {
-                        if (!isIdentityNumberValid(input.value)) {
-                            errorMessageIdentityNumber.innerText = 'Sai định dạng số căn cước!';
-                            errorMessageIdentityNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else if (isIdentityNumberExisted(input.value)) {
-                            errorMessageIdentityNumber.innerText = 'Số căn cước đã tồn tại! ';
-                            errorMessageIdentityNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else {
-                            errorMessageIdentityNumber.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    }
-                    if (field.id === 'fullName') {
-                        if (!isFullNameValid(input.value)) {
-                            errorMessage.style.display = 'block';
-                            saveButton.disabled = true;
-                        } else {
-                            errorMessage.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    } 
-                });
-
-                input.addEventListener('focus', function () {
-                    input.style.borderColor = '#007BFF';
-                });
-
-                input.addEventListener('blur', function () {
-                    input.style.borderColor = '#ddd';
-                });
-
-                fieldContainer.appendChild(input);
-                addFormContainer.appendChild(fieldContainer);
-            });  
-
-            //#region css saveButton
-            const saveButton = document.createElement('button');
-            saveButton.innerText = 'Lưu';
-            saveButton.style.backgroundColor = '#008CBA';
-            saveButton.style.color = 'white';
-            saveButton.style.padding = '8px 16px';
-            saveButton.style.marginRight = '8px';
-            saveButton.style.border = 'none';
-            saveButton.style.borderRadius = '4px';
-            saveButton.style.cursor = 'pointer';
-            saveButton.style.fontSize = '14px';
-            saveButton.style.transition = 'background-color 0.3s';
-            saveButton.disabled = true;
-            //#endregion
-
-            saveButton.addEventListener('mouseover', function () {
-                saveButton.style.backgroundColor = '#007bb5';
-            });
-            saveButton.addEventListener('mouseout', function () {
-                saveButton.style.backgroundColor = '#008CBA';
-            });
-            saveButton.style.marginTop = '16px';
-            saveButton.onclick = function () {
-                const newRecord = {
-                    roomBookingDetailId: roomBookingDetailId,
-                    fullName: document.getElementById('fullName').value,
-                    dateOfBirth: document.getElementById('dateOfBirth').value,
-                    gender: document.getElementById('gender').value,
-                    identityNumber: document.getElementById('identityNumber').value,
-                    phoneNumber: document.getElementById('phoneNumber').value
-                }; //bản ghi mới để thêm
-
-
-                // Gửi yêu cầu AJAX để thêm bản ghi vào database
-                $.ajax({
-                    url: '/ResidenceRegistration/AddResidenceRegistration',
-                    type: 'POST',
-                    data: newRecord,
-                    success: function (response) {
-                        if (response === 1) {
-                            alert('Thêm bản ghi thành công!');
-                            data.push(newRecord);
-                            console.log(data);
-
-                            tbody.innerHTML = ''; // Xóa bảng cũ
-                            data.forEach(item => {
-                                const row = document.createElement('tr');
-                                const gender = item.gender === 'Nam' ? 'Nam' : item.gender === 'Nữ' ? 'Nữ' : 'Khác';
-                                const cells = [
-                                    item.fullName,
-                                    moment(item.dateOfBirth).format("YYYY-MM-DD"),
-                                    gender,
-                                    item.identityNumber,
-                                    item.phoneNumber,
-                                    item.checkOutTime ? moment(item.checkOutTime).format("YYYY-MM-DD HH:mm") : 'Chưa checkout'  
-                                ];
-
-                                cells.forEach(cellText => {
-                                    const td = document.createElement('td');
-                                    td.innerText = cellText;
-                                    td.style.border = '1px solid #ddd';
-                                    td.style.padding = '8px';
-                                    row.appendChild(td);
-                                });
-
-                                //#region Tạo cột Actions
-                                const actionsTd = document.createElement('td');
-                                actionsTd.style.border = '1px solid #ddd';
-                                actionsTd.style.padding = '8px';
-
-                                const editButton = document.createElement('button');
-                                editButton.innerText = 'Sửa';
-                                editButton.style.backgroundColor = '#4CAF50';
-                                editButton.style.color = 'white';
-                                editButton.style.padding = '8px 16px';
-                                editButton.style.marginRight = '8px';
-                                editButton.style.border = 'none';
-                                editButton.style.borderRadius = '4px';
-                                editButton.style.cursor = 'pointer';
-                                editButton.style.fontSize = '14px';
-                                editButton.style.transition = 'background-color 0.3s';
-
-                                const deleteButton = document.createElement('button');
-                                deleteButton.innerText = 'Xóa';
-                                deleteButton.style.backgroundColor = '#f44336';
-                                deleteButton.style.color = 'white';
-                                deleteButton.style.padding = '8px 16px';
-                                deleteButton.style.marginRight = '8px';
-                                deleteButton.style.border = 'none';
-                                deleteButton.style.borderRadius = '4px';
-                                deleteButton.style.cursor = 'pointer';
-                                deleteButton.style.fontSize = '14px';
-                                deleteButton.style.transition = 'background-color 0.3s';
-
-                                const leaveButton = document.createElement('button');
-                                leaveButton.innerText = 'Rời';
-                                leaveButton.style.backgroundColor = '#FF9800';
-                                leaveButton.style.color = 'white';
-                                leaveButton.style.padding = '8px 16px';
-                                leaveButton.style.marginRight = '8px';
-                                leaveButton.style.border = 'none';
-                                leaveButton.style.borderRadius = '4px';
-                                leaveButton.style.cursor = 'pointer';
-                                leaveButton.style.fontSize = '14px';
-                                leaveButton.style.transition = 'background-color 0.3s';
-
-                                if (item.checkOutTime) {
-                                    leaveButton.disabled = true;
-                                    leaveButton.style.backgroundColor = '#D3D3D3';
-                                    leaveButton.style.cursor = 'default';
- 
-
-                                    deleteButton.disabled = true;
-                                    deleteButton.style.backgroundColor = '#D3D3D3';
-                                    deleteButton.style.cursor = 'default';
- 
-
-                                    editButton.disabled = true;
-                                    editButton.style.backgroundColor = '#D3D3D3';
-                                    editButton.style.cursor = 'default';
- 
-                                }
-
-
-                                actionsTd.appendChild(editButton);
-                                actionsTd.appendChild(deleteButton);
-                                actionsTd.appendChild(leaveButton);
-                                row.appendChild(actionsTd);
-
-                                tbody.appendChild(row);
-                                //#endregion
-                                var temp = dataRessidence.length;
-                                title.innerText = 'Danh sách khách hàng ' + temp + '/' + maximumOccupancy;
-                            });
-                        } else {
-                            alert('Có lỗi xảy ra, vui lòng thử lại!');  
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Có lỗi xảy ra khi thêm bản ghi: ' + error);
-                    }
-                });//ajax Add
-                // Đóng form
-                addFormContainer.remove();
-            }; //save button onclick
-
-            //#region css cancel button
-            const cancelButton = document.createElement('button');
-            cancelButton.innerText = 'Hủy';
-            cancelButton.style.backgroundColor = '#f44336';
-            cancelButton.style.color = 'white';
-            cancelButton.style.padding = '8px 16px';
-            cancelButton.style.border = 'none';
-            cancelButton.style.borderRadius = '4px';
-            cancelButton.style.cursor = 'pointer';
-            cancelButton.style.fontSize = '14px';
-            cancelButton.style.transition = 'background-color 0.3s';
-            //#endregion
-
-            cancelButton.addEventListener('mouseover', function () {
-                cancelButton.style.backgroundColor = '#e60000';
-            });
-            cancelButton.addEventListener('mouseout', function () {
-                cancelButton.style.backgroundColor = '#f44336';
-            });
-
-            cancelButton.onclick = function () {
-                addFormContainer.remove();
-            };
-            addFormContainer.appendChild(saveButton);
-            addFormContainer.appendChild(cancelButton);
-            modalContainer.appendChild(addFormContainer);
-            //cancel button
-        }//function show add form
 
         //#region Tạo bảng để thêm vào modal
         const table = document.createElement('table');
