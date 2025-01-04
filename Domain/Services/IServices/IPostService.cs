@@ -11,5 +11,6 @@ namespace Domain.Services.IServices
         Task<int> DeletePost(PostDeleteRequest request);
         Task<ResponseData<Post>> GetAllPost(PostGetRequest Post);
         Task<Post> GetPostById(Guid Id);
+        Task<List<PostTermsDto>> GetAllPostTerms();
     }
 }
