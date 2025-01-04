@@ -17,6 +17,21 @@ namespace API.Controllers
             _postRepo = postRepo;
         }
 
+        [HttpGet("GetAllPostTerms")]
+        public async Task<IActionResult> GetAllPostTerms()
+        {
+            try
+            {
+                var postTerms = await _postRepo.GetAllPostTerms();
+                return Ok(postTerms);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         [HttpPost("CreatePost")]
         public async Task<int> CreatePost(PostCreateRequest request)
         {

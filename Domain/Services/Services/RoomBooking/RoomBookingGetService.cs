@@ -82,7 +82,7 @@ public class RoomBookingGetService : IRoomBookingGetService
         return await _roomBookingRepository.GetCheckinRoomBookingByRoomBookingId(roomBookingId);
     }
 
-    public async Task<List<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request)
+    public async Task<ResponseData<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request)
     {
         return await _roomBookingRepository.GetListRoomBookingByCustomerId(request);
     }

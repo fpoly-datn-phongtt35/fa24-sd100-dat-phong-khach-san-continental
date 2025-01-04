@@ -20,7 +20,7 @@ namespace View.Controllers
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
 
-        public async Task<IActionResult> GetResidenceByDate(int pageIndex = 1, int pageSize = 10, DateTime? date = null)
+        public async Task<IActionResult> GetResidenceByDate(int pageIndex = 1, int pageSize = 10, DateTime? date = null, string? fullName = null, string? identityNumber = null, string? roomName = null, bool? isCheckOut = null)
         {
             string requestUrl = "api/ResidenceRegistration/GetResidenceRegistrationsByDate";
 
@@ -28,7 +28,11 @@ namespace View.Controllers
             {
                 Date = date,
                 PageIndex = pageIndex,
-                PageSize = pageSize
+                PageSize = pageSize,
+                FullName = fullName,
+                IdentityNumber = identityNumber,
+                RoomName = roomName,
+                IsCheckOut = isCheckOut
             };
             var jsonRequest = JsonConvert.SerializeObject(request);
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");

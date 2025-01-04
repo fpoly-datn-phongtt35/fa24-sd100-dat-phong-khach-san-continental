@@ -1,22 +1,16 @@
 ﻿using Domain.DTO.Customer;
 using Domain.DTO.Order;
+using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
-using Domain.DTO.ServiceOrderDetail;
 using Domain.Enums;
-using Domain.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Utilities;
 using ViewClient.Repositories.IRepository;
-using ViewClient.Repositories.Repository;
 
 namespace ViewClient.Controllers
 {
@@ -42,14 +36,39 @@ namespace ViewClient.Controllers
             _serviceOderDetailRepo = serviceOderDetailRepo;
             _customerRepo = customerRepo;
         }
+        [HttpGet]
+        public async Task<IActionResult> BookingHistory(RoomBookingGetRequestByCustomer request)
+        {
+            try
+            {
+                var _UserLogin = Guid.Empty;
+                if (HttpContext.User.FindFirst(ClaimTypes.UserData) != null)
+                {
+                    _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+                }
 
+                if (_UserLogin == Guid.Empty)
+                {
+                    return StatusCode(401, new { error = "Bạn cần đăng nhập để thực hiện chức năng này." });
+                }
+
+                request.CustomerId = _UserLogin;
+                request.PageSize = 10;
+                var roomBookings = await _roomBookingRepo.GetListRoomBookingByCustomerId(request);
+                return View(roomBookings);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi trong quá trình lấy dữ liệu.");
+            }
+        }
+        
         [HttpGet]
         public IActionResult CreatePaymentLink()
         {
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
             var apiUrl = "https://localhost:7130/api/Order/create";

@@ -2,7 +2,7 @@
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
 }
 
 const today = new Date();
@@ -12,26 +12,6 @@ const checkIn = localStorage.getItem("CheckIn");
 const checkOut = localStorage.getItem("CheckOut");
 const maxiumOccupancy = localStorage.getItem("maxiumOccupancy");
 const quantityRoom = localStorage.getItem("quantityRoom");
-
-// Chuyển đổi giá trị từ localStorage thành Date nếu có giá trị
-if (checkIn) {
-    const checkInDateObject = new Date(checkIn);
-    document.getElementById('checkIn').value = formatDate(checkInDateObject); // Định dạng lại
-} else {
-    const checkInDate = new Date(today);
-    checkInDate.setDate(today.getDate() + 1);
-    document.getElementById('checkIn').value = formatDate(checkInDate);
-}
-
-// Kiểm tra nếu có giá trị checkOut trong localStorage
-if (checkOut) {
-    const checkOutDateObject = new Date(checkOut);
-    document.getElementById('checkOut').value = formatDate(checkOutDateObject); // Định dạng lại
-} else {
-    const checkOutDate = new Date(today);
-    checkOutDate.setDate(today.getDate() + 2);
-    document.getElementById('checkOut').value = formatDate(checkOutDate);
-}
 
 // Lưu giá trị cho maxiumOccupancy và quantityRoom vào input
 if (maxiumOccupancy) {
@@ -64,18 +44,29 @@ function validateDates() {
     const maxOccupancyValue = parseInt(document.getElementById('maxiumOccupancy').value, 10);
     const roomQuantityValue = parseInt(document.getElementById('quantityRoom').value, 10);
 
-    const checkInDate = new Date(checkInValue);
-    const checkOutDate = new Date(checkOutValue);
-    const minCheckIn = formatDate(today);
+    // Chuyển đổi checkIn và checkOut từ định dạng d-m-Y sang YYYY-MM-DD
+    const [dayIn, monthIn, yearIn] = checkInValue.split('-');
+    const checkInDate = new Date(`${yearIn}-${monthIn}-${dayIn}T00:00:00`);
+
+    const [dayOut, monthOut, yearOut] = checkOutValue.split('-');
+    const checkOutDate = new Date(`${yearOut}-${monthOut}-${dayOut}T00:00:00`);
+
+    // Ngày hôm nay
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Đặt giờ, phút, giây về 0
+
+    // Ngày trả phòng tối thiểu
     const minCheckOutDate = new Date(checkInDate);
     minCheckOutDate.setDate(checkInDate.getDate() + 1); // Ngày trả phòng phải lớn hơn ngày nhận phòng ít nhất 1 ngày
-    if (checkOutValue <= minCheckIn) {
+    console.log(minCheckOutDate);
+
+    if (checkOutDate <= minCheckOutDate) {
         document.getElementById('checkOut').value = formatDate(minCheckOutDate);
         showToast("Thời gian trả phòng phải lớn hơn thời gian nhận phòng 1 ngày!");
         return false;
     }
-    if (checkOutValue <= checkInValue) {
-        showToast("Thời gian trả phòng phải lớn hơn thời gian nhận phòng 1 ngày!");
+    if (checkOutDate <= checkInDate) {
+        showToast("Thời gian trả phòng phải lớn hơn thời gian nhận phòng!");
         return false;
     }
     if (roomQuantityValue > maxOccupancyValue) {
@@ -84,21 +75,51 @@ function validateDates() {
         return false;
     }
 
-    document.getElementById('checkOut').setAttribute('min', checkInValue);
+    document.getElementById('checkOut').setAttribute('min', formatDate(minCheckOutDate));
     return true;
-}
+}   
 document.addEventListener('DOMContentLoaded', function () {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    flatpickr("#checkIn", {
+
+    if (checkIn) {
+        document.getElementById('checkIn').value = checkIn;
+    } else {
+        // Nếu không có, thiết lập giá trị mặc định là ngày mai
+        document.getElementById('checkIn').value = formatDate(tomorrow);
+    }
+
+    // Nếu có giá trị checkOut trong localStorage, thiết lập giá trị cho input
+    if (checkOut) {
+        document.getElementById('checkOut').value = checkOut;
+    } else {
+        // Nếu không có, thiết lập giá trị mặc định là ngày mốt (ngày nhận phòng + 1)
+        const minCheckOutDate = new Date(tomorrow);
+        minCheckOutDate.setDate(minCheckOutDate.getDate() + 1);
+        document.getElementById('checkOut').value = formatDate(minCheckOutDate);
+    }
+
+    $('#checkIn').flatpickr({
         plugins: [new rangePlugin({ input: "#checkOut" })],
-        dateFormat: "Y-m-d",
-        minDate: today
+        noCalendar: false,
+        dateFormat: "d-m-Y",
+        time_24hr: true,
+        defaultHour: 14,
+        defaultMinute: 0,
+        minuteIncrement: 1,
+        disableMobile: true,
+        static: true,
     });
-    flatpickr("#checkOut", {
-        dateFormat: "Y-m-d",
-        minDate: tomorrow
+    $('#checkOut').flatpickr({
+        noCalendar: false,
+        dateFormat: "d-m-Y",
+        time_24hr: true,
+        defaultHour: 12,
+        defaultMinute: 0,
+        minuteIncrement: 1,
+        disableMobile: true,
+        static: true,
     });
 });
 function showToast(message) {

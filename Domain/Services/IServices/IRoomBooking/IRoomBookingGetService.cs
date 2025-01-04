@@ -12,5 +12,5 @@ public interface IRoomBookingGetService
     Task<RoomBookingResponse?> GetRoomBookingById(Guid? roomBookingId);
     Task<Guid?> GetRoomBookingIdByOrderCode(int orderCode);
     Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId);
-    Task<List<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request);
+    Task<ResponseData<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request);
 }

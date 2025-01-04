@@ -10,5 +10,6 @@ namespace Domain.Repositories.IRepository
         Task<int> DeletePost(PostDeleteRequest request);
         Task<DataTable> GetAllPost(PostGetRequest request);
         Task<DataTable> GetPostById(Guid id);
+        Task<List<PostTermsDto>> GetAllPostTerms();
     }
 }

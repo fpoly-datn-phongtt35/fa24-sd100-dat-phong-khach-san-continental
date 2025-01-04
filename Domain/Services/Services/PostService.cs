@@ -92,6 +92,18 @@ namespace Domain.Services.Services
             return model;
         }
 
+        public Task<List<PostTermsDto>> GetAllPostTerms()
+        {
+            try
+            {
+                return _postRepo.GetAllPostTerms();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error", ex);
+            }
+        }
+
         public async Task<Post> GetPostById(Guid Id)
         {
             Post Post = new Post();

@@ -8,23 +8,53 @@
 
 <form method="get" action="@Url.Action("GetResidenceByDate")" class="p-3 bg-light rounded shadow-sm">
     <div class="row g-2 align-items-center">
-        <!-- Label -->
         <div class="col-auto">
-            <label for="dateFilter" class="form-label fw-bold mb-0">Chọn ngày:</label>
+            <label for="filters" class="form-label fw-bold mb-0">Lọc theo:</label>
         </div>
-        <!-- Input -->
-        <div class="col-auto w-50">
+        
+        <div class="col-auto ">
             <input type="date" id="dateFilter" name="date" class="form-control"
-                   value="@Context.Request.Query["date"].ToString()" />
+                   value="@Context.Request.Query["date"].ToString()" placeholder="Lọc theo ngày" />
         </div>
-        <!-- Button -->
+
+        <div class="col-auto ">
+            <input type="text" id="fullNameFilter" name="fullName" class="form-control"
+                   value="@Context.Request.Query["fullName"].ToString()" placeholder="Tên khách" />
+        </div>
+
+        <div class="col-auto ">
+            <input type="text" id="identityNumberFilter" name="identityNumber" class="form-control"
+                   value="@Context.Request.Query["identityNumber"].ToString()" placeholder="Căn cước" />
+        </div>
+
+        <div class="col-auto">
+            <input type="text" id="roomNameFilter" name="roomName" class="form-control"
+                   value="@Context.Request.Query["roomName"].ToString()" placeholder="Tên phòng" />
+        </div>
+
+        @* <div class="col-auto w-25">
+            <select id="isCheckedOutFilter" name="isCheckedOut" class="form-select">
+                <option value="" @(Context.Request.Query["isCheckOut"].ToString() == "" ? "selected" : "")>Trạng thái checkout</option>
+                <option value="0" @(Context.Request.Query["isCheckOut"].ToString() == "0" ? "selected" : "")>Chưa checkout</option>
+                <option value="1" @(Context.Request.Query["isCheckOut"].ToString() == "1" ? "selected" : "")>Đã checkout</option>
+            </select>
+        </div> *@
+
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Lọc</button>
+            <button type="submit" class="btn btn-danger" onclick="clearFilters()">Xóa lọc</button>
         </div>
     </div>
 </form>
 
-
+<script>
+    function clearFilters() {
+        document.getElementById('dateFilter').value = '';
+        document.getElementById('fullNameFilter').value = '';
+        document.getElementById('identityNumberFilter').value = '';
+        document.getElementById('roomNameFilter').value = '';
+    }
+</script>
 
 <table class="table">
     <thead>
@@ -65,13 +95,14 @@
                     <a class="page-link" href="@Url.Action("GetResidenceByDate", new {
                         pageIndex = i,
                         pageSize = Model.PageSize,
-                        date = Context.Request.Query["date"].ToString()
+                        date = Context.Request.Query["date"].ToString(),
+                        fullName = Context.Request.Query["fullName"].ToString(),
+                        identityNumber = Context.Request.Query["identityNumber"].ToString(),
+                        roomName = Context.Request.Query["roomName"].ToString(),
+                        isCheckedOut = Context.Request.Query["isCheckOut"].ToString()
                     })">@i</a>
                 </li>
             }
         </ul>
     </nav>
 </div>
-
-
-

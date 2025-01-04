@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+
+@{
+    var userLogin = Context.User.FindFirst(ClaimTypes.UserData)?.Value;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -23,7 +28,9 @@
             </div>
 
             <div class="navbar-center">
+                <a href="/Home/index">Trang chủ</a>
                 <a href="@Url.Action("GroupedServices", "Service")">Dịch vụ</a>
+                <a href="@Url.Action("GroupedServices", "Service")">Liên hệ</a>
             </div>
             <div class="navbar-right">
                 <button class="profile-button" id="profileButton" aria-expanded="false" aria-label="Menu điều hướng chính">
@@ -46,8 +53,12 @@
                 else
                 {
                     <div class="profile-dropdown" id="profileDropdown">
-                        <span>Xin chào, @Context.Session.GetString("UserName")!</span>
-                        <form asp-controller="Authoration" asp-action="Logout" method="post" style="display:inline;">
+                        <span style="color:black;">Xin chào, @Context.Session.GetString("UserName")!</span>
+                        <form asp-controller="RoomBooking" asp-action="BookingHistory" method="get">
+                            <input type="hidden" name="Id" value="@userLogin" />
+                            <button type="submit" class="nav-button">Lịch sử đặt phòng</button>
+                        </form>
+                        <form asp-controller="Authoration" asp-action="Logout" method="post">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="nav-button">Đăng Xuất</button>
                         </form>
@@ -62,7 +73,12 @@
             @RenderBody()
         </main>
     </div>
-
+    <div class="banner text-center text-danger d-flex align-items-center" style=" no-repeat center center/cover; height: 400px;">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Chào mừng đến với <span class="text-warning">khách sạn <span class="unifrakturmaguntia-regular text-warning">Continental</span></span></h1>
+            <p class="lead"><i class="fas fa-star text-warning"></i> Dịch vụ đặt phòng trực tuyến nhanh chóng, tiện lợi <i class="fas fa-star text-warning"></i></p>
+        </div>
+    </div>
     <footer class="border-top footer text-muted">
         <!-- Email -->
         <div class="email-subscription text-center mb-4">
@@ -107,7 +123,7 @@
                 <div class="footer-column">
                     <h4>Khác</h4>
                     <a href="#">Chú ý quyền riêng tư</a>
-                    <a href="#">Điều khoản và điều kiện</a>
+                    <a href="https://localhost:7173/post/GetAllPostTerms">Điều khoản và điều kiện</a>
                     <a href="#">Đăng ký nơi ở</a>
                     <a href="#">Chương trình Tiết lộ Lỗ hổng Bảo mật</a>
                 </div>

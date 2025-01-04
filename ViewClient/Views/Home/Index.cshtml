@@ -13,25 +13,29 @@
 }
 
 <div class="search-box">
-@*     <h3 style="text-align: center;">Tìm Kiếm Phòng</h3> *@
+    <h2 class="text-center mb-4 fs-2 fw-bolder"><i class="fas fa-calendar-check text-primary"></i> ĐẶT LỊCH NGAY </h2>
     <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
-        <div class="me-2">
-            <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
-            <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
-        </div> 
-        <div class="me-2">
-            <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
-            <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
+                <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+            </div>
+            <div class="col-md-3">
+                <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
+                <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+            </div>
+            <div class="col-md-3">
+                <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
+                <input type="number" id="maxiumOccupancy" name="maxiumOccupancy" class="form-control" title="Số người" min="1" max="50" required>
+            </div>
+            <div class="col-md-3">
+                <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
+                <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
+            </div>
         </div>
-        <div class="me-2">
-            <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
-            <input type="number" id="maxiumOccupancy" name="maxiumOccupancy" class="form-control" title="Số người" min="1" max="50" required>
+        <div class="text-center mt-0 ms-lg-2">
+            <button type="submit" id="validateButton" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
         </div>
-        <div class="me-2">
-            <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
-            <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
-        </div>
-        <button type="submit" id="validateButton" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
     </form>
 </div>
 <div class="container">

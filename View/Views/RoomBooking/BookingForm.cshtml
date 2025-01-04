@@ -255,7 +255,8 @@
     <div>
         @if (idRoomBooking != null)
         {
-        <a class="btn btn-warning" href="~/PaymentHistory/Id=@idRoomBooking">Chuyển đến trang thanh toán</a>
+        @* <a class="btn btn-warning" href="~/PaymentHistory/Id=@idRoomBooking">Chuyển đến trang thanh toán</a> *@
+           <a href="/PaymentHistory/AddPayment/@idRoomBooking" class="btn btn-success me-3">Thanh toán</a>
         }
     </div>
 </div>
@@ -275,6 +276,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     function showPaymentHistory(data) {
@@ -306,15 +308,6 @@
         const modalTitle = document.createElement('h5');
         modalTitle.innerText = 'Lịch sử thanh toán';
         modalHeader.appendChild(modalTitle);
-
-        const closeButton = document.createElement('button');
-        closeButton.innerText = 'Đóng';
-        closeButton.style.background = 'transparent';
-        closeButton.style.border = 'none';
-        closeButton.style.fontSize = '16px';
-        closeButton.style.cursor = 'pointer';
-        closeButton.onclick = () => modalContainer.remove();
-        modalHeader.appendChild(closeButton);
 
         modalContainer.appendChild(modalHeader);
 
@@ -373,6 +366,23 @@
         modalContainer.appendChild(table);
 
         document.body.appendChild(modalContainer);
+
+        // Tạo overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'customModalOverlay';
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.zIndex = '998';
+        overlay.onclick = function () {
+            modalContainer.remove();
+            overlay.remove();
+        };
+
+        document.body.appendChild(overlay);
     }
 
 

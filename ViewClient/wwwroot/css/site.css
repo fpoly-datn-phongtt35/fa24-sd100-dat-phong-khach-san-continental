@@ -94,11 +94,17 @@ body {
     align-items: center;
     gap: 8px;
 }
-.navbar-center a{
-    text-decoration:none;
-    color: black;
-    font-weight:500;
-    
+.navbar-center {
+    display: flex;
+    justify-content:space-evenly; /* Căn chỉnh các mục đều */
+    flex-grow: 1;
+}
+
+    .navbar-center a {
+        text-decoration: none;
+        color: black;
+        font-weight: 500;
+    }
 }
 .profile-menu {
     position: relative;
@@ -185,14 +191,12 @@ body {
     }
 /* Banner */
 .banner {
-    background-image: url('../../wwwroot/img/2.png');
     background-size: cover;
     background-position: center;
     height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
     text-align: center;
     position: relative;
 }
@@ -204,7 +208,7 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.01);
     }
 
     .banner img {
@@ -244,14 +248,13 @@ body {
 /* Ô tìm kiếm */
 .search-box {
     width: 100%;
-    min-width: 1000px;
     max-width: 100%;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: sticky;
-    top: 10px;
+    top: 0;
     z-index: 1000;
     margin-bottom:15px;
 }
@@ -999,8 +1002,59 @@ footer p {
     font-size: 14px; 
 }
 
+/*service*/
+a:hover {
+    text-decoration: none;
+}
+a {
+    text-decoration: none;
+    color:inherit;
+}
 
+/*bookingHistory*/
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 10px; /* Padding cho bảng */
+}
 
+    .table th, .table td {
+        padding: 15px; /* Padding cho ô */
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
 
+.pagination {
+    display: flex;
+    justify-content: center; /* Căn giữa các nút phân trang */
+    padding: 10px 0; /* Khoảng cách trên và dưới */
+}
 
+    .pagination .page-item {
+        margin: 0 5px; /* Khoảng cách giữa các nút */
+    }
 
+    .pagination .page-link {
+        padding: 10px 15px; /* Padding cho nút */
+        border: 1px solid #007bff; /* Viền cho nút */
+        border-radius: 5px; /* Bo tròn góc */
+        color: #007bff; /* Màu chữ */
+        text-decoration: none; /* Bỏ gạch chân */
+        transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển tiếp */
+    }
+
+        .pagination .page-link:hover {
+            background-color: #007bff; /* Màu nền khi hover */
+            color: white; /* Màu chữ khi hover */
+        }
+
+    .pagination .active .page-link {
+        background-color: #007bff; /* Màu nền cho nút đang hoạt động */
+        color: white; /* Màu chữ cho nút đang hoạt động */
+        border: 1px solid #007bff; /* Viền cho nút đang hoạt động */
+    }
+
+    .pagination .disabled .page-link {
+        color: #6c757d; /* Màu chữ cho nút không hoạt động */
+        pointer-events: none; /* Không cho phép nhấp chuột */
+    }

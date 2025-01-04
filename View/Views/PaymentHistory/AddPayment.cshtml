@@ -4,19 +4,28 @@
 @{
     var roomBooking = (RoomBookingResponse)ViewBag.RoomBooking;
     var message = (string)ViewBag.Message;
-    var amountToPay = (decimal)ViewBag.AmountToPay;
-    var totalPaid = (decimal)ViewBag.TotalPaid;
+    var amountToPay = ViewBag.AmountToPay != null ? (decimal)ViewBag.AmountToPay : 0;
+    var totalPaid = ViewBag.TotalPaid != null ? (decimal)ViewBag.TotalPaid : 0;
+    var expenses = ViewBag.Expenses != null ? (decimal)ViewBag.Expenses : 0;
+    var service = ViewBag.Service != null ? (decimal)ViewBag.Service : 0;
+    var extra = ViewBag.Extra != null ? (decimal)ViewBag.Extra : 0;
+
 }
 
 <div class="container mt-5">
     <h2 class="text-center">Thêm Thanh Toán</h2>
     <div class="card shadow mt-4">
         <div class="card-header">
-            <h5 class="card-title">Thông Tin Phòng</h5>
+            <h5 class="card-title">Thông Tin Thanh Toán</h5>
         </div>
         <div class="card-body">
             <p><strong>Tên khách hàng:</strong> @roomBooking.CustomerFullName</p>
+            <p><strong>Tổng tiền dịch vụ:</strong> @service</p>
+            <p><strong>Tổng tiền phụ thu:</strong> @extra</p>
+            <p><strong>Tổng tiền hao phí:</strong> @expenses</p>
+            <p><strong>Tên khách hàng:</strong> @roomBooking.CustomerFullName</p>
             <p><strong>Tổng giá trị hóa đơn:</strong> @roomBooking.TotalPrice VND</p>
+            <p><strong>Tổng tiền phải trả thực tế:</strong> @roomBooking.TotalPriceReality VND</p>
             <p><strong>Đã thanh toán:</strong> @totalPaid VND</p>
             <p><strong>Cần thanh toán:</strong> @amountToPay VND</p>
             <p class="text-info"><strong>@message</strong></p>
