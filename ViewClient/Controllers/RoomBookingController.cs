@@ -53,7 +53,7 @@ namespace ViewClient.Controllers
                 }
 
                 request.CustomerId = _UserLogin;
-                ViewBag.UserLogin = request.CustomerId;
+                request.PageSize = 10;
                 var roomBookings = await _roomBookingRepo.GetListRoomBookingByCustomerId(request);
                 return View(roomBookings);
             }
