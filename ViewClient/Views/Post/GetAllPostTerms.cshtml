@@ -1,0 +1,52 @@
+﻿@using ViewClient.ViewModels
+@model List<TermsViewModel>
+
+<div class="container flex-grow-1 d-flex flex-column align-items-center">
+    <main style="width: 65%">
+        <p style="padding-top: 50px; font-weight: bold; font-size: 1.3em; margin-bottom: 20px;">ĐIỀU KHOẢN SỬ DỤNG</p>
+
+
+        <hr style="border: 0.0px solid rgba(0, 0, 0, 0.1); width: 100%; margin-top: 10px;">
+
+        <p style="text-align: left; margin-top: 10px;">
+            BẠN PHẢI ĐỌC NHỮNG ĐIỀU KHOẢN SỬ DỤNG DƯỚI ĐÂY TRƯỚC KHI SỬ DỤNG TRANG WEB NÀY. VIỆC SỬ DỤNG TRANG WEB NÀY XÁC NHẬN VIỆC CHẤP THUẬN VÀ TUÂN THỦ CÁC ĐIỀU KHOẢN VÀ ĐIỀU KIỆN DƯỚI ĐÂY.
+        </p>
+        <p style="text-align: left; margin-top: 10px;">
+            Bằng cách truy cập và/hoặc sử dụng Trang Web https://localhost:7173/, bạn thừa nhận rằng bạn đã đọc, hiểu và đồng ý chịu sự ràng buộc bởi các Điều Khoản Sử Dụng được quy định dưới đây và các điều khoản và điều kiện khác liên quan đến Trang Web, bao gồm nhưng không giới hạn ở các điều khoản và điều kiện về bảo mật và Các Câu Hỏi Thường Gặp, mà chúng cấu thành các thành phần không thể tách rời của các Điều Khoản Sử Dụng (“Điều Khoản”) này. Bạn phải đủ mười tám (18) tuổi trở lên để được phép sử dụng Trang Web.
+        </p>
+        <p style="text-align: left; margin-top: 10px;">
+            Xin lưu ý rằng chúng tôi có thể thay đổi, sửa đổi, bổ sung và loại bỏ các Điều Khoản này vào bất cứ thời điểm nào mà không cần thông báo trước. Bạn phải đọc các Điều Khoản này một cách định kỳ. Bằng việc tiếp tục sử dụng Trang Web này sau khi đã có những thay đổi như vậy đối với các Điều Khoản, người truy cập, người dùng hoặc Người Dùng Đã Đăng Ký (“bạn” hay “Người Dùng”) đồng ý và chấp thuận với những thay đổi đó. Nếu bạn sử dụng bất kỳ dịch vụ nào khác của chúng tôi, thì việc sử dụng của bạn được dựa trên sự chấp thuận và tuân thủ các điều khoản và điều kiện được áp dụng đối với các dịch vụ đó.
+        </p>
+        <p style="text-align: left; margin-top: 10px;">
+            Các quy định của Điều Khoản Sử Dụng này được dịch từ phiên bản gốc tiếng Anh, và được cung cấp nhằm tạo sự thuận tiện cho việc xem xét của bạn. Có thể có một số khác biệt giữa bản dịch và bản gốc tiếng Anh, và trong trường hợp có bất kỳ sự khác biệt nào như vậy, thì sự khác biệt đó được coi là lỗi dịch thuật và bản tiếng Anh sẽ được ưu tiên áp dụng. Nếu nghi ngờ về tính chính xác của thông tin chứa trong bản dịch, xin vui lòng tham khảo phiên bản tiếng Anh.
+        </p>
+        <hr style="border: 0.0px solid rgba(0, 0, 0, 0.1); width: 100%; margin-top: 10px;">
+
+        @if (Model != null && Model.Any())
+        {
+            <div>
+                @foreach (var group in Model)
+                {
+                    <div style="flex: 1 0 22%; margin-bottom: 20px">
+                        <strong style="font-size: 0.9em; font-weight: 700;">
+                            @(string.IsNullOrWhiteSpace(group.PostTypeTitle) ? "Unknown Type" : group.PostTypeTitle)
+                        </strong>
+
+                        <div style="text-align: left; margin-top: 10px; margin-bottom: 10px">
+                            @for (int i = 0; i < group.PostTitles.Count; i++)
+                            {
+                                <p style="margin: 0; padding-left: 20px; font-size: 0.95em; font-weight: 450;">
+                                    @group.PostTitles[i] - @group.PostContents[i]
+                                </p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="text-align: center; color: red;">Không có dữ liệu để hiển thị.</p>
+        }
+    </main>
+</div>

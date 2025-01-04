@@ -130,5 +130,33 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
+
+        public async Task<List<PostTermsDto>> GetAllPostTerms()
+        {
+            try
+            {
+                var dataTable = await _DbWorker.GetDataTableAsync(
+                    StoredProcedureConstant.SP_GetAllTerms,
+                    Array.Empty<SqlParameter>()
+                );
+
+                var groupedData = dataTable.AsEnumerable()
+                    .GroupBy(row => row.Field<string>("PostTypeTitle"))
+                    .Select(group => new PostTermsDto
+                    {
+                        PostTypeTitle = group.Key,
+                        PostIds = group.Select(row => row.Field<Guid>("PostId")).ToList(),
+                        PostTitles = group.Select(row => row.Field<string>("PostTitle")).ToList(),
+                        PostContents = group.Select(row => row.Field<string>("PostContent")).ToList()
+
+                    }).ToList();
+                return groupedData;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
