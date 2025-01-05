@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Domain.DTO.Customer;
 using Domain.DTO.Floor;
 using Domain.DTO.Paging;
-using Domain.DTO.ResidenceRegistration;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
 using Domain.DTO.RoomType;
-using Domain.DTO.RoomTypeService;
 using Domain.DTO.Service;
 using Domain.DTO.ServiceOrderDetail;
 using Domain.DTO.ServiceType;
@@ -20,10 +16,6 @@ using Domain.Services.IServices;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomType;
-using Domain.Services.IServices.IRoomTypeService;
-using Domain.Services.Services;
-using Domain.Services.Services.Room;
-using Domain.Services.Services.RoomTypeService;
 using Microsoft.AspNetCore.Mvc;
 using WEB.CMS.Customize;
 
@@ -81,7 +73,7 @@ public class RoomBookingController : Controller
             return response.data;
         }
         catch (Exception ex)
-        {
+        {                                                                                                                    
             Console.WriteLine(ex.Message);
             return null;
         }
@@ -364,8 +356,8 @@ public class RoomBookingController : Controller
                 CheckInReality = localTime,
                 ModifiedTime = localTime
             };
-            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(roomBookingDetailUpdate);
-
+            
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdate);
             return Json(new { success = true, message = "Check-In thành công!" });
         }
         catch (Exception ex)
@@ -451,6 +443,7 @@ public class RoomBookingController : Controller
             }
 
             decimal? finalExpenses = expenses ?? roomBookingDetail.Expenses;
+            
             var roomBookingDetailUpdate = new RoomBookingDetailUpdateRequest()
             {
                 Id = id,
@@ -463,7 +456,7 @@ public class RoomBookingController : Controller
                 ModifiedTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local)
             };
             
-            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(roomBookingDetailUpdate);
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdate);
             if (response == null)
             {
                 return Json(new
@@ -534,7 +527,7 @@ public class RoomBookingController : Controller
                 CheckOutReality = localTime,
                 ModifiedTime = localTime
             };
-            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail(roomBookingDetailUpdate);
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdate);
             var updateStatusRquest = new RoomUpdateStatusRequest()
             {
                 Id = roomId,
@@ -581,13 +574,10 @@ public class RoomBookingController : Controller
     [Route("RoomBooking/RoomBookingDetails/RoomBookingDetailId={roomBookingDetailId}")]
     public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId)
     {
-        var roomBookingDetail =
+        var roomBookingDetailResponse =
             await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(roomBookingDetailId);
-
-        if (roomBookingDetail == null)
+        if (roomBookingDetailResponse == null)
             return View("Error");
-
-        var roomBookingDetailResponse = roomBookingDetail.ToRoomBookingDetailResponse();
         return View(roomBookingDetailResponse);
     }
 
