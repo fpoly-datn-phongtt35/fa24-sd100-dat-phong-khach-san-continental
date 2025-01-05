@@ -143,7 +143,7 @@ public class RoomBookingController : Controller
     {
         try
         {
-            var response = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingI(RoomBooking);
+            var response = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingDetailId(RoomBooking);
             return response;
         }
         catch (Exception ex)
@@ -172,7 +172,7 @@ public class RoomBookingController : Controller
     {
         try
         {
-            var response = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingI(id);
+            var response = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingDetailId(id);
             return response;
         }
         catch (Exception ex)
@@ -195,9 +195,8 @@ public class RoomBookingController : Controller
     }
 
 
-    public async Task<int> submit(RoomBooking bookingcreaterequest,
-        List<RoomBookingDetail> lstupsert,
-        List<ServiceOrderDetail> lstSerOrderDetail, List<Guid> ListDelete)
+    public async Task<string> submit(RoomBooking bookingcreaterequest,
+        List<RoomBookingDetail> lstupsert)
     {
         try
         {
@@ -262,40 +261,12 @@ public class RoomBookingController : Controller
 
                 await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
             }
-
-            foreach (var i in lstSerOrderDetail)
-            {
-                if (i.Id == Guid.Empty)
-                {
-                    i.RoomBookingId = idroombooking != Guid.Empty ? idroombooking : bookingcreaterequest.Id;
-                    i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    i.Status = EntityStatus.Active;
-                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
-                }
-                else
-                {
-                    i.ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
-                }
-            }
-
-            foreach (var i in ListDelete)
-            {
-                var request = new ServiceOrderDetailDeleteRequest()
-                {
-                    Id = i,
-                    DeletedTime = DateTime.UtcNow,
-                    DeletedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                };
-                await _serviceOrderDetailService.DeleteServiceOrderDetail(request);
-            }
-
-            return 1;
+            return "/BookingRoom/Id="+ (idroombooking!= Guid.Empty ? idroombooking : bookingcreaterequest.Id)  + "&&Client=" + bookingcreaterequest.CustomerId;
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return -1;
+            return "-1";
         }
     }
 
@@ -404,10 +375,38 @@ public class RoomBookingController : Controller
     }
 
     public async Task<IActionResult> UpdateCheckInAndCheckOutReality(Guid id, string checkInTime, string checkoutTime,
-        string note, decimal? expenses)
+        string note, decimal? expenses,List<ServiceOrderDetail> lstSerOrderDetail,
+              List<Guid>? ListDelete)
     {
         try
         {
+            foreach (var i in lstSerOrderDetail)
+            {
+                if (i.Id == Guid.Empty)
+                {
+                    i.RoomBookingDetailId = id;
+                    i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    i.Status = EntityStatus.Active;
+                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
+                }
+                else
+                {
+                    i.ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    await _serviceOrderDetailService.UpsertServiceOrderDetail(i);
+                }
+            }
+
+            foreach (var i in ListDelete)
+            {
+                var request = new ServiceOrderDetailDeleteRequest()
+                {
+                    Id = i,
+                    DeletedTime = DateTime.UtcNow,
+                    DeletedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                };
+                await _serviceOrderDetailService.DeleteServiceOrderDetail(request);
+            }
+
             if (expenses > 0 && string.IsNullOrWhiteSpace(note))
             {
                 return Json(new { success = false, message = "Vui lòng nhập ghi chú khi thêm phí hư tổn." });
@@ -639,13 +638,17 @@ public class RoomBookingController : Controller
         }
     }
 
-    public async Task<ResponseData<Customer>> GetCustomerSuggestion(string txt_search)
+    public async Task<ResponseData<Customer>> GetCustomerSuggestion(string? txt_search)
     {
         var response = new ResponseData<Customer>();
         try
         {
             var request = new CustomerGetRequest();
-            if (Regex.IsMatch(txt_search, @"^\d+$"))
+            if(txt_search == null)
+            {
+
+            }
+            else if (Regex.IsMatch(txt_search, @"^\d+$"))
             {
                 request.PhoneNumber = txt_search;
                 request.UserName = null;

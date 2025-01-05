@@ -43,7 +43,6 @@ namespace Domain.Models
         public List<RoomBookingDetail> RoomBookingDetails { get; set; }
         public ICollection<FeedBack> FeedBacks { get; set; }
         public List<VoucherDetail> VoucherDetails { get; set; }
-        public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
         public virtual List<PaymentHistory> PaymentHistorys { get; set; }
     }
 }
