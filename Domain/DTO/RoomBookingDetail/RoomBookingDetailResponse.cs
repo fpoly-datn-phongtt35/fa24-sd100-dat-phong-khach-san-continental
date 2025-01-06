@@ -27,7 +27,7 @@ public class RoomBookingDetailResponse
     
     public string? RoomName { get; set; }
     public int? NumberOfNight { get; set; }
-    public decimal? TotalRoomPrice { get; set; }
+    public decimal? RoomPrice { get; set; }
 
     public override bool Equals(object? obj)
     {
@@ -53,6 +53,26 @@ public class RoomBookingDetailResponse
         // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
         return base.GetHashCode();
     }
+
+    public RoomBookingDetailUpdateRequest ToRoomBookingDetailUpdateRequest()
+    {
+        return new RoomBookingDetailUpdateRequest()
+        {
+            Id = Id,
+            CheckInBooking = CheckInBooking,
+            CheckOutBooking = CheckOutBooking,
+            CheckInReality = CheckInReality,
+            CheckOutReality = CheckOutReality,
+            ExtraPrice = ExtraPrice,
+            Expenses = Expenses,
+            Price = Price,
+            Note = Note,
+            Status = Status,
+            ModifiedTime = ModifiedTime,
+            ModifiedBy = ModifiedBy,
+            Deleted = Deleted
+        };
+    }
 }
 
 public static class RoomBookingDetailResponseExtensions
@@ -62,37 +82,31 @@ public static class RoomBookingDetailResponseExtensions
         if (roomBookingDetail == null)
             throw new ArgumentNullException(nameof(roomBookingDetail), "RoomBookingDetail không được null.");
         
-        // Xử lý giá trị mặc định cho CheckInReality và CheckOutReality
-        var checkInReality = roomBookingDetail.CheckInReality ?? 
-                             (roomBookingDetail.CheckInBooking?.Date.AddHours(12));
-        var checkOutReality = roomBookingDetail.CheckOutReality ?? 
-                              (roomBookingDetail.CheckOutBooking?.Date.AddHours(14));
+        var checkInReality = roomBookingDetail.CheckInReality;
+        var checkOutReality = roomBookingDetail.CheckOutReality;
+
+        int numberOfNights;
+
+        if (checkInReality == null && checkOutReality == null)
+        {
+            numberOfNights = (roomBookingDetail.CheckInBooking.HasValue && roomBookingDetail.CheckOutBooking.HasValue)
+                ? (int)((roomBookingDetail.CheckOutBooking.Value.Date - roomBookingDetail.CheckInBooking.Value.Date).TotalDays)
+                : 0;
+        }
+        else if (checkOutReality == null)
+        {
+            numberOfNights = (checkInReality.HasValue && roomBookingDetail.CheckOutBooking.HasValue)
+                ? (int)((roomBookingDetail.CheckOutBooking.Value.Date - checkInReality.Value.Date).TotalDays)
+                : 0;
+        }
+        else
+        {
+            numberOfNights = (checkInReality.HasValue && checkOutReality.HasValue)
+                ? (int)((checkOutReality.Value.Date - checkInReality.Value.Date).TotalDays)
+                : 0;
+        }
+
         
-        var numberOfNights = (checkInReality.HasValue && checkOutReality.HasValue)
-            ? (int?)((checkOutReality.Value.Date - checkInReality.Value.Date).TotalDays)
-            : null;
-        
-        var totalRoomPrice = (numberOfNights.HasValue && roomBookingDetail.Price.HasValue)
-            ? numberOfNights.Value * roomBookingDetail.Price.Value
-            : (decimal?)null;
-        
-        var earlyCheckInSurcharge = roomBookingDetail.CheckInReality.HasValue
-            ? SurchargeCalculator.CalculateSurcharge(
-                roomBookingDetail.CheckInBooking ?? DateTimeOffset.UtcNow,
-                roomBookingDetail.CheckInReality.Value,
-                roomBookingDetail.Price ?? 0,
-                true // Check-in
-            ): 0;
-        
-        var lateCheckOutSurcharge = roomBookingDetail.CheckOutReality.HasValue
-            ? SurchargeCalculator.CalculateSurcharge(
-                roomBookingDetail.CheckOutBooking ?? DateTimeOffset.UtcNow,
-                roomBookingDetail.CheckOutReality.Value,
-                roomBookingDetail.Price ?? 0,
-                false // Check-out
-            ) : 0;
-        
-        var extraPrice = earlyCheckInSurcharge + lateCheckOutSurcharge;
         return new RoomBookingDetailResponse()
         {
             Id = roomBookingDetail.Id,
@@ -104,7 +118,7 @@ public static class RoomBookingDetailResponseExtensions
             CheckOutReality = roomBookingDetail.CheckOutReality,
             Price = roomBookingDetail.Price,
             Deposit = roomBookingDetail.Deposit,
-            ExtraPrice = extraPrice,
+            ExtraPrice = roomBookingDetail.ExtraPrice,
             Expenses = roomBookingDetail.Expenses,
             Note = roomBookingDetail.Note,
             Status = roomBookingDetail.Status,
@@ -117,56 +131,56 @@ public static class RoomBookingDetailResponseExtensions
             DeletedTime = roomBookingDetail.DeletedTime,
             RoomName = roomBookingDetail.Room?.Name ?? "Không có tên phòng",
             NumberOfNight = numberOfNights,
-            TotalRoomPrice = totalRoomPrice
+            RoomPrice = roomBookingDetail.Room?.Price
         };
     }
 }
 
-public static class SurchargeCalculator
-{
-    public static decimal CalculateSurcharge(DateTimeOffset bookingTime, DateTimeOffset realityTime, decimal roomPrice, bool isCheckIn)
-    {
-        // TimeSpan bookingLocalTime = bookingTime.LocalDateTime.TimeOfDay;
-        // TimeSpan realityLocalTime = realityTime.LocalDateTime.TimeOfDay;
-        TimeSpan defaultCheckInTime = new TimeSpan(14, 0, 0); // 2:00 PM
-        TimeSpan defaultCheckOutTime = new TimeSpan(12, 0, 0); // 12:00 PM
-        
-        TimeSpan realityLocalTime = realityTime.LocalDateTime.TimeOfDay;
-        decimal surcharge = 0;
-
-        if (isCheckIn)
-        {
-            if (realityLocalTime >= new TimeSpan(5, 0, 0) && realityLocalTime 
-                < new TimeSpan(9, 0, 0))
-            {
-                surcharge = 0.5m * roomPrice;
-            }
-            else if (realityLocalTime >= new TimeSpan(9, 0, 0) && realityLocalTime 
-                     < new TimeSpan(14, 0, 0))
-            {
-                surcharge = 0.3m * roomPrice;
-            }
-        }
-        else
-        {
-            if (realityLocalTime > defaultCheckOutTime)
-            {
-                if (realityLocalTime <= new TimeSpan(15, 0, 0)) // Từ 12:00 PM đến 3:00 PM
-                {
-                    surcharge = 0.3m * roomPrice; // Phụ thu 30%
-                }
-                else if (realityLocalTime <= new TimeSpan(18, 0, 0)) // Từ 3:00 PM đến 6:00 PM
-                {
-                    surcharge = 0.5m * roomPrice; // Phụ thu 50%
-                }
-                else if (realityLocalTime > new TimeSpan(18, 0, 0)) // Sau 6:00 PM
-                {
-                    surcharge = roomPrice; // Phụ thu 100%
-                }
-            }
-        }
-
-        return surcharge;
-    }
-}
+// public static class SurchargeCalculator
+// {
+//     public static decimal CalculateSurcharge(DateTimeOffset bookingTime, DateTimeOffset realityTime, decimal roomPrice, bool isCheckIn)
+//     {
+//         // TimeSpan bookingLocalTime = bookingTime.LocalDateTime.TimeOfDay;
+//         // TimeSpan realityLocalTime = realityTime.LocalDateTime.TimeOfDay;
+//         TimeSpan defaultCheckInTime = new TimeSpan(14, 0, 0); // 2:00 PM
+//         TimeSpan defaultCheckOutTime = new TimeSpan(12, 0, 0); // 12:00 PM
+//         
+//         TimeSpan realityLocalTime = realityTime.LocalDateTime.TimeOfDay;
+//         decimal surcharge = 0;
+//
+//         if (isCheckIn)
+//         {
+//             if (realityLocalTime >= new TimeSpan(5, 0, 0) && realityLocalTime 
+//                 < new TimeSpan(9, 0, 0))
+//             {
+//                 surcharge = 0.5m * roomPrice;
+//             }
+//             else if (realityLocalTime >= new TimeSpan(9, 0, 0) && realityLocalTime 
+//                      < new TimeSpan(14, 0, 0))
+//             {
+//                 surcharge = 0.3m * roomPrice;
+//             }
+//         }
+//         else
+//         {
+//             if (realityLocalTime > defaultCheckOutTime)
+//             {
+//                 if (realityLocalTime <= new TimeSpan(15, 0, 0)) // Từ 12:00 PM đến 3:00 PM
+//                 {
+//                     surcharge = 0.3m * roomPrice; // Phụ thu 30%
+//                 }
+//                 else if (realityLocalTime <= new TimeSpan(18, 0, 0)) // Từ 3:00 PM đến 6:00 PM
+//                 {
+//                     surcharge = 0.5m * roomPrice; // Phụ thu 50%
+//                 }
+//                 else if (realityLocalTime > new TimeSpan(18, 0, 0)) // Sau 6:00 PM
+//                 {
+//                     surcharge = roomPrice; // Phụ thu 100%
+//                 }
+//             }
+//         }
+//
+//         return surcharge;
+//     }
+// }
 

@@ -27,11 +27,11 @@ namespace Domain.Services.Services
             _serviceOrderDetailRepo = new ServiceOrderDetailRepo(_configuration);
         }
 
-        public async Task<List<ServiceOrderDetailResponse>> GetListServiceOrderDetailByRoomBookingI(Guid id)
+        public async Task<List<ServiceOrderDetailResponse>> GetListServiceOrderDetailByRoomBookingDetailId(Guid id)
         {
             try
             {
-                DataTable dt = await _serviceOrderDetailRepo.GetListServiceOrderDetailByRoomBookingI(id);
+                DataTable dt = await _serviceOrderDetailRepo.GetListServiceOrderDetailByRoomBookingDetailId(id);
                 var sv = (from row in dt.AsEnumerable()
                           select new ServiceOrderDetailResponse
                           {
@@ -119,12 +119,12 @@ namespace Domain.Services.Services
             return sv;
         }
 
-        public async Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetailByRoomBookingId(Guid id)
+        public async Task<ResponseData<ServiceOrderDetail>> GetServiceOrderDetailByRoomBookingDetailId(Guid id)
         {
             var model = new ResponseData<ServiceOrderDetail>();
             try
             {
-                DataTable table = await _serviceOrderDetailRepo.GetServiceOrderDetailByRoomBookingId(id);
+                DataTable table = await _serviceOrderDetailRepo.GetServiceOrderDetailByRoomBookingDetailId(id);
 
                 model.data = (from row in table.AsEnumerable()
                               select new ServiceOrderDetail
@@ -156,7 +156,7 @@ namespace Domain.Services.Services
                               select new ServiceOrderDetail
                               {
                                   Id = row.Field<Guid>("Id"),
-                                  RoomBookingId = row.Field<Guid>("RoomBookingId"),
+                                  RoomBookingDetailId = row.Field<Guid>("RoomBookingDetailId"),
                                   ServiceId = row.Field<Guid>("ServiceId"),
                                   Amount = row.Field<double>("Amount"),
                                   Price = row.Field<decimal>("Price"),

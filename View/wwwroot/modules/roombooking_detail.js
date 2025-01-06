@@ -118,7 +118,6 @@ $(document).ready(function () {
         $("#Client_Id").select2();
         _roombooking_detail.LoadDetailCustomer($("#Client_Id").val());
         _roombooking_detail.LoadListRoomRelated($("#IdRoomBooking").val());
-        _Service_OrderDetail.LoadListSerOrderDetailRelated($("#IdRoomBooking").val());
     }
 
     $("#room_Id").select2({
@@ -162,92 +161,9 @@ $(document).ready(function () {
 
 
 
-    $("#service_Id").select2({
-        placeholder: "Tìm tên dịch vụ",
-        maximumSelectionLength: 1,
-        ajax: {
-            url: "/RoomBooking/GetServiceSuggestion",
-            type: "post",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                getSerRq.Name = params.term
-                var query = {
-                    request: getSerRq,
-                }
-
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-            processResults: function (response) {
-                return {
-                    results: $.map(response, function (item) {
-                        return {
-                            text: item.name + ' - ' + item.description,
-                            id: item.id,
-                        }
-                    })
-                };
-            },
-        }
-    }).on('select2:opening', function (e) {
-        $('#service_Id').val([]).trigger('change');
-    });
-
-    $("#service_Id").on("select2:select", function (e) {
-        var data = e.params.data;
-        _Service_OrderDetail.AddServiceToList(data.id)
-    });
-
-
-    $("#service_type_Id").select2({
-        placeholder: "Tìm tên loại dịch vụ",
-        maximumSelectionLength: 1,
-        ajax: {
-            url: "/RoomBooking/GetlistServiceType",
-            type: "post",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    txt_search: params.term,
-                }
-
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-            processResults: function (response) {
-                return {
-                    results: $.map(response, function (item) {
-                        return {
-                            text: item.name + ' - ' + item.description,
-                            id: item.id,
-                        }
-                    })
-                };
-            },
-        }
-    }).on('select2:opening', function (e) {
-        $('#service_type_Id').val([]).trigger('change');
-        getSerRq.ServiceTypeId = null;
-    });
-
-
-    $("#service_type_Id").on("select2:select", function (e) {
-        var data = e.params.data;
-        getSerRq.ServiceTypeId = data.id;
-    });
+   
 })
 //#endregion
-
-
-var getSerRq =
-{
-    Name: null,
-    ServiceTypeId: null,
-    MinPrice: null,
-    MaxPrice: null
-}
 
 var getRoomRq = {
     Name: null,
@@ -270,191 +186,6 @@ var STT = 1;
 let dataRessidence = [];
 var residenceCount = 0;
 var maximumOccupancy = 0;
-
-
-var listIdService = [];
-var lstServiceOrderDetail = [];
-var IdSerAdd = -1;
-var LstDelete = [];
-var LstIdSerAdd = [];
-var STT2 = 1;
-
-var _Service_OrderDetail =
-{
-    LoadListRoomRelated: function (Id) {
-        $.ajax({
-            url: "/RoomBooking/GetListServiceRelated",
-            type: "post",
-            data: { id: Id },
-            success: function (result) {
-                $("#service-related").append();
-            }
-        });
-    },
-    OnchangeMinSer: function () {
-        getSerRq.MinPrice = $("#min_Ser").val();
-    },
-    OnchangeMaxSer: function () {
-        getSerRq.MaxPrice = $("#max_Ser").val();
-    },
-    AddServiceToList: function (Id) {
-        if (listIdService.indexOf(Id) < 0) {
-            listIdService.push(Id);
-            $.ajax({
-                url: "/RoomBooking/GetServiceById",
-                type: "post",
-                data: { Id: Id },
-                success: function (result) {
-                    if (result != null) {
-                        var formattedprice = parseFloat(result.price).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',');
-                        $("#service-related").append(`
-                        <tr class="align-items-center" id="ElementSer_`+ IdSerAdd + `">
-                            <td style="display:none"><input id="IdSer_`+ IdSerAdd + `" value="${result.id}"></input></td>
-                            <td scope="col" class="STT_Ser"></td>
-                            <td scope="col">${result.name}</td>
-                            <td scope="col">
-                                <input id="PriceSer_`+ IdSerAdd + `" class="form-control" value="${formattedprice}" disabled />
-                            </td>
-                            <td scope="col">
-                                <input id="QuantitySer_`+ IdSerAdd + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `')" class="form-control" type="number" value="1" min="1" />
-                            </td>
-                            <td scope="col">
-                                ${result.unit}
-                            </td>
-                            <td scope="col">
-                                <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
-                            </td>
-                            <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
-                           </td>
-                            <td scope="col">
-                                <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
-                            </td>
-                            <td scope="col">
-                                <a class="btn btn-danger" onclick="_Service_OrderDetail.RemoveServiceOut('`+ IdSerAdd + `')">Xóa</a>
-                            </td>
-                        </tr>
-                        `);
-                        LstIdSerAdd.push(IdSerAdd);
-                        IdSerAdd = IdSerAdd - 1;
-                        _Service_OrderDetail.CalculatingTotalPriceSer();
-                        _Service_OrderDetail.ResetIndex();
-                    }
-
-                }
-            });
-        }
-    },
-    RemoveServiceOut: function (Id) {
-        if (Id < 0) {
-            var Idremove = $("#IdSer_" + Id).val();
-            listIdService = listIdService.filter(x => x != Idremove);
-            LstIdSerAdd = LstIdSerAdd.filter(x => x != Id);
-        }
-        LstDelete.push(Id);
-        $("#ElementSer_" + Id).remove();
-        _Service_OrderDetail.CalculatingTotalPriceSer();
-        _Service_OrderDetail.ResetIndex();
-    },
-    ResetIndex: function () {
-        STT2 = 1;
-        var EleIndex = $('tr[id^="ElementSer_"]');
-        EleIndex.each(function () {
-            $(this).find('td[class^="STT_Ser"]').html(STT2);
-            STT2++;
-        });
-    },
-    OnchangeQuantity: function (Id) {
-        var TotalPriceSer = $("#PriceSer_" + Id).val().replaceAll(',', '') * $("#QuantitySer_" + Id).val();
-        var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
-        formattedprice = formattedprice.replaceAll('.', ',')
-        $("#TotalPriceSer_" + Id).val(formattedprice);
-        _Service_OrderDetail.CalculatingTotalPriceSer();
-    },
-    CalculatingTotalPriceSer: function () {
-        var AmountPriceService = 0;
-        var AmountExtraSer = 0;
-        var lstToalPriceSerEle = document.getElementsByClassName("total_price_ser");
-        var lstExtraSerElete = document.getElementsByClassName("priceSer_extra");
-        for (let i = 0; i < lstToalPriceSerEle.length; i++) {
-            const element = lstToalPriceSerEle[i];
-            AmountPriceService = AmountPriceService + parseInt(element.value.replaceAll(',', ''));
-        }
-
-        for (let i = 0; i < lstExtraSerElete.length; i++) {
-            const element = lstExtraSerElete[i];
-            AmountExtraSer = AmountExtraSer + parseInt(element.value);
-        }
-        $("#total_service_price").html(global.NumberVNFormated(AmountPriceService));
-        $("#total_service_extra_price").html(global.NumberVNFormated(AmountExtraSer));
-        _roombooking_detail.CalculatingRoomPrice();
-    },
-    LoadListSerOrderDetailRelated: function (Id) {
-        $.ajax({
-            url: "/RoomBooking/GetListServiceRelated",
-            type: "post",
-            data: { id: Id },
-            success: function (result) {
-                if (result != null) {
-                    result.forEach(item => {
-                        var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',');
-                        $("#service-related").append(`
-                        <tr class="align-items-center" id="ElementSer_`+ item.id + `">
-                            <td style="display:none"><input id="IdSerOrder_`+ item.id + `" value="${item.id}"></input></td>
-                            <td style="display:none"><input id="IdSer_`+ item.id + `" value="${item.serviceId}"></input></td>
-                            <td scope="col" class="STT_Ser">${STT2}</td>
-                            <td scope="col">${item.name}</td>
-                            <td scope="col">
-                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${formattedprice}" disabled />
-                            </td>
-                            <td scope="col">
-                                <input id="QuantitySer_`+ item.id + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + item.id + `')" class="form-control" type="number" value="${item.quantity}" min="1" />
-                            </td>
-                            <td scope="col">
-                                ${item.unit}
-                            </td>
-                            <td scope="col">
-                                <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
-                            </td>
-                            <td class="">
-                               <input id="ExtraSerPr_` + item.id + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="${item.extraPrice}" min="0" type="number">
-                           </td>
-                            <td scope="col">
-                                <textarea id="NoteSer_`+ item.id + `" class="form-control text-start" placeholder="Thêm ghi chú">${item.description != null ? item.description : ""}</textarea>
-                            </td>
-                            <td scope="col">
-                                <a class="btn btn-danger" onclick="_Service_OrderDetail.RemoveServiceOut('`+ item.id + `')">Xóa</a>
-                            </td>
-                        </tr>
-                        `)
-                        STT2++;
-                        LstIdSerAdd.push(item.id);
-                    })
-                    _Service_OrderDetail.CalculatingTotalPriceSer();
-                    _Service_OrderDetail.ResetIndex();
-                }
-            }
-        });
-    },
-
-    GetListOBjService: function () {
-        LstIdSerAdd.forEach(item => {
-            var obj =
-            {
-                Id: $("#IdSerOrder_" + item).val(),
-                Price: $("#PriceSer_" + item).val(),
-                Amount: $("#TotalPriceSer_" + item).val(),
-                Quantity: $("#QuantitySer_" + item).val(),
-                ExtraPrice: $("#ExtraSerPr_" + item).val(),
-                Description: $("#NoteSer_" + item).val(),
-                ServiceId: $("#IdSer_" + item).val()
-            }
-            lstServiceOrderDetail.push(obj);
-        })
-    }
-}
 
 
 var _roombooking_detail = {
@@ -714,9 +445,6 @@ var _roombooking_detail = {
                            </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
                            <td class="d-flex">
-                               <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('` + item.roomBookingDetailId + `','` + item.roomId + `')">Hủy</a>
-                               <a class="text-green btn btn-success ms-2 btn-checkin text-nowrap" id="btn-checkin-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('` + item.roomBookingDetailId + `')">Đã nhận</a>
-                               <a class="text-white btn btn-warning ms-2 btn-checkout text-nowrap" id="btn-checkout-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckOut('` + item.roomBookingDetailId + `','` + item.roomId + `')">Đã trả</a>
                                <a class="btn btn-info ms-2 btn-residence text-nowrap" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Danh sách</a>
                                <a class="btn btn-primary ms-2 btn-detail text-nowrap" id="btn-detail-` + item.roomBookingDetailId + `" href="/RoomBooking/RoomBookingDetails/RoomBookingDetailId=` + item.roomBookingDetailId + `" style="cursor:pointer">Chi tiết</a>
                            </td>
@@ -1701,13 +1429,12 @@ var _roombooking_detail = {
 
     submit: function () {
         _roombooking_detail.GetlistObjSubmit();
-        _Service_OrderDetail.GetListOBjService();
         $.ajax({
             url: "/RoomBooking/submit",
             type: "post",
-            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail, lstSerOrderDetail: lstServiceOrderDetail, ListDelete: LstDelete },
+            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail},
             success: function (result) {
-                window.location.href = "/roombooking";
+                window.location.href = result;
             }
         });
     }
