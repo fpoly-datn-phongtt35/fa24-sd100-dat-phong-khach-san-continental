@@ -48,7 +48,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetTop5MostBookedRoomsLastMonth = "SP_GetTop5MostBookedRoomsLastMonth";
         public const string SP_GetTopMostBookedRoomsCustomer = "SP_GetTopMostBookedRoomsCustomer";
         public const string SP_GetRevenue = "SP_GetRevenue";
-        ////public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
+        public const string SP_GetCoverageRatio = "SP_GetCoverageRatio";
 
         //building
         public const string SP_InsertBuilding = "SP_InsertBuilding";
