@@ -8,7 +8,8 @@ namespace Domain.Repositories.IRepository
     {
         Task<DataTable> GetListRoomBookingDetailByRoomBookingId(Guid id);
         Task<DataTable> GetById(Guid id);
-        Task<DataTable> GetRoomBookingDetailById2(Guid id);
+        Task<RoomBookingDetail?> GetRoomBookingDetailById2(Guid id);
+        Task<RoomBookingDetail?> UpdateRoomBookingDetail2(RoomBookingDetail roomBookingDetail);
         Task<int> UpSertRoomBookingDetail(RoomBookingDetail request);
         Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);

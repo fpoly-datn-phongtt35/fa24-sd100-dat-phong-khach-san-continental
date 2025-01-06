@@ -46,11 +46,11 @@ namespace API.Controllers
         }
 
         [HttpPost("GetServiceOrderDetailByRoomBookingId")]
-        public async Task<ResponseData<ServiceOrderDetail>> GetListServiceOrderDetailByRoomBookingId(Guid id)
+        public async Task<ResponseData<ServiceOrderDetail>> GetListServiceOrderDetailByRoomBookingDetailId(Guid id)
         {
             try
             {
-                return await _serviceOrderDetailService.GetServiceOrderDetailByRoomBookingId(id);
+                return await _serviceOrderDetailService.GetServiceOrderDetailByRoomBookingDetailId(id);
             }
             catch (Exception ex)
             {

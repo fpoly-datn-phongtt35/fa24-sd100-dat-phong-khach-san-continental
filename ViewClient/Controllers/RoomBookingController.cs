@@ -177,7 +177,7 @@ namespace ViewClient.Controllers
                     {
                         var serviceOrderDetail = new Domain.Models.ServiceOrderDetail
                         {
-                            RoomBookingId = roomBooking,
+                            RoomBookingDetailId = roomBooking,
                             ServiceId = service.ServiceId,
                             Amount = Convert.ToDouble((service.Quantity) * (service.Price)),
                             Description = null,

@@ -14,7 +14,8 @@ namespace Domain.DTO.RoomBookingDetail
         public DateTimeOffset? CheckOutBooking { get; set; }
         public DateTimeOffset? CheckInReality { get; set; }
         public DateTimeOffset? CheckOutReality { get; set; }
-        public decimal? ExtraPrice { get; set; }
+        public decimal ExtraPrice { get; set; }
+        public decimal? Price { get; set; }
         public decimal? Expenses { get; set; } = 0;
         public string? Note { get; set; }
         public EntityStatus Status { get; set; }
@@ -23,5 +24,25 @@ namespace Domain.DTO.RoomBookingDetail
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
+
+        public Models.RoomBookingDetail ToRoomBookingDetail()
+        {
+            return new Models.RoomBookingDetail()
+            {
+                Id = Id,
+                CheckInBooking = CheckInBooking,
+                CheckOutBooking = CheckOutBooking,
+                CheckInReality = CheckInReality,
+                CheckOutReality = CheckOutReality,
+                ExtraPrice = ExtraPrice,
+                Expenses = Expenses,
+                Price = Price,
+                Note = Note,
+                Status = Status,
+                ModifiedTime = ModifiedTime,
+                ModifiedBy = ModifiedBy,
+                Deleted = Deleted
+            };
+        }
     }
 }

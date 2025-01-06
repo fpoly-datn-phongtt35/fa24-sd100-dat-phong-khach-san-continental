@@ -27,7 +27,7 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-
+        public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
         public Room Room { get; set; }
         public RoomBooking RoomBooking { get; set; }
         public virtual List<ResidenceRegistration> ResidenceRegistrations { get; set; }
