@@ -104,7 +104,7 @@ namespace View.Controllers
                 return null;
             }
         }
-        public async Task<IActionResult> Index(int? selectedMonthCustomer, int? selectedYearCustomer, int? selectedMonthRoom, int? selectedYearRoom, string revenueFilterType = "Month")
+        public async Task<IActionResult> Index(int? month, int? year, int? selectedMonthCustomer, int? selectedYearCustomer, int? selectedMonthRoom, int? selectedYearRoom, string revenueFilterType = "Month")
         {
             try
             {
@@ -136,7 +136,35 @@ namespace View.Controllers
                 var topRoomRequestUrl = $"api/Room/GetTopBookingRoomsAsync?selectedMonthRoom={selectedMonthRoom}&selectedYearRoom={selectedYearRoom}";
                 var topRoomData = await SendHttpRequest<List<TopRoomBookingViewModel>>(topRoomRequestUrl, HttpMethod.Post);
 
+                // coverage ratio
+                if (month == null) month = DateTime.Now.Month; 
+                if (year == null) year = DateTime.Now.Year;
+                var coverageRatioUrl = $"api/Room/GetCoverageRatio?month={month}&year={year}";
+
+                var coverageRatioResponse = await SendHttpRequest<object>(coverageRatioUrl, HttpMethod.Post);  
+
+                float? coverageRatio = null;
+
+                if (coverageRatioResponse != null)
+                {
+                    if (float.TryParse(coverageRatioResponse.ToString(), out float parsedValue))
+                    {
+                        coverageRatio = parsedValue;
+                    }
+                }
+
+                if (coverageRatio.HasValue)
+                {
+                    ViewBag.CoverageRatio = coverageRatio.Value;
+                }
+                else
+                {
+                    ViewBag.CoverageRatio = "No data available"; 
+                }
+
                 // Truyền dữ liệu vào ViewBag
+                ViewBag.Month = month;
+                ViewBag.Year = year;
                 ViewBag.Periods = periods;
                 ViewBag.TotalAmounts = totalAmounts;
                 ViewBag.TopCustomers = topCustomerData;

@@ -5,6 +5,7 @@
     var periods = ViewBag.Periods as List<string>;
     var totalAmounts = ViewBag.TotalAmounts as List<decimal>;
     var topCustomers = ViewBag.TopCustomers as List<Domain.DTO.Room.TopCustomerBooking>;
+    var coverageRatio = ViewBag.CoverageRatio ;
     var topRooms = ViewBag.TopRooms as List<Domain.DTO.Room.TopRoomBookingViewModel>;
     var revenueFilterType = HttpContextAccessor.HttpContext.Request.Query["revenueFilterType"].ToString();
 }
@@ -102,8 +103,6 @@
     </div>
 
 
-
-
     <style>
 
         .top-customer-list {
@@ -164,6 +163,54 @@
 
 
 </div>
+<hr style="height: 1px">
+<!-- Coverage ratio -->
+<div style="flex: 3;">
+    <div style="display: flex; justify-content: flex-start; align-items: center; margin-bottom: 20px; width: 100%;">
+        <h3 style="margin-right: 20px;">Tỉ lệ phủ</h3>
+        <form method="get" action="@Url.Action("Index")" style="display: flex; align-items: center; margin-right: 20px;">
+            <label for="Month">Tháng:</label>
+            <select id="Month" name="Month" class="form-control" style="width: 80px; display: inline-block; margin-right: 10px;">
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i" selected="@(i == ViewBag.Month ? "selected" : null)">@i</option>
+                }
+            </select>
+
+            <label for="Year">Năm:</label>
+            <select id="Year" name="Year" class="form-control" style="width: 100px; display: inline-block; margin-right: 10px;">
+                @for (int i = DateTime.Now.Year; i >= 2024; i--)
+                {
+                    <option value="@i" selected="@(i == ViewBag.Year ? "selected" : null)">@i</option>
+                }
+            </select>
+
+            <button type="submit" class="btn btn-primary" style="margin-bottom:5px">Lọc</button>
+        </form>
+
+        @if (coverageRatio != null)
+        {
+            <div style="font-size: 1.5rem; font-weight: bold; color: #4CAF50; padding: 10px; border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); display: inline-block; margin-left: 20px;">
+                @coverageRatio %
+            </div>
+        }
+    </div>
+
+    <hr>
+
+    @{
+        var month = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["Month"].FirstOrDefault() ?? DateTime.Now.Month.ToString());
+        var year = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["Year"].FirstOrDefault() ?? DateTime.Now.Year.ToString());
+    }
+
+    @if (coverageRatio == null)
+    {
+        <p>Không có dữ liệu để hiển thị.</p>
+    }
+</div>
+
+
+
 
 </div>
 

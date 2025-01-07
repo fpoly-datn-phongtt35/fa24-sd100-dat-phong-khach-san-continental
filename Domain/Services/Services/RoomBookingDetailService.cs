@@ -99,41 +99,12 @@ namespace Domain.Services.Services
             return roomBookingDetail;
         }
         
-        public async Task<RoomBookingDetail> GetRoomBookingDetailById2(Guid id)
+        public async Task<RoomBookingDetailResponse?> GetRoomBookingDetailById2(Guid roomBookingDetailId)
         {
-            RoomBookingDetail roomBookingDetail = new RoomBookingDetail();
-            try
-            {
-                DataTable table = await _roomBookingDetailRepository.GetRoomBookingDetailById2(id);
-                roomBookingDetail = (from row in table.AsEnumerable()
-                            select new RoomBookingDetail
-                            {
-                                Id = row.Field<Guid>("Id"),
-                                RoomId = row.Field<Guid>("RoomId"),
-                                RoomBookingId = row.Field<Guid>("RoomBookingId"),
-                                CheckInBooking = row.Field<DateTimeOffset?>("CheckInBooking"),
-                                CheckOutBooking = row.Field<DateTimeOffset?>("CheckOutBooking"),
-                                CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
-                                CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
-                                Price = row.Field<decimal?>("Price"),
-                                ExtraPrice = row.Field<decimal>("ExtraPrice"),
-                                Deposit = row.Field<decimal>("Deposit"),
-                                Expenses = row.Field<decimal?>("Expenses"),
-                                Note = row.Field<string>("Note"),
-                                Status = row.Field<EntityStatus>("Status"),
-                                Deleted = row.Field<bool>("Deleted"),
-                                Room = new Models.Room()
-                                {
-                                    Id = row.Field<Guid>("RoomId"),
-                                    Name = table.Columns.Contains("Name") ? row.Field<string>("Name") : null
-                                }
-                            }).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return roomBookingDetail;
+            if (roomBookingDetailId == null) return null;
+            var roomBookingDetail = await _roomBookingDetailRepository.GetRoomBookingDetailById2(roomBookingDetailId);
+            if (roomBookingDetail == null) return null;
+            return roomBookingDetail.ToRoomBookingDetailResponse();
         }
         
         public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id)
@@ -182,6 +153,29 @@ namespace Domain.Services.Services
             {
                 throw ex;
             }
+        }
+        
+        public async Task<RoomBookingDetailResponse?> UpdateRoomBookingDetail2(RoomBookingDetailUpdateRequest roomBookingDetailUpdateRequest)
+        {
+            if(roomBookingDetailUpdateRequest == null)
+                throw new ArgumentNullException(nameof(roomBookingDetailUpdateRequest));
+            
+            var existingRoomBookingDetail = await _roomBookingDetailRepository
+                .GetRoomBookingDetailById2(roomBookingDetailUpdateRequest.Id);
+            if(existingRoomBookingDetail == null)
+                throw new ArgumentException("Id Room Booking Detail does not exist");
+            
+            existingRoomBookingDetail.CheckInReality = roomBookingDetailUpdateRequest.CheckInReality;
+            existingRoomBookingDetail.CheckOutReality = roomBookingDetailUpdateRequest.CheckOutReality;
+            existingRoomBookingDetail.Expenses = roomBookingDetailUpdateRequest.Expenses;
+            existingRoomBookingDetail.ExtraPrice = roomBookingDetailUpdateRequest.ExtraPrice;
+            existingRoomBookingDetail.Price = roomBookingDetailUpdateRequest.Price;
+            existingRoomBookingDetail.Status = roomBookingDetailUpdateRequest.Status;
+            existingRoomBookingDetail.ModifiedBy = roomBookingDetailUpdateRequest.ModifiedBy;
+            existingRoomBookingDetail.ModifiedTime = roomBookingDetailUpdateRequest.ModifiedTime;
+            
+            await _roomBookingDetailRepository.UpdateRoomBookingDetail2(existingRoomBookingDetail);
+            return existingRoomBookingDetail.ToRoomBookingDetailResponse();
         }
     }
 }

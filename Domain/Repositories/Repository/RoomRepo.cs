@@ -539,5 +539,30 @@ namespace Domain.Repositories.Repository
 
             return revenueList;
         }
+
+        public async Task<float> GetCoverageRatio(int month, int year)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Month", month),
+                new SqlParameter("@Year", year)
+            };
+
+            var dataTable = _worker.GetDataTable("SP_GetCoverageRatio", parameters);
+
+            float data = 0f; 
+
+            if (dataTable.Rows.Count > 0)
+            {
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    if (row["MonthlyCoverageRatio"] != DBNull.Value)
+                    {
+                        data = Convert.ToSingle(row["MonthlyCoverageRatio"]);
+                    }
+                }
+            }
+            return data;   
+        }
     }
 }

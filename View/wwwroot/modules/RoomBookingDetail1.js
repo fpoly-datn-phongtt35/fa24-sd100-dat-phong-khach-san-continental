@@ -116,7 +116,8 @@ $(document).ready(function () {
         });
     }
 
-    function handleUpdateCheckInAndCheckOut(roomBookingDetailId, checkInDateTime, checkOutDateTime, note, expenses, lstSerOrderDetail, ListDelete) {
+    function handleUpdateCheckInAndCheckOut(roomBookingDetailId, checkInDateTime, checkOutDateTime, note, noteCheckin, 
+                                            noteCheckout, expenses, lstSerOrderDetail, ListDelete) {
         _Service_OrderDetail.GetListOBjService();
         executeAction(
             '/RoomBooking/UpdateCheckInAndCheckOutReality',
@@ -125,6 +126,8 @@ $(document).ready(function () {
                 checkInTime: checkInDateTime,
                 checkoutTime: checkOutDateTime,
                 note: note,
+                noteCheckin: noteCheckin,
+                noteCheckout: noteCheckout,
                 expenses: expenses,
                 lstSerOrderDetail: lstServiceOrderDetail,
                 ListDelete: LstDelete 
@@ -158,10 +161,14 @@ $(document).ready(function () {
         const selectedCheckInDateTime = $('#checkInRealityPicker').val();
         const selectedCheckOutDateTime = $('#checkOutRealityPicker').val();
         const note = $('#Note').val().trim();
+        const noteCheckin = $('#NoteCheckin').val().trim();
+        const noteCheckout = $('#NoteCheckout').val().trim();
 
-        // Lấy giá trị phí hư tổn và loại bỏ dấu phẩy (nếu có), sau đó chuyển thành số
         const expensesInput = $('#Expenses').val().replace(/,/g, '');  // Loại bỏ dấu phẩy
         const expenses = parseFloat(expensesInput) || 0;  // Chuyển thành số thực
+
+        console.log('Expenses input:', expensesInput);
+        console.log('Parsed expenses:', expenses);
 
         if (expenses > 0 && !note) {
             Swal.fire({
@@ -193,7 +200,7 @@ $(document).ready(function () {
         }).then(function (result) {
             if (result.isConfirmed) {
                 handleUpdateCheckInAndCheckOut(roomBookingDetailId, selectedCheckInDateTime, selectedCheckOutDateTime, 
-                    note, expenses,lstServiceOrderDetail,LstDelete);
+                    note, noteCheckin, noteCheckout, expenses, lstServiceOrderDetail, LstDelete);
             }
         });
     });
@@ -241,7 +248,7 @@ function validateExpenses() {
     expensesInput.value = value;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function ()
 {
     _Service_OrderDetail.LoadListSerOrderDetailRelated($("#SerDetailId").val());

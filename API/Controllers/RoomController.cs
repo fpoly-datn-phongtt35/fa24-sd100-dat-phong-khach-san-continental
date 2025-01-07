@@ -47,6 +47,19 @@ namespace API.Controllers
             }
         }
 
+        [HttpPost(nameof(GetCoverageRatio))]
+        public async Task<float> GetCoverageRatio(int month, int year)
+        {
+            try
+            {
+                return await _roomGetService.GetCoverageRatio(month, year);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         [HttpPost(nameof(GetRoomById))]
         public async Task<RoomResponse?> GetRoomById(Guid roomId)
         {
