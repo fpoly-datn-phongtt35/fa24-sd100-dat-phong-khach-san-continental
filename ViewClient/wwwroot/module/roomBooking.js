@@ -23,11 +23,16 @@
     }
    
 
-    function formatDate(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${day}-${month}-${year}`;
+    function convertToISO(dateString) {
+        var parts = dateString.split('-'); 
+        // Kiểm tra độ dài của mảng parts để đảm bảo nó có 3 phần
+        if (parts.length === 3) {
+            var day = parts[0];
+            var month = parts[1];
+            var year = parts[2];
+            return `${year}-${month}-${day}`;
+        }
+        return null; 
     }
 
     // Lấy giá trị từ localStorage ngay khi trang được tải
@@ -120,7 +125,7 @@
         document.getElementById('modalCheckOut').value = checkOut;
         //document.getElementById('modalEmail').innerText = email;
         //document.getElementById('modalPhoneNumber').innerText = phoneNumber;
-        document.getElementById('modalDeposit').innerText = depositPayment + ' VNĐ';
+        document.getElementById('modalDeposit').innerText = depositPayment.toLocaleString() + " VNĐ";
         document.getElementById('modalTotalPrice').innerText = totalPrice + ' VNĐ';
         document.getElementById('modalServices').innerText = services.join(', ') || 'Không có dịch vụ nào';
 
@@ -129,6 +134,8 @@
     });
     $('#confirmBooking').click(function () {
         $('#validationMessage').html('').hide();
+        var checkInDate = new Date(convertToISO(checkIn));
+        var checkOutDate = new Date(convertToISO(checkOut));
 
         var depositText = $('#depositPayment').text();
         var deposit = parseFloat(depositText.replace("Đặt cọc: ", "").replace(" VNĐ", "").replace(/,/g, ""));
@@ -137,11 +144,14 @@
         var servicePriceText = $('#totalServicePayment').text();
         var servicePrice = parseFloat(servicePriceText.replace("Tiền dịch vụ: ", "").replace(" VNĐ", "").replace(/,/g, ""));
 
+        checkInDate.setUTCHours(14, 0, 0);
+        checkOutDate.setUTCHours(12, 0, 0); 
+
         // Tạo đối tượng bookingDetails
         var bookingDetails = {
             RoomId: roomId,
-            CheckInBooking: new Date(localStorage.getItem("CheckIn")),
-            CheckOutBooking: new Date(localStorage.getItem("CheckOut")),
+            CheckInBooking: checkInDate,
+            CheckOutBooking: checkOutDate,
             Price: Math.round(price),
             SelectedServices: [],
             Customer: {
@@ -151,7 +161,7 @@
                 PhoneNumber: $('#phone').val() || null
             },
             Deposit: Math.round(deposit),
-            ServicePrice: Math.round(servicePrice)
+            ServicePrice: Math.round(servicePrice),
         };
 
         // Lấy danh sách dịch vụ đã chọn
@@ -161,7 +171,7 @@
             var servicePrice = parseFloat($(this).closest('.form-check').find('span').data('price'));
             bookingDetails.SelectedServices.push({ ServiceId: serviceId, Quantity: quantity, Price: Math.round(servicePrice) });
         });
-
+        console.log(JSON.stringify(bookingDetails));
         // Gửi dữ liệu đặt phòng
         $.ajax({
             url: bookingUrl,
@@ -184,7 +194,7 @@
             },
             error: function (xhr, status, error) {
                 showToast("Hãy kiểm tra lại thông tin cá nhân, thông tin đặt phòng!");
-                console.log("Error: " + error);
+                console.log(xhr.responseText);
                 $('#validationMessage').html("Đã xảy ra lỗi trong quá trình đặt phòng: " + xhr.responseText).show();
             }
         });

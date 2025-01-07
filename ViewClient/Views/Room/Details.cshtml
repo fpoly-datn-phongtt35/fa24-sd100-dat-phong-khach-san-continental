@@ -198,20 +198,18 @@
     </div>
     <div class="card-footer">
         <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Hủy</a>
-        <button type="button" class="btn btn-primary" id="confirmBookingButton">Đặt phòng</button>
+            <button type="button" class="btn btn-primary" id="confirmBookingButton" data-bs-toggle="modal" data-bs-target="#bookingConfirmationModal">Đặt phòng</button>
     </div>
 </div>
 </div>
 
 @* --Modal xác nhận-- *@
-<div class="modal fade" id="bookingConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="bookingConfirmationModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="bookingConfirmationModalLabel">Xác nhận đặt phòng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p><strong>Tên phòng:</strong> <h3 id="modalRoomName"></h3></p>
@@ -230,7 +228,7 @@
                 <p><strong>Tổng tiền:</strong> <span id="modalTotalPrice"></span> (đã trừ tiền đặt cọc)</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <button type="button" class="btn btn-primary" id="confirmBooking">Xác nhận</button>
             </div>
         </div>

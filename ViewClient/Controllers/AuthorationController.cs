@@ -90,6 +90,7 @@ namespace ViewClient.Controllers
         }
 
         [HttpPost("logout")]
+        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("UserName");

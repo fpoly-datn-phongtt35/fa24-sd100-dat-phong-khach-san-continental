@@ -115,7 +115,7 @@ namespace ViewClient.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> RoomBooking(RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
+        public async Task<IActionResult> RoomBooking([FromBody]RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
             try
             {

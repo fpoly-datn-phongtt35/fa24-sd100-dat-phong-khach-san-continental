@@ -20,59 +20,66 @@
 </head>
 <body>
     <header>
-        <div class="navbar">
-            <div class="navbar-left">
-                <a href="/Home/index" class="navbar-link d-flex align-items-center" style="width: 100px; height: 80px;">
-                    <h1 class="unifrakturmaguntia-regular ms-2">Continental</h1>
-                </a>
-            </div>
-
-            <div class="navbar-center">
-                <a href="/Home/index">Trang chủ</a>
-                <a href="@Url.Action("GroupedServices", "Service")">Dịch vụ</a>
-                <a href="@Url.Action("GroupedServices", "Service")">Liên hệ</a>
-            </div>
-            <div class="navbar-right">
-                <button class="profile-button" id="profileButton" aria-expanded="false" aria-label="Menu điều hướng chính">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;">
-                        <g fill="none"><path d="M2 16h28M2 24h28M2 8h28"></path></g>
-                    </svg>
-                    <div class="profile-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="display: block; height: 100%; width: 100%; fill: currentcolor;">
-                            <path d="M16 .7C7.56.7.7 7.56.7 16S7.56 31.3 16 31.3 31.3 24.44 31.3 16 24.44.7 16 .7zm0 28c-4.02 0-7.6-1.88-9.93-4.81a12.43 12.43 0 0 1 6.45-4.4A6.5 6.5 0 0 1 9.5 14a6.5 6.5 0 0 1 13 0 6.51 6.51 0 0 1-3.02 5.5 12.42 12.42 0 0 1 6.45 4.4A12.67 12.67 0 0 1 16 28.7z"></path>
-                        </svg>
-                    </div>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Eleventh navbar example">
+            <div class="container">
+                <a href="/Home/index" class="navbar-brand unifrakturmaguntia-regular fs-1">Continental</a>
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fa-solid fa-bars"></i></span>
                 </button>
-                @if (Context.Session.GetString("UserName") == null)
-                {
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <a href="/login">Đăng Nhập</a>
-                        <a href="/register">Đăng ký</a>
+
+                <div class="navbar-collapse collapse" id="navbarsExample09" style="">
+                    <ul class="navbar-nav gap-5 mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                        <a href="/Home/index" class="fw-bolder">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="@Url.Action("GroupedServices", "Service")" class="fw-bolder">Dịch vụ</a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="@Url.Action("GroupedServices", "Service")" class="fw-bolder">Liên hệ</a>
+                        </li>
+                    </ul>
+                    <div class="navbar-right">
+                        <button class="profile-button" id="profileButton" aria-expanded="false" aria-label="Menu điều hướng chính">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;">
+                                <g fill="none"><path d="M2 16h28M2 24h28M2 8h28"></path></g>
+                            </svg>
+                            <div class="profile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation" focusable="false" style="display: block; height: 100%; width: 100%; fill: currentcolor;">
+                                    <path d="M16 .7C7.56.7.7 7.56.7 16S7.56 31.3 16 31.3 31.3 24.44 31.3 16 24.44.7 16 .7zm0 28c-4.02 0-7.6-1.88-9.93-4.81a12.43 12.43 0 0 1 6.45-4.4A6.5 6.5 0 0 1 9.5 14a6.5 6.5 0 0 1 13 0 6.51 6.51 0 0 1-3.02 5.5 12.42 12.42 0 0 1 6.45 4.4A12.67 12.67 0 0 1 16 28.7z"></path>
+                                </svg>
+                            </div>
+                        </button>
+                        @if (Context.Session.GetString("UserName") == null)
+                        {
+                            <div class="profile-dropdown" id="profileDropdown">
+                                <a href="/login">Đăng Nhập</a>
+                                <a href="/register">Đăng ký</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="profile-dropdown" id="profileDropdown">
+                                <span style="color:black;">Xin chào, @Context.Session.GetString("UserName")!</span>
+                                <form asp-controller="RoomBooking" asp-action="BookingHistory" method="get">
+                                    <input type="hidden" name="Id" value="@userLogin" />
+                                    <button type="submit" class="nav-button">Lịch sử đặt phòng</button>
+                                </form>
+                                <form asp-controller="Authoration" asp-action="Logout" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="nav-button">Đăng Xuất</button>
+                                </form>
+                            </div>
+                        }
                     </div>
-                }
-                else
-                {
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <span style="color:black;">Xin chào, @Context.Session.GetString("UserName")!</span>
-                        <form asp-controller="RoomBooking" asp-action="BookingHistory" method="get">
-                            <input type="hidden" name="Id" value="@userLogin" />
-                            <button type="submit" class="nav-button">Lịch sử đặt phòng</button>
-                        </form>
-                        <form asp-controller="Authoration" asp-action="Logout" method="post">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="nav-button">Đăng Xuất</button>
-                        </form>
-                    </div>
-                }
+                </div>
             </div>
-        </div>
+        </nav>
     </header>
 
-    <div class="container-fluid">
-        <main role="main" class="pb-3" style="min-height:100vh;">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main" class="pb-3" style="min-height:100vh;">
+        @RenderBody()
+    </main>
     <div class="banner text-center text-danger d-flex align-items-center" style=" no-repeat center center/cover; height: 400px; margin-top:400px;">
         <div class="container">
             <h1 class="display-4 fw-bold">Chào mừng đến với <span class="text-warning">khách sạn <span class="unifrakturmaguntia-regular text-warning">Continental</span></span></h1>
