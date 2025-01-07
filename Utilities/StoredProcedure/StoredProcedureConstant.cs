@@ -181,5 +181,8 @@ namespace Utilities.StoredProcedure
         public const string SP_CheckOut1Residence = "SP_CheckOut1Residence";
         public const string SP_CheckOutResidencesByRoomBookingDetail = "SP_CheckOutResidencesByRoomBookingDetail";
         public const string SP_GetResidenceRegistrationByDate = "SP_GetResidenceRegistrationByDate";
+        
+        //Edit History
+        public const string SP_InsertEditHistory = "SP_InsertEditHistory";
     }
 }
