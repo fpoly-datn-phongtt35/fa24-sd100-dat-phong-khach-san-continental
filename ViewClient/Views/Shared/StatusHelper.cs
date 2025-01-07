@@ -163,5 +163,26 @@ namespace ViewClient.Views.Shared
             // Trả về nội dung HTML với thẻ span và lớp badge
             return new HtmlString($"<span class='{badgeClass}'>{typeText}</span>");
         }
+        public static IHtmlContent UnitDictonary(this UnitType? unitType)
+        {
+            var unitNames = new Dictionary<UnitType?, string>
+        {
+            { UnitType.Times, "Lần" },
+            { UnitType.Ticket, "Vé" },
+            { UnitType.Gram, "Gram" },
+            { UnitType.Kilo, "Kilogram" },
+            { UnitType.Ton, "Tấn" },
+            { UnitType.Hour, "Giờ" },
+            { UnitType.Bag, "Túi" },
+            { UnitType.Bottle, "Chai" },
+            { UnitType.Bowl, "Bát" },
+            { UnitType.Cup, "Tách" },
+            { UnitType.Carton, "Thùng" },
+            { UnitType.Serving, "Phần" }
+        };
+
+            return new HtmlString(unitNames[unitType]);
+        }
+
     }
 }
