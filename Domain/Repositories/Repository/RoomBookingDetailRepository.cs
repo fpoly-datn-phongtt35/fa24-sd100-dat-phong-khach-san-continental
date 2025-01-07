@@ -55,6 +55,7 @@ namespace Domain.Repositories.Repository
                 Console.WriteLine(ex);
                 throw new Exception("An error occurred while updating the room booking detail", ex);
             }
+
             return await existingRoomBookingDetail;
         }
 
@@ -305,21 +306,55 @@ namespace Domain.Repositories.Repository
 
         public RoomBookingDetail ConvertDataRowToRoomBookingDetail(DataRow row)
         {
+            // return new RoomBookingDetail()
+            // {
+            //     Id = Guid.Parse(row["Id"].ToString()!),
+            //     RoomBookingId = Guid.Parse(row["RoomBookingId"].ToString()!),
+            //     RoomId = Guid.Parse(row["RoomId"].ToString()!),
+            //     CheckInBooking = ConvertDateTimeOffsetToString(row, "CheckInBooking"),
+            //     CheckOutBooking = ConvertDateTimeOffsetToString(row, "CheckOutBooking"),
+            //     CheckInReality = ConvertDateTimeOffsetToString(row, "CheckInReality"),
+            //     CheckOutReality = ConvertDateTimeOffsetToString(row, "CheckOutReality"),
+            //     Price = decimal.Parse(row["Price"].ToString()!),
+            //     Expenses = decimal.Parse(row["Expenses"].ToString()!),
+            //     ExtraPrice = decimal.Parse(row["ExtraPrice"].ToString()!),
+            //     Deposit = decimal.Parse(row["Deposit"].ToString()!),
+            //     Note = row["Note"].ToString()!,
+            //     Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
+            //     CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),
+            //     CreatedBy = ConvertGuidToString(row, "CreatedBy"),
+            //     ModifiedTime = ConvertDateTimeOffsetToString(row, "ModifiedTime"),
+            //     ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
+            //     Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
+            //     DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
+            //     DeletedBy = ConvertGuidToString(row, "DeletedBy"),
+            //     Room = new Room()
+            //     {
+            //         Id = Guid.Parse(row["RoomId"].ToString()!),
+            //         Name = row["RoomName"].ToString()!,
+            //         Price = decimal.Parse(row["RoomPrice"].ToString()!)
+            //     }
+            // };
+
             return new RoomBookingDetail()
             {
-                Id = Guid.Parse(row["Id"].ToString()!),
-                RoomBookingId = Guid.Parse(row["RoomBookingId"].ToString()!),
-                RoomId = Guid.Parse(row["RoomId"].ToString()!),
+                Id = row["Id"] != DBNull.Value ? Guid.Parse(row["Id"].ToString()!) : Guid.Empty,
+                RoomBookingId = row["RoomBookingId"] != DBNull.Value
+                    ? Guid.Parse(row["RoomBookingId"].ToString()!)
+                    : Guid.Empty,
+                RoomId = row["RoomId"] != DBNull.Value ? Guid.Parse(row["RoomId"].ToString()!) : Guid.Empty,
                 CheckInBooking = ConvertDateTimeOffsetToString(row, "CheckInBooking"),
                 CheckOutBooking = ConvertDateTimeOffsetToString(row, "CheckOutBooking"),
                 CheckInReality = ConvertDateTimeOffsetToString(row, "CheckInReality"),
                 CheckOutReality = ConvertDateTimeOffsetToString(row, "CheckOutReality"),
-                Price = decimal.Parse(row["Price"].ToString()!),
-                Expenses = decimal.Parse(row["Expenses"].ToString()!),
-                ExtraPrice = decimal.Parse(row["ExtraPrice"].ToString()!),
-                Deposit = decimal.Parse(row["Deposit"].ToString()!),
-                Note = row["Note"].ToString()!,
-                Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
+                Price = row["Price"] != DBNull.Value ? decimal.Parse(row["Price"].ToString()!) : 0,
+                Expenses = row["Expenses"] != DBNull.Value ? decimal.Parse(row["Expenses"].ToString()!) : 0,
+                ExtraPrice = row["ExtraPrice"] != DBNull.Value ? decimal.Parse(row["ExtraPrice"].ToString()!) : 0,
+                Deposit = row["Deposit"] != DBNull.Value ? decimal.Parse(row["Deposit"].ToString()!) : 0,
+                Note = row["Note"] != DBNull.Value ? row["Note"].ToString()! : string.Empty,
+                Status = row["Status"] != DBNull.Value
+                    ? (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!)
+                    : EntityStatus.Active,
                 CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),
                 CreatedBy = ConvertGuidToString(row, "CreatedBy"),
                 ModifiedTime = ConvertDateTimeOffsetToString(row, "ModifiedTime"),
@@ -329,9 +364,9 @@ namespace Domain.Repositories.Repository
                 DeletedBy = ConvertGuidToString(row, "DeletedBy"),
                 Room = new Room()
                 {
-                    Id = Guid.Parse(row["RoomId"].ToString()!),
-                    Name = row["RoomName"].ToString()!,
-                    Price = decimal.Parse(row["RoomPrice"].ToString()!)
+                    Id = row["RoomId"] != DBNull.Value ? Guid.Parse(row["RoomId"].ToString()!) : Guid.Empty,
+                    Name = row["RoomName"] != DBNull.Value ? row["RoomName"].ToString()! : string.Empty,
+                    Price = row["RoomPrice"] != DBNull.Value ? decimal.Parse(row["RoomPrice"].ToString()!) : 0
                 }
             };
         }
