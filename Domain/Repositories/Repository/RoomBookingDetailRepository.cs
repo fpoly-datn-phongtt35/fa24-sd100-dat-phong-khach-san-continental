@@ -43,7 +43,8 @@ namespace Domain.Repositories.Repository
                     new("@Note", (object)roomBookingDetail.Note ?? DBNull.Value),
                     new("@Status", (object)roomBookingDetail.Status ?? DBNull.Value),
                     new("@ModifiedBy", (object)roomBookingDetail.ModifiedBy ?? DBNull.Value),
-                    new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now }
+                    new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value }
                 };
 
                 await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);

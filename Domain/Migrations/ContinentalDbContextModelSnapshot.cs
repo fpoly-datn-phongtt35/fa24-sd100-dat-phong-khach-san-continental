@@ -226,6 +226,36 @@ namespace Domain.Migrations
                     b.ToTable("Customer", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.EditHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("For")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RoomBookingDetailId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomBookingDetailId");
+
+                    b.ToTable("EditHistory", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Models.FeedBack", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1238,6 +1268,17 @@ namespace Domain.Migrations
                     b.Navigation("RoomType");
                 });
 
+            modelBuilder.Entity("Domain.Models.EditHistory", b =>
+                {
+                    b.HasOne("Domain.Models.RoomBookingDetail", "RoomBookingDetail")
+                        .WithMany("EditHistory")
+                        .HasForeignKey("RoomBookingDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RoomBookingDetail");
+                });
+
             modelBuilder.Entity("Domain.Models.FeedBack", b =>
                 {
                     b.HasOne("Domain.Models.Customer", "Customer")
@@ -1501,6 +1542,8 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.RoomBookingDetail", b =>
                 {
+                    b.Navigation("EditHistory");
+
                     b.Navigation("ResidenceRegistrations");
 
                     b.Navigation("ServiceOrderDetails");
