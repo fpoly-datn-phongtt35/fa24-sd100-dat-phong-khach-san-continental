@@ -1,4 +1,10 @@
-﻿html {
+﻿* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
     font-size: 14px;
 }
 
@@ -40,34 +46,28 @@ body {
     color: black
 }
 
-.navbar, .navbar-left, .navbar-center, .navbar-right {
+/* .navbar, .navbar-left, .navbar-center, .navbar-right {
     box-sizing: border-box;
     background-color: white !important;
-}
+} */
   
 
-.navbar {
-    /*position: fixed; 
-    top: 0; 
-    left: 0;
-    width: 100%;
-    z-index: 999; */
+/* .navbar {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
-    padding: 10px 20px;
     width: 100%;
-}
+} */
 
-.navbar-left {
+/* .navbar-left {
     display: flex;
     align-items: center;
     width:30%;
-}
+} */
 
-    .navbar-left a {
+/*    .navbar-left a {
         text-decoration: none; 
         color: black !important;   
     }
@@ -93,19 +93,41 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-.navbar-center {
+}*/
+/* .navbar-center {
     display: flex;
-    justify-content:space-evenly; /* Căn chỉnh các mục đều */
+    justify-content:space-evenly;
     flex-grow: 1;
 }
 
-    .navbar-center a {
-        text-decoration: none;
-        color: black;
-        font-weight: 500;
-    }
+.navbar-center a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+} */
+.nav-button {
+    background-color: inherit; /* Màu nền */
+    color: black; /* Màu chữ */
+    border: none; /* Không có viền */
+    padding: 10px 15px; /* Khoảng cách bên trong */
+    text-align: center; /* Căn giữa chữ */
+    text-decoration: none; /* Không gạch chân chữ */
+    display: inline-block; /* Hiển thị inline */
+    font-size: 14px; /* Kích thước chữ */
+    border-radius: 5px; /* Bo góc */
+    cursor: pointer; /* Con trỏ chuột khi di chuột */
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển đổi */
 }
+
+    .nav-button:hover {
+        background-color: rgb(239, 165, 188); /* Màu nền khi hover */
+        color: #fff; /* Màu chữ khi hover */
+    }
+
+    .nav-button:focus {
+        outline: none; /* Xóa đường viền khi focus */
+    }
+
 .profile-menu {
     position: relative;
 }
@@ -254,7 +276,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: sticky;
-    top: 0;
+    top: -1px;
     z-index: 1000;
     margin-bottom:15px;
 }
@@ -633,7 +655,7 @@ body {
     margin-bottom: 20px; /* Khoảng cách dưới */
 }
 
-//room
+/* room */
 .card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 cột dọc */
@@ -643,9 +665,8 @@ body {
 }
 
 .card {
-    border: 1px solid #ddd;
+    border: 1px solid #DDDDDD;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
 }
     .card:hover {
@@ -655,29 +676,56 @@ body {
         text-decoration:none;
     }
 .card-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
-    margin: 10px 10px 0 10px;
+    margin: 10px 10px 0 0;
 }
-
+.no-border{
+    border:none;
+}
 .img-container {
-    width: 100%;
-    height: 150px; /* Chiều cao cố định cho hình ảnh */
+    width: 80%;
+    height: 80%;
+    padding-bottom: 80%;
+    position: relative;
     overflow: hidden;
+    border-radius: 15px;
 }
 
     .img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+        border-radius: 15px;
     }
 
+.heart-icon {
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    z-index: 1;
+    border-radius: 50%;
+    padding: 5px;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+    .heart-icon:hover {
+        color: #e44a4a;
+        border-color: white;
+    }
+.carousel-control-prev {
+    left: -10px;
+}
+.carousel-control-next {
+    right: 55px;
+}
 .card p {
-    margin: 10px;
     font-weight: bold;
-    font-size: 1.1rem; /* Tăng kích thước chữ */
+    font-size: 1rem; /* Tăng kích thước chữ */
     color: #333; /* Màu chữ tối hơn để nổi bật hơn */
-    padding: 5px; /* Thêm khoảng cách bên trong */
     border-radius: 3px; /* Bo viền cho nền */
 }
 
@@ -1058,3 +1106,13 @@ a {
         color: #6c757d; /* Màu chữ cho nút không hoạt động */
         pointer-events: none; /* Không cho phép nhấp chuột */
     }
+
+input.form-control:disabled,
+input.form-control[readonly] {
+    background-color: white !important;
+}
+
+.no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}

@@ -8,15 +8,13 @@
     ViewData["Title"] = "Details";
     bool isUserLoggedIn = Context.Session.GetString("UserName") != null;
 }
-
-<div style="padding:10px;">
+<div class="d-flex justify-content-between align-items-center">
+    <div class="room-info">@Html.DisplayFor(model => model.Room.Name)</div>
     <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Quay lại</a>
 </div>
 
-<div class="room-info">@Html.DisplayFor(model => model.Room.Name)</div>
-
 <div class="d-flex">
-<div class="d-flex flex-column" style="padding:10px;">
+<div class="d-flex flex-column mb-5" style="padding:10px; width:1000px; height:700px;">
     <div class="img-column mb-3">
         @if (Model.Room.Images != null && Model.Room.Images.Any())
         {
@@ -32,19 +30,23 @@
                             var activeClass = (i == 0) ? "active" : "";
 
                             <div class="carousel-item @activeClass">
-                                <img src="@imagePath" class="d-block w-100" alt="" />
-                            </div>
-                        }
+                                <img src="@imagePath" class="d-block w-100" style="height:700px;" alt="" />
+
+                                </div>
+                            }
+                            if( i == Model.Room.Images.Count){
+                                i=-1;
+                            }
                     }
                 </div>
-                <a class="carousel-control-prev" href="#roomImageCarousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#roomImageCarousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
             </div>
         }
         else
@@ -174,7 +176,7 @@
                         <label class="form-check-label" for="service_@service.Id" style="flex-grow: 1;">
                             <strong>@service.Name</strong> - <span style="color: green;" data-price="@service.Price">
                                 @(Math.Round(@service.Price).ToString("N0")) VNĐ
-                            </span> / @service.Unit
+                            </span> / @StatusHelper.UnitDictonary(service.Unit)
                         </label>
                         <input type="number" class="form-control quantity-input service-quantity" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
                     </div>
@@ -195,33 +197,38 @@
         </div>
     </div>
     <div class="card-footer">
-        <button type="button" class="btn btn-secondary">Hủy</button>
-        <button type="button" class="btn btn-primary" id="confirmBookingButton">Đặt phòng</button>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Hủy</a>
+            <button type="button" class="btn btn-primary" id="confirmBookingButton" data-bs-toggle="modal" data-bs-target="#bookingConfirmationModal">Đặt phòng</button>
     </div>
 </div>
 </div>
 
 @* --Modal xác nhận-- *@
-<div class="modal fade" id="bookingConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="bookingConfirmationModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="bookingConfirmationModalLabel">Xác nhận đặt phòng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><strong>Tên phòng:</strong> <span id="modalRoomName"></span></p>
-                <p><strong>Họ:</strong> <span id="modalFirstName"></span></p>
-                <p><strong>Tên:</strong> <span id="modalLastName"></span></p>
+                <p><strong>Tên phòng:</strong> <h3 id="modalRoomName"></h3></p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="modalCheckIn" class="form-label"><strong>Ngày nhận phòng:</strong></label>
+                    <input type="text" id="modalCheckIn" name="checkIn" class="form-control" title="Ngày nhận phòng" style="width: 50%;" disabled>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="modalCheckOut" class="form-label"><strong>Ngày trả phòng:</strong></label>
+                    <input type="text" id="modalCheckOut" name="checkOut" class="form-control" title="Ngày trả phòng" style="width: 50%;" disabled>
+                </div>
                 <p><strong>Email:</strong> <span id="modalEmail"></span></p>
                 <p><strong>Số điện thoại:</strong> <span id="modalPhoneNumber"></span></p>
                 <p><strong>Dịch vụ đã chọn:</strong> <span id="modalServices"></span></p>
-                <p><strong>Tổng tiền:</strong> <span id="modalTotalPrice"></span> VNĐ</p>
+                <p><strong>Tiền đặt cọc:</strong> <span id="modalDeposit"></span></p>
+                <p><strong>Tổng tiền:</strong> <span id="modalTotalPrice"></span> (đã trừ tiền đặt cọc)</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <button type="button" class="btn btn-primary" id="confirmBooking">Xác nhận</button>
             </div>
         </div>
