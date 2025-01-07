@@ -71,6 +71,7 @@ var _roomBooking =
     {
         searchModel.SearchString = $("#txtSearch").val();
         searchModel.PageIndex = 1;
+        this.LoadListRoomBooking(searchModel)
     },
     OnChangeStatus: function ()
     {
