@@ -224,6 +224,10 @@
             <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
             <button class="ms-3 btn btn-warning" onclick="_roombooking_detail.BlockedBill('@idRoomBooking')">Đóng đơn đặt phòng</button>
         }
+        else if (idRoomBooking == null)
+        {
+            <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+        }
     </div>
     <div>
         @if (idRoomBooking != null && RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED 
