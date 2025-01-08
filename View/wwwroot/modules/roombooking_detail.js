@@ -1427,15 +1427,52 @@ var _roombooking_detail = {
         console.log(lstRoomBookingDetail)
     },
 
-    submit: function () {
-        _roombooking_detail.GetlistObjSubmit();
-        $.ajax({
-            url: "/RoomBooking/submit",
-            type: "post",
-            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail},
-            success: function (result) {
-                window.location.href = result;
+    submit: async function () {
+        const confrm = await global.Noti("Xác nhận cập nhật","Bạn có chắc chắn muốn cập nhật không?");
+        if (confrm > 0) {
+            _roombooking_detail.GetlistObjSubmit();
+            if (lstRoomBookingDetail.length <= 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo đặt phòng',
+                    text: 'Bạn phải chọn ít nhất 1 phòng.'
+                });
             }
-        });
+            else if (RoomBooking.CustomerId == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo đặt phòng',
+                    text: 'Bạn chưa nhập thông tin khách hàng.'
+                });
+            }
+            else {
+                $.ajax({
+                    url: "/RoomBooking/submit",
+                    type: "post",
+                    data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
+                    success: function (result) {
+                        window.location.href = result;
+                    }
+                });
+            }
+        }
+        else {
+            lstRoomBookingDetail = [];
+            RoomBooking = [];
+        }
+    },
+
+    BlockedBill: async function (Id) {
+        const confrm = await global.Noti("Xác nhận đóng đơn đặt phòng", "<strong>Lưu ý</strong>: Bạn sẽ không thể cập nhật thông tin sau khi đóng đơn\n Bạn có chắc chắn muốn cập nhật không?");
+        if (confrm > 0) {
+            $.ajax({
+                url: "/RoomBooking/BlockedBill",
+                type: "post",
+                data: { Id: Id, CusId: $("#Client_Id").val() },
+                success: function (result) {
+                    window.location.href = result;
+                }
+            });
+        }
     }
 }

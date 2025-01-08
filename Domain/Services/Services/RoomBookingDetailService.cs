@@ -170,6 +170,7 @@ namespace Domain.Services.Services
             existingRoomBookingDetail.Expenses = roomBookingDetailUpdateRequest.Expenses;
             existingRoomBookingDetail.ExtraPrice = roomBookingDetailUpdateRequest.ExtraPrice;
             existingRoomBookingDetail.Price = roomBookingDetailUpdateRequest.Price;
+            existingRoomBookingDetail.Note = roomBookingDetailUpdateRequest.Note;
             existingRoomBookingDetail.Status = roomBookingDetailUpdateRequest.Status;
             existingRoomBookingDetail.ModifiedBy = roomBookingDetailUpdateRequest.ModifiedBy;
             existingRoomBookingDetail.ModifiedTime = roomBookingDetailUpdateRequest.ModifiedTime;
