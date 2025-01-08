@@ -217,7 +217,7 @@
 <div class="container d-flex justify-content-between align-items-center" style="width:100%">
     <div>
         <a class="btn btn-secondary text-decoration-none text-white" href="/roombooking">Quay lại</a>
-        @if (idRoomBooking != null && RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED
+        @if (RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED
           && RB.Status != Domain.Enums.RoomBookingStatus.PAID
           && RB.Status != Domain.Enums.RoomBookingStatus.FAILED)
         {
