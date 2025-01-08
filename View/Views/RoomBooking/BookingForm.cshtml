@@ -217,12 +217,16 @@
 <div class="container d-flex justify-content-between align-items-center" style="width:100%">
     <div>
         <a class="btn btn-secondary text-decoration-none text-white" href="/roombooking">Quay lại</a>
-        @if (RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED
+        @if (idRoomBooking != null && RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED
           && RB.Status != Domain.Enums.RoomBookingStatus.PAID
           && RB.Status != Domain.Enums.RoomBookingStatus.FAILED)
         {
             <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
             <button class="ms-3 btn btn-warning" onclick="_roombooking_detail.BlockedBill('@idRoomBooking')">Đóng đơn đặt phòng</button>
+        }
+        else if (idRoomBooking == null)
+        {
+            <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
         }
     </div>
     <div>
