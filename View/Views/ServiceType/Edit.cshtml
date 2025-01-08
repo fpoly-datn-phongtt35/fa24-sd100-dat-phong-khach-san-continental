@@ -1,27 +1,33 @@
-﻿@model Domain.Models.ServiceType
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.Models.ServiceType
 
-<h2>Edit Service</h2>
+<h2>Chỉnh sửa</h2>
 
 <form asp-action="Edit" method="post">
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name">Tên</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label asp-for="Description">Mô tả</label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses, Model.Status))"></select>
+        <label asp-for="Status">Trạng thái</label>
+        <select name="status" class="form-select" id="status">
+            <option disabled>-- Chọn trạng thái --</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+                var statusEnum = (EntityStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameEntityStatus(statusEnum)
+                </option>
+            }
+        </select>
         <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-    <div class="form-group form-check">
-        <label class="form-check-label">
-            <input class="form-check-input" asp-for="Deleted" /> @Html.DisplayNameFor(model => model.Deleted)
-        </label>
     </div>
     <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow" />
 

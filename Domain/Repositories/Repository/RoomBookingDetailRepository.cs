@@ -42,6 +42,7 @@ namespace Domain.Repositories.Repository
                     new("@CheckInReality", (object)roomBookingDetail.CheckInReality ?? DBNull.Value),
                     new("@CheckOutReality", (object)roomBookingDetail.CheckOutReality ?? DBNull.Value),
                     new("@Note", (object)roomBookingDetail.Note ?? DBNull.Value),
+                    new("@ExtraPrice",(object)roomBookingDetail.ExtraPrice ?? DBNull.Value),
                     new("@Status", (object)roomBookingDetail.Status ?? DBNull.Value),
                     new("@ModifiedBy", (object)roomBookingDetail.ModifiedBy ?? DBNull.Value),
                     new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },

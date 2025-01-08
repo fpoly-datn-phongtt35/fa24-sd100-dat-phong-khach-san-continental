@@ -20,14 +20,13 @@
         </div>
         <div class="card-body">
             <p><strong>Tên khách hàng:</strong> @roomBooking.CustomerFullName</p>
-            <p><strong>Tổng tiền dịch vụ:</strong> @service</p>
-            <p><strong>Tổng tiền phụ thu:</strong> @extra</p>
-            <p><strong>Tổng tiền hao phí:</strong> @expenses</p>
-            <p><strong>Tên khách hàng:</strong> @roomBooking.CustomerFullName</p>
-            <p><strong>Tổng giá trị hóa đơn:</strong> @roomBooking.TotalPrice VND</p>
+            <p><strong>Tổng tiền dịch vụ:</strong> @service.ToString("N0")</p>
+            <p><strong>Tổng tiền phụ thu:</strong> @extra.ToString("N0")</p>
+            <p><strong>Tổng tiền hao phí:</strong> @expenses.ToString("N0")</p>
+            <p><strong>Tổng giá trị hóa đơn:</strong> @roomBooking.TotalPrice.Value.ToString("N0") VND</p>
             <p><strong>Tổng tiền phải trả thực tế:</strong> @roomBooking.TotalPriceReality VND</p>
-            <p><strong>Đã thanh toán:</strong> @totalPaid VND</p>
-            <p><strong>Cần thanh toán:</strong> @amountToPay VND</p>
+            <p><strong>Đã thanh toán:</strong> @totalPaid.ToString("N0") VND</p>
+            <p><strong>Cần thanh toán:</strong> @amountToPay.ToString("N0") VND</p>
             <p class="text-info"><strong>@message</strong></p>
         </div>
     </div>
@@ -47,10 +46,20 @@
                     <option id="paymentMethod" value="BankTransfer">Chuyển khoản</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-success">Thanh toán</button>
+            <button type="submit" style="display:none" class="btn btn-success btn-Thanhtoan">Thanh toán</button>
+            <button type="button" class="btn btn-success btn-Thanhtoan" onclick="_Payment.Paid()">Thanh toán</button>
             <a href="/PaymentHistory/Id=@roomBooking.Id" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </div>
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script asp-append-version="true" src="~/modules/payment.js"></script>
+    <!-- Thêm Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Thêm Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+}
 
 

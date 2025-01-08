@@ -455,6 +455,26 @@ public class RoomBookingController : Controller
         }
     }
     
+    public async Task<string> BlockedBill(Guid Id,Guid CusId) 
+    {
+        try
+        {
+            var roomBooking = new RoomBookingUpdateRequest()
+            {
+                Id = Id,
+                Status = RoomBookingStatus.PAID,
+                ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                ModifiedTime = DateTime.Now,
+            };
+            await _roomBookingUpdateService.UpdateRoomBookingAsync(roomBooking);
+            return "/BookingRoom/Id=" + Id + "&&Client=" + CusId;
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
+    }
+
     private async Task HandleServiceOrderDetails(Guid id, List<ServiceOrderDetail> lstSerOrderDetail,
         List<Guid>? ListDelete, Guid userId)
     {

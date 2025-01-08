@@ -1,39 +1,53 @@
-﻿@model Domain.DTO.Service.ServiceCreateRequest
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.DTO.Service.ServiceCreateRequest
 @{
     ViewData["Title"] = "Create Service";
 }
 
-<h2>Create Service</h2>
+<h2>Tạo mới dịch vụ</h2>
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="ServiceTypeId">Service type</label>
+        <label asp-for="ServiceTypeId">Loại dịch vụ</label>
         <select asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name"))">
-            <option value="">-- Select Service Type --</option>
+            <option value="">-- Chọn loại dịch vụ --</option>
         </select>
     </div>
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name">Tên dịch vụ</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label asp-for="Description">Mô tả</label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Price"></label>
+        <label asp-for="Price">Giá</label>
         <input asp-for="Price" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Unit">Unit</label>
-        <select asp-for="Unit" class="form-control" asp-items="@(new SelectList(ViewBag.Units))"></select>
-        <span asp-validation-for="Unit" class="text-danger"></span>
+        <div class="form-group mb-3">
+            <label asp-for="Unit" class="control-label1">Đơn vị</label>
+            <select name="Unit" class="form-select" id="Unit">
+                <option hidden>Chọn đơn vị</option>
+                @foreach (var status in Enum.GetValues(typeof(UnitType)))
+                {
+                    var statusEnum = (UnitType)status;
+                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["Unit"].ToString() == ((int)status).ToString())">
+                        @UnitHelper.DisplayUnit(statusEnum)
+                    </option>
+                }
+            </select>
+        </div>
+
+
     </div>
     <div class="form-group">
-        <label asp-for="Image">Upload Image</label>
+        <label asp-for="Image">Hình ảnh</label>
         <input asp-for="Image" type="file" name="img" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
