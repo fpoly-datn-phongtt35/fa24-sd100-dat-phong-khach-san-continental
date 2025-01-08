@@ -64,6 +64,17 @@ public static class StatusHelper
         };
     }
     
+    public static IHtmlContent DisplayNameForEditHistory(this For forHistory)
+    {
+        return forHistory switch
+        {
+            For.Expenses => new HtmlString("Phí hư tổn"),
+            For.CheckInReality =>  new HtmlString("Ngày nhận thực tế"),
+            For.CheckOutReality =>  new HtmlString("Ngày trả thực tế"),
+            _ => new HtmlString("null")
+        };
+    }
+    
     public static IHtmlContent DisplayNameRoomStatus(this RoomStatus status)
     {
         return status switch

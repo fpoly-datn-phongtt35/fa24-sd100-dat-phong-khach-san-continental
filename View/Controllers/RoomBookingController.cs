@@ -417,8 +417,8 @@ public class RoomBookingController : Controller
             
             if (isExpensesChanged && string.IsNullOrWhiteSpace(note))
                 return Json(new { success = false, message = "Vui lòng nhập mô tả khi thêm phí hư tổn." });
-
-            var roomBookingDetailUpdate = new RoomBookingDetailUpdateRequest()
+            
+            var roomBookingDetailUpdateRequest = new RoomBookingDetailUpdateRequest()
             {
                 Id = id,
                 Status = EntityStatus.InActive,
@@ -429,8 +429,9 @@ public class RoomBookingController : Controller
                 Note = note,
                 ModifiedTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local)
             };
-
-            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdate);
+            Console.WriteLine($"Note received in Controller: {note}");
+            
+            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdateRequest);
             if (response == null)
             {
                 return Json(new { success = false, message = "Cập nhật thất bại. Vui lòng thử lại sau." });
@@ -659,7 +660,7 @@ public class RoomBookingController : Controller
     public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId)
     {
         var roomBookingDetailResponse =
-            await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(roomBookingDetailId);
+            await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailWithEditHistoryById(roomBookingDetailId);
         if (roomBookingDetailResponse == null)
             return View("Error");
         return View(roomBookingDetailResponse);
