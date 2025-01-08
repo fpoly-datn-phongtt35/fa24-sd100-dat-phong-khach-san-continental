@@ -57,15 +57,15 @@
                 <td>
                     @{
                         var postType = postTypeList.FirstOrDefault(pt => pt.Id == item.PostTypeId);
-                        var postTypeName = postType != null ? postType.TitleOfType : "Unknown";
-                        @Html.DisplayFor(modelItem => postTypeName)
+                        var postTypeName = postType?.TitleOfType;
+                       @(postTypeName.HasValue? PostTypeHelper.DisplayPostType(postTypeName.Value): "Unknown")
                     }
                 </td>
                 <td>
                     @{
                         var staff = staffList.FirstOrDefault(s => s.Id == item.StaffId);
                         var staffName = staff != null ? staff.FirstName + " " + staff.LastName : "Unknown";
-                        @Html.DisplayFor(modelItem => staffName)
+                        @staffName
                     }
                 </td>
             <td>
