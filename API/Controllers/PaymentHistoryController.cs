@@ -103,7 +103,7 @@ namespace API.Controllers
             {
                 Amount = 0
             };
-            await Task.Delay(2000);
+            await Task.Delay(1000);
             // Lấy danh sách các bản ghi có Amount = 0
             var paymentHistories = await _paymentHistoryService.GetListPaymentHistory(request);
 

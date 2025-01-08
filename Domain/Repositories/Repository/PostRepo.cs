@@ -1,6 +1,9 @@
 ﻿using Domain.DTO.Post;
+using Domain.Enums;
+using Domain.Helper;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -141,10 +144,10 @@ namespace Domain.Repositories.Repository
                 );
 
                 var groupedData = dataTable.AsEnumerable()
-                    .GroupBy(row => row.Field<string>("PostTypeTitle"))
+                    .GroupBy(row => row.Field<PostTypeEnum>("PostTypeTitle"))
                     .Select(group => new PostTermsDto
                     {
-                        PostTypeTitle = group.Key,
+                        PostTypeTitle = PostTypeHelper.DisplayPostType(group.Key),
                         PostIds = group.Select(row => row.Field<Guid>("PostId")).ToList(),
                         PostTitles = group.Select(row => row.Field<string>("PostTitle")).ToList(),
                         PostContents = group.Select(row => row.Field<string>("PostContent")).ToList()

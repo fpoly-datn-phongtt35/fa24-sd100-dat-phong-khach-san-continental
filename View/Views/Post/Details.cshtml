@@ -1,4 +1,6 @@
-﻿@model Domain.Models.Post
+﻿@using Domain.Models
+@using View.Views.Shared.Helper
+@model Domain.Models.Post
 
 @{
     ViewData["Title"] = "Details";
@@ -11,34 +13,43 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PostTypeId)
+            Loại bài đăng
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                var postTypes = ViewBag.PostTypes as List<SelectListItem>;
+                var postType = postTypes?.FirstOrDefault(pt => pt.Value == Model.PostTypeId.ToString());
+            }
+            @postType?.Text
+        </dd>
+
+        <dt class = "col-sm-2">
+            Nhân viên
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PostTypeId)
+            @{
+                var staffs = ViewBag.StaffList as List<Staff>;
+                var staff = staffs?.FirstOrDefault(s => s.Id == Model.StaffId);
+            }
+            @staff?.FirstName @staff?.LastName
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StaffId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StaffId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            Tiêu đề
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
+            Nội dung
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Content)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+            Trạng thái
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+            @StatusHelper.DisplayStatusBadge(Model.Status)
         </dd>
     </dl>
 </div>

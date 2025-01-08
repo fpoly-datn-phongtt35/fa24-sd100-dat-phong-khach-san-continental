@@ -1,10 +1,12 @@
-﻿@model Domain.Models.Service
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.Models.Service
 
-<h2>Edit Service</h2>
+<h2>Chỉnh sửa</h2>
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name">Tên</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
@@ -12,43 +14,54 @@
     <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow" />
 
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label asp-for="Description">Mô tả</label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Price"></label>
+        <label asp-for="Price">Giá</label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Unit"></label>
-        <select asp-for="Unit" class="form-control" asp-items="@(new SelectList(ViewBag.Units))"></select>
-        <span asp-validation-for="Unit" class="text-danger"></span>
+        <label asp-for="Unit">Đơn vị</label>
+        <select name="status" class="form-select" id="status">
+            <option disabled>-- Chọn đơn vị --</option>
+            @foreach (var status in Enum.GetValues(typeof(UnitType)))
+            {
+                var statusEnum = (UnitType)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["unit"].ToString() == ((int)status).ToString())">
+                    @UnitHelper.DisplayUnit(statusEnum)
+                </option>
+            }
+        </select>
     </div>
     <div class="form-group">
-        <label asp-for="ServiceTypeId">Service</label>
+        <label asp-for="ServiceTypeId">Loại dịch vụ</label>
         <select asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name", Model.ServiceTypeId))">
             <option value="">-- Select Service --</option>
         </select>
     </div>
     <div class="form-group">
-        <label asp-for="Image">Upload Image</label>
+        <label asp-for="Image">Hình ảnh</label>
         <input asp-for="Image" type="file" name="img" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses, Model.Status))"></select>
-        <span asp-validation-for="Status" class="text-danger"></span>
+        <label asp-for="Status">Trạng thái</label>
+        <select name="status" class="form-select" id="status">
+            <option disabled>-- Chọn trạng thái --</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+                var statusEnum = (EntityStatus)status;
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                    @StatusHelper.DisplayNameEntityStatus(statusEnum)
+                </option>
+            }
+        </select>
     </div>
-    <div class="form-group">
-        <label asp-for="Deleted"></label>
-        <input asp-for="Deleted" type="checkbox" />
-        <span asp-validation-for="Deleted" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </form>
 
 @section Scripts {
