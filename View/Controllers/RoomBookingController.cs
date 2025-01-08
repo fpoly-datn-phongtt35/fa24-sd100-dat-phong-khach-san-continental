@@ -364,8 +364,14 @@ public class RoomBookingController : Controller
                 CheckInReality = localTime,
                 ModifiedTime = localTime
             };
-
+            
             var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdate);
+            
+            var note = "Check-In thành công"; // Ghi chú cho lịch sử chỉnh sửa
+            var success = await AddEditHistory(id, 1, $"Cập nhật thời gian check-in: {localTime}", note);
+            if (!success)
+                return Json(new { success = false, message = "Check-In thành công nhưng không thể lưu lịch sử chỉnh sửa." });
+            
             return Json(new { success = true, message = "Check-In thành công!" });
         }
         catch (Exception ex)
@@ -375,7 +381,8 @@ public class RoomBookingController : Controller
     }
 
     public async Task<IActionResult> UpdateCheckInAndCheckOutReality(Guid id, string checkInTime, string checkoutTime,
-        string noteCheckin, string noteCheckout, string note, decimal? expenses, List<ServiceOrderDetail> lstSerOrderDetail,
+        string noteCheckin, string noteCheckout, string note, decimal? expenses,
+        List<ServiceOrderDetail> lstSerOrderDetail,
         List<Guid>? ListDelete)
     {
         try
@@ -383,7 +390,7 @@ public class RoomBookingController : Controller
             var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             await HandleServiceOrderDetails(id, lstSerOrderDetail, ListDelete, userId);
-            
+
             if (!TryParseDateTime(checkInTime, out var selectedCheckInTime))
             {
                 return Json(new { success = false, message = "Định dạng thời gian Check-In không hợp lệ." });
@@ -396,6 +403,7 @@ public class RoomBookingController : Controller
                 {
                     return Json(new { success = false, message = "Định dạng thời gian Check-Out không hợp lệ." });
                 }
+
                 selectedCheckoutTime = checkoutTimeParsed;
             }
 
@@ -408,7 +416,7 @@ public class RoomBookingController : Controller
             bool isCheckInChanged = selectedCheckInTime != roomBookingDetail.CheckInReality;
             bool isExpensesChanged = expenses.HasValue && expenses.Value != roomBookingDetail.Expenses;
             bool isCheckOutChanged = selectedCheckoutTime != roomBookingDetail.CheckOutReality;
-            // Yêu cầu mô tả nếu CheckInReality thay đổi hoặc nếu thêm phí hư tổn
+            
             if (isCheckInChanged && string.IsNullOrWhiteSpace(noteCheckin))
                 return Json(new { success = false, message = "Vui lòng nhập mô tả khi chỉnh sửa Ngày nhận thực tế." });
             
@@ -417,7 +425,7 @@ public class RoomBookingController : Controller
             
             if (isExpensesChanged && string.IsNullOrWhiteSpace(note))
                 return Json(new { success = false, message = "Vui lòng nhập mô tả khi thêm phí hư tổn." });
-            
+
             var roomBookingDetailUpdateRequest = new RoomBookingDetailUpdateRequest()
             {
                 Id = id,
@@ -430,23 +438,24 @@ public class RoomBookingController : Controller
                 ModifiedTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local)
             };
             Console.WriteLine($"Note received in Controller: {note}");
-            
-            var response = await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdateRequest);
+
+            var response =
+                await _roomBookingDetailServiceForCustomer.UpdateRoomBookingDetail2(roomBookingDetailUpdateRequest);
             if (response == null)
             {
                 return Json(new { success = false, message = "Cập nhật thất bại. Vui lòng thử lại sau." });
             }
-            
+
             try
             {
-                await AddEditHistoryIfChanged(id, roomBookingDetail, selectedCheckInTime, selectedCheckoutTime, 
-                    checkInTime, checkoutTime, expenses, note,  noteCheckin, noteCheckout);
+                await AddEditHistoryIfChanged(id, roomBookingDetail, selectedCheckInTime, selectedCheckoutTime,
+                    checkInTime, checkoutTime, expenses, note, noteCheckin, noteCheckout);
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
-            
+
             return Json(new { success = true, message = "Cập nhật thành công!" });
         }
         catch (Exception ex)
@@ -454,8 +463,8 @@ public class RoomBookingController : Controller
             return Json(new { success = false, message = "Lỗi: " + ex.Message });
         }
     }
-    
-    public async Task<string> BlockedBill(Guid Id,Guid CusId) 
+
+    public async Task<string> BlockedBill(Guid Id, Guid CusId)
     {
         try
         {
@@ -469,7 +478,7 @@ public class RoomBookingController : Controller
             await _roomBookingUpdateService.UpdateRoomBookingAsync(roomBooking);
             return "/BookingRoom/Id=" + Id + "&&Client=" + CusId;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw ex;
         }
@@ -550,7 +559,8 @@ public class RoomBookingController : Controller
 
     private async Task AddEditHistoryIfChanged(
         Guid id, RoomBookingDetailResponse roomBookingDetail,
-        DateTimeOffset selectedCheckInTime, DateTimeOffset? selectedCheckoutTime, string checkInTime, string checkoutTime,
+        DateTimeOffset selectedCheckInTime, DateTimeOffset? selectedCheckoutTime, string checkInTime,
+        string checkoutTime,
         decimal? expenses, string note, string noteCheckin, string noteCheckout)
     {
         try
@@ -641,6 +651,12 @@ public class RoomBookingController : Controller
                 ModifiedTime = DateTime.Now,
             };
             var rs = await _roomUpdateStatusService.UpdateRoomStatus(updateStatusRquest);
+            
+            var note = "Check-Out thành công"; // Ghi chú cho lịch sử chỉnh sửa
+            var success = await AddEditHistory(id, 1, $"Cập nhật thời gian check-out: {localTime}", note);
+            if (!success)
+                return Json(new { success = false, message = "Check-Out thành công nhưng không thể lưu lịch sử chỉnh sửa." });
+            
             return Json(new { success = true, message = "Check-Out thành công!" });
         }
         catch (Exception ex)
