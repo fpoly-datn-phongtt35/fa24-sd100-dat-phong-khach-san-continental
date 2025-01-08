@@ -11,6 +11,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.DTO.EditHistory;
 
 namespace Domain.Services.Services
 {
@@ -106,7 +107,30 @@ namespace Domain.Services.Services
             if (roomBookingDetail == null) return null;
             return roomBookingDetail.ToRoomBookingDetailResponse();
         }
-        
+
+        public async Task<RoomBookingDetailResponse?> GetRoomBookingDetailWithEditHistoryById(Guid roomBookingDetailId)
+        {
+            var roomBookingDetail = await _roomBookingDetailRepository
+                    .GetRoomBookingDetailWithEditHistory(roomBookingDetailId);
+            if(roomBookingDetail == null) return null;
+            
+            var roomBookingDetailResponse = roomBookingDetail.ToRoomBookingDetailResponse();
+            
+            //Convert List EditHistory
+            roomBookingDetailResponse.EditHistory = roomBookingDetail.EditHistory
+                .Select(editHistory => new EditHistoryResponse
+                {
+                    Id = editHistory.Id,
+                    RoomBookingDetailId = editHistory.RoomBookingDetailId,
+                    For = editHistory.For,
+                    Content = editHistory.Content,
+                    Description = editHistory.Description,
+                    ModifiedAt = editHistory.ModifiedAt
+                }).ToList();
+            
+            return roomBookingDetailResponse;
+        }
+
         public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id)
         {
             List<RoomBookingDetailGetByIdRoomBooking> roomBookingDetail = new List<RoomBookingDetailGetByIdRoomBooking>();
@@ -172,9 +196,11 @@ namespace Domain.Services.Services
             existingRoomBookingDetail.Price = roomBookingDetailUpdateRequest.Price;
             existingRoomBookingDetail.Note = roomBookingDetailUpdateRequest.Note;
             existingRoomBookingDetail.Status = roomBookingDetailUpdateRequest.Status;
+            existingRoomBookingDetail.Note = roomBookingDetailUpdateRequest.Note;
             existingRoomBookingDetail.ModifiedBy = roomBookingDetailUpdateRequest.ModifiedBy;
             existingRoomBookingDetail.ModifiedTime = roomBookingDetailUpdateRequest.ModifiedTime;
-            
+            Console.WriteLine($"Note in Service: {roomBookingDetailUpdateRequest.Note}");
+
             await _roomBookingDetailRepository.UpdateRoomBookingDetail2(existingRoomBookingDetail);
             return existingRoomBookingDetail.ToRoomBookingDetailResponse();
         }

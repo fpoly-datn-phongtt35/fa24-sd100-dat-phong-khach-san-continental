@@ -167,8 +167,7 @@ $(document).ready(function () {
         const expensesInput = $('#Expenses').val().replace(/,/g, '');  // Loại bỏ dấu phẩy
         const expenses = parseFloat(expensesInput) || 0;  // Chuyển thành số thực
 
-        console.log('Expenses input:', expensesInput);
-        console.log('Parsed expenses:', expenses);
+        console.log('note input:', note);
 
         if (expenses > 0 && !note) {
             Swal.fire({

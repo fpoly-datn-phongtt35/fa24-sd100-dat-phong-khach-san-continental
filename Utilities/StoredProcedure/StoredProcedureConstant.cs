@@ -184,5 +184,6 @@ namespace Utilities.StoredProcedure
         
         //Edit History
         public const string SP_InsertEditHistory = "SP_InsertEditHistory";
+        public const string SP_GetEditHistoryByRoomBookingDetailId = "SP_GetEditHistoryByRoomBookingDetailId";
     }
 }

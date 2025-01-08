@@ -22,7 +22,13 @@
             Check-Out
         </button>
     </p>
-
+    
+    <div class="form-group mb-3">
+        <button id="btnUpdate" class="btn btn-warning"
+                data-room-booking-detail-id="@Model.Id">
+            Cập nhật
+        </button>
+    </div>
 
     <div>
         <div>
@@ -121,7 +127,7 @@
                     <div class="form-group mb-3">
                         <label class="control-label1">Phí hư tổn</label>
                         <input id="Expenses" name="Expenses" class="form-control-static bordered-text"
-                               min="0" step="1000" placeholder="Nhập phí hư tổn"
+                               placeholder="Nhập phí hư tổn"
                                value="@Model.Expenses?.ToString("N0")" oninput="validateExpenses()" />
                     </div>
 
@@ -167,11 +173,37 @@
                 </div>
             </div>
         </div>
-        <div class="form-group mb-3">
-            <button id="btnUpdate" class="btn btn-warning"
-                    data-room-booking-detail-id="@Model.Id">
-                Cập nhật
-            </button>
+
+        <div>
+            <h3>Danh sách lịch sử cập nhật</h3>
+            @if (Model.EditHistory != null && Model.EditHistory.Any())
+            {
+            <table class="table table-bordered" style="color: black">
+                <thead>
+                <tr>
+                    <th>Mục chỉnh sửa</th>
+                    <th>Nội dung</th>
+                    <th>Mô tả</th>
+                    <th>Thời gian</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var editHistory in Model.EditHistory)
+                {
+                <tr>
+                    <td style="width: 20%">@StatusHelper.DisplayNameForEditHistory(editHistory.For)</td>
+                    <td style="width: 20%">@editHistory.Content</td>
+                    <td style="width: 40%">@editHistory.Description</td>
+                    <td style="width: 20%">@editHistory.ModifiedAt.Value.ToString("dd/MM/yyyy hh:mm tt")</td>
+                </tr>
+                }
+                </tbody>
+            </table>
+            }
+            else
+            {
+                <p>Chi tiết Phòng này hiện không có mục nào được chỉnh sửa.</p>
+            }
         </div>
     </div>
 </div>
