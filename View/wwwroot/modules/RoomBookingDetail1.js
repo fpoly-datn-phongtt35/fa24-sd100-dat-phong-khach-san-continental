@@ -87,6 +87,40 @@ $(document).ready(function () {
             }
         );
     }
+    function getResidence(roomBookingDetailId) {
+        $.ajax({
+            url: '/ResidenceRegistration/GetResidenceRegistrationByRoomBookingDetailId',
+            type: 'POST',
+            data: { Id : roomBookingDetailId },
+            success: function (response) {
+                console.log(response)
+
+                $('#residenceModal').modal('show');
+                $('#residenceTable tbody').empty();
+                response.forEach(residence => {
+                    const fullName = residence.fullName;
+                    const dateOfBirth = residence.dateOfBirth ? new Date(residence.dateOfBirth).toLocaleDateString() : 'N/A';
+                    const gender = residence.gender === 1 ? 'Nam' : 'Nữ';
+                    const identityNumber = residence.identityNumber;
+                    const phoneNumber = residence.phoneNumber;
+
+                    // Thêm một dòng vào bảng
+                    const row = `
+                    <tr>
+                        <td>${fullName}</td>
+                        <td>${dateOfBirth}</td>
+                        <td>${gender}</td>
+                        <td>${identityNumber}</td>
+                        <td>${phoneNumber}</td>
+                    </tr>
+                `;
+
+                    // Thêm dòng vào bảng trong modal
+                    $('#residenceTable tbody').append(row);
+                });
+            }
+        });
+    }
     
     $('#checkInButton').on('click', function () {
         const roomBookingDetailId = $(this).data('id');
@@ -96,6 +130,11 @@ $(document).ready(function () {
     $('#checkOutButton').on('click', function () {
         const roomBookingDetailId = $(this).data('id');
         handleCheckOut(roomBookingDetailId);
+    });
+
+    $('#btnResidence').on('click', function () {
+        const roomBookingDetailId = this.getAttribute('data-room-booking-detail-id');
+        getResidence(roomBookingDetailId);
     });
 });
 
