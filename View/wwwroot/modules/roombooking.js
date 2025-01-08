@@ -35,7 +35,7 @@
     });
 
     setInterval(() => {
-        _roomBooking.CheckDepositRoomBooking();
+/*        _roomBooking.CheckDepositRoomBooking()*/
         _roomBooking.LoadListRoomBooking();
     }, 3000);
 })
@@ -51,18 +51,6 @@ var searchModel =
 
 var _roomBooking =
 {
-    CheckDepositRoomBooking: function ()
-    {
-        $.ajax({
-            type: 'POST',
-            url: '/RoomBooking/CheckDepositRoomBooking',
-            success: function (data) {
-            },
-            error: function (xhr, status, error) {
-                console.log("Error: " + error);
-            }
-        });
-    },
     RedirecDetail: function (IdRoomBooking,IdUser)
     {
         location.href = "/BookingRoom/Id=" + IdRoomBooking + "&&Client=" + IdUser; 
