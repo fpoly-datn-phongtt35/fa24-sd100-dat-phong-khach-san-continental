@@ -18,6 +18,8 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Price { get; set; }
         public decimal? Expenses { get; set; }
         public string? Note { get; set; }
+        public decimal? ServicePrice { get; set; }
+        public decimal? ExtraService {  get; set; } 
         public EntityStatus Status { get; set; }
         public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }

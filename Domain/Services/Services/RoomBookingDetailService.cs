@@ -194,6 +194,8 @@ namespace Domain.Services.Services
             existingRoomBookingDetail.Expenses = roomBookingDetailUpdateRequest.Expenses;
             existingRoomBookingDetail.ExtraPrice = roomBookingDetailUpdateRequest.ExtraPrice;
             existingRoomBookingDetail.Price = roomBookingDetailUpdateRequest.Price;
+            existingRoomBookingDetail.ExtraService = roomBookingDetailUpdateRequest.ExtraService;
+            existingRoomBookingDetail.ServicePrice = roomBookingDetailUpdateRequest.ServicePrice;
             existingRoomBookingDetail.Note = roomBookingDetailUpdateRequest.Note;
             existingRoomBookingDetail.Status = roomBookingDetailUpdateRequest.Status;
             existingRoomBookingDetail.Note = roomBookingDetailUpdateRequest.Note;

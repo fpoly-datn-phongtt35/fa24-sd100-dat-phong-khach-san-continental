@@ -20,11 +20,12 @@
         </div>
         <div class="card-body">
             <p><strong>Tên khách hàng:</strong> @roomBooking.CustomerFullName</p>
+            <p><strong>Tổng tiền phòng:</strong> @roomBooking.TotalRoomPrice.Value.ToString("N0") VND</p>
             <p><strong>Tổng tiền dịch vụ:</strong> @service.ToString("N0")</p>
             <p><strong>Tổng tiền phụ thu:</strong> @extra.ToString("N0")</p>
             <p><strong>Tổng tiền hao phí:</strong> @expenses.ToString("N0")</p>
             <p><strong>Tổng giá trị hóa đơn:</strong> @roomBooking.TotalPrice.Value.ToString("N0") VND</p>
-            <p><strong>Tổng tiền phải trả thực tế:</strong> @roomBooking.TotalPriceReality VND</p>
+            <p><strong>Tổng tiền phải trả thực tế:</strong> @roomBooking.TotalPriceReality.Value.ToString("N0") VND</p>
             <p><strong>Đã thanh toán:</strong> @totalPaid.ToString("N0") VND</p>
             <p><strong>Cần thanh toán:</strong> @amountToPay.ToString("N0") VND</p>
             <p class="text-info"><strong>@message</strong></p>

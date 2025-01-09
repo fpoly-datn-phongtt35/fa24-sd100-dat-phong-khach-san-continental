@@ -417,4 +417,20 @@ public class RoomBookingRepository : IRoomBookingRepository
             ModifiedBy = row["ModifiedBy"] != DBNull.Value ? (Guid?)Guid.Parse(row["ModifiedBy"].ToString()!) : null,
         };
     }
+
+    public async Task<int> UpdateRoomBookingPrice(Guid id)
+    {
+        try
+        {
+            SqlParameter[] sqlParameter = new SqlParameter[]
+            {
+                new SqlParameter("@IdRoomBooking", id),
+            };
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingPrice, sqlParameter);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
 }

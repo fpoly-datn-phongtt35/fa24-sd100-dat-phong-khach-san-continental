@@ -60,20 +60,30 @@
             }
         </select>
 
-@*         <select name="roomBookingId" id="roomBookingId" class="form-select me-2" style="max-width: 200px;">
-            <option value="">-- RoomBooking --</option>
+        <select name="roomBookingId" id="roomBookingId" class="form-select me-2" style="max-width: 200px;">
+            <option value="">-- Hóa đơn đặt phòng --</option>
+            @{
+                var uniqueRoomBookings = new HashSet<Guid>();
+            }
             @foreach (var roomBookingId in ViewBag.RoomBookingList)
             {
+                if (uniqueRoomBookings.Contains(roomBookingId)) continue;
+                uniqueRoomBookings.Add(roomBookingId);
                 <option value="@((Guid)roomBookingId)"
                         selected="@(Context.Request.Query["roomBookingId"].ToString() == ((Guid)roomBookingId).ToString())">
                     @roomBookingId
                 </option>
             }
-        </select> *@
+        </select>
         <select name="customerId" id="customerId" class="form-select me-2" style="max-width: 200px;">
             <option value="">-- Khách hàng --</option>
+            @{
+                var uniqueCustomers = new HashSet<Guid>();
+            }
             @foreach (var customer in ViewBag.CustomerList as List<(Guid, string)>)
             {
+                if (uniqueCustomers.Contains(customer.Item1)) continue;
+                uniqueCustomers.Add(customer.Item1);
                 <option value="@customer.Item1" selected="@(Context.Request.Query["customerId"].ToString() == customer.Item1.ToString())">
                     @customer.Item2
                 </option>
@@ -153,7 +163,10 @@
                     }
                 </td>
                 <td>
-                    @Html.ActionLink("Thanh toán", "Index", new { id = item.Id }, new { @class = "btn btn-success" })
+                    @if (item.OrderCode != 0)
+                    {
+                        @Html.ActionLink("Thanh toán", "GetPaymentLink", new { orderCode = item.OrderCode }, new { @class = "btn btn-success" })
+                    }
                 </td>
             </tr>
         }
@@ -182,3 +195,33 @@
         </ul>
     </nav>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Thông Báo</h5>
+            </div>
+            <div class="modal-body">
+                @TempData["ErrorMessage"]
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <text>
+            $('#errorModal').modal('show');
+        </text>
+    }
+        });
+</script>
+
+

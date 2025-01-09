@@ -51,6 +51,18 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
         return existingRoomBooking.ToRoomBookingResponse();
     }
 
+    public async Task<int> UpdateRoomBookingPrice(Guid id)
+    {
+        try
+        {
+            return await _roomBookingRepository.UpdateRoomBookingPrice(id);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
     public Task<int> UpdateRoomBookingStatus(Guid id, int status)
     {
         try
