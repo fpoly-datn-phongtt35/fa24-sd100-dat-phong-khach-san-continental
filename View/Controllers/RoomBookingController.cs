@@ -206,6 +206,7 @@ public class RoomBookingController : Controller
                     BookingType = BookingType.Offline,
                     StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     CustomerId = bookingcreaterequest.CustomerId,
+                    TotalPriceReality = bookingcreaterequest.TotalPriceReality,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
                     TotalPrice = bookingcreaterequest.TotalPrice != 0
                         ? bookingcreaterequest.TotalPrice
@@ -381,9 +382,9 @@ public class RoomBookingController : Controller
     }
 
     public async Task<IActionResult> UpdateCheckInAndCheckOutReality(Guid id, string checkInTime, string checkoutTime,
-        string noteCheckin, string noteCheckout, string note, decimal? expenses,
+        string noteCheckin, string noteCheckout, string note, decimal? expenses,decimal? ServicePrice,decimal? ExtraService,
         List<ServiceOrderDetail> lstSerOrderDetail,
-        List<Guid>? ListDelete)
+        List<Guid>? ListDelete,Guid RB_Id)
     {
         try
         {
@@ -434,6 +435,8 @@ public class RoomBookingController : Controller
                 CheckInReality = selectedCheckInTime,
                 CheckOutReality = selectedCheckoutTime,
                 Expenses = expenses,
+                ServicePrice = ServicePrice,
+                ExtraService = ExtraService,
                 Note = note,
                 ModifiedTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local)
             };
@@ -450,6 +453,15 @@ public class RoomBookingController : Controller
             {
                 await AddEditHistoryIfChanged(id, roomBookingDetail, selectedCheckInTime, selectedCheckoutTime,
                     checkInTime, checkoutTime, expenses, note, noteCheckin, noteCheckout);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+
+            try
+            {
+                await _roomBookingUpdateService.UpdateRoomBookingPrice(RB_Id);
             }
             catch (Exception ex)
             {
