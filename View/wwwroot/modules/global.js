@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    setInterval(() => {
+   /* setInterval(() => {
         $.ajax({
             type: 'POST',
             url: '/RoomBooking/CheckDepositRoomBooking',
@@ -9,7 +9,7 @@
                 console.log("Error: " + error);
             }
         });
-    }, 3000);
+    }, 3000);*/
 })
 var global =
 {

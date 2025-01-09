@@ -113,10 +113,7 @@ namespace Domain.Repositories.Repository
                         new SqlParameter("@ExtraService", (object)request.ExtraService ?? DBNull.Value),
                         new SqlParameter("@Note", (object)request.Note ?? DBNull.Value),
                         new SqlParameter("@ModifiedTime", (object)DateTimeOffset.Now ?? DBNull.Value),
-                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value),
-                        new SqlParameter("@Deleted", request.Deleted),
-                        new SqlParameter("@DeletedTime", (object)(request.Deleted ? DateTimeOffset.Now : DBNull.Value)),
-                        new SqlParameter("@DeletedBy", (object)request.DeletedBy ?? DBNull.Value)
+                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value)
                     };
                     _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);
                 }
