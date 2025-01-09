@@ -189,12 +189,12 @@ namespace API.Controllers
                 PaymentLinkInformation paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderId);
                 var id = paymentLinkInformation.id;
                 var paymentLink = $"https://pay.payos.vn/web/{id}";
-                return Ok(new Response(0, "Ok", paymentLink));
+                return Ok(paymentLink);
             }
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
-                return Ok(new Response(-1, "fail", null));
+                return BadRequest("Mã đơn hàng không hợp lệ hoặc đã được thanh toán");
             }
         }
 
