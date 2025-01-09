@@ -206,6 +206,7 @@ public class RoomBookingController : Controller
                     BookingType = BookingType.Offline,
                     StaffId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     CustomerId = bookingcreaterequest.CustomerId,
+                    TotalPriceReality = bookingcreaterequest.TotalPriceReality,
                     TotalExtraPrice = bookingcreaterequest.TotalExtraPrice,
                     TotalPrice = bookingcreaterequest.TotalPrice != 0
                         ? bookingcreaterequest.TotalPrice
