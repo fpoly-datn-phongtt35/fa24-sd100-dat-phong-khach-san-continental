@@ -47,7 +47,8 @@ namespace Domain.Repositories.Repository
                     new("@Status", (object)roomBookingDetail.Status ?? DBNull.Value),
                     new("@ModifiedBy", (object)roomBookingDetail.ModifiedBy ?? DBNull.Value),
                     new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value }
+                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value },
+                    new("@ExtraPrice", SqlDbType.Decimal) { Value = (object)roomBookingDetail.ExtraPrice ?? DBNull.Value },
                 };
                 foreach (var param in sqlParameters)
                 {
@@ -113,10 +114,7 @@ namespace Domain.Repositories.Repository
                         new SqlParameter("@ExtraService", (object)request.ExtraService ?? DBNull.Value),
                         new SqlParameter("@Note", (object)request.Note ?? DBNull.Value),
                         new SqlParameter("@ModifiedTime", (object)DateTimeOffset.Now ?? DBNull.Value),
-                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value),
-                        new SqlParameter("@Deleted", request.Deleted),
-                        new SqlParameter("@DeletedTime", (object)(request.Deleted ? DateTimeOffset.Now : DBNull.Value)),
-                        new SqlParameter("@DeletedBy", (object)request.DeletedBy ?? DBNull.Value)
+                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value)
                     };
                     _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);
                 }

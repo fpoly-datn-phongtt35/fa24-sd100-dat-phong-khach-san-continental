@@ -149,6 +149,8 @@ namespace Domain.Services.Services
                                          CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
                                          CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
                                          Price = row.Field<decimal?>("Price"),
+                                         ServicePrice = row.Field<decimal?>("ServicePrice"),
+                                         ExtraService = row.Field<decimal?>("ExtraService"),
                                          ExtraPrice = row.Field<decimal?>("ExtraPrice"),
                                          Expenses = row.Field<decimal?>("Expenses"),
                                          Note = row.Field<string>("Note"),

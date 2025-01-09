@@ -143,7 +143,7 @@ $(document).ready(function () {
                 return {
                     results: $.map(response.lstRoom, function (item) {
                         return {
-                            text: item.name + ' - ' + item.description,
+                            text: 'phòng ' + item.name + ' - giá: ' + global.NumberVNFormated(item.price) ,
                             id: item.id,
                         }
                     })
@@ -412,15 +412,28 @@ var _roombooking_detail = {
                         var newFMfrom = moment(datefrom).format("YYYY-MM-DD")
                         const dateto = new Date(item.checkOutBooking);
                         var newFMto = moment(dateto).format("YYYY-MM-DD")
+
+                        var UnnePrice = item.expenses + item.extraPrice + item.extraService + item.servicePrice;
+                        var Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking)) + UnnePrice;
+
                         var newCIfrom;
                         var newCOto
                         if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
+
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking)) - UnnePrice;
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
+
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality)) - UnnePrice;
+                        }
+
+                        if (item.checkInReality != null && item.checkOutReality != null)
+                        {
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality)) - UnnePrice;
                         }
                         $("#room-related").append(`
                         <tr class="">
@@ -429,7 +442,7 @@ var _roombooking_detail = {
                            <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="${item.status}"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${item.name}</td>
-                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.price)}</td>
+                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(Price)}</td>
                            <td>
                                <input id="CheckIn_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
@@ -445,6 +458,7 @@ var _roombooking_detail = {
                            </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
                            <td class="d-flex">
+                               <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('` + item.roomBookingDetailId + `','` + item.roomId + `')">Hủy</a>
                                <a class="btn btn-info ms-2 btn-residence text-nowrap" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Danh sách</a>
                                <a class="btn btn-primary ms-2 btn-detail text-nowrap" id="btn-detail-` + item.roomBookingDetailId + `" href="/RoomBooking/RoomBookingDetails/RoomBookingDetailId=` + item.roomBookingDetailId + `" style="cursor:pointer">Chi tiết</a>
                            </td>
