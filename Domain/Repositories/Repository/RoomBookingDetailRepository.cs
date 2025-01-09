@@ -45,7 +45,8 @@ namespace Domain.Repositories.Repository
                     new("@Status", (object)roomBookingDetail.Status ?? DBNull.Value),
                     new("@ModifiedBy", (object)roomBookingDetail.ModifiedBy ?? DBNull.Value),
                     new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value }
+                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value },
+                    new("@ExtraPrice", SqlDbType.Decimal) { Value = (object)roomBookingDetail.ExtraPrice ?? DBNull.Value },
                 };
                 foreach (var param in sqlParameters)
                 {
