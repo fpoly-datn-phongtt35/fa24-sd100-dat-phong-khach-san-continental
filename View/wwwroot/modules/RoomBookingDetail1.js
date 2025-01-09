@@ -156,7 +156,7 @@ $(document).ready(function () {
     }
 
     function handleUpdateCheckInAndCheckOut(roomBookingDetailId, checkInDateTime, checkOutDateTime, note, noteCheckin, 
-                                            noteCheckout, expenses, lstSerOrderDetail, ListDelete) {
+                                            noteCheckout, expenses,ServicePrice,ExtraService, lstSerOrderDetail, ListDelete,RB_Id) {
         _Service_OrderDetail.GetListOBjService();
         executeAction(
             '/RoomBooking/UpdateCheckInAndCheckOutReality',
@@ -165,11 +165,14 @@ $(document).ready(function () {
                 checkInTime: checkInDateTime,
                 checkoutTime: checkOutDateTime,
                 note: note,
+                ExtraService: ExtraService,
+                ServicePrice: ServicePrice,
                 noteCheckin: noteCheckin,
                 noteCheckout: noteCheckout,
                 expenses: expenses,
                 lstSerOrderDetail: lstServiceOrderDetail,
-                ListDelete: LstDelete 
+                ListDelete: LstDelete,
+                RB_Id: RB_Id
             },
             function (response) {
                 if (response.success) {
@@ -202,7 +205,8 @@ $(document).ready(function () {
         const note = $('#Note').val().trim();
         const noteCheckin = $('#NoteCheckin').val().trim();
         const noteCheckout = $('#NoteCheckout').val().trim();
-
+        const ServicePrice = $('#total_service_price').text().replaceAll(',','');
+        const ExtraService = $('#total_service_extra_price').text().replaceAll(',', '');
         const expensesInput = $('#Expenses').val().replace(/,/g, '');  // Loại bỏ dấu phẩy
         const expenses = parseFloat(expensesInput) || 0;  // Chuyển thành số thực
 
@@ -238,7 +242,7 @@ $(document).ready(function () {
         }).then(function (result) {
             if (result.isConfirmed) {
                 handleUpdateCheckInAndCheckOut(roomBookingDetailId, selectedCheckInDateTime, selectedCheckOutDateTime, 
-                    note, noteCheckin, noteCheckout, expenses, lstServiceOrderDetail, LstDelete);
+                    note, noteCheckin, noteCheckout, expenses, ServicePrice, ExtraService, lstServiceOrderDetail, LstDelete, $('#RB_Id').val());
             }
         });
     });
@@ -429,7 +433,7 @@ var _Service_OrderDetail =
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
                             <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
+                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
