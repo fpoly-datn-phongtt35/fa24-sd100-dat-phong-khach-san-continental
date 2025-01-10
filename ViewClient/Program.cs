@@ -69,7 +69,6 @@ namespace ViewClient
                 RequestPath = "/View/wwwroot/images"
             });
 
-
             app.UseRouting();
 
             app.UseAuthorization();

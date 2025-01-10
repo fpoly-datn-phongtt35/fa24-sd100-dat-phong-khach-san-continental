@@ -3,64 +3,64 @@
 @{
     ViewData["Title"] = "Details";
 }
-<form style="margin-left:25px">
-    <h3>Thông tin chi tiết khách hàng</h3>
+<div class="container mt-4">
+    <h3 class="text-center">Thông tin chi tiết khách hàng</h3>
+    <hr />
 
-    <div>
-    <hr style="height:100%"/>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Tài khoản
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            Họ 
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            Tên
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            Số điện thoại
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            Giói tính
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            Ngày sinh
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-        <dt class = "col-sm-2">
-            Trạng thái
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <dl class="row">
+                <dt class="col-sm-4"><strong>Tài khoản</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.UserName)</dd>
+
+                <dt class="col-sm-4"><strong>Họ</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.FirstName)</dd>
+
+                <dt class="col-sm-4"><strong>Tên</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.LastName)</dd>
+
+                <dt class="col-sm-4"><strong>Email</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+
+                <dt class="col-sm-4"><strong>Số điện thoại</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+                <dt class="col-sm-4"><strong>Giới tính</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Gender)</dd>
+
+                <dt class="col-sm-4"><strong>Ngày sinh</strong></dt>
+                <dd class="col-sm-8">@String.Format("{0:dd/MM/yyyy}", Model.DateOfBirth)</dd>
+
+                <dt class="col-sm-4"><strong>Trạng thái</strong></dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Status)</dd>
+            </dl>
+
+            <div class="text-center mt-4">
+                @Html.ActionLink("Sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning mr-2" })
+                <a asp-action="Index" class="btn btn-info">Quay lại</a>
+            </div>
+        </div>
     </div>
-    <div>
-    @Html.ActionLink("Sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" }) |
-    <a asp-action="Index" class="btn btn-info">Quay lại</a>
-    </div>
-</form>
+</div>
+
+<style>
+    .container {
+        background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    dt {
+        font-weight: bold;
+        color: #343a40; /* Màu chữ đậm */
+    }
+
+    dd {
+        margin-bottom: 1rem; /* Giảm khoảng cách dưới mỗi mục */
+    }
+
+    hr {
+        border-top: 2px solid #007bff; /* Đường kẻ màu xanh */
+    }
+</style>

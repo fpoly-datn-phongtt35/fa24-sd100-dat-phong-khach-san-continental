@@ -5,6 +5,7 @@ using Domain.Models;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Win32;
 using System.Data;
 using Utilities;
 using Utilities.StoredProcedure;
@@ -204,6 +205,28 @@ namespace Domain.Repositories.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public async Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request)
+        {
+            try
+            {
+                string hashedPassword = PasswordHashingHelper.HashPassword(request.Password);
+                string newPasswordHashed = PasswordHashingHelper.HashPassword(request.NewPassword);
+
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@UserId", request.Id),
+                    new SqlParameter("@Password", hashedPassword),
+                    new SqlParameter("@NewPassword", newPasswordHashed)
+                };
+
+                return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_UpdatePassword, sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }
