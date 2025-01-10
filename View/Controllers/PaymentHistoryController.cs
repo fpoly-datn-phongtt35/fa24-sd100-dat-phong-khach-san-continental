@@ -127,7 +127,12 @@ namespace View.Controllers
                 }
                 else
                 {
-                    amountToPay = (decimal)(roomBooking.TotalPriceReality - totalPaid);
+                    var temp = (decimal)(roomBooking.TotalPriceReality - totalPaid);
+                    if (temp < 0)
+                    {
+                        temp = 0;
+                    }
+                    amountToPay = temp;
                     message = $"Số tiền cần thanh toán là: {amountToPay}";
                 }
                 var totalExpenses = roomBooking.TotalExpenses;
