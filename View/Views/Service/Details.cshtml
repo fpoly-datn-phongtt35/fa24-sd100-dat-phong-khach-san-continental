@@ -1,13 +1,14 @@
-﻿@model Domain.Models.Service
+﻿@using Domain.Models
+@using View.Views.Shared.Helper
+@model Domain.Models.Service
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Chi tiết dịch vụ</h1>
 
 <div>
-    <h4>Service</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -17,31 +18,33 @@
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            Tên
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            Mô tả
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
+            Giá tiền
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Unit)
+            Đơn vị
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Unit)
+            @((Model.Unit != null)
+                ? UnitHelper.DisplayUnit(Model.Unit.Value)
+                : "Unknown")
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
+            Hình ảnh
         </dt>
         <dd class="col-sm-9">
             @if (!string.IsNullOrEmpty(Model.Image))
@@ -65,55 +68,59 @@
         </dd>
 
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ServiceTypeId)
+            Loại dịch vụ
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ServiceTypeId)
+            @{
+                var types = ViewBag.ServiceTypeList as List<ServiceType>;
+                var type = types?.FirstOrDefault(t => t.Id == Model.ServiceTypeId);
+            }
+            @type.Name
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+            Trạng thái
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+            @StatusHelper.DisplayStatusBadge(Model.Status)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedTime)
+            Thời gian tạo
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
+            Tạo bởi
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedBy)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedTime)
+            Thời gian sửa
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ModifiedTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedBy)
+            Sửa bởi
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ModifiedBy)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Deleted)
+            Đã xóa
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Deleted)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedBy)
+            Xóa bởi
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DeletedBy)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedTime)
+            Thời gian xóa
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DeletedTime)
@@ -121,6 +128,6 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.Id }) |
+    <a asp-action="Index">Quay lại</a>
 </div>

@@ -70,6 +70,7 @@
                 </div>
             </div>
             <input id="IdRoomBooking" style="display:none" value="@ViewBag.IdRoomBooking" />
+            <input type="hidden" id="RoomBookingStatus" value="@(RB != null? (int)RB.Status : null)" />
             <select class="select2 m-2" id="room_Id" style="width:100%">
             </select>
             <div class="table-responsive table-scroll">
@@ -138,7 +139,7 @@
                                     <div id="total_service_extra_price" class="me-1">0</div> ₫
                                 </div>
                             </li>
-                            <li class="flex list-unstyled justify-content-between mb-2">
+                            <li class="flex hid list-unstyled justify-content-between mb-2">
                                 <div class="text-dark fw-bold">Tổng giá các phòng</div>
                                 <div class="text-right d-flex">
                                     <div id="total_roomprice" class="me-1">0</div> ₫
@@ -217,10 +218,22 @@
 <div class="container d-flex justify-content-between align-items-center" style="width:100%">
     <div>
         <a class="btn btn-secondary text-decoration-none text-white" href="/roombooking">Quay lại</a>
-        <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+        @if (idRoomBooking != null && RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED
+          && RB.Status != Domain.Enums.RoomBookingStatus.PAID
+          && RB.Status != Domain.Enums.RoomBookingStatus.FAILED)
+        {
+            <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+            <button class="ms-3 btn btn-warning" onclick="_roombooking_detail.BlockedBill('@idRoomBooking')">Đóng đơn đặt phòng</button>
+        }
+        else if (idRoomBooking == null)
+        {
+            <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+        }
     </div>
     <div>
-        @if (idRoomBooking != null)
+        @if (idRoomBooking != null && RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED 
+        && RB.Status != Domain.Enums.RoomBookingStatus.PAID
+        && RB.Status != Domain.Enums.RoomBookingStatus.FAILED)
         {
         @* <a class="btn btn-warning" href="~/PaymentHistory/Id=@idRoomBooking">Chuyển đến trang thanh toán</a> *@
            <a href="/PaymentHistory/AddPayment/@idRoomBooking" class="btn btn-success me-3">Thanh toán</a>
@@ -374,5 +387,11 @@
 
 
 @section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script asp-append-version="true" src="~/modules/roombooking_detail.js"></script>
+    <!-- Thêm Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Thêm Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 }

@@ -20,6 +20,11 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
+    <Folder Include="Views\Checkout\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Checkout\Cancel.cshtml" />
   </ItemGroup>
 
 </Project>

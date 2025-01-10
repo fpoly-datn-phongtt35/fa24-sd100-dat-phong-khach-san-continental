@@ -118,6 +118,14 @@ $(document).ready(function () {
         $("#Client_Id").select2();
         _roombooking_detail.LoadDetailCustomer($("#Client_Id").val());
         _roombooking_detail.LoadListRoomRelated($("#IdRoomBooking").val());
+        if ($('#RoomBookingStatus').val() == 2 || $('#RoomBookingStatus').val() == 3 || $('#RoomBookingStatus').val() == 4)
+        {
+            setInterval(() => {
+                _roombooking_detail.LoadListRoomRelated($("#IdRoomBooking").val());
+            }, 1000);
+        }
+        $("#fromDate").attr('disabled', 'disabled');
+        $("#toDate").attr('disabled', 'disabled');
     }
 
     $("#room_Id").select2({
@@ -143,7 +151,7 @@ $(document).ready(function () {
                 return {
                     results: $.map(response.lstRoom, function (item) {
                         return {
-                            text: item.name + ' - ' + item.description,
+                            text: 'phòng ' + item.name + ' - giá: ' + global.NumberVNFormated(item.price) ,
                             id: item.id,
                         }
                     })
@@ -192,6 +200,8 @@ var _roombooking_detail = {
     AddRoomToList: function (Id) {
         if (lstIdRoom.indexOf(Id) < 0) {
             lstIdRoom.push(Id);
+            $("#fromDate").attr('disabled', 'disabled');
+            $("#toDate").attr('disabled', 'disabled');
             $.ajax({
                 url: "/RoomBooking/GetRoomById",
                 type: "post",
@@ -232,21 +242,38 @@ var _roombooking_detail = {
                         $("#CheckOut_" + IdAdd).attr('min', moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
                         _roombooking_detail.CalculatePrice(IdAdd);
                         IdAdd = IdAdd - 1;
+                        var lstEleCheckIn = document.getElementsByClassName('checkout_time');
+                        for (let i = 0; i < lstEleCheckIn.length; i++) {
+                            const element = lstEleCheckIn[i];
+                            element.max = $("#toDate").val();
+                        }
+                        var lstEleCheckIn = document.getElementsByClassName('checkin_time');
+                        for (let i = 0; i < lstEleCheckIn.length; i++) {
+                            const element = lstEleCheckIn[i];
+                            element.max = $("#toDate").val();
+                        }
                     }
                     _roombooking_detail.CalculatingRoomPrice();
                 }
             });
         }
     },
+    addOrSubtractDays:function(dateString, days) {
+        const date = new Date(dateString);
+        date.setDate(date.getDate() + days);
+        return date.toISOString().split('T')[0];
+    },
 
     OnchangeFromDateRow: function (Id) {
-        $("#CheckOut_" + Id).attr('min', $("#CheckIn_" + Id).val());
+        $("#CheckOut_" + Id).attr('min', _roombooking_detail.addOrSubtractDays($("#CheckIn_" + Id).val(),1));
         $("#CheckIn_" + Id).val($("#CheckIn_" + Id).val());
         _roombooking_detail.CalculatePrice(Id);
         _roombooking_detail.CalculatingRoomPrice();
     },
 
     OnchangeToDateRow: function (Id) {
+        $("#CheckIn_" + Id).attr('max', _roombooking_detail.addOrSubtractDays($("#CheckOut_" + Id).val(),-1));
+        $("#CheckOut_" + Id).val($("#CheckOut_" + Id).val());
         _roombooking_detail.CalculatePrice(Id);
         _roombooking_detail.CalculatingRoomPrice();
     },
@@ -406,21 +433,35 @@ var _roombooking_detail = {
             data: { Id: Id },
             success: function (result) {
                 if (result != null) {
+                    $("#room-related").html(``);
                     result.forEach(item => {
                         LstIdUpdate.push(item.roomBookingDetailId);
                         const datefrom = new Date(item.checkInBooking);
                         var newFMfrom = moment(datefrom).format("YYYY-MM-DD")
                         const dateto = new Date(item.checkOutBooking);
                         var newFMto = moment(dateto).format("YYYY-MM-DD")
+
+                        var UnnePrice = item.expenses + item.extraPrice + item.extraService + item.servicePrice;
+                        var Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking)) + UnnePrice;
+
                         var newCIfrom;
                         var newCOto
                         if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
+
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking)) - UnnePrice;
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
+
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality)) - UnnePrice;
+                        }
+
+                        if (item.checkInReality != null && item.checkOutReality != null)
+                        {
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality)) - UnnePrice;
                         }
                         $("#room-related").append(`
                         <tr class="">
@@ -429,7 +470,7 @@ var _roombooking_detail = {
                            <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="${item.status}"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${item.name}</td>
-                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.price)}</td>
+                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(Price)}</td>
                            <td>
                                <input id="CheckIn_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
@@ -445,7 +486,8 @@ var _roombooking_detail = {
                            </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
                            <td class="d-flex">
-                               <a class="btn btn-info ms-2 btn-residence text-nowrap" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Danh sách</a>
+                               <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('` + item.roomBookingDetailId + `','` + item.roomId + `')">Hủy</a>
+                               <a class="btn btn-info ms-2 btn-residence text-nowrap text-light" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Tạm trú</a>
                                <a class="btn btn-primary ms-2 btn-detail text-nowrap" id="btn-detail-` + item.roomBookingDetailId + `" href="/RoomBooking/RoomBookingDetails/RoomBookingDetailId=` + item.roomBookingDetailId + `" style="cursor:pointer">Chi tiết</a>
                            </td>
                            
@@ -1404,7 +1446,7 @@ var _roombooking_detail = {
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: null,
                 CheckOutReality: null,
-                Price: $("#Price_"+item).text(),
+                Price: $("#RoomPr_"+item).text(),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
@@ -1418,7 +1460,7 @@ var _roombooking_detail = {
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: $("#CheckInReal_" + item).val(),
                 CheckOutReality: $("#CheckOutReal_" + item).val(),
-                Price: $("#Price_" + item).text(),
+                Price: $("#RoomPr_" + item).text(),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
@@ -1427,15 +1469,56 @@ var _roombooking_detail = {
         console.log(lstRoomBookingDetail)
     },
 
-    submit: function () {
-        _roombooking_detail.GetlistObjSubmit();
-        $.ajax({
-            url: "/RoomBooking/submit",
-            type: "post",
-            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail},
-            success: function (result) {
-                window.location.href = result;
+    submit: async function () {
+        const confrm = await global.Noti("Xác nhận cập nhật","Bạn có chắc chắn muốn cập nhật không?");
+        if (confrm > 0) {
+            _roombooking_detail.GetlistObjSubmit();
+            if (lstRoomBookingDetail.length <= 0) {
+                lstRoomBookingDetail = [];
+                RoomBooking = [];
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo đặt phòng',
+                    text: 'Bạn phải chọn ít nhất 1 phòng.'
+                });
             }
-        });
+            else if (RoomBooking.CustomerId == null) {
+                lstRoomBookingDetail = [];
+                RoomBooking = [];
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo đặt phòng',
+                    text: 'Bạn chưa nhập thông tin khách hàng.'
+                });
+            }
+            else {
+                $.ajax({
+                    url: "/RoomBooking/submit",
+                    type: "post",
+                    data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
+                    success: function (result) {
+                        window.location.href = result;
+                    }
+                });
+            }
+        }
+        else {
+            lstRoomBookingDetail = [];
+            RoomBooking = [];
+        }
+    },
+
+    BlockedBill: async function (Id) {
+        const confrm = await global.Noti("Xác nhận đóng đơn đặt phòng", "<strong>Lưu ý</strong>: Bạn sẽ không thể cập nhật thông tin sau khi đóng đơn\n Bạn có chắc chắn muốn cập nhật không?");
+        if (confrm > 0) {
+            $.ajax({
+                url: "/RoomBooking/BlockedBill",
+                type: "post",
+                data: { Id: Id, CusId: $("#Client_Id").val() },
+                success: function (result) {
+                    window.location.href = result;
+                }
+            });
+        }
     }
 }

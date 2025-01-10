@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ContinentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250106040630_Add_Table_EditHistory")]
+    partial class Add_Table_EditHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,11 +204,6 @@ namespace Domain.Migrations
 
                     b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NewPassword")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -488,9 +486,10 @@ namespace Domain.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TitleOfType")
+                    b.Property<string>("TitleOfType")
+                        .IsRequired()
                         .IsUnicode(true)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -770,9 +769,6 @@ namespace Domain.Migrations
                     b.Property<decimal>("ExtraPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("ExtraService")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -791,9 +787,6 @@ namespace Domain.Migrations
 
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("ServicePrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

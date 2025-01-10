@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.DTO.EditHistory;
+using Domain.Enums;
 
 namespace Domain.DTO.RoomBookingDetail;
 
@@ -14,7 +15,7 @@ public class RoomBookingDetailResponse
     public decimal? Price { get; set; }
     public decimal Deposit { get; set; } = 0;
     public decimal ExtraPrice { get; set; }
-    public decimal? Expenses { get; set; } = 0;
+    public decimal? Expenses { get; set; }
     public string? Note { get; set; }
     public EntityStatus Status { get; set; } = EntityStatus.Active;
     public DateTimeOffset? CreatedTime { get; set; }
@@ -28,6 +29,8 @@ public class RoomBookingDetailResponse
     public string? RoomName { get; set; }
     public int? NumberOfNight { get; set; }
     public decimal? RoomPrice { get; set; }
+    
+    public List<EditHistoryResponse> EditHistory { get; set; } = new List<EditHistoryResponse>();
 
     public override bool Equals(object? obj)
     {
@@ -135,52 +138,4 @@ public static class RoomBookingDetailResponseExtensions
         };
     }
 }
-
-// public static class SurchargeCalculator
-// {
-//     public static decimal CalculateSurcharge(DateTimeOffset bookingTime, DateTimeOffset realityTime, decimal roomPrice, bool isCheckIn)
-//     {
-//         // TimeSpan bookingLocalTime = bookingTime.LocalDateTime.TimeOfDay;
-//         // TimeSpan realityLocalTime = realityTime.LocalDateTime.TimeOfDay;
-//         TimeSpan defaultCheckInTime = new TimeSpan(14, 0, 0); // 2:00 PM
-//         TimeSpan defaultCheckOutTime = new TimeSpan(12, 0, 0); // 12:00 PM
-//         
-//         TimeSpan realityLocalTime = realityTime.LocalDateTime.TimeOfDay;
-//         decimal surcharge = 0;
-//
-//         if (isCheckIn)
-//         {
-//             if (realityLocalTime >= new TimeSpan(5, 0, 0) && realityLocalTime 
-//                 < new TimeSpan(9, 0, 0))
-//             {
-//                 surcharge = 0.5m * roomPrice;
-//             }
-//             else if (realityLocalTime >= new TimeSpan(9, 0, 0) && realityLocalTime 
-//                      < new TimeSpan(14, 0, 0))
-//             {
-//                 surcharge = 0.3m * roomPrice;
-//             }
-//         }
-//         else
-//         {
-//             if (realityLocalTime > defaultCheckOutTime)
-//             {
-//                 if (realityLocalTime <= new TimeSpan(15, 0, 0)) // Từ 12:00 PM đến 3:00 PM
-//                 {
-//                     surcharge = 0.3m * roomPrice; // Phụ thu 30%
-//                 }
-//                 else if (realityLocalTime <= new TimeSpan(18, 0, 0)) // Từ 3:00 PM đến 6:00 PM
-//                 {
-//                     surcharge = 0.5m * roomPrice; // Phụ thu 50%
-//                 }
-//                 else if (realityLocalTime > new TimeSpan(18, 0, 0)) // Sau 6:00 PM
-//                 {
-//                     surcharge = roomPrice; // Phụ thu 100%
-//                 }
-//             }
-//         }
-//
-//         return surcharge;
-//     }
-// }
 

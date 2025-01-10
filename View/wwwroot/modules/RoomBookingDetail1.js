@@ -87,6 +87,40 @@ $(document).ready(function () {
             }
         );
     }
+    function getResidence(roomBookingDetailId) {
+        $.ajax({
+            url: '/ResidenceRegistration/GetResidenceRegistrationByRoomBookingDetailId',
+            type: 'POST',
+            data: { Id : roomBookingDetailId },
+            success: function (response) {
+                console.log(response)
+
+                $('#residenceModal').modal('show');
+                $('#residenceTable tbody').empty();
+                response.forEach(residence => {
+                    const fullName = residence.fullName;
+                    const dateOfBirth = residence.dateOfBirth ? new Date(residence.dateOfBirth).toLocaleDateString() : 'N/A';
+                    const gender = residence.gender === 1 ? 'Nam' : 'Nữ';
+                    const identityNumber = residence.identityNumber;
+                    const phoneNumber = residence.phoneNumber;
+
+                    // Thêm một dòng vào bảng
+                    const row = `
+                    <tr>
+                        <td>${fullName}</td>
+                        <td>${dateOfBirth}</td>
+                        <td>${gender}</td>
+                        <td>${identityNumber}</td>
+                        <td>${phoneNumber}</td>
+                    </tr>
+                `;
+
+                    // Thêm dòng vào bảng trong modal
+                    $('#residenceTable tbody').append(row);
+                });
+            }
+        });
+    }
     
     $('#checkInButton').on('click', function () {
         const roomBookingDetailId = $(this).data('id');
@@ -96,6 +130,11 @@ $(document).ready(function () {
     $('#checkOutButton').on('click', function () {
         const roomBookingDetailId = $(this).data('id');
         handleCheckOut(roomBookingDetailId);
+    });
+
+    $('#btnResidence').on('click', function () {
+        const roomBookingDetailId = this.getAttribute('data-room-booking-detail-id');
+        getResidence(roomBookingDetailId);
     });
 });
 
@@ -117,7 +156,7 @@ $(document).ready(function () {
     }
 
     function handleUpdateCheckInAndCheckOut(roomBookingDetailId, checkInDateTime, checkOutDateTime, note, noteCheckin, 
-                                            noteCheckout, expenses, lstSerOrderDetail, ListDelete) {
+                                            noteCheckout, expenses,ServicePrice,ExtraService, lstSerOrderDetail, ListDelete,RB_Id) {
         _Service_OrderDetail.GetListOBjService();
         executeAction(
             '/RoomBooking/UpdateCheckInAndCheckOutReality',
@@ -126,11 +165,14 @@ $(document).ready(function () {
                 checkInTime: checkInDateTime,
                 checkoutTime: checkOutDateTime,
                 note: note,
+                ExtraService: ExtraService,
+                ServicePrice: ServicePrice,
                 noteCheckin: noteCheckin,
                 noteCheckout: noteCheckout,
                 expenses: expenses,
                 lstSerOrderDetail: lstServiceOrderDetail,
-                ListDelete: LstDelete 
+                ListDelete: LstDelete,
+                RB_Id: RB_Id
             },
             function (response) {
                 if (response.success) {
@@ -163,12 +205,12 @@ $(document).ready(function () {
         const note = $('#Note').val().trim();
         const noteCheckin = $('#NoteCheckin').val().trim();
         const noteCheckout = $('#NoteCheckout').val().trim();
-
+        const ServicePrice = $('#total_service_price').text().replaceAll(',','');
+        const ExtraService = $('#total_service_extra_price').text().replaceAll(',', '');
         const expensesInput = $('#Expenses').val().replace(/,/g, '');  // Loại bỏ dấu phẩy
         const expenses = parseFloat(expensesInput) || 0;  // Chuyển thành số thực
 
-        console.log('Expenses input:', expensesInput);
-        console.log('Parsed expenses:', expenses);
+        console.log('note input:', note);
 
         if (expenses > 0 && !note) {
             Swal.fire({
@@ -200,7 +242,7 @@ $(document).ready(function () {
         }).then(function (result) {
             if (result.isConfirmed) {
                 handleUpdateCheckInAndCheckOut(roomBookingDetailId, selectedCheckInDateTime, selectedCheckOutDateTime, 
-                    note, noteCheckin, noteCheckout, expenses, lstServiceOrderDetail, LstDelete);
+                    note, noteCheckin, noteCheckout, expenses, ServicePrice, ExtraService, lstServiceOrderDetail, LstDelete, $('#RB_Id').val());
             }
         });
     });
@@ -391,7 +433,7 @@ var _Service_OrderDetail =
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
                             <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
+                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>

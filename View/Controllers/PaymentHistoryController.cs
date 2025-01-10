@@ -127,7 +127,12 @@ namespace View.Controllers
                 }
                 else
                 {
-                    amountToPay = (decimal)(roomBooking.TotalPrice - totalPaid);
+                    var temp = (decimal)(roomBooking.TotalPriceReality - totalPaid);
+                    if (temp < 0)
+                    {
+                        temp = 0;
+                    }
+                    amountToPay = temp;
                     message = $"Số tiền cần thanh toán là: {amountToPay}";
                 }
                 var totalExpenses = roomBooking.TotalExpenses;
@@ -145,7 +150,7 @@ namespace View.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -238,6 +243,22 @@ namespace View.Controllers
             }
         }
 
+        public async Task<IActionResult> GetPaymentLink(int orderCode)
+        {
+            string apiUrl = $"api/order/GetOrderLink/{orderCode}";
+            HttpResponseMessage response = await _client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string paymentLink = await response.Content.ReadAsStringAsync();
+
+                return Redirect(paymentLink);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Mã thanh toán ko hợp lệ hoặc giao dịch đã hoàn thành";
+                return Redirect("https://localhost:7114/PaymentHistory");
+            }
+        }
         
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null, Guid? customerId = null, PaymentType? note = null, decimal? amount = null, PaymentMethod? paymentMethod = null, decimal? fromAmount = null, decimal? toAmount = null)
         {
@@ -289,7 +310,7 @@ namespace View.Controllers
                     var cResponseString = await cResponse.Content.ReadAsStringAsync();
                     var cData = JsonConvert.DeserializeObject<Customer>(cResponseString);
 
-                    customerInfos.Add((item, cData.FirstName + " " + cData.LastName));
+                    customerInfos.Add((cData.Id, cData.FirstName + " " + cData.LastName));
                 }
                 ViewBag.CustomerList = customerInfos;
                 ViewBag.RoomBookingList = roomBookingIds;

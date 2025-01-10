@@ -5,18 +5,18 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h1>List of Services</h1>
+<h1>Danh sách dịch vụ</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
 </p>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
-        <input type="text" id="serviceName" name="serviceName" class="form-control me-2" placeholder="Service Name" value="@Context.Request.Query["serviceName"]" style="max-width: 200px;" />
+        <input type="text" id="serviceName" name="serviceName" class="form-control me-2" placeholder="Tên dịch vụ" value="@Context.Request.Query["serviceName"]" style="max-width: 200px;" />
 
         <select name="serviceTypeId" id="serviceTypeId" class="form-select me-2" style="max-width: 200px;">
-            <option value="">-- Service Types --</option>
+            <option value="">-- Loại dịch vụ --</option>
             @foreach (var serviceType in ViewBag.ServiceTypeList)
             {
                 <option value="@serviceType.Id"
@@ -28,18 +28,18 @@
 
 
         <select name="status" id="status" class="form-select me-2" style="max-width: 200px;">
-            <option value="">-- Status --</option>
+            <option value="">-- Trạng thái --</option>
             @foreach (var status in ViewBag.StatusList)
             {
                 <option value="@((int)status)"
                         selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
-                    @status
+                    @StatusHelper.DisplayStatusBadge(status)
                 </option>
             }
         </select>
 
-        <input type="number" name="minPrice" id="minPrice" class="form-control" value="@Context.Request.Query["minPrice"]" placeholder="Min Price" style="max-width: 100px;" />
-        <input type="number" name="maxPrice" id="maxPrice" class="form-control" value="@Context.Request.Query["maxPrice"]" placeholder="Max Price" style="max-width: 100px;" />
+        <input type="number" name="minPrice" id="minPrice" class="form-control" value="@Context.Request.Query["minPrice"]" placeholder="Từ giá" style="max-width: 100px;" />
+        <input type="number" name="maxPrice" id="maxPrice" class="form-control" value="@Context.Request.Query["maxPrice"]" placeholder="Đến giá" style="max-width: 100px;" />
 
         <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
@@ -60,13 +60,13 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.data.First().Name)</th>
-            <th>ServiceType</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Description)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Price)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Unit)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Image)</th>
-            <th>@Html.DisplayNameFor(model => model.data.First().Status)</th>
+            <th>Tên dịch vụ</th>
+            <th>Loại dịch vụ</th>
+            <th>Mô tả</th>
+            <th>Giá tiền</th>
+            <th>Đơn vị</th>
+            <th>Hình ảnh</th>
+            <th>Trạng thái</th>
             <th></th>
         </tr>
     </thead>
@@ -116,9 +116,9 @@
                     }
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) 
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) 
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) 
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) 
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }

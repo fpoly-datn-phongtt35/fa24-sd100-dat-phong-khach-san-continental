@@ -25,6 +25,7 @@ namespace Domain.Repositories.Repository
             _configuration = configuration;
         }
 
+
         public async Task<RoomBookingDetail?> UpdateRoomBookingDetail2(RoomBookingDetail roomBookingDetail)
         {
             var existingRoomBookingDetail = GetRoomBookingDetailById2(roomBookingDetail.Id);
@@ -40,12 +41,19 @@ namespace Domain.Repositories.Repository
                     new("@CheckOutBooking", (object)roomBookingDetail.CheckOutBooking ?? DBNull.Value),
                     new("@CheckInReality", (object)roomBookingDetail.CheckInReality ?? DBNull.Value),
                     new("@CheckOutReality", (object)roomBookingDetail.CheckOutReality ?? DBNull.Value),
+                    new("@ServicePrice", (object)roomBookingDetail.ServicePrice ?? DBNull.Value),
+                    new("@ExtraService", (object)roomBookingDetail.ExtraService ?? DBNull.Value),
                     new("@Note", (object)roomBookingDetail.Note ?? DBNull.Value),
                     new("@Status", (object)roomBookingDetail.Status ?? DBNull.Value),
                     new("@ModifiedBy", (object)roomBookingDetail.ModifiedBy ?? DBNull.Value),
                     new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value }
+                    new("@Expenses", SqlDbType.Decimal) { Value = (object)roomBookingDetail.Expenses ?? DBNull.Value },
+                    new("@ExtraPrice", SqlDbType.Decimal) { Value = (object)roomBookingDetail.ExtraPrice ?? DBNull.Value },
                 };
+                foreach (var param in sqlParameters)
+                {
+                    Console.WriteLine($"{param.ParameterName}: {param.Value}");
+                }
 
                 await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);
             }
@@ -55,6 +63,7 @@ namespace Domain.Repositories.Repository
                 Console.WriteLine(ex);
                 throw new Exception("An error occurred while updating the room booking detail", ex);
             }
+
             return await existingRoomBookingDetail;
         }
 
@@ -101,12 +110,11 @@ namespace Domain.Repositories.Repository
                         new SqlParameter("@Status", (int)request.Status), // Chuyển đổi enum sang int
                         new SqlParameter("@ExtraPrice", (object)request.ExtraPrice ?? DBNull.Value),
                         new SqlParameter("@Expenses", (object)request.Expenses ?? DBNull.Value),
+                        new SqlParameter("@ServicePrice", (object)request.ServicePrice ?? DBNull.Value),
+                        new SqlParameter("@ExtraService", (object)request.ExtraService ?? DBNull.Value),
                         new SqlParameter("@Note", (object)request.Note ?? DBNull.Value),
                         new SqlParameter("@ModifiedTime", (object)DateTimeOffset.Now ?? DBNull.Value),
-                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value),
-                        new SqlParameter("@Deleted", request.Deleted),
-                        new SqlParameter("@DeletedTime", (object)(request.Deleted ? DateTimeOffset.Now : DBNull.Value)),
-                        new SqlParameter("@DeletedBy", (object)request.DeletedBy ?? DBNull.Value)
+                        new SqlParameter("@ModifiedBy", (object)request.ModifiedBy ?? DBNull.Value)
                     };
                     _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingDetail, sqlParameters);
                 }
@@ -237,6 +245,78 @@ namespace Domain.Repositories.Repository
             }
         }
 
+        public async Task<RoomBookingDetail?> GetRoomBookingDetailWithEditHistory(Guid roomBookingDetailId)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new("@Id", SqlDbType.UniqueIdentifier) { Value = roomBookingDetailId }
+                };
+
+                var roomBookingDetailDataTable = await _worker
+                    .GetDataTableAsync(StoredProcedureConstant.SP_GetRoomBookingDetailById2, parameters);
+                if (roomBookingDetailDataTable.Rows.Count == 0)
+                    return null;
+
+                var row = roomBookingDetailDataTable.Rows[0];
+                var roomBookingDetail = ConvertDataRowToRoomBookingDetail(row);
+
+                //Get List EditHistory to RoomBookingDetail
+                roomBookingDetail.EditHistory = await GetEditHistoryByRoomBookingDetailId(roomBookingDetailId);
+
+                return roomBookingDetail;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("An error occurred while retrieving the room booking detail with edit history", e);
+            }
+        }
+
+        public async Task<List<EditHistory>> GetEditHistoryByRoomBookingDetailId(Guid roomBookingDetailId)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new("@RoomBookingDetailId", SqlDbType.UniqueIdentifier) { Value = roomBookingDetailId }
+                };
+                
+                var dataTable = await _worker
+                    .GetDataTableAsync(StoredProcedureConstant.SP_GetEditHistoryByRoomBookingDetailId, parameters);
+                if(dataTable.Rows.Count == 0)
+                    return new List<EditHistory>(); // Ko co data trả về
+                
+                var editHistories = new List<EditHistory>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    if (dataTable.Columns.Contains("Id"))
+                    {
+                        var editHistory = new EditHistory()
+                        {
+                            Id = (int)row["Id"],
+                            RoomBookingDetailId = (Guid)row["RoomBookingDetailId"],
+                            For = (For)(int)row["For"],
+                            Content = row["Content"].ToString(),
+                            Description = row["Description"].ToString(),
+                            ModifiedAt = (DateTimeOffset)row["ModifiedAt"],
+                        };
+                        editHistories.Add(editHistory);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Column 'Id' does not exist in the result set.");
+                    }
+                }
+
+                return editHistories;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("An error occurred while retrieving the list edit history", e);
+            }
+        }
+
         public async Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request)
         {
             var existingRoomBookingDetail = GetRoomBookingDetailById2(request.Id);
@@ -254,6 +334,8 @@ namespace Domain.Repositories.Repository
                     new("@CheckOutBooking", SqlDbType.DateTimeOffset) { Value = request.CheckOutBooking },
                     new("@CheckInReality", SqlDbType.DateTimeOffset) { Value = request.CheckInReality },
                     new("@CheckOutReality", SqlDbType.DateTimeOffset) { Value = request.CheckOutReality },
+                    new("@ServicePrice", SqlDbType.Decimal){Value = request.ServicePrice},
+                    new("@ExtraService", SqlDbType.Decimal){Value = request.ExtraService},
                     new("@Expenses", SqlDbType.Decimal) { Value = request.Expenses },
                     new("@Note", SqlDbType.NVarChar) { Value = request.Note },
                     new("@Status", SqlDbType.Int) { Value = request.Status },
@@ -307,19 +389,23 @@ namespace Domain.Repositories.Repository
         {
             return new RoomBookingDetail()
             {
-                Id = Guid.Parse(row["Id"].ToString()!),
-                RoomBookingId = Guid.Parse(row["RoomBookingId"].ToString()!),
-                RoomId = Guid.Parse(row["RoomId"].ToString()!),
+                Id = row["Id"] != DBNull.Value ? Guid.Parse(row["Id"].ToString()!) : Guid.Empty,
+                RoomBookingId = row["RoomBookingId"] != DBNull.Value
+                    ? Guid.Parse(row["RoomBookingId"].ToString()!)
+                    : Guid.Empty,
+                RoomId = row["RoomId"] != DBNull.Value ? Guid.Parse(row["RoomId"].ToString()!) : Guid.Empty,
                 CheckInBooking = ConvertDateTimeOffsetToString(row, "CheckInBooking"),
                 CheckOutBooking = ConvertDateTimeOffsetToString(row, "CheckOutBooking"),
                 CheckInReality = ConvertDateTimeOffsetToString(row, "CheckInReality"),
                 CheckOutReality = ConvertDateTimeOffsetToString(row, "CheckOutReality"),
-                Price = decimal.Parse(row["Price"].ToString()!),
-                Expenses = decimal.Parse(row["Expenses"].ToString()!),
-                ExtraPrice = decimal.Parse(row["ExtraPrice"].ToString()!),
-                Deposit = decimal.Parse(row["Deposit"].ToString()!),
-                Note = row["Note"].ToString()!,
-                Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
+                Price = row["Price"] != DBNull.Value ? decimal.Parse(row["Price"].ToString()!) : 0,
+                Expenses = row["Expenses"] != DBNull.Value ? decimal.Parse(row["Expenses"].ToString()!) : 0,
+                ExtraPrice = row["ExtraPrice"] != DBNull.Value ? decimal.Parse(row["ExtraPrice"].ToString()!) : 0,
+                Deposit = row["Deposit"] != DBNull.Value ? decimal.Parse(row["Deposit"].ToString()!) : 0,
+                Note = row["Note"] != DBNull.Value ? row["Note"].ToString()! : string.Empty,
+                Status = row["Status"] != DBNull.Value
+                    ? (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!)
+                    : EntityStatus.Active,
                 CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),
                 CreatedBy = ConvertGuidToString(row, "CreatedBy"),
                 ModifiedTime = ConvertDateTimeOffsetToString(row, "ModifiedTime"),
@@ -329,9 +415,9 @@ namespace Domain.Repositories.Repository
                 DeletedBy = ConvertGuidToString(row, "DeletedBy"),
                 Room = new Room()
                 {
-                    Id = Guid.Parse(row["RoomId"].ToString()!),
-                    Name = row["RoomName"].ToString()!,
-                    Price = decimal.Parse(row["RoomPrice"].ToString()!)
+                    Id = row["RoomId"] != DBNull.Value ? Guid.Parse(row["RoomId"].ToString()!) : Guid.Empty,
+                    Name = row["RoomName"] != DBNull.Value ? row["RoomName"].ToString()! : string.Empty,
+                    Price = row["RoomPrice"] != DBNull.Value ? decimal.Parse(row["RoomPrice"].ToString()!) : 0
                 }
             };
         }

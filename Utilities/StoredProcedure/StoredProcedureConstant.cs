@@ -149,6 +149,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetCheckinRoomBookingByRoomBookingId = "SP_GetCheckinRoomBookingByRoomBookingId";
         public const string SP_CheckDepositedRoomBooking = "SP_CheckDepositedRoomBooking";
         public const string SP_GetListRoomBookingsByCustomerId = "SP_GetListRoomBookingsByCustomerId";
+        public const string SP_UpdateRoomBookingPrice = "SP_UpdateRoomBookingPrice";
 
         // RoomBookingDetail
         public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
@@ -185,5 +186,6 @@ namespace Utilities.StoredProcedure
         
         //Edit History
         public const string SP_InsertEditHistory = "SP_InsertEditHistory";
+        public const string SP_GetEditHistoryByRoomBookingDetailId = "SP_GetEditHistoryByRoomBookingDetailId";
     }
 }

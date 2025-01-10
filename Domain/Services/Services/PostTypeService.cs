@@ -57,7 +57,7 @@ namespace Domain.Services.Services
                               select new PostType
                               {
                                   Id = row.Field<Guid>("Id"),
-                                  TitleOfType = row.Field<string>("TitleOfType"),
+                                  TitleOfType = row.Field<PostTypeEnum>("TitleOfType"),
                                   Content = row.Field<string>("Content"),
                                   Status = row.Field<EntityStatus>("Status"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
@@ -100,7 +100,7 @@ namespace Domain.Services.Services
                             select new PostType
                             {
                                 Id = row.Field<Guid>("Id"),
-                                TitleOfType = row.Field<string>("TitleOfType"),
+                                TitleOfType = row.Field<PostTypeEnum>("TitleOfType"),
                                 Content = row.Field<string>("Content"),
                                 Status = row.Field<EntityStatus>("Status"),
                                 CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),

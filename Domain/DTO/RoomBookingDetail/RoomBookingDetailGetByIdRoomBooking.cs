@@ -22,6 +22,8 @@ namespace Domain.DTO.RoomBookingDetail
         public decimal? Price { get; set; }
         public decimal? ExtraPrice { get; set; }
         public decimal? Expenses { get; set; }
+        public decimal? ServicePrice { get; set; }
+        public decimal? ExtraService { get; set; }
         public string? Note { get; set; }
     }
 }

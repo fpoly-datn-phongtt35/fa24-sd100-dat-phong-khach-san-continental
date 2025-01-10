@@ -1,9 +1,9 @@
 ﻿@using Domain.DTO.Paging
 @using View.Models.Paging
 @model ResponseData<Domain.Models.Staff>
-<table class="table table-bordered mt-3 rounded-3">
+<table class="table mt-3 rounded-3">
     <thead>
-        <tr class="text-white">
+        <tr class="text-dark">
             <th scope="col">#</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
@@ -27,13 +27,13 @@
             }
             foreach (var i in Model.data)
             {
-                <tr class="text-white">
+                <tr class="text-dark">
                     <th scope="row">@STT</th>
                     <td>@i.FirstName</td>
                     <td>@i.LastName</td>
                     <td>@i.Email</td>
                     <td>@i.PhoneNumber</td>
-                    <td>@(i.CreatedTime != null ? i.CreatedTime.ToString() : "N/A")</td>
+                    <td>@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-mm-yyy hh:mm") : "N/A")</td>
                     <td>
                         <button class="btn btn-outline-warning" onclick="_staff.LoadForm('@i.Id')">Update</button>
                         <button class="btn btn-outline-danger ps-1" onclick="_staff.Delete('@i.Id')">Delete</button>

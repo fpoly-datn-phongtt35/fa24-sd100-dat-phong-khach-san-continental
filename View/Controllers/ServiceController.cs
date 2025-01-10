@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using View.Models;
 using WEB.CMS.Customize;
@@ -90,6 +91,21 @@ namespace View.Controllers
         // GET: ServiceController/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
+            string serviceTyperequestUrl = "api/ServiceType/GetListServiceType";
+
+            var serviceTypeRequest = new ServiceTypeGetRequest();
+
+            var serviceTypeJsonRequest = JsonConvert.SerializeObject(serviceTypeRequest);
+            var serviceTypeContent = new StringContent(serviceTypeJsonRequest, Encoding.UTF8, "application/json");
+
+            var serviceTypeResponse = await _client.PostAsync(serviceTyperequestUrl, serviceTypeContent);
+
+            var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
+
+            var serviceTypes = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
+
+            ViewBag.ServiceTypeList = serviceTypes.data;
+
             string requestUrl = $"api/Service/GetServiceById?id={id}";
 
             // Tạo nội dung json cho request
@@ -137,6 +153,8 @@ namespace View.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ServiceCreateRequest request, IFormFile img)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            request.CreatedBy = userId;
             if (ModelState.IsValid)
             {
                 // Xử lý ảnh
@@ -214,7 +232,8 @@ namespace View.Controllers
         {
             ViewBag.Units = Enum.GetValues(typeof(UnitType));
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            request.ModifiedBy = userId;
             //xử lý ảnh
             if (img != null && img.Length > 0)
             {
@@ -268,12 +287,14 @@ namespace View.Controllers
         // DELETE: ServiceController/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            
             string requestUrl = "https://localhost:7130/api/Service/DeleteService";
 
             var request = new ServiceDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),  //tạm thời, sau lấy giá trị từ người dùng đang đăng nhập
+                DeletedBy = userId,
                 DeletedTime = DateTimeOffset.Now
             };
 
