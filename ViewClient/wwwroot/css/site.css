@@ -1,4 +1,10 @@
-﻿html {
+﻿* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
     font-size: 14px;
 }
 
@@ -33,44 +39,37 @@ body {
     margin: 0;
     height: 100%;
 }
-
-
 .unifrakturmaguntia-regular {
     font-family: "UnifrakturMaguntia", cursive;
     font-weight: 400;
     font-style: normal;
+    color: black
 }
 
-.navbar, .navbar-left, .navbar-center, .navbar-right {
+/* .navbar, .navbar-left, .navbar-center, .navbar-right {
     box-sizing: border-box;
-}
+    background-color: white !important;
+} */
+  
 
-
-.navbar {
-    /*position: fixed; 
-    top: 0; 
-    left: 0;
-    width: 100%;
-    z-index: 999; */
+/* .navbar {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #000000;
     color: white;
-    padding: 10px 20px;
     width: 100%;
-}
+} */
 
-.navbar-left {
+/* .navbar-left {
     display: flex;
     align-items: center;
     width:30%;
-}
+} */
 
-    .navbar-left a {
+/*    .navbar-left a {
         text-decoration: none; 
-        color: white;
+        color: black !important;   
     }
 
         .navbar-left a:hover,
@@ -93,95 +92,133 @@ body {
 .navbar-right {
     display: flex;
     align-items: center;
-    justify-content: end;
-    gap: 15px;
-    width: 30%;
+    gap: 8px;
+}*/
+/* .navbar-center {
+    display: flex;
+    justify-content:space-evenly;
+    flex-grow: 1;
 }
-    .navbar-center {
-        flex-grow: 1;
-        text-align: center;
-    }
 
-        .navbar-center a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            margin: 0 15px;
-            position: relative;
-        }
-
-            .navbar-center a:hover::after {
-                content: ""; 
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: -5px; 
-                height: 2px; 
-                background-color: white; 
-            }
-
-.nav-button {
-    background-color: #00b1ff;
-    color: white;
-    border: none;
-    border: 2px groove #ddd;
-    border-radius: 5px;
-    padding: 10px 15px;
-    text-align: center;
+.navbar-center a {
     text-decoration: none;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    color: black;
+    font-weight: 500;
+} */
+.nav-button {
+    background-color: inherit; /* Màu nền */
+    color: black; /* Màu chữ */
+    border: none; /* Không có viền */
+    padding: 10px 15px; /* Khoảng cách bên trong */
+    text-align: center; /* Căn giữa chữ */
+    text-decoration: none; /* Không gạch chân chữ */
+    display: inline-block; /* Hiển thị inline */
+    font-size: 14px; /* Kích thước chữ */
+    border-radius: 5px; /* Bo góc */
+    cursor: pointer; /* Con trỏ chuột khi di chuột */
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển đổi */
 }
 
     .nav-button:hover {
-        background-color: #1341f6;
-        cursor: pointer;
+        background-color: rgb(239, 165, 188); /* Màu nền khi hover */
+        color: #fff; /* Màu chữ khi hover */
     }
 
-    .nav-button a {
-        color: white;
+    .nav-button:focus {
+        outline: none; /* Xóa đường viền khi focus */
+    }
+
+.profile-menu {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 5px 5px 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 21px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+    .profile-button:hover {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+    }
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 8px 0;
+    min-width: 200px;
+}
+
+    .profile-dropdown.show {
+        display: block;
+        z-index:1200;
+    }
+
+    .profile-dropdown a {
+        display: block;
+        padding: 8px 16px;
+        color: #222222;
         text-decoration: none;
     }
-.nav-button-another {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: white;
+
+        .profile-dropdown a:hover {
+            background-color: #F7F7F7;
+        }
+.button {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button-outline {
+    border: 1px solid #DDDDDD;
+    color: #222222;
+    background-color: #FFFFFF;
+}
+
+    .button-outline:hover {
+        border-color: #222222;
+    }
+
+.button-primary {
+    background-color: #FF385C;
+    color: #FFFFFF;
     border: none;
-    border: 2px groove #ddd;
-    border-radius: 5px;
-    padding: 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
-    .nav-button-another:hover {
-        background-color: #1341f6;
-        cursor: pointer;
+    .button-primary:hover {
+        background-color: #D70466;
     }
-
-    .nav-button-another a {
-        color: white;
-        text-decoration: none;
-    }
-
-
-.navbar-right span {
-    font-size: 16px;
-    color: #eff91c;
-    font-size: 16px;
-    font-weight: bold;
-}
 /* Banner */
 .banner {
-    background-image: url('../../wwwroot/img/2.png');
     background-size: cover;
     background-position: center;
     height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
     text-align: center;
     position: relative;
 }
@@ -193,7 +230,7 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.01);
     }
 
     .banner img {
@@ -202,19 +239,44 @@ body {
         max-width: 90%;
         height: auto;
     }
+.button {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
+.button-outline {
+    border: 1px solid #DDDDDD;
+    color: #222222;
+    background-color: #FFFFFF;
+}
 
+    .button-outline:hover {
+        border-color: #222222;
+    }
+
+.button-primary {
+    background-color: #FF385C;
+    color: #FFFFFF;
+    border: none;
+}
+
+    .button-primary:hover {
+        background-color: #D70466;
+    }
 /* Ô tìm kiếm */
 .search-box {
     width: 100%;
-    min-width: 1000px;
     max-width: 100%;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: sticky;
-    top: 10px;
+    top: -1px;
     z-index: 1000;
     margin-bottom:15px;
 }
@@ -593,7 +655,7 @@ body {
     margin-bottom: 20px; /* Khoảng cách dưới */
 }
 
-//room
+/* room */
 .card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 cột dọc */
@@ -603,42 +665,67 @@ body {
 }
 
 .card {
-    border: 1px solid #ddd;
+    border: 1px solid #DDDDDD;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
 }
     .card:hover {
-        transform: scale(1.1);
         transition: transform 0.3s ease;
     }
     h5.card-title.p{
         text-decoration:none;
     }
 .card-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
-    margin: 10px;
+    margin: 10px 10px 0 0;
 }
-
+.no-border{
+    border:none;
+}
 .img-container {
-    width: 100%;
-    height: 150px; /* Chiều cao cố định cho hình ảnh */
+    width: 80%;
+    height: 80%;
+    padding-bottom: 80%;
+    position: relative;
     overflow: hidden;
+    border-radius: 15px;
 }
 
     .img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+        border-radius: 15px;
     }
 
+.heart-icon {
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    z-index: 1;
+    border-radius: 50%;
+    padding: 5px;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+    .heart-icon:hover {
+        color: #e44a4a;
+        border-color: white;
+    }
+.carousel-control-prev {
+    left: -10px;
+}
+.carousel-control-next {
+    right: 55px;
+}
 .card p {
-    margin: 10px;
     font-weight: bold;
-    font-size: 1.1rem; /* Tăng kích thước chữ */
+    font-size: 1rem; /* Tăng kích thước chữ */
     color: #333; /* Màu chữ tối hơn để nổi bật hơn */
-    padding: 5px; /* Thêm khoảng cách bên trong */
     border-radius: 3px; /* Bo viền cho nền */
 }
 
@@ -692,12 +779,16 @@ hr {
 
 .d-flex {
     display: flex;
+    /* Đặt chiều của flex thành cột */
     align-items: flex-start; /* Căn chỉnh các phần tử theo chiều dọc */
 }
-
+.d-flex-column {
+    display: flex;
+    flex-direction: column;
+}
 .img-column {
-    flex: 1; /* Chiếm không gian còn lại */
-    margin-right: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    margin-bottom: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
 }
 
 dt {
@@ -718,7 +809,6 @@ div.info-row:hover {
     transform: scaleY(0.85);
 }
 .room-info{
-    margin-top:30px;
     padding-left:10px;
     font-size: xx-large;
     font-weight: 700;
@@ -731,14 +821,13 @@ div.info-row:hover {
     margin: 5px 0; /* Khoảng cách giữa các hình ảnh */
 }
 .info-column {
-    width: 300px; /* Adjust the width as needed */
-    padding: 10px; /* Reduce padding */
-    font-size: 14px; /* Make font size smaller */
-    border: 1px solid #ccc; /* Optional: Add a border for better visibility */
-    border-radius: 5px; /* Optional: Rounded corners */
-    background-color: #f9f9f9; /* Optional: Light background color */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    padding: 10px; /* Giữ padding */
+    font-size: 14px; /* Kích thước chữ */
+    border: 1px solid #ccc; /* Viền cho phần thông tin */
+    border-radius: 5px; /* Bo góc */
+    background-color: #f9f9f9; /* Màu nền nhẹ */
 }
-
 .info-row {
     margin-bottom: 8px; /* Space between rows */
 }
@@ -961,8 +1050,69 @@ footer p {
     font-size: 14px; 
 }
 
+/*service*/
+a:hover {
+    text-decoration: none;
+}
+a {
+    text-decoration: none;
+    color:inherit;
+}
 
+/*bookingHistory*/
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 10px; /* Padding cho bảng */
+}
 
+    .table th, .table td {
+        padding: 15px; /* Padding cho ô */
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
 
+.pagination {
+    display: flex;
+    justify-content: center; /* Căn giữa các nút phân trang */
+    padding: 10px 0; /* Khoảng cách trên và dưới */
+}
 
+    .pagination .page-item {
+        margin: 0 5px; /* Khoảng cách giữa các nút */
+    }
 
+    .pagination .page-link {
+        padding: 10px 15px; /* Padding cho nút */
+        border: 1px solid #007bff; /* Viền cho nút */
+        border-radius: 5px; /* Bo tròn góc */
+        color: #007bff; /* Màu chữ */
+        text-decoration: none; /* Bỏ gạch chân */
+        transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển tiếp */
+    }
+
+        .pagination .page-link:hover {
+            background-color: #007bff; /* Màu nền khi hover */
+            color: white; /* Màu chữ khi hover */
+        }
+
+    .pagination .active .page-link {
+        background-color: #007bff; /* Màu nền cho nút đang hoạt động */
+        color: white; /* Màu chữ cho nút đang hoạt động */
+        border: 1px solid #007bff; /* Viền cho nút đang hoạt động */
+    }
+
+    .pagination .disabled .page-link {
+        color: #6c757d; /* Màu chữ cho nút không hoạt động */
+        pointer-events: none; /* Không cho phép nhấp chuột */
+    }
+
+input.form-control:disabled,
+input.form-control[readonly] {
+    background-color: white !important;
+}
+
+.no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}

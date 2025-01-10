@@ -2,7 +2,9 @@
 using System.Data;
 using Azure.Core;
 using Domain.DTO.Paging;
+using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories.IRepository;
@@ -339,6 +341,96 @@ public class RoomBookingRepository : IRoomBookingRepository
         catch (Exception e)
         {
             throw new Exception("An error occurred while checking the roombooking status", e);
+        }
+    }
+
+    public async Task<ResponseData<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request)
+    {
+        var roomBookings = new ResponseData<RoomBookingResponseForCustomer>();
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@CustomerId", request.CustomerId),
+                new SqlParameter("@PageIndex", request.PageIndex),
+                new SqlParameter("@PageSize", request.PageSize),
+            };
+
+            var db = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetListRoomBookingsByCustomerId, parameters);
+            var rbList = new List<RoomBookingResponseForCustomer>();
+            var listRoomBooking = db.AsEnumerable().Select(row => new RoomBookingResponseForCustomer
+            {
+                Id = row.Field<Guid>("Id"),
+                BookingType = (BookingType)row.Field<int?>("BookingType"),
+                CustomerId = row.Field<Guid>("CustomerId"),
+                StaffId = row.Field<Guid?>("StaffId"),
+                TotalPrice = row.Field<decimal?>("TotalPrice"),
+                TotalRoomPrice = row.Field<decimal?>("TotalRoomPrice"),
+                TotalServicePrice = row.Field<decimal?>("TotalServicePrice"),
+                TotalExtraPrice = row.Field<decimal?>("TotalExtraPrice"),
+                Status = row.Field<RoomBookingStatus>("Status"),
+                StaffName = row.Field<string>("StaffName"),
+                CustomerName = row.Field<string>("CustomerName"),
+                CreatedTime = row.Field<DateTimeOffset?>("CreatedTime"),
+                CreatedBy = row.Field<Guid?>("CreatedBy"),
+                ModifiedTime = row.Field<DateTimeOffset?>("ModifiedTime"),
+                ModifiedBy = row.Field<Guid?>("ModifiedBy"),
+            }).ToList();
+
+            roomBookings.data = listRoomBooking;
+            roomBookings.CurrentPage = request.PageIndex;
+            roomBookings.PageSize = request.PageSize;
+            try
+            {
+                roomBookings.totalRecord = Convert.ToInt32(db.Rows[0]["TotalRows"]);
+            }
+            catch (Exception e)
+            {
+                roomBookings.totalRecord = 0;
+            }
+            roomBookings.totalPage = (int)Math.Ceiling((double)roomBookings.totalRecord / request.PageSize);
+            return roomBookings;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("An error occurred while updating the room", e);
+        }
+    }
+    private RoomBookingResponseForCustomer ConvertDataRowToRB(DataRow row)
+    {
+        return new RoomBookingResponseForCustomer()
+        {
+            Id = Guid.Parse(row["Id"].ToString()!),
+            BookingType = (BookingType?)Enum.Parse(typeof(BookingType), row["BookingType"].ToString()!),
+            CustomerId = Guid.Parse(row["CustomerId"].ToString()!),
+            StaffId = row["StaffId"] != DBNull.Value ? (Guid?)Guid.Parse(row["StaffId"].ToString()!) : null,
+            TotalPrice = row["TotalPrice"] != DBNull.Value ? (decimal?)decimal.Parse(row["TotalPrice"].ToString()!) : null,
+            TotalRoomPrice = row["TotalRoomPrice"] != DBNull.Value ? (decimal?)decimal.Parse(row["TotalRoomPrice"].ToString()!) : null,
+            TotalServicePrice = row["TotalServicePrice"] != DBNull.Value ? (decimal?)decimal.Parse(row["TotalServicePrice"].ToString()!) : null,
+            TotalExtraPrice = row["TotalExtraPrice"] != DBNull.Value ? (decimal?)decimal.Parse(row["TotalExtraPrice"].ToString()!) : null,
+            Status = (RoomBookingStatus)Enum.Parse(typeof(RoomBookingStatus), row["Status"].ToString()!),
+            StaffName = row["StaffName"]?.ToString(),
+            CustomerName = row["CustomerName"]?.ToString(),
+            CreatedTime = row["CreatedTime"] != DBNull.Value ? (DateTimeOffset?)Convert.ToDateTime(row["CreatedTime"]) : null,
+            CreatedBy = row["CreatedBy"] != DBNull.Value ? (Guid?)Guid.Parse(row["CreatedBy"].ToString()!) : null,
+            ModifiedTime = row["ModifiedTime"] != DBNull.Value ? (DateTimeOffset?)Convert.ToDateTime(row["ModifiedTime"]) : null,
+            ModifiedBy = row["ModifiedBy"] != DBNull.Value ? (Guid?)Guid.Parse(row["ModifiedBy"].ToString()!) : null,
+        };
+    }
+
+    public async Task<int> UpdateRoomBookingPrice(Guid id)
+    {
+        try
+        {
+            SqlParameter[] sqlParameter = new SqlParameter[]
+            {
+                new SqlParameter("@IdRoomBooking", id),
+            };
+            return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateRoomBookingPrice, sqlParameter);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
         }
     }
 }

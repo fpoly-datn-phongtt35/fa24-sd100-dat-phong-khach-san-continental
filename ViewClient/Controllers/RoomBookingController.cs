@@ -1,22 +1,16 @@
 ﻿using Domain.DTO.Customer;
 using Domain.DTO.Order;
+using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
-using Domain.DTO.ServiceOrderDetail;
 using Domain.Enums;
-using Domain.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Utilities;
 using ViewClient.Repositories.IRepository;
-using ViewClient.Repositories.Repository;
 
 namespace ViewClient.Controllers
 {
@@ -42,18 +36,39 @@ namespace ViewClient.Controllers
             _serviceOderDetailRepo = serviceOderDetailRepo;
             _customerRepo = customerRepo;
         }
+        [HttpGet]
+        public async Task<IActionResult> BookingHistory(RoomBookingGetRequestByCustomer request)
+        {
+            try
+            {
+                var _UserLogin = Guid.Empty;
+                if (HttpContext.User.FindFirst(ClaimTypes.UserData) != null)
+                {
+                    _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
+                }
 
-        //    var model = new { Room = room, BookingDetails = roomBookingDetailCreateRequest };
-        //    return PartialView("ModalPartial", model);
-        //}
+                if (_UserLogin == Guid.Empty)
+                {
+                    return StatusCode(401, new { error = "Bạn cần đăng nhập để thực hiện chức năng này." });
+                }
 
+                request.CustomerId = _UserLogin;
+                request.PageSize = 10;
+                var roomBookings = await _roomBookingRepo.GetListRoomBookingByCustomerId(request);
+                return View(roomBookings);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi trong quá trình lấy dữ liệu.");
+            }
+        }
+        
         [HttpGet]
         public IActionResult CreatePaymentLink()
         {
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
             var apiUrl = "https://localhost:7130/api/Order/create";
@@ -100,13 +115,8 @@ namespace ViewClient.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> RoomBooking([FromBody] RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
+        public async Task<IActionResult> RoomBooking([FromBody]RoomBookingDetailCreateRequest roomBookingDetailCreateRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 var _UserLogin = Guid.Empty;
@@ -152,7 +162,11 @@ namespace ViewClient.Controllers
                     Status = RoomBookingStatus.PENDING,
                     StaffId = null,
                     CreatedBy = customerId,
-                    NewId = null
+                    NewId = null,
+                    TotalExpenses = 0,
+                    TotalPriceReality = 0,
+                    TotalExtraPrice = 0,
+                    BookingBy = BookingBy.Day
                 };
 
                 var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
@@ -163,7 +177,7 @@ namespace ViewClient.Controllers
                     {
                         var serviceOrderDetail = new Domain.Models.ServiceOrderDetail
                         {
-                            RoomBookingId = roomBooking,
+                            RoomBookingDetailId = roomBooking,
                             ServiceId = service.ServiceId,
                             Amount = Convert.ToDouble((service.Quantity) * (service.Price)),
                             Description = null,
@@ -191,6 +205,8 @@ namespace ViewClient.Controllers
                 roomBookingDetailCreateRequest.Customer = null;
                 roomBookingDetailCreateRequest.ServicePrice = null;
                 roomBookingDetailCreateRequest.TotalPrice = null;
+                roomBookingDetailCreateRequest.Expenses = null;
+                roomBookingDetailCreateRequest.Note = null;
                 var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
 
                 var roomStatus = new RoomUpdateStatusRequest

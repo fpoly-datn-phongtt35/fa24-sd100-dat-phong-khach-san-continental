@@ -13,6 +13,10 @@ namespace Domain.Services.IServices
     {
         Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id);
         Task<RoomBookingDetail> GetById(Guid id);
+        Task<RoomBookingDetailResponse?> GetRoomBookingDetailById2(Guid id);
+        Task<RoomBookingDetailResponse?> GetRoomBookingDetailWithEditHistoryById(Guid roomBookingDetailId);
+        Task<RoomBookingDetailResponse?> UpdateRoomBookingDetail2
+            (RoomBookingDetailUpdateRequest roomBookingDetailUpdateRequest);
         Task<int> UpSertRoomBookingDetail(RoomBookingDetail request);
         Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);

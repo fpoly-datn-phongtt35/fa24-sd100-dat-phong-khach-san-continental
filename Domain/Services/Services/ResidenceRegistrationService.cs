@@ -205,6 +205,47 @@ namespace Domain.Services.Services
             return model;
         }
 
+        public async Task<ResponseData<ResidenceResponse>> GetResidencesByDate(ResidenceGetByDateRequest request)
+        {
+            var model = new ResponseData<ResidenceResponse>();
+            try
+            {
+                DataTable table = await _residenceRegistrationRepo.GetResidencesByDate(request);
+                model.data = (from row in table.AsEnumerable()
+                              select new ResidenceResponse
+                              {
+                                  Id = row.Field<Guid>("Id"),
+                                  RoomBookingDetailId = row.Field<Guid>("RoomBookingDetailId"),
+                                  RoomName = row.Field<string>("RoomName"),
+                                  FullName = row.Field<string>("FullName"),
+                                  DateOfBirth = row.Field<DateTime>("DateOfBirth"),
+                                  Gender = row.Field<GenderType?>("Gender"),
+                                  IdentityNumber = row.Field<string>("IdentityNumber"),
+                                  PhoneNumber = row.Field<string>("PhoneNumber"),
+                                  CheckInTime = row.Field<DateTimeOffset?>("CheckInTime"),
+                                  CheckOutTime = row.IsNull("CheckOutTime") ? null : row.Field<DateTimeOffset?>("CheckOutTime"),
+                                  IsCheckOut = row.Field<bool?>("IsCheckOut")
+                              }).ToList();
+                model.CurrentPage = request.PageIndex;
+                model.PageSize = request.PageSize;
+                try
+                {
+                    model.totalRecord = Convert.ToInt32(table.Rows[0]["TotalRows"]);
+                }
+                catch (Exception ex)
+                {
+                    model.totalRecord = 0;
+                }
+                model.totalPage = (int)Math.Ceiling((double)model.totalRecord / request.PageSize);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return model;
+        }
+
         public async Task<int> UpdateResidence(ResidenceUpdateRequest request)
         {
             try

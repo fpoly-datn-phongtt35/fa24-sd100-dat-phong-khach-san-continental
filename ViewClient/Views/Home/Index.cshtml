@@ -9,35 +9,38 @@
     ViewBag.Title = "Continental";
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
     var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
-   
 }
 
-<div class="search-box">
-@*     <h3 style="text-align: center;">Tìm Kiếm Phòng</h3> *@
+<div class="search-box container">
+    <h2 class="text-center mb-4 fs-2 fw-bolder"><i class="fas fa-calendar-check text-primary"></i> ĐẶT LỊCH NGAY </h2>
     <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
-        <div class="me-2">
-            <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
-            <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
-        </div> 
-        <div class="me-2">
-            <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
-            <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
+                <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+            </div>
+            <div class="col-md-3">
+                <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
+                <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+            </div>
+            <div class="col-md-3">
+                <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
+                <input type="number" id="maxiumOccupancy" name="maxiumOccupancy" class="form-control" title="Số người" min="1" max="50" required>
+            </div>
+            <div class="col-md-3">
+                <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
+                <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
+            </div>
         </div>
-        <div class="me-2">
-            <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
-            <input type="number" id="maxiumOccupancy" name="maxiumOccupancy" class="form-control" title="Số người" min="1" max="50" required>
+        <div class="text-center mt-0 ms-lg-2">
+            <button type="submit" id="validateButton" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
         </div>
-        <div class="me-2">
-            <h6 for="quantityRoom" class="form-label">Số Lượng Phòng</h6>
-            <input type="number" id="quantityRoom" name="quantityRoom" class="form-control" title="Số lượng phòng" min="1" max="25" required>
-        </div>
-        <button type="submit" id="validateButton" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
     </form>
 </div>
 <div class="container">
     @if (!groupedData.Any())
     {
-        <h3 style="text-align: center; color:#F04770;">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
+        <h3 style="color:#F04770;" class="text-center">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
     }
     else
     {
@@ -46,32 +49,44 @@
             var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == group.Key);
             if (roomType != null)
             {
-                <h3 class="room-type-title d-flex">
-                    Loại phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.Name</p> -
-                    Số lượng người/phòng: <p style="text-transform:uppercase; color:#108AB1;"> @roomType.MaximumOccupancy</p>
-                </h3>
-                <div class="row mb-2">
+                <h4 class="room-type-title d-flex">
+                    Loại phòng: <p style="color:#108AB1;" class="text-uppercase"> @roomType.Name</p> -
+                    Số lượng người/phòng: <p style="color:#108AB1;" class="text-uppercase"> @roomType.MaximumOccupancy</p>
+                </h4>
+                <div class="row gap-0">
                     @foreach (var room in group)
                     {
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link" style="text-decoration:none;">
-                                <div class="card">
-                                    <h5 class="card-title" style="color:black;">@room.Name</h5>
-                                    <div class="d-flex justify-content-center">
-                                        @foreach (var img in room.Images)
-                                        {
-                                            var extension = System.IO.Path.GetExtension(img);
-                                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                        <div class="col-lg-3 col-md-3 col-sm-4 mb-1 no-padding">
+                            <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link">
+                                <div class="card no-border">
+                                    <div id="carousel-@room.Id" class="carousel slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
+                                        <div class="carousel-inner">
+                                            @foreach (var img in room.Images)
                                             {
-                                                var imagePath = Url.Content($"/View/wwwroot/images/{img}");
-                                                <div class="img-container" style="margin: 5px;">
-                                                    <img src="@imagePath" alt="@room.Name" style="object-fit: cover; width: 100%; height: 150px;" />
-                                                </div>
+                                                var extension = System.IO.Path.GetExtension(img);
+                                                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                                                {
+                                                    var imagePath = Url.Content($"/View/wwwroot/images/{img}");
+                                                    <div class="carousel-item @(img == room.Images.First() ? "active" : "")">
+                                                        <div class="img-container">
+                                                            <img src="@imagePath" alt="@room.Name" class="d-block w-100" />
+                                                        </div>
+                                                    </div>
+                                                }
                                             }
-                                        }
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-@room.Id" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
                                     </div>
+                                    <i class="fas fa-heart heart-icon"></i>
+                                    <h5 class="card-title" style="color:black;">@room.Name</h5>
                                     <p>đ @String.Format("{0:N0}", room.Price) / ngày</p>
-                                  
                                 </div>
                             </a>
                         </div>

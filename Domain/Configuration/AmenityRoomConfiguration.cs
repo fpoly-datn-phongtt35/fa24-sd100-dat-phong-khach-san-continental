@@ -12,7 +12,9 @@ namespace Domain.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Amount).IsRequired();
-            builder.HasOne(x => x.Amenity).WithMany(x => x.AmenityRooms).HasForeignKey(x => x.AmenityId);
+            builder.HasOne(x => x.Amenity)
+                .WithMany(x => x.AmenityRooms)
+                .HasForeignKey(x => x.AmenityId);
             builder.HasOne(x => x.RoomType).WithMany(x => x.AmenityRooms).HasForeignKey(x => x.RoomTypeId);
         }
     }

@@ -20,7 +20,7 @@ namespace View.Controllers
             _httpClient = new HttpClient();
         }
 
-        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, string titleOfType = null)
+        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, PostTypeEnum? titleOfType = null)
         {
             string requestURL = "https://localhost:7130/api/PostType/GetListPostType";
 
@@ -83,6 +83,7 @@ namespace View.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
+            ViewBag.PostTypes = Enum.GetValues(typeof(PostTypeEnum));
             return View(new PostTypeCreateRequest());
         }
 
@@ -118,6 +119,7 @@ namespace View.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
+            ViewBag.PostTypes = Enum.GetValues(typeof(PostTypeEnum));
 
             try
             {

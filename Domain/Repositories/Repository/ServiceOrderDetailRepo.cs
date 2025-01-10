@@ -32,7 +32,7 @@ namespace Domain.Repositories.Repository
                 {
                     SqlParameter[] sqlParameters = new SqlParameter[]
                     {
-                    new SqlParameter("@RoomBookingId", request.RoomBookingId),
+                    new SqlParameter("@RoomBookingDetailId", request.RoomBookingDetailId),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Quantity", request.Quantity),
@@ -50,7 +50,7 @@ namespace Domain.Repositories.Repository
                     SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != Guid.Empty ? request.Id : (object)DBNull.Value),
-                    new SqlParameter("@RoomBookingId", request.RoomBookingId != Guid.Empty? request.RoomBookingId : DBNull.Value),
+                    new SqlParameter("@RoomBookingDetailId", request.RoomBookingDetailId != Guid.Empty? request.RoomBookingDetailId : DBNull.Value),
                     new SqlParameter("@ServiceId", request.ServiceId),
                     new SqlParameter("@Amount", request.Amount),
                     new SqlParameter("@Description", request.Description),
@@ -73,16 +73,16 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<DataTable> GetListServiceOrderDetailByRoomBookingI(Guid id)
+        public async Task<DataTable> GetListServiceOrderDetailByRoomBookingDetailId(Guid id)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@RoomBookingId", id != null ? id : DBNull.Value ),
+                    new SqlParameter("@RoomBookingDetailId", id != null ? id : DBNull.Value ),
                 };
 
-                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetailByRoomBookingId, sqlParameters);
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetailByRoomBookingDetailId, sqlParameters);
             }
             catch (Exception ex)
             {
@@ -106,13 +106,13 @@ namespace Domain.Repositories.Repository
                 throw ex;
             }
         }
-        public async Task<DataTable> GetServiceOrderDetailByRoomBookingId(Guid id)
+        public async Task<DataTable> GetServiceOrderDetailByRoomBookingDetailId(Guid id)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@RoomBookingId", id != null ? id : DBNull.Value ),
+                    new SqlParameter("@RoomBookingDetailId", id != null ? id : DBNull.Value ),
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceOrderDetail, sqlParameters);

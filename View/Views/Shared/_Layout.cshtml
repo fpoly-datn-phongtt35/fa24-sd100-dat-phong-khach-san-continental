@@ -23,6 +23,17 @@
             z-index: 9999; /* Đảm bảo nó hiển thị trên các phần tử khác */
         }
 
+        .page-link {
+            color: #2987a7 !important;
+        }
+
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff !important;
+            background-color: #2987a7 !important;
+            border-color: #2987a7 !important;
+        }
+
         .Layout-scroll{
             overflow-y: scroll;
             scroll-behavior: smooth;
@@ -48,11 +59,11 @@
             transform: rotate(180deg);
         }
     </style>
-    <div class="d-flex ">
+    <div class="d-flex" style="background-color:#f8f9fa;min-height:100vh">
         <partial name="_header" />
 
         <div class="container-fluid p-0" style="width:83%;margin-left:17%">
-            <main role="main" class="pb-3" style="background-color:#f8f9fa;min-height:100vh">
+            <main role="main" class="pb-3" style="background-color:#f8f9fa;min-height:70vh">
                 <div class="d-flex align-items-center ps-1 bar-css" style="box-shadow:0px 0px 3px;width:100%">
                     <div class="d-flex align-items-center justify-content-end" style="width:97%;">
                         <div id="acc_dashboard" onclick="global.Account_DashBoard()">

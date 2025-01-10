@@ -570,8 +570,7 @@ namespace Utilities.StoredProcedure
                         oCommand.Parameters.AddRange(parameters);
                     }
 
-                    oConnection.Open();
-
+                    await oConnection.OpenAsync();
                     await oCommand.ExecuteNonQueryAsync();
                 }
             }

@@ -118,7 +118,6 @@ $(document).ready(function () {
         $("#Client_Id").select2();
         _roombooking_detail.LoadDetailCustomer($("#Client_Id").val());
         _roombooking_detail.LoadListRoomRelated($("#IdRoomBooking").val());
-        _Service_OrderDetail.LoadListSerOrderDetailRelated($("#IdRoomBooking").val());
     }
 
     $("#room_Id").select2({
@@ -144,7 +143,7 @@ $(document).ready(function () {
                 return {
                     results: $.map(response.lstRoom, function (item) {
                         return {
-                            text: item.name + ' - ' + item.description,
+                            text: 'phòng ' + item.name + ' - giá: ' + global.NumberVNFormated(item.price) ,
                             id: item.id,
                         }
                     })
@@ -162,92 +161,9 @@ $(document).ready(function () {
 
 
 
-    $("#service_Id").select2({
-        placeholder: "Tìm tên dịch vụ",
-        maximumSelectionLength: 1,
-        ajax: {
-            url: "/RoomBooking/GetServiceSuggestion",
-            type: "post",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                getSerRq.Name = params.term
-                var query = {
-                    request: getSerRq,
-                }
-
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-            processResults: function (response) {
-                return {
-                    results: $.map(response, function (item) {
-                        return {
-                            text: item.name + ' - ' + item.description,
-                            id: item.id,
-                        }
-                    })
-                };
-            },
-        }
-    }).on('select2:opening', function (e) {
-        $('#service_Id').val([]).trigger('change');
-    });
-
-    $("#service_Id").on("select2:select", function (e) {
-        var data = e.params.data;
-        _Service_OrderDetail.AddServiceToList(data.id)
-    });
-
-
-    $("#service_type_Id").select2({
-        placeholder: "Tìm tên loại dịch vụ",
-        maximumSelectionLength: 1,
-        ajax: {
-            url: "/RoomBooking/GetlistServiceType",
-            type: "post",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                var query = {
-                    txt_search: params.term,
-                }
-
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-            processResults: function (response) {
-                return {
-                    results: $.map(response, function (item) {
-                        return {
-                            text: item.name + ' - ' + item.description,
-                            id: item.id,
-                        }
-                    })
-                };
-            },
-        }
-    }).on('select2:opening', function (e) {
-        $('#service_type_Id').val([]).trigger('change');
-        getSerRq.ServiceTypeId = null;
-    });
-
-
-    $("#service_type_Id").on("select2:select", function (e) {
-        var data = e.params.data;
-        getSerRq.ServiceTypeId = data.id;
-    });
+   
 })
 //#endregion
-
-
-var getSerRq =
-{
-    Name: null,
-    ServiceTypeId: null,
-    MinPrice: null,
-    MaxPrice: null
-}
 
 var getRoomRq = {
     Name: null,
@@ -270,191 +186,6 @@ var STT = 1;
 let dataRessidence = [];
 var residenceCount = 0;
 var maximumOccupancy = 0;
-
-
-var listIdService = [];
-var lstServiceOrderDetail = [];
-var IdSerAdd = -1;
-var LstDelete = [];
-var LstIdSerAdd = [];
-var STT2 = 1;
-
-var _Service_OrderDetail =
-{
-    LoadListRoomRelated: function (Id) {
-        $.ajax({
-            url: "/RoomBooking/GetListServiceRelated",
-            type: "post",
-            data: { id: Id },
-            success: function (result) {
-                $("#service-related").append();
-            }
-        });
-    },
-    OnchangeMinSer: function () {
-        getSerRq.MinPrice = $("#min_Ser").val();
-    },
-    OnchangeMaxSer: function () {
-        getSerRq.MaxPrice = $("#max_Ser").val();
-    },
-    AddServiceToList: function (Id) {
-        if (listIdService.indexOf(Id) < 0) {
-            listIdService.push(Id);
-            $.ajax({
-                url: "/RoomBooking/GetServiceById",
-                type: "post",
-                data: { Id: Id },
-                success: function (result) {
-                    if (result != null) {
-                        var formattedprice = parseFloat(result.price).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',');
-                        $("#service-related").append(`
-                        <tr class="align-items-center" id="ElementSer_`+ IdSerAdd + `">
-                            <td style="display:none"><input id="IdSer_`+ IdSerAdd + `" value="${result.id}"></input></td>
-                            <td scope="col" class="STT_Ser"></td>
-                            <td scope="col">${result.name}</td>
-                            <td scope="col">
-                                <input id="PriceSer_`+ IdSerAdd + `" class="form-control" value="${formattedprice}" disabled />
-                            </td>
-                            <td scope="col">
-                                <input id="QuantitySer_`+ IdSerAdd + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `')" class="form-control" type="number" value="1" min="1" />
-                            </td>
-                            <td scope="col">
-                                ${result.unit}
-                            </td>
-                            <td scope="col">
-                                <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
-                            </td>
-                            <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
-                           </td>
-                            <td scope="col">
-                                <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
-                            </td>
-                            <td scope="col">
-                                <a class="btn btn-danger" onclick="_Service_OrderDetail.RemoveServiceOut('`+ IdSerAdd + `')">Xóa</a>
-                            </td>
-                        </tr>
-                        `);
-                        LstIdSerAdd.push(IdSerAdd);
-                        IdSerAdd = IdSerAdd - 1;
-                        _Service_OrderDetail.CalculatingTotalPriceSer();
-                        _Service_OrderDetail.ResetIndex();
-                    }
-
-                }
-            });
-        }
-    },
-    RemoveServiceOut: function (Id) {
-        if (Id < 0) {
-            var Idremove = $("#IdSer_" + Id).val();
-            listIdService = listIdService.filter(x => x != Idremove);
-            LstIdSerAdd = LstIdSerAdd.filter(x => x != Id);
-        }
-        LstDelete.push(Id);
-        $("#ElementSer_" + Id).remove();
-        _Service_OrderDetail.CalculatingTotalPriceSer();
-        _Service_OrderDetail.ResetIndex();
-    },
-    ResetIndex: function () {
-        STT2 = 1;
-        var EleIndex = $('tr[id^="ElementSer_"]');
-        EleIndex.each(function () {
-            $(this).find('td[class^="STT_Ser"]').html(STT2);
-            STT2++;
-        });
-    },
-    OnchangeQuantity: function (Id) {
-        var TotalPriceSer = $("#PriceSer_" + Id).val().replaceAll(',', '') * $("#QuantitySer_" + Id).val();
-        var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
-        formattedprice = formattedprice.replaceAll('.', ',')
-        $("#TotalPriceSer_" + Id).val(formattedprice);
-        _Service_OrderDetail.CalculatingTotalPriceSer();
-    },
-    CalculatingTotalPriceSer: function () {
-        var AmountPriceService = 0;
-        var AmountExtraSer = 0;
-        var lstToalPriceSerEle = document.getElementsByClassName("total_price_ser");
-        var lstExtraSerElete = document.getElementsByClassName("priceSer_extra");
-        for (let i = 0; i < lstToalPriceSerEle.length; i++) {
-            const element = lstToalPriceSerEle[i];
-            AmountPriceService = AmountPriceService + parseInt(element.value.replaceAll(',', ''));
-        }
-
-        for (let i = 0; i < lstExtraSerElete.length; i++) {
-            const element = lstExtraSerElete[i];
-            AmountExtraSer = AmountExtraSer + parseInt(element.value);
-        }
-        $("#total_service_price").html(global.NumberVNFormated(AmountPriceService));
-        $("#total_service_extra_price").html(global.NumberVNFormated(AmountExtraSer));
-        _roombooking_detail.CalculatingRoomPrice();
-    },
-    LoadListSerOrderDetailRelated: function (Id) {
-        $.ajax({
-            url: "/RoomBooking/GetListServiceRelated",
-            type: "post",
-            data: { id: Id },
-            success: function (result) {
-                if (result != null) {
-                    result.forEach(item => {
-                        var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
-                        formattedprice = formattedprice.replaceAll('.', ',');
-                        $("#service-related").append(`
-                        <tr class="align-items-center" id="ElementSer_`+ item.id + `">
-                            <td style="display:none"><input id="IdSerOrder_`+ item.id + `" value="${item.id}"></input></td>
-                            <td style="display:none"><input id="IdSer_`+ item.id + `" value="${item.serviceId}"></input></td>
-                            <td scope="col" class="STT_Ser">${STT2}</td>
-                            <td scope="col">${item.name}</td>
-                            <td scope="col">
-                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${formattedprice}" disabled />
-                            </td>
-                            <td scope="col">
-                                <input id="QuantitySer_`+ item.id + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + item.id + `')" class="form-control" type="number" value="${item.quantity}" min="1" />
-                            </td>
-                            <td scope="col">
-                                ${item.unit}
-                            </td>
-                            <td scope="col">
-                                <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
-                            </td>
-                            <td class="">
-                               <input id="ExtraSerPr_` + item.id + `" disabled class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="${item.extraPrice}" min="0" type="number">
-                           </td>
-                            <td scope="col">
-                                <textarea id="NoteSer_`+ item.id + `" class="form-control text-start" placeholder="Thêm ghi chú">${item.description != null ? item.description : ""}</textarea>
-                            </td>
-                            <td scope="col">
-                                <a class="btn btn-danger" onclick="_Service_OrderDetail.RemoveServiceOut('`+ item.id + `')">Xóa</a>
-                            </td>
-                        </tr>
-                        `)
-                        STT2++;
-                        LstIdSerAdd.push(item.id);
-                    })
-                    _Service_OrderDetail.CalculatingTotalPriceSer();
-                    _Service_OrderDetail.ResetIndex();
-                }
-            }
-        });
-    },
-
-    GetListOBjService: function () {
-        LstIdSerAdd.forEach(item => {
-            var obj =
-            {
-                Id: $("#IdSerOrder_" + item).val(),
-                Price: $("#PriceSer_" + item).val(),
-                Amount: $("#TotalPriceSer_" + item).val(),
-                Quantity: $("#QuantitySer_" + item).val(),
-                ExtraPrice: $("#ExtraSerPr_" + item).val(),
-                Description: $("#NoteSer_" + item).val(),
-                ServiceId: $("#IdSer_" + item).val()
-            }
-            lstServiceOrderDetail.push(obj);
-        })
-    }
-}
 
 
 var _roombooking_detail = {
@@ -681,15 +412,28 @@ var _roombooking_detail = {
                         var newFMfrom = moment(datefrom).format("YYYY-MM-DD")
                         const dateto = new Date(item.checkOutBooking);
                         var newFMto = moment(dateto).format("YYYY-MM-DD")
+
+                        var UnnePrice = item.expenses + item.extraPrice + item.extraService + item.servicePrice;
+                        var Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking)) + UnnePrice;
+
                         var newCIfrom;
                         var newCOto
                         if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
+
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking)) - UnnePrice;
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
+
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality)) - UnnePrice;
+                        }
+
+                        if (item.checkInReality != null && item.checkOutReality != null)
+                        {
+                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality)) - UnnePrice;
                         }
                         $("#room-related").append(`
                         <tr class="">
@@ -698,7 +442,7 @@ var _roombooking_detail = {
                            <td style="display:none"><input id="Status_`+ item.roomBookingDetailId + `" value="${item.status}"></input></td>
                            <td scope="row">${STT}</td>
                            <td>${item.name}</td>
-                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(item.price)}</td>
+                           <td class="room_price" id="Price_` + item.roomBookingDetailId + `">${global.NumberVNFormated(Price)}</td>
                            <td>
                                <input id="CheckIn_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeFromDateRow(` + item.roomBookingDetailId + `)" class="form-control checkin_time select_time" value="` + newFMfrom + `" type="date">
                            </td>
@@ -715,9 +459,8 @@ var _roombooking_detail = {
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
                            <td class="d-flex">
                                <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('` + item.roomBookingDetailId + `','` + item.roomId + `')">Hủy</a>
-                               <a class="text-green btn btn-success ms-2 btn-checkin text-nowrap" id="btn-checkin-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckIn('` + item.roomBookingDetailId + `')">Đã nhận</a>
-                               <a class="text-white btn btn-warning ms-2 btn-checkout text-nowrap" id="btn-checkout-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.CheckOut('` + item.roomBookingDetailId + `','` + item.roomId + `')">Đã trả</a>
                                <a class="btn btn-info ms-2 btn-residence text-nowrap" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Danh sách</a>
+                               <a class="btn btn-primary ms-2 btn-detail text-nowrap" id="btn-detail-` + item.roomBookingDetailId + `" href="/RoomBooking/RoomBookingDetails/RoomBookingDetailId=` + item.roomBookingDetailId + `" style="cursor:pointer">Chi tiết</a>
                            </td>
                            
                         </tr>
@@ -780,34 +523,6 @@ var _roombooking_detail = {
         title.innerText = 'Danh sách khách hàng ' + residenceCount + '/' + maximumOccupancy;
         modalHeader.appendChild(title);
 
-        // Tạo nút "Thêm"
-        const addButton = document.createElement('button');
-        addButton.innerText = 'Thêm';
-        addButton.style.backgroundColor = '#008CBA';
-        addButton.style.color = 'white';
-        addButton.style.padding = '8px 16px';
-        addButton.style.marginRight = '8px';
-        addButton.style.border = 'none';
-        addButton.style.borderRadius = '4px';
-        addButton.style.cursor = 'pointer';
-        addButton.style.fontSize = '14px';
-        addButton.style.transition = 'background-color 0.3s';
-        //#endregion
-
-        addButton.addEventListener('mouseover', function () {
-            addButton.style.backgroundColor = '#007bb5';
-        });
-        addButton.addEventListener('mouseout', function () {
-            addButton.style.backgroundColor = '#008CBA';
-        });
-        addButton.onclick = function () {
-            showAddForm();
-        };
-        modalHeader.appendChild(addButton);
-
-        modalContainer.appendChild(modalHeader);
-
-
         //#region validate residence
         function isPhoneNumberValid(phoneNumber) {
             const phoneRegex = /^(0\d{9})$/;
@@ -858,240 +573,214 @@ var _roombooking_detail = {
         }
         //#endregion
 
+        // Tạo nút "Thêm"
+        const addButton = document.createElement('button');
+        addButton.innerText = 'Thêm';
+        addButton.style.backgroundColor = '#008CBA';
+        addButton.style.color = 'white';
+        addButton.style.padding = '8px 16px';
+        addButton.style.marginRight = '8px';
+        addButton.style.border = 'none';
+        addButton.style.borderRadius = '4px';
+        addButton.style.cursor = 'pointer';
+        addButton.style.fontSize = '14px';
+        addButton.style.transition = 'background-color 0.3s';
+        //#endregion
 
-        // Hàm hiển thị form thêm bản ghi
-        function showAddForm() {
-            //#region formContainer
-            const addFormContainer = document.createElement('div');
-            addFormContainer.style.marginTop = '16px';
-            addFormContainer.style.padding = '20px';
-            addFormContainer.style.border = '1px solid #ddd';
-            addFormContainer.style.borderRadius = '8px';
-            addFormContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-            addFormContainer.style.backgroundColor = '#fff';
+        addButton.addEventListener('mouseover', function () {
+            addButton.style.backgroundColor = '#007bb5';
+        });
+        addButton.addEventListener('mouseout', function () {
+            addButton.style.backgroundColor = '#008CBA';
+        });
+        //addButton.onclick = function () {
+        //    showAddForm();
+        //};
+        modalHeader.appendChild(addButton);
 
-            const formTitle = document.createElement('h3');
-            formTitle.innerText = 'Thêm bản ghi';
-            formTitle.style.textAlign = 'center';
-            addFormContainer.appendChild(formTitle);
+        modalContainer.appendChild(modalHeader);  
 
-            const formFields = [
-                { label: 'Tên', type: 'text', id: 'fullName', placeholder: 'Nhập tên đầy đủ' },
-                { label: 'Ngày sinh', type: 'date', id: 'dateOfBirth' },
-                { label: 'Giới tính', type: 'select', id: 'gender', options: ['Nam', 'Nữ', 'Khác'] },
-                { label: 'Căn cước', type: 'number', id: 'identityNumber', placeholder: 'Nhập số căn cước' },
-                { label: 'SĐT', type: 'number', id: 'phoneNumber', placeholder: 'Nhập số điện thoại' }
-            ];  
+
+
+        //#region thêm
+
+        addButton.addEventListener('click', function () {
+            //#region tạo khung form thêm mới
+            const addForm = document.createElement('div');
+            addForm.style.position = 'fixed';
+            addForm.style.top = '50%';
+            addForm.style.left = '50%';
+            addForm.style.transform = 'translate(-50%, -50%)';
+            addForm.style.width = '1000px';
+            addForm.style.backgroundColor = 'white';
+            addForm.style.padding = '20px';
+            addForm.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+            addForm.style.borderRadius = '8px';
+            addForm.style.zIndex = '1001';
             //#endregion
 
-            formFields.forEach(field => {
-                //#region tạo các trường
-                const fieldContainer = document.createElement('div');
-                fieldContainer.style.marginBottom = '16px';
+            // Form thêm mới
+            addForm.innerHTML = `
+                <h3 style="text-align: center; font-size: 20px; font-weight: 600;">Thêm mới thông tin cư trú</h3>
+                <input type="hidden" id="roomBookingDetailId" value="${roomBookingDetailId}" />
+                <div style="margin-bottom: 16px;">
+                    <label for="fullName" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Tên:</label>
+                    <span id="fullNameError" style="color: red; font-size: 12px; display: none;"></span>
+                    <input type="text" id="fullName" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
+                </div>
 
-                const label = document.createElement('label');
-                label.setAttribute('for', field.id);
-                label.innerText = field.label;
-                label.style.display = 'block';
-                label.style.fontWeight = '600';
-                label.style.fontSize = '14px';
-                label.style.color = '#333';
-                fieldContainer.appendChild(label);
+                <div style="margin-bottom: 16px;">
+                    <label for="dateOfBirth" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Ngày sinh:</label>
+                    <span id="dateOfBithError" style="color: red; font-size: 12px; display: none;"></span>
+                    <input type="date" id="dateOfBirth" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
+                </div>
 
-                // tạo thẻ input theo type
-                let input;
-                if (field.type === 'select') {
-                    input = document.createElement('select');
-                    field.options.forEach(optionText => {
-                        const option = document.createElement('option');
-                        option.value = optionText;
-                        option.innerText = optionText;
-                        input.appendChild(option);
-                    });
-                } else if (field.type === 'date') {
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'date');
-                } else if (field.id === 'identityNumber' || field.id === 'phoneNumber') {
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'number');
-                    input.setAttribute('placeholder', field.placeholder || '');
+                <div style="margin-bottom: 16px;">
+                    <label for="gender" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Giới tính:</label>
+                    <select id="gender" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;">
+                        <option value="1">Nam</option>
+                        <option value="2">Nữ</option>
+                        <option value="0">Khác</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="identityNumber" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Căn cước:</label>
+                    <span id="identityNumberError" style="color: red; font-size: 12px; display: none;"></span>
+                    <input type="number" id="identityNumber" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="phoneNumber" style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Số điện thoại:</label>
+                    <span id="phoneNumberError" style="color: red; font-size: 12px; display: none;"></span>
+                    <input type="number" id="phoneNumber" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; color: #333; outline: none; transition: border-color 0.3s;" />
+                </div>
+
+                <div style="display: flex; justify-content: space-between;">
+                    <button id="addSaveButton" style="background-color: #008CBA; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s;">Thêm</button>
+                    <button id="addCancelButton" style="background-color: #f44336; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s;">Hủy</button>
+                </div>
+            `;
+
+            // Thêm form vào body
+            document.body.appendChild(addForm);
+
+            //#region kiểm tra định đạng
+            const addSaveButton = document.getElementById('addSaveButton');
+            // số điện thoại
+            const phoneNumberInput = document.getElementById('phoneNumber');
+            var tempPhoneNumber = phoneNumberInput.value;
+            const phoneNumberError = document.getElementById('phoneNumberError');
+            phoneNumberInput.addEventListener('input', function () {
+                if (!isPhoneNumberValid(phoneNumberInput.value)) {
+                    phoneNumberError.innerText = 'Sai định dạng số điện thoại!';
+                    phoneNumberError.style.display = 'block';
+                    addSaveButton.disabled = true;
+                } else if (isPhoneNumberExisted(phoneNumberInput.value)) {
+                    phoneNumberError.innerText = ' Số điện thoại đã tồn tại!';
+                    phoneNumberError.style.display = 'block';
+                    addSaveButton.disabled = true;
+                }
+                else {
+                    phoneNumberError.style.display = 'none';
+                    addSaveButton.disabled = false;
+                }
+            });
+            // số căn cước
+            const identityNumberInput = document.getElementById('identityNumber');
+            var tempIdentityNumber = identityNumberInput.value;
+            const identityNumberError = document.getElementById('identityNumberError');
+            identityNumberInput.addEventListener('input', function () {
+                if (!isIdentityNumberValid(identityNumberInput.value)) {
+                    identityNumberError.innerText = 'Sai định dạng số căn cước!';
+                    identityNumberError.style.display = 'block';
+                    addSaveButton.disabled = true;
+                } else if (isIdentityNumberExisted(identityNumberInput.value)) {
+                    identityNumberError.innerText = 'Số căn cước đã tồn tại!';
+                    identityNumberError.style.display = 'block';
+                    addSaveButton.disabled = true;
                 } else {
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'text');
-                    input.setAttribute('placeholder', field.placeholder || '');
+                    identityNumberError.style.display = 'none';
+                    addSaveButton.disabled = false;
                 }
-
-                // style cho input
-                input.id = field.id;
-                input.name = field.id;
-                input.style.width = '100%';
-                input.style.padding = '10px';
-                input.style.border = '1px solid #ddd';
-                input.style.borderRadius = '4px';
-                input.style.fontSize = '14px';
-                input.style.color = '#333';
-                input.style.outline = 'none';
-                input.style.transition = 'border-color 0.3s';
-                //#endregion
-
-                // thông báo lỗi dưới các trường
-                if (field.id === 'phoneNumber') {
-                    errorMessagePhoneNumber = document.createElement('div');
-                    errorMessagePhoneNumber.style.color = 'red';
-                    errorMessagePhoneNumber.style.fontSize = '12px';
-                    errorMessagePhoneNumber.style.display = 'none';
-                    errorMessagePhoneNumber.innerText = ' ';
-                    fieldContainer.appendChild(errorMessagePhoneNumber);
+            });
+            // fullName
+            const fullNameInput = document.getElementById('fullName');
+            const fullNameError = document.getElementById('fullNameError');
+            fullNameInput.addEventListener('input', function () {
+                if (!isFullNameValid(fullNameInput.value)) {
+                    fullNameError.style.display = 'block';
+                    addSaveButton.disabled = true;
+                } else {
+                    fullNameError.style.display = 'none';
+                    addSaveButton.disabled = false;
                 }
-                if (field.id === 'identityNumber') {
-                    errorMessageIdentityNumber = document.createElement('div');
-                    errorMessageIdentityNumber.style.color = 'red';
-                    errorMessageIdentityNumber.style.fontSize = '12px';
-                    errorMessageIdentityNumber.style.display = 'none';
-                    errorMessageIdentityNumber.innerText = ' ';
-                    fieldContainer.appendChild(errorMessageIdentityNumber);
+            });
+            // DoB
+            const dateOfBirthInput = document.getElementById('dateOfBirth');
+            const dateOfBithError = document.getElementById('dateOfBithError');
+            dateOfBirthInput.addEventListener('change', function () {
+                if (!isDateOfBirthValid(dateOfBirthInput.value)) {
+                    dateOfBithError.style.display = 'block';
+                    addSaveButton.disabled = true;
+                } else {
+                    dateOfBithError.style.display = 'none';
+                    addSaveButton.disabled = false;
                 }
-                if (field.id === 'fullName') {
-                    errorMessage = document.createElement('div');
-                    errorMessage.style.color = 'red';
-                    errorMessage.style.fontSize = '12px';
-                    errorMessage.style.display = 'none';
-                    errorMessage.innerText = ' ';
-                    fieldContainer.appendChild(errorMessage);
-                }
-                if (field.id === 'dateOfBirth') {
-                    errorMessageDob = document.createElement('div');
-                    errorMessageDob.style.color = 'red';
-                    errorMessageDob.style.fontSize = '12px';
-                    errorMessageDob.style.display = 'none';
-                    errorMessageDob.innerText = ' ';
-                    fieldContainer.appendChild(errorMessageDob);
-                }
-
-                if (field.id === 'dateOfBirth') {
-                    input.addEventListener('change', function () {
-                        if (!isDateOfBirthValid(input.value)) {
-                            errorMessageDob.innerText = 'Ngày sinh không hợp lệ!';
-                            errorMessageDob.style.display = 'block';
-                            saveButton.disabled = true;
-                        } else {
-                            errorMessageDob.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    });
-                }
-
-                input.addEventListener('input', function () {
-                    if (field.id === 'phoneNumber') {
-                        if (!isPhoneNumberValid(input.value)) {
-                            errorMessagePhoneNumber.innerText = 'Sai định dạng số điện thoại!';
-                            errorMessagePhoneNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else if (isPhoneNumberExisted(input.value)) {
-                            errorMessagePhoneNumber.innerText = 'Số điện thoại đã tồn tại! ';
-                            errorMessagePhoneNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else {
-                            errorMessagePhoneNumber.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    }
-                    if (field.id === 'identityNumber') {
-                        if (!isIdentityNumberValid(input.value)) {
-                            errorMessageIdentityNumber.innerText = 'Sai định dạng số căn cước!';
-                            errorMessageIdentityNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else if (isIdentityNumberExisted(input.value)) {
-                            errorMessageIdentityNumber.innerText = 'Số căn cước đã tồn tại! ';
-                            errorMessageIdentityNumber.style.display = 'block';
-                            saveButton.disabled = true;
-                        }
-                        else {
-                            errorMessageIdentityNumber.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    }
-                    if (field.id === 'fullName') {
-                        if (!isFullNameValid(input.value)) {
-                            errorMessage.style.display = 'block';
-                            saveButton.disabled = true;
-                        } else {
-                            errorMessage.style.display = 'none';
-                            saveButton.disabled = false;
-                        }
-                    } 
-                });
-
-                input.addEventListener('focus', function () {
-                    input.style.borderColor = '#007BFF';
-                });
-
-                input.addEventListener('blur', function () {
-                    input.style.borderColor = '#ddd';
-                });
-
-                fieldContainer.appendChild(input);
-                addFormContainer.appendChild(fieldContainer);
-            });  
-
-            //#region css saveButton
-            const saveButton = document.createElement('button');
-            saveButton.innerText = 'Lưu';
-            saveButton.style.backgroundColor = '#008CBA';
-            saveButton.style.color = 'white';
-            saveButton.style.padding = '8px 16px';
-            saveButton.style.marginRight = '8px';
-            saveButton.style.border = 'none';
-            saveButton.style.borderRadius = '4px';
-            saveButton.style.cursor = 'pointer';
-            saveButton.style.fontSize = '14px';
-            saveButton.style.transition = 'background-color 0.3s';
-            saveButton.disabled = true;
+            });
             //#endregion
 
-            saveButton.addEventListener('mouseover', function () {
-                saveButton.style.backgroundColor = '#007bb5';
-            });
-            saveButton.addEventListener('mouseout', function () {
-                saveButton.style.backgroundColor = '#008CBA';
-            });
-            saveButton.style.marginTop = '16px';
-            saveButton.onclick = function () {
-                const newRecord = {
-                    roomBookingDetailId: roomBookingDetailId,
+            // Xử lý sự kiện Thêm
+            addSaveButton.addEventListener('click', function () {
+                const dateOfBirthValue = document.getElementById('dateOfBirth').value;  
+                const dateOfBirthFormatted = dateOfBirthValue ? dateOfBirthValue + 'T00:00:00' : null; 
+
+                const newResidence = {
                     fullName: document.getElementById('fullName').value,
-                    dateOfBirth: document.getElementById('dateOfBirth').value,
+                    dateOfBirth: dateOfBirthFormatted,
                     gender: document.getElementById('gender').value,
                     identityNumber: document.getElementById('identityNumber').value,
-                    phoneNumber: document.getElementById('phoneNumber').value
-                }; //bản ghi mới để thêm
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    roomBookingDetailId: roomBookingDetailId,
+                    isCheckOut: false, 
+                    checkOutTime: null  
+                };
 
-
-                // Gửi yêu cầu AJAX để thêm bản ghi vào database
                 $.ajax({
                     url: '/ResidenceRegistration/AddResidenceRegistration',
                     type: 'POST',
-                    data: newRecord,
+                    
+                    data: newResidence,
                     success: function (response) {
                         if (response === 1) {
-                            alert('Thêm bản ghi thành công!');
-                            data.push(newRecord);
+                            alert('Thêm mới thành công');
+                            console.log(response)
+                            const newData = {
+                                id: newResidence.id, 
+                                roomBookingDetailId: newResidence.roomBookingDetailId, 
+                                fullName: newResidence.fullName,  
+                                dateOfBirth: newResidence.dateOfBirth, 
+                                gender: parseInt(newResidence.gender),  
+                                identityNumber: newResidence.identityNumber, 
+                                phoneNumber: newResidence.phoneNumber, 
+                                isCheckOut: false,
+                                checkOutTime: null  
+                            };
+
+                            data.push(newData);
                             console.log(data);
 
-                            tbody.innerHTML = ''; // Xóa bảng cũ
+                            tbody.innerHTML = '';
                             data.forEach(item => {
                                 const row = document.createElement('tr');
-                                const gender = item.gender === 'Nam' ? 'Nam' : item.gender === 'Nữ' ? 'Nữ' : 'Khác';
+                                const gender = item.gender === 1 ? 'Nam' : item.gender === 2 ? 'Nữ' : 'Khác';
                                 const cells = [
                                     item.fullName,
                                     moment(item.dateOfBirth).format("YYYY-MM-DD"),
                                     gender,
                                     item.identityNumber,
                                     item.phoneNumber,
-                                    item.checkOutTime ? moment(item.checkOutTime).format("YYYY-MM-DD HH:mm") : 'Chưa checkout'  
+                                    item.checkOutTime ? moment(item.checkOutTime).format("YYYY-MM-DD HH:mm") : 'Chưa checkout'
                                 ];
 
                                 cells.forEach(cellText => {
@@ -1147,17 +836,17 @@ var _roombooking_detail = {
                                     leaveButton.disabled = true;
                                     leaveButton.style.backgroundColor = '#D3D3D3';
                                     leaveButton.style.cursor = 'default';
- 
+
 
                                     deleteButton.disabled = true;
                                     deleteButton.style.backgroundColor = '#D3D3D3';
                                     deleteButton.style.cursor = 'default';
- 
+
 
                                     editButton.disabled = true;
                                     editButton.style.backgroundColor = '#D3D3D3';
                                     editButton.style.cursor = 'default';
- 
+
                                 }
 
 
@@ -1171,46 +860,24 @@ var _roombooking_detail = {
                                 var temp = dataRessidence.length;
                                 title.innerText = 'Danh sách khách hàng ' + temp + '/' + maximumOccupancy;
                             });
+                            document.body.removeChild(addForm);
                         } else {
-                            alert('Có lỗi xảy ra, vui lòng thử lại!');  
+                            alert('Thêm mới thất bại');
                         }
                     },
-                    error: function (xhr, status, error) {
-                        alert('Có lỗi xảy ra khi thêm bản ghi: ' + error);
+                    error: function () {
+                        alert('Có lỗi xảy ra');
                     }
-                });//ajax Add
-                // Đóng form
-                addFormContainer.remove();
-            }; //save button onclick
-
-            //#region css cancel button
-            const cancelButton = document.createElement('button');
-            cancelButton.innerText = 'Hủy';
-            cancelButton.style.backgroundColor = '#f44336';
-            cancelButton.style.color = 'white';
-            cancelButton.style.padding = '8px 16px';
-            cancelButton.style.border = 'none';
-            cancelButton.style.borderRadius = '4px';
-            cancelButton.style.cursor = 'pointer';
-            cancelButton.style.fontSize = '14px';
-            cancelButton.style.transition = 'background-color 0.3s';
-            //#endregion
-
-            cancelButton.addEventListener('mouseover', function () {
-                cancelButton.style.backgroundColor = '#e60000';
-            });
-            cancelButton.addEventListener('mouseout', function () {
-                cancelButton.style.backgroundColor = '#f44336';
+                });
             });
 
-            cancelButton.onclick = function () {
-                addFormContainer.remove();
-            };
-            addFormContainer.appendChild(saveButton);
-            addFormContainer.appendChild(cancelButton);
-            modalContainer.appendChild(addFormContainer);
-            //cancel button
-        }//function show add form
+            // Xử lý sự kiện Hủy
+            const addCancelButton = document.getElementById('addCancelButton');
+            addCancelButton.addEventListener('click', function () {
+                document.body.removeChild(addForm);
+            });
+        });
+        //#endregion
 
         //#region Tạo bảng để thêm vào modal
         const table = document.createElement('table');
@@ -1296,7 +963,7 @@ var _roombooking_detail = {
                 editForm.style.top = '50%';
                 editForm.style.left = '50%';
                 editForm.style.transform = 'translate(-50%, -50%)';
-                editForm.style.width = '50%';
+                editForm.style.width = '1000px';
                 editForm.style.backgroundColor = 'white';
                 editForm.style.padding = '20px';
                 editForm.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
@@ -1774,16 +1441,52 @@ var _roombooking_detail = {
         console.log(lstRoomBookingDetail)
     },
 
-    submit: function () {
-        _roombooking_detail.GetlistObjSubmit();
-        _Service_OrderDetail.GetListOBjService();
-        $.ajax({
-            url: "/RoomBooking/submit",
-            type: "post",
-            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail, lstSerOrderDetail: lstServiceOrderDetail, ListDelete: LstDelete },
-            success: function (result) {
-                window.location.href = "/roombooking";
+    submit: async function () {
+        const confrm = await global.Noti("Xác nhận cập nhật","Bạn có chắc chắn muốn cập nhật không?");
+        if (confrm > 0) {
+            _roombooking_detail.GetlistObjSubmit();
+            if (lstRoomBookingDetail.length <= 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo đặt phòng',
+                    text: 'Bạn phải chọn ít nhất 1 phòng.'
+                });
             }
-        });
+            else if (RoomBooking.CustomerId == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thông báo đặt phòng',
+                    text: 'Bạn chưa nhập thông tin khách hàng.'
+                });
+            }
+            else {
+                $.ajax({
+                    url: "/RoomBooking/submit",
+                    type: "post",
+                    data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
+                    success: function (result) {
+                        window.location.href = result;
+                    }
+                });
+            }
+        }
+        else {
+            lstRoomBookingDetail = [];
+            RoomBooking = [];
+        }
+    },
+
+    BlockedBill: async function (Id) {
+        const confrm = await global.Noti("Xác nhận đóng đơn đặt phòng", "<strong>Lưu ý</strong>: Bạn sẽ không thể cập nhật thông tin sau khi đóng đơn\n Bạn có chắc chắn muốn cập nhật không?");
+        if (confrm > 0) {
+            $.ajax({
+                url: "/RoomBooking/BlockedBill",
+                type: "post",
+                data: { Id: Id, CusId: $("#Client_Id").val() },
+                success: function (result) {
+                    window.location.href = result;
+                }
+            });
+        }
     }
 }

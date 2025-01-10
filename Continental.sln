@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{7C4DC35F-5B14-4F35-A5EA-CEC04B8EACFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewClient", "ViewClient\ViewClient.csproj", "{6C2A66C9-4E0C-4A87-A196-8F4EC0016807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewClient", "ViewClient\ViewClient.csproj", "{6C2A66C9-4E0C-4A87-A196-8F4EC0016807}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

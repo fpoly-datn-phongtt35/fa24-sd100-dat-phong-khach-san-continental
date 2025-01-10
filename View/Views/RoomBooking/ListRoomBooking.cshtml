@@ -44,10 +44,9 @@
                         <td>@i.BookingType</td>
                         <td>@i.Status</td>
                         <td>@String.Format("{0:N0}", i.TotalPrice)</td>
-                        <td>@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-MM-yyyy") : "N/A")</td>
+                        <td>@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-MM-yyyy hh:mm") : "N/A")</td>
                         <td class="d-flex">
-                            <a class="text-decoration-underline" onclick="_roomBooking.RedirecDetail('@i.Id','@i.CustomerId')" style="color:deepskyblue;cursor:pointer">Update</a>
-                            <a class="ms-2 text-decoration-underline" style="color:darkred;cursor:pointer">Delete</a>
+                            <a class="text-decoration-none btn btn-success text-light" onclick="_roomBooking.RedirecDetail('@i.Id','@i.CustomerId')" style="cursor:pointer">Thao tác</a>
                         </td>
                     </tr>
                     STT++;

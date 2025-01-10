@@ -12,7 +12,7 @@ namespace Domain.Repositories.IRepository
     public interface IServiceOrderDetailRepo
     {
         Task<int> UpsertServiceOrderDetail(ServiceOrderDetail request);
-        Task<DataTable> GetListServiceOrderDetailByRoomBookingI(Guid id);
+        Task<DataTable> GetListServiceOrderDetailByRoomBookingDetailId(Guid id);
         Task<int> DeleteServiceOrderDetail(ServiceOrderDetailDeleteRequest request);
         Task<DataTable> GetServiceOrderDetails(ServiceOrderDetailGetRequest request);
     }

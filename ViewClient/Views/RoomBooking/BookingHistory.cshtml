@@ -1,0 +1,93 @@
+﻿@using Domain.DTO.Paging
+@using ViewClient.Models.Paging
+@using ViewClient.Views.Shared
+
+@model ResponseData<Domain.DTO.RoomBooking.RoomBookingResponseForCustomer>
+
+@{
+    ViewData["Title"] = "Lịch sử đặt phòng";
+}
+
+<h1>Lịch sử đặt phòng</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Nhân viên
+            </th>
+            <th>
+                Phương thức đặt phòng
+            </th>
+            <th>
+                Tổng tiền thanh toán
+            </th>
+            <th>
+                Tổng tiền phòng
+            </th>
+            <th>
+                Tổng tiền dịch vụ
+            </th>
+            <th>
+                Tổng tiền phụ thu
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Ngày tạo
+            </th>
+            <th>
+                Ngày cập nhật
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data != null && Model.data.Any())
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+                    <td>@item.StaffId</td>
+                    <td style="text-align:center;">@StatusHelper.DisplayBookingType(item.BookingType)</td>
+                    <td>@item.TotalPrice?.ToString("N0")</td>
+                    <td>@item.TotalRoomPrice?.ToString("N0")</td>
+                    <td>@item.TotalServicePrice?.ToString("N0")</td>
+                    <td>@item.TotalExtraPrice?.ToString("N0")</td>
+                    <td>@StatusHelper.DisplayRoomBookingStatus(item.Status)</td>
+                    <td>@item.CreatedTime?.ToString("dd-MM-yyyy")</td>
+                    <td>@item.ModifiedTime?.ToString("dd-MM-yyyy")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="13">Quý khách chưa có đặt bất kì phòng nào.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = 1, pageSize = Model.PageSize })">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.CurrentPage == Model.totalPage ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = Model.totalPage, pageSize = Model.PageSize })">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

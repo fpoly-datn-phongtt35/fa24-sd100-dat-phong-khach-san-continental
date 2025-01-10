@@ -29,7 +29,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@TitleOfType", request.TitleOfType),
+                    new SqlParameter("@TitleOfType", (int)request.TitleOfType),
                     new SqlParameter("@Content", request.Content),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),
@@ -92,7 +92,7 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id),
-                    new SqlParameter("@TitleOfType", request.TitleOfType),
+                    new SqlParameter("@TitleOfType", SqlDbType.Int) {Value = request.TitleOfType},
                     new SqlParameter("@Content", request.Content),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@ModifiedTime",DateTime.Now),

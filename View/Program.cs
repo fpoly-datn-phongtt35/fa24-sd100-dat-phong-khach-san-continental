@@ -2,12 +2,14 @@ using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Domain.Services.IServices.IAmenity;
+using Domain.Services.IServices.IEditHistory;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomType;
 using Domain.Services.IServices.IRoomTypeService;
 using Domain.Services.Services;
 using Domain.Services.Services.Amenity;
+using Domain.Services.Services.EditHistory;
 using Domain.Services.Services.Room;
 using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomType;
@@ -52,6 +54,9 @@ namespace View
             builder.Services.AddTransient<IResidenceRegistrationService, ResidenceRegistrationService>();
             builder.Services.AddTransient<IPaymentHistoryRepository, PaymentHistoryRepository>();
             builder.Services.AddTransient<IPaymentHistoryService, PaymentHistoryService>();
+            builder.Services.AddTransient<IEditHistoryRepository, EditHistoryRepository>();
+            builder.Services.AddTransient<IEditHistoryAddService, EditHistoryAddService>();
+            
             builder.Services.AddSession(option =>
             {
                 option.IdleTimeout = TimeSpan.FromSeconds(100);
@@ -102,7 +107,7 @@ namespace View
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Statistics}/{action=Index}/{id?}");
 
             app.Run();
         }

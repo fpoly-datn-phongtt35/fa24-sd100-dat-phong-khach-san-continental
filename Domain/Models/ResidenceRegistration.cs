@@ -20,6 +20,7 @@ namespace Domain.Models
         public string? PhoneNumber { get; set; }
         public bool? IsCheckOut { get; set; }
         public DateTimeOffset? CheckOutTime { get; set; }
+        public DateTimeOffset? CheckInTime { get; set; }
 
 
 

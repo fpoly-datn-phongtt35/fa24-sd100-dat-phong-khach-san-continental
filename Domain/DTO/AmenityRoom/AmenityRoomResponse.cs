@@ -107,6 +107,7 @@ public static class AmenityRoomResponseExtensions
             Deleted = amenityRoom.Deleted,
             DeletedTime = amenityRoom.DeletedTime,
             DeletedBy = amenityRoom.DeletedBy,
+            
             AmenityName = amenityRoom.Amenity?.Name,
             RoomTypeName = amenityRoom.RoomType?.Name
         };

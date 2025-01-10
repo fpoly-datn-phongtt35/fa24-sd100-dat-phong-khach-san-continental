@@ -9,6 +9,6 @@ namespace Domain.DTO.Client
     public class ClientInsertCustomerViewModel
     {
         public Guid Id { get; set; }
-        public string Messenger { get; set; }
+        public string? Messenger { get; set; }
     }
 }

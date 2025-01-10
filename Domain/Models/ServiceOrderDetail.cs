@@ -7,7 +7,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; } 
-        public Guid RoomBookingId { get; set; } 
+        public Guid RoomBookingDetailId { get; set; } 
         public decimal Price { get; set; }
         public double? Amount { get; set; }
         public int Quantity { get; set; }
@@ -23,8 +23,7 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-
         public virtual Service? Service { get; set; }
-        public virtual RoomBooking? RoomBooking { get; set; }
+        public virtual RoomBookingDetail? RoomBookingDetail { get; set; }
     }
 }

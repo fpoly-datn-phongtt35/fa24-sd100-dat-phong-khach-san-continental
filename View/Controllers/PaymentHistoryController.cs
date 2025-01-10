@@ -57,6 +57,8 @@ namespace View.Controllers
                     var totalPaid = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(IdRoomBooking);
                     ViewBag.RoomBooking = roomBooking;
                     ViewBag.TotalPaid = totalPaid;
+
+
                     return View(data);
                 }
                 catch (Exception ex)
@@ -71,7 +73,40 @@ namespace View.Controllers
             }
         }
 
-        
+        public async Task<IActionResult> PaymentHistoryByBookingId(Guid IdRoomBooking)
+        {
+            try
+            {
+                string requestUrl = "api/PaymentHistory/GetListPaymentHistory";
+                PaymentHistoryGetRequest request = new PaymentHistoryGetRequest()
+                {
+                    RoomBookingId = IdRoomBooking
+                };
+                var jsonRequest = JsonConvert.SerializeObject(request);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await _client.PostAsync(requestUrl, content);
+
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<ResponseData<PaymentHistory>>(responseString);
+
+                    return Json(data.data);
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
 
         [Route("/PaymentHistory/AddPayment/{IdRoomBooking}")]
@@ -92,10 +127,16 @@ namespace View.Controllers
                 }
                 else
                 {
-                    amountToPay = (decimal)(roomBooking.TotalPrice - totalPaid);
+                    amountToPay = (decimal)(roomBooking.TotalPriceReality - totalPaid);
                     message = $"Số tiền cần thanh toán là: {amountToPay}";
                 }
+                var totalExpenses = roomBooking.TotalExpenses;
+                var totalServicePrice = roomBooking.TotalServicePrice;
+                var totalExtraPrice = roomBooking.TotalExtraPrice;
 
+                ViewBag.Expenses = totalExpenses;
+                ViewBag.Service = totalServicePrice;
+                ViewBag.Extra = totalExtraPrice;
                 ViewBag.Message = message;
                 ViewBag.AmountToPay = amountToPay;
                 ViewBag.TotalPaid = totalPaid;
@@ -104,7 +145,7 @@ namespace View.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -114,6 +155,11 @@ namespace View.Controllers
         {
             try
             {
+                var roomBooking = await _roomBookingGetService.GetRoomBookingById(RoomBookingId);
+                var ClientId = roomBooking.CustomerId;
+                string url = $"https://localhost:7114/BookingRoom/Id={RoomBookingId}&&Client={ClientId}";
+
+
                 var totalPaid = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(RoomBookingId);
 
                 var paymentType = totalPaid == 0 ? PaymentType.Deposit : PaymentType.Bill;
@@ -134,7 +180,7 @@ namespace View.Controllers
 
                     if (result == 1)
                     {
-                        return RedirectToAction("PaymentHistoryByBooking", new { IdRoomBooking = RoomBookingId });
+                        return Redirect(url);
                     }
                     else
                     {
@@ -192,6 +238,22 @@ namespace View.Controllers
             }
         }
 
+        public async Task<IActionResult> GetPaymentLink(int orderCode)
+        {
+            string apiUrl = $"api/order/GetOrderLink/{orderCode}";
+            HttpResponseMessage response = await _client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string paymentLink = await response.Content.ReadAsStringAsync();
+
+                return Redirect(paymentLink);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Mã thanh toán ko hợp lệ hoặc giao dịch đã hoàn thành";
+                return Redirect("https://localhost:7114/PaymentHistory");
+            }
+        }
         
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null, Guid? customerId = null, PaymentType? note = null, decimal? amount = null, PaymentMethod? paymentMethod = null, decimal? fromAmount = null, decimal? toAmount = null)
         {
@@ -243,7 +305,7 @@ namespace View.Controllers
                     var cResponseString = await cResponse.Content.ReadAsStringAsync();
                     var cData = JsonConvert.DeserializeObject<Customer>(cResponseString);
 
-                    customerInfos.Add((item, cData.FirstName + " " + cData.LastName));
+                    customerInfos.Add((cData.Id, cData.FirstName + " " + cData.LastName));
                 }
                 ViewBag.CustomerList = customerInfos;
                 ViewBag.RoomBookingList = roomBookingIds;

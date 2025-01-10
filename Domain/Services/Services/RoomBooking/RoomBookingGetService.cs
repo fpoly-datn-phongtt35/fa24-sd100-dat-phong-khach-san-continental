@@ -3,6 +3,7 @@ using Domain.DTO.RoomBooking;
 using Domain.Enums;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoomBooking;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -79,5 +80,10 @@ public class RoomBookingGetService : IRoomBookingGetService
     public async Task<List<DateTimeOffset>> GetCheckinRoomBookingByRoomBookingId(Guid roomBookingId)
     {
         return await _roomBookingRepository.GetCheckinRoomBookingByRoomBookingId(roomBookingId);
+    }
+
+    public async Task<ResponseData<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId(RoomBookingGetRequestByCustomer request)
+    {
+        return await _roomBookingRepository.GetListRoomBookingByCustomerId(request);
     }
 }

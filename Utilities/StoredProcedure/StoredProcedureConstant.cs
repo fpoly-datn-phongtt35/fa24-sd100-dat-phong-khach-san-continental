@@ -32,7 +32,7 @@ namespace Utilities.StoredProcedure
         public const string SP_DeleteServiceOrderDetail = "SP_DeleteServiceOrderDetail";
         public const string SP_UpdateServiceOrderDetail = "SP_UpdateServiceOrderDetail";
         public const string SP_GetServiceOrderDetailById = "SP_GetServiceOrderDetailById";
-        public const string SP_GetListServiceOrderDetailByRoomBookingId = "SP_GetListServiceOrderDetailByRoomBookingId";
+        public const string SP_GetListServiceOrderDetailByRoomBookingDetailId = "SP_GetListServiceOrderDetailByRoomBookingDetailId";
 
         //room
         public const string SP_InsertRoom = "SP_InsertRoom";
@@ -48,7 +48,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetTop5MostBookedRoomsLastMonth = "SP_GetTop5MostBookedRoomsLastMonth";
         public const string SP_GetTopMostBookedRoomsCustomer = "SP_GetTopMostBookedRoomsCustomer";
         public const string SP_GetRevenue = "SP_GetRevenue";
-        ////public const string SP_GetListRoomWithSearch = "SP_GetListRoomWithSearch";
+        public const string SP_GetCoverageRatio = "SP_GetCoverageRatio";
 
         //building
         public const string SP_InsertBuilding = "SP_InsertBuilding";
@@ -138,6 +138,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetPostById = "SP_GetPostById";
         public const string SP_UpdatePost = "SP_UpdatePost";
         public const string SP_DeletePost = "SP_DeletePost";
+        public const string SP_GetAllTerms = "SP_GetAllTerms";
         //RoomBooking
         public const string SP_GetFilteredRoomBookings = "SP_GetFilteredRoomBookings";
         public const string SP_GetRoomBookingById = "SP_GetRoomBookingById";
@@ -147,13 +148,15 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomBookingStatus = "SP_UpdateRoomBookingStatus";
         public const string SP_GetCheckinRoomBookingByRoomBookingId = "SP_GetCheckinRoomBookingByRoomBookingId";
         public const string SP_CheckDepositedRoomBooking = "SP_CheckDepositedRoomBooking";
-
+        public const string SP_GetListRoomBookingsByCustomerId = "SP_GetListRoomBookingsByCustomerId";
+        public const string SP_UpdateRoomBookingPrice = "SP_UpdateRoomBookingPrice";
 
         // RoomBookingDetail
         public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
         public const string SP_InsertRoomBookingDetail = "SP_InsertRoomBookingDetail";
         public const string SP_UpdateRoomBookingDetail = "SP_UpdateRoomBookingDetail";
         public const string SP_GetRoomBookingDetailById = "SP_GetRoomBookingDetailById";
+        public const string SP_GetRoomBookingDetailById2 = "SP_GetRoomBookingDetailById2";
         public const string SP_GetListRoomBookingDetailByRoomBookingId = "SP_GetListRoomBookingDetailByRoomBookingId";
         public const string SP_GetRoomBookingDetailsByCustomerId = "SP_GetRoomBookingDetailsByCustomerId";
         //Client 
@@ -178,6 +181,10 @@ namespace Utilities.StoredProcedure
         public const string SP_GetMaximumOccupancyByRoomBookingDetailId = "SP_GetMaximumOccupancyByRoomBookingDetailId";
         public const string SP_CheckOut1Residence = "SP_CheckOut1Residence";
         public const string SP_CheckOutResidencesByRoomBookingDetail = "SP_CheckOutResidencesByRoomBookingDetail";
-
+        public const string SP_GetResidenceRegistrationByDate = "SP_GetResidenceRegistrationByDate";
+        
+        //Edit History
+        public const string SP_InsertEditHistory = "SP_InsertEditHistory";
+        public const string SP_GetEditHistoryByRoomBookingDetailId = "SP_GetEditHistoryByRoomBookingDetailId";
     }
 }

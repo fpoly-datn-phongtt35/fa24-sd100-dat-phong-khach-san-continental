@@ -99,6 +99,90 @@ namespace ViewClient.Views.Shared
                 _ => new HtmlString("Không xác định")
             };
         }
+        public static IHtmlContent DisplayRoomBookingStatus(this RoomBookingStatus status)
+        {
+            string statusText;
+            string badgeClass;
+
+            switch (status)
+            {
+                case RoomBookingStatus.NEW:
+                    statusText = "Mới";
+                    badgeClass = "badge bg-info"; // Badge màu xanh
+                    break;
+                case RoomBookingStatus.PENDING:
+                    statusText = "Đang chờ";
+                    badgeClass = "badge bg-warning"; // Badge màu vàng
+                    break;
+                case RoomBookingStatus.PAID:
+                    statusText = "Đã thanh toán";
+                    badgeClass = "badge bg-success"; // Badge màu xanh lá
+                    break;
+                case RoomBookingStatus.CANCELLED:
+                    statusText = "Đã hủy";
+                    badgeClass = "badge bg-danger"; // Badge màu đỏ
+                    break;
+                case RoomBookingStatus.FAILED:
+                    statusText = "Thất bại";
+                    badgeClass = "badge bg-danger"; // Badge màu đỏ
+                    break;
+                case RoomBookingStatus.DEPOSITED:
+                    statusText = "Đã đặt cọc";
+                    badgeClass = "badge bg-primary"; // Badge màu xanh dương
+                    break;
+                default:
+                    statusText = "Không xác định";
+                    badgeClass = "badge bg-secondary"; // Badge màu xám
+                    break;
+            }
+
+            // Trả về nội dung HTML với thẻ span và lớp badge
+            return new HtmlString($"<span class='{badgeClass}'>{statusText}</span>");
+        }
+        public static IHtmlContent DisplayBookingType(this BookingType? bookingType)
+        {
+            string typeText;
+            string badgeClass;
+
+            switch (bookingType)
+            {
+                case BookingType.Online:
+                    typeText = "Trực tuyến";
+                    badgeClass = "badge bg-success"; // Badge màu xanh lá
+                    break;
+                case BookingType.Offline:
+                    typeText = "Ngoại tuyến";
+                    badgeClass = "badge bg-secondary"; // Badge màu xám
+                    break;
+                default:
+                    typeText = "Không xác định";
+                    badgeClass = "badge bg-danger"; // Badge màu đỏ
+                    break;
+            }
+
+            // Trả về nội dung HTML với thẻ span và lớp badge
+            return new HtmlString($"<span class='{badgeClass}'>{typeText}</span>");
+        }
+        public static IHtmlContent UnitDictonary(this UnitType? unitType)
+        {
+            var unitNames = new Dictionary<UnitType?, string>
+        {
+            { UnitType.Times, "Lần" },
+            { UnitType.Ticket, "Vé" },
+            { UnitType.Gram, "Gram" },
+            { UnitType.Kilo, "Kilogram" },
+            { UnitType.Ton, "Tấn" },
+            { UnitType.Hour, "Giờ" },
+            { UnitType.Bag, "Túi" },
+            { UnitType.Bottle, "Chai" },
+            { UnitType.Bowl, "Bát" },
+            { UnitType.Cup, "Tách" },
+            { UnitType.Carton, "Thùng" },
+            { UnitType.Serving, "Phần" }
+        };
+
+            return new HtmlString(unitNames[unitType]);
+        }
 
     }
 }

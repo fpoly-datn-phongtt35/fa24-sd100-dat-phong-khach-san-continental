@@ -39,7 +39,7 @@
     <tbody>
 @foreach (var item in Model.data) {
         <tr>
-            <td> @Html.DisplayFor(modelItem => item.TitleOfType)</td>
+            <td> @(item.TitleOfType.HasValue? PostTypeHelper.DisplayPostType(item.TitleOfType.Value): "Unknown")</td>
             <td> @Html.DisplayFor(modelItem => item.Content)</td>
             <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
             <td>

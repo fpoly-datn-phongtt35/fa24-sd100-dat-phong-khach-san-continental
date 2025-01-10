@@ -43,7 +43,11 @@ namespace Domain.Services.Services
                 if (table != null && table.Rows.Count > 0)
                 {
                     var row = table.Rows[0];
-                    if (table.Columns.Contains("Id"))
+                    if (table.Columns.Contains("ExistingCustomerId") && !row.IsNull("ExistingCustomerId"))
+                    {
+                        model.Id = row.Field<Guid>("ExistingCustomerId");
+                    }
+                    else if (table.Columns.Contains("Id") && !row.IsNull("Id"))
                     {
                         model.Id = row.Field<Guid>("Id");
                     }

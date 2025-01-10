@@ -1,4 +1,6 @@
-﻿@model Domain.Models.Post
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.Models.Post
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,34 +14,37 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" disabled/>
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostTypeId" class="control-label"></label>
-                <input asp-for="PostTypeId" class="form-control" />
+                <label asp-for="PostTypeId" class="control-label">Loại bài đăng</label>
+                <select asp-for="PostTypeId" class="form-control" asp-items="@(ViewBag.PostTypes)">
+                    <option value="">-- Loại bài đăng --</option>
+                </select>
                 <span asp-validation-for="PostTypeId" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
-                <label asp-for="StaffId" class="control-label"></label>
-                <input asp-for="StaffId" class="form-control" />
-                <span asp-validation-for="StaffId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label">Tiêu đề</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
+                <label asp-for="Content" class="control-label">Nội dung</label>
                 <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses))"></select>
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="control-label1">Trạng thái</label>
+                <select name="status" class="form-select" id="status">
+                    <option disabled>-- Chọn trạng thái --</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                    {
+                        var statusEnum = (EntityStatus)status;
+                        <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                            @StatusHelper.DisplayNameEntityStatus(statusEnum)
+                        </option>
+                    }
+                </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">

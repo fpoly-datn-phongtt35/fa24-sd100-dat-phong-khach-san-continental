@@ -110,11 +110,13 @@ namespace API.Controllers
         public async Task<IActionResult> CreatePaymentLinkAdmin(PaymentLinkCreateRequest request)
         {           
             var roomBooking = await _roomBookingGetService.GetRoomBookingById(request.RoomBookingId);
-            var cancelUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
-            var successUrl = $"https://localhost:7114/PaymentHistory/Id={request.RoomBookingId}";
-
-            //var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
             
+            var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
+
+            var cancelUrl = $"https://localhost:7114/BookingRoom/Id={request.RoomBookingId}&&Client={customer.Id}";
+            var successUrl = $"https://localhost:7114/BookingRoom/Id={request.RoomBookingId}&&Client={customer.Id}";
+
+
             try
             {
                 //int orderCode = GenerateOrderCode(roomBookingId);
@@ -187,12 +189,12 @@ namespace API.Controllers
                 PaymentLinkInformation paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderId);
                 var id = paymentLinkInformation.id;
                 var paymentLink = $"https://pay.payos.vn/web/{id}";
-                return Ok(new Response(0, "Ok", paymentLink));
+                return Ok(paymentLink);
             }
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
-                return Ok(new Response(-1, "fail", null));
+                return BadRequest("Mã đơn hàng không hợp lệ hoặc đã được thanh toán");
             }
         }
 

@@ -81,7 +81,7 @@ namespace ViewClient.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Yêu cầu nhập đúng thông tin.");
+                    ModelState.AddModelError(string.Empty, "Thông tin đã tồn tại. Hãy nhập thông tin cá nhân của bạn.");
                 }
             }
 
@@ -90,6 +90,7 @@ namespace ViewClient.Controllers
         }
 
         [HttpPost("logout")]
+        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("UserName");

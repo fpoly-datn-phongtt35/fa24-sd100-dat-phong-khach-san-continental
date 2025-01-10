@@ -1,10 +1,12 @@
 ﻿using Domain.DTO.Customer;
+using Domain.DTO.Paging;
 using Domain.DTO.RoomBooking;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.Services.RoomBooking;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace API.ClientControllers
 {
@@ -13,9 +15,11 @@ namespace API.ClientControllers
     public class RoomBookingController : ControllerBase
     {
         private readonly IRoomBookingCreateForCustomerService _roomBookingCreateService;
-        public RoomBookingController(IRoomBookingCreateForCustomerService roomBookingCreateService)
+        private readonly IRoomBookingGetService _getListRoomBookingsService;
+        public RoomBookingController(IRoomBookingCreateForCustomerService roomBookingCreateService, IRoomBookingGetService getListRoomBookingsService)
         {
             _roomBookingCreateService = roomBookingCreateService;
+            _getListRoomBookingsService = getListRoomBookingsService;
         }
         [HttpPost("CreateRoomBookingForCustomer")]
         public async Task<ActionResult<Guid>> CreateRoomBookingForCustomer(RoomBookingCreateRequestForCustomer request)
@@ -34,6 +38,19 @@ namespace API.ClientControllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        [HttpPost("GetListRoomBookingByCustomerId")]
+        public async Task<ResponseData<RoomBookingResponseForCustomer>> GetListRoomBookingByCustomerId
+        (RoomBookingGetRequestByCustomer request)
+        {
+            try
+            {
+                return await _getListRoomBookingsService.GetListRoomBookingByCustomerId(request);
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("The list of room bookings could not be retrieved", e);
             }
         }
     }

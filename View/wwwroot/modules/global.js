@@ -1,5 +1,43 @@
-﻿var global =
+﻿$(document).ready(function () {
+   /* setInterval(() => {
+        $.ajax({
+            type: 'POST',
+            url: '/RoomBooking/CheckDepositRoomBooking',
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    }, 3000);*/
+})
+var global =
 {
+    Noti: async function (title ="Xác nhận cập nhật",txt = "Bạn có chắc chắn muốn cập nhật không?") {
+        try {
+            const result = await Swal.fire({
+                title: title,
+                text: txt,
+                icon: 'question',
+                html: txt.replace(/\n/g, '<br>'), // Thay thế \n bằng <br>
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            });
+
+            if (result.isConfirmed) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } catch (error) {
+            console.error("Lỗi trong Noti:", error);
+            return -1;
+        }
+    },
+
     ShowTabMenu: function (element) {
         var menu = element.parentElement.querySelector('ul');
         var i = element.parentElement.querySelector('i');
