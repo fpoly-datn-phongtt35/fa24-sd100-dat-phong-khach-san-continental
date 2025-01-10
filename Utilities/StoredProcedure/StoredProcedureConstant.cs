@@ -162,6 +162,7 @@ namespace Utilities.StoredProcedure
         public const string SP_ClientLogin = "SP_ClientLogin";
         public const string SP_ClientRegister = "SP_ClientRegister";
         public const string SP_ClientInsertCustomer = "SP_ClientInsertCustomer";
+        public const string SP_UpdatePassword = "SP_UpdatePassword";
 
         //payment history
         public const string SP_InsertPaymentHistory = "SP_InsertPaymentHistory";

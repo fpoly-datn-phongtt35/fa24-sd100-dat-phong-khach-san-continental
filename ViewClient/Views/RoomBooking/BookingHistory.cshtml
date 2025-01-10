@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-               Nhân viên
-            </th>
-            <th>
                 Phương thức đặt phòng
             </th>
             <th>
@@ -37,9 +34,6 @@
             <th>
                 Ngày tạo
             </th>
-            <th>
-                Ngày cập nhật
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,15 +43,13 @@
             foreach (var item in Model.data)
             {
                 <tr>
-                    <td>@item.StaffId</td>
                     <td style="text-align:center;">@StatusHelper.DisplayBookingType(item.BookingType)</td>
                     <td>@item.TotalPrice?.ToString("N0")</td>
                     <td>@item.TotalRoomPrice?.ToString("N0")</td>
                     <td>@item.TotalServicePrice?.ToString("N0")</td>
                     <td>@item.TotalExtraPrice?.ToString("N0")</td>
                     <td>@StatusHelper.DisplayRoomBookingStatus(item.Status)</td>
-                    <td>@item.CreatedTime?.ToString("dd-MM-yyyy")</td>
-                    <td>@item.ModifiedTime?.ToString("dd-MM-yyyy")</td>
+                    <td>@item.CreatedTime?.ToString("dd-MM-yyyy HH:MM:ss tt")</td>
                 </tr>
             }
         }

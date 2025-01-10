@@ -12,7 +12,8 @@ namespace Domain.Models
         public string UserName { get; set; } = string.Empty;
         [Required]
         //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Mật khẩu gồm chữ viết hoa, chữ viết thường, chữ số và chỉ từ 8-15 kí tự!")]
-        public string? Password { get; set; }
+        public string? Password { get; set; } 
+        public string? NewPassword { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         [Required]
