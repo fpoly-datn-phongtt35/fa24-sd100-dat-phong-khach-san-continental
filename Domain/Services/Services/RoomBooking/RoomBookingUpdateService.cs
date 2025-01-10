@@ -45,6 +45,7 @@ public class RoomBookingUpdateService : IRoomBookingUpdateService
         existingRoomBooking.TotalPrice = roomBookingUpdateRequest.TotalPrice;
         existingRoomBooking.TotalExtraPrice = roomBookingUpdateRequest.TotalExtraPrice;
         existingRoomBooking.TotalExpenses = roomBookingUpdateRequest.TotalExpenses;
+        existingRoomBooking.TotalRoomPrice = roomBookingUpdateRequest.TotalRoomPrice;
         existingRoomBooking.TotalPriceReality = roomBookingUpdateRequest.TotalPriceReality;
 
         await _roomBookingRepository.UpdateRoomBooking(existingRoomBooking);
