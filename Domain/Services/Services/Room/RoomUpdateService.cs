@@ -36,7 +36,6 @@ namespace Domain.Services.Services.Room
             existingRoom.Name = roomUpdateRequest.Name;
             existingRoom.Description = roomUpdateRequest.Description;
             existingRoom.Price = roomUpdateRequest.Price;
-            existingRoom.Images = roomUpdateRequest.Images;
             existingRoom.Address = roomUpdateRequest.Address;
             existingRoom.RoomTypeId = roomUpdateRequest.RoomTypeId;
             existingRoom.ModifiedTime = roomUpdateRequest.ModifiedTime;

@@ -73,7 +73,6 @@ namespace Domain.DTO.Room
                 Address = Address,
                 Description = Description,
                 RoomSize = RoomSize,
-                Images = Images,
                 FloorId = FloorId,
                 RoomTypeId = RoomTypeId,
                 Status = Status,
