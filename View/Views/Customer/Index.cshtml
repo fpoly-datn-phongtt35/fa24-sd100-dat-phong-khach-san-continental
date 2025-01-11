@@ -14,8 +14,8 @@
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
-        <input type="text" id="userName" name="userName" class="form-control me-2" placeholder="User Name" value="@Context.Request.Query["userName"]" style="max-width: 200px;" />
-        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control me-2" value="@Context.Request.Query["phoneNumber"]" placeholder="Phone Number" style="max-width: 200px;" />
+        <input type="text" id="userName" name="userName" class="form-control me-2" placeholder="Tài khoản" value="@Context.Request.Query["userName"]" style="max-width: 200px;" />
+        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control me-2" value="@Context.Request.Query["phoneNumber"]" placeholder="Số điện thoại" style="max-width: 200px;" />
         <input type="text" name="email" id="email" class="form-control me-2" value="@Context.Request.Query["email"]" placeholder="Email" style="max-width: 200px;" />
 
         <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
@@ -56,7 +56,7 @@
                 <td> @Html.DisplayFor(modelItem => item.Email)</td>
                 <td> @Html.DisplayFor(modelItem => item.PhoneNumber)</td>
                 <td>@GenderHelper.DisplayGenderBadge(item.Gender ?? Domain.Enums.GenderType.Unknown)</td>
-                <td> @Html.DisplayFor(modelItem => item.DateOfBirth)</td>
+                <td> @String.Format("{0:dd/MM/yyyy}", item.DateOfBirth)</td>
                 <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
                 <td>
                     @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },

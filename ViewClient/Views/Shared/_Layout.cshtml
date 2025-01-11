@@ -50,7 +50,7 @@
                                 </svg>
                             </div>
                         </button>
-                        @if (Context.Session.GetString("UserName") == null)
+                        @if (User.FindFirst(ClaimTypes.UserData) == null)
                         {
                             <div class="profile-dropdown" id="profileDropdown">
                                 <a href="/login">Đăng Nhập</a>

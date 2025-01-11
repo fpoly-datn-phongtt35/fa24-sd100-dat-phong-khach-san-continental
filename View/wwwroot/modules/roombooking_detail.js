@@ -499,6 +499,11 @@ var _roombooking_detail = {
                             $("#btn-checkin-" + item.roomBookingDetailId).remove();
                             $("#btn-checkout-" + item.roomBookingDetailId).remove();
                             $("#ExtraPr_" + item.roomBookingDetailId).attr('disabled', 'disabled');
+                            const button = document.getElementById('residenceAddButton');
+                            if (button) {
+                                button.disabled = true;
+                                button.style.cursor = 'not-allowed';
+                            }
                         }
                         else if (item.status == "2") {
                             $("#btn-huy-" + item.roomBookingDetailId).remove();
@@ -605,6 +610,7 @@ var _roombooking_detail = {
         // Tạo nút "Thêm"
         const addButton = document.createElement('button');
         addButton.innerText = 'Thêm';
+        addButton.id = 'residenceAddButton';
         addButton.style.backgroundColor = '#008CBA';
         addButton.style.color = 'white';
         addButton.style.padding = '8px 16px';

@@ -4,7 +4,9 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h1>Lịch sử giao vịt</h1>
+
+<div style="margin: 0 30px">
+    <h1>Lịch sử giao dịch</h1>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
@@ -60,7 +62,7 @@
             }
         </select>
 
-        <select name="roomBookingId" id="roomBookingId" class="form-select me-2" style="max-width: 200px;">
+        @* <select name="roomBookingId" id="roomBookingId" class="form-select me-2" style="max-width: 200px;">
             <option value="">-- Hóa đơn đặt phòng --</option>
             @{
                 var uniqueRoomBookings = new HashSet<Guid>();
@@ -74,7 +76,7 @@
                     @roomBookingId
                 </option>
             }
-        </select>
+        </select> *@
         <select name="customerId" id="customerId" class="form-select me-2" style="max-width: 200px;">
             <option value="">-- Khách hàng --</option>
             @{
@@ -113,8 +115,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Mã thanh toán</th>
-            <th>Id đặt phòng</th>
+            @* <th>Mã thanh toán</th>
+            <th>Id đặt phòng</th> *@
             <th>Khách hàng</th>
             <th>Phương thức thanh toán</th>
             <th>Số tiền</th>
@@ -128,7 +130,7 @@
         {
             var customerName = string.Empty;
 
-            var customerInfos = (List<(Guid roomBookingId, string customerName)>)ViewBag.CustomerList;
+            var customerInfos = (List<(Guid roomBookingId, string customerName)>)ViewBag.CustomerList2;
 
             var customerInfo = customerInfos.FirstOrDefault(x => x.roomBookingId == item.RoomBookingId);
 
@@ -137,8 +139,8 @@
                 customerName = customerInfo.customerName;
             }
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.OrderCode)</td>
-                <td>@Html.DisplayFor(modelItem => item.RoomBookingId)</td>
+                @* <td>@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                <td>@Html.DisplayFor(modelItem => item.RoomBookingId)</td> *@
                 <td>@customerName</td>
                 <td>
                     @if (item.PaymentMethod == Domain.Enums.PaymentMethod.BankTransfer)
@@ -150,8 +152,8 @@
                         @:Tiền mặt
                     }
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-                <td>@Html.DisplayFor(modelItem => item.PaymentTime)</td>
+                <td>@item.Amount.ToString("N0")</td>
+                <td>@(item.PaymentTime.HasValue ? item.PaymentTime.Value.ToString("dd-MM-yyyy hh:mm") : "N/A")</td>
                 <td>
                     @if (item.Note == Domain.Enums.PaymentType.Deposit)
                     {
@@ -212,6 +214,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <script>
     $(document).ready(function () {

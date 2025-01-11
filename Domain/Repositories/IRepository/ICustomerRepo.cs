@@ -16,5 +16,6 @@ namespace Domain.Repositories.IRepository
         Task<DataTable> ClientRegister(RegisterSubmitModel register);
         Task<DataTable> ClientLogin(LoginSubmitModel request);
         Task<DataTable> ClientInsertCustomer(ClientCreateCustomerRequest request);
+        Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request);
     }
 }

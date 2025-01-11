@@ -5,12 +5,14 @@ using Domain.DTO.ServiceType;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Drawing.Printing;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using View.Views.Shared.Helper;
 using WEB.CMS.Customize;
 
 namespace View.Controllers
@@ -89,7 +91,13 @@ namespace View.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
+            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus))
+               .Cast<EntityStatus>()
+               .Select(e => new SelectListItem
+               {
+                   Value = ((int)e).ToString(),
+                   Text = StatusHelper.DisplayStatusBadge(e).ToString()
+               }).ToList();
             return View(new CustomerCreateRequest());
         }
 
@@ -105,6 +113,8 @@ namespace View.Controllers
                     _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 }
                 string requestURL = "https://localhost:7130/api/Customer/CreateCustomer";
+
+             
                 request.Status = EntityStatus.Active;
                 request.CreatedTime = DateTimeOffset.Now;
                 request.CreatedBy = _UserLogin;
@@ -133,7 +143,7 @@ namespace View.Controllers
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return View("Error");
+                    return NotFound();
                 }
 
                 var responseString = await response.Content.ReadAsStringAsync();
@@ -153,19 +163,52 @@ namespace View.Controllers
         public async Task<IActionResult> Edit(CustomerUpdateRequest request)
         {
             var _UserLogin = Guid.Empty;
+
+            // Lấy thông tin người dùng đã đăng nhập
             if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
             {
                 _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             }
-            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-            ViewBag.Genders = Enum.GetValues(typeof(GenderType));
+
+            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus))
+                .Cast<EntityStatus>()
+                .Select(e => new SelectListItem
+                {
+                    Value = ((int)e).ToString(),
+                    Text = e.ToString()
+                }).ToList();
+
+            ViewBag.Genders = Enum.GetValues(typeof(GenderType))
+                .Cast<GenderType>()
+                .Select(g => new SelectListItem
+                {
+                    Value = ((int)g).ToString(),
+                    Text = g.ToString() 
+                }).ToList();
+
+
+            if (request.Gender.HasValue)
+            {
+                var genderString = request.Gender.Value.ToString();
+                if (Enum.TryParse<GenderType>(genderString, out var gender))
+                {
+                    request.Gender = gender;
+                }
+                else
+                {
+                    ModelState.AddModelError("Gender", "Giá trị giới tính không hợp lệ.");
+                }
+            }
             request.ModifiedBy = _UserLogin;
             request.ModifiedTime = DateTimeOffset.Now;
+
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Customer/UpdateCustomer", request);
+
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
+
             ModelState.AddModelError("", "Không thể sửa khách hàng.");
             return View("Error", new Exception("Không thể sửa khách hàng."));
         }

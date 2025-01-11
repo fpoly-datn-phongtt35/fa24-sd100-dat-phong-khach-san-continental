@@ -1,71 +1,110 @@
 ﻿@model Domain.Models.Customer;
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Customer";
 }
 
-<h3>Sửa thông tin khách hàng</h3>
+<h3 class="text-center">Sửa thông tin khách hàng</h3>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8 offset-md-2">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" readonly/>
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" required />
+                <label asp-for="UserName" class="control-label"><i class="fas fa-user"></i> Tên người dùng</label>
+                <input asp-for="UserName" class="form-control" required placeholder="Nhập tên người dùng" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" required/>
+                <label asp-for="FirstName" class="control-label"><i class="fas fa-user-circle"></i> Họ</label>
+                <input asp-for="FirstName" class="form-control" required placeholder="Nhập họ" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" required />
+                <label asp-for="LastName" class="control-label"><i class="fas fa-user-circle"></i> Tên</label>
+                <input asp-for="LastName" class="form-control" required placeholder="Nhập tên" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" required />
+                <label asp-for="Email" class="control-label"><i class="fas fa-envelope"></i> Email</label>
+                <input asp-for="Email" class="form-control" required placeholder="Nhập email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" required />
+                <label asp-for="PhoneNumber" class="control-label"><i class="fas fa-phone"></i> Số điện thoại</label>
+                <input asp-for="PhoneNumber" class="form-control" required placeholder="Nhập số điện thoại" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control" asp-items="@(new SelectList(ViewBag.Genders))"> </select>
+                <label asp-for="Gender" class="control-label"><i class="fas fa-venus-mars"></i> Giới tính</label>
+                <select asp-for="Gender" class="form-control">
+                    <option value="">-Chọn giới tính-</option>
+                    <option value="1">Nam</option>
+                    <option value="2">Nữ</option>
+                    <option value="0">Không trả lời</option>
+                </select>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="DateOfBirth" class="control-label"></label>
+                <label asp-for="DateOfBirth" class="control-label"><i class="fas fa-calendar-alt"></i> Ngày sinh</label>
                 <input asp-for="DateOfBirth" class="form-control" required />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
+                <label asp-for="Status" class="control-label"><i class="fas fa-check-circle"></i> Trạng thái</label>
                 <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses))"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group text-center">
                 <input type="submit" value="Lưu" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+<div class="text-center mt-3">
     <a asp-action="Index" class="btn btn-info">Quay lại</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<style>
+    /* Custom styles */
+    h3 {
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border-radius: 0.25rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+</style>
