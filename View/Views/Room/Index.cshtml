@@ -82,7 +82,7 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@String.Format("{0:N0}", item.Price) VND</td>
                 @* <td>@Html.DisplayFor(modelItem => item.Address)</td> *@
                 @* <td>@Html.DisplayFor(modelItem => item.Description)</td> *@
                 <td>@Html.DisplayFor(modelItem => item.RoomSize)</td>

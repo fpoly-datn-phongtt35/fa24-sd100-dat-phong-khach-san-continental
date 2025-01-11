@@ -315,6 +315,7 @@ public class RoomTypeRepository : IRoomTypeRepository
                 new("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
                 new("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
                 new("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
+                new("@Quantity",SqlDbType.Int){ Value = roomType.Quantity },
                 new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
                 new("@Status", SqlDbType.Int) { Value = roomType.Status },
                 new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
