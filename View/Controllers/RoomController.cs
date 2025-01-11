@@ -264,7 +264,13 @@ namespace View.Controllers
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Không có tệp nào được chọn.");
+                var existedId = roomUpdateRequest.Id;
+                string roomRequestUrl = $"/api/Room/GetRoomById?roomId={existedId}";
+                var room = await SendHttpRequest<RoomResponse>(roomRequestUrl, HttpMethod.Post);
+                if (room != null)
+                {
+                    roomUpdateRequest.Images = room.Images;
+                }
             }
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             roomUpdateRequest.ModifiedBy = userId;
