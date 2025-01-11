@@ -83,8 +83,8 @@
                     @serviceType.Name
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td>@Html.DisplayFor(modelItem => item.Unit)</td>
+                <td>@item.Price.ToString("N0")</td>
+                <td>@(item.Unit.HasValue ? UnitHelper.DisplayUnit(item.Unit.Value) : "N/A")</td>
                 <td>
                     <div class="d-flex justify-content-start">
                         @if (!string.IsNullOrEmpty(item.Image))
