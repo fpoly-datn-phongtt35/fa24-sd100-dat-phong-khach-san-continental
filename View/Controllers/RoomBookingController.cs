@@ -231,6 +231,7 @@ public class RoomBookingController : Controller
                     TotalServicePrice = bookingcreaterequest.TotalServicePrice,
                     TotalExpenses = bookingcreaterequest.TotalExpenses,
                     TotalPriceReality = bookingcreaterequest.TotalPriceReality,
+                    TotalRoomPrice = bookingcreaterequest.TotalRoomPrice,
                     Status = bookingcreaterequest.Status,
                     ModifiedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     ModifiedTime = DateTime.Now,

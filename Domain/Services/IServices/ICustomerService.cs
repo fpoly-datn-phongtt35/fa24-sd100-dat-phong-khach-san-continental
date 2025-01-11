@@ -18,5 +18,6 @@ namespace Domain.Services.IServices
         Task<ClientAuthenicationViewModel> ClientLogin(LoginSubmitModel request);
         Task<ClientAuthenicationViewModel> ClientRegister(RegisterSubmitModel register);
         Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request);
+        Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request);
     }
 }

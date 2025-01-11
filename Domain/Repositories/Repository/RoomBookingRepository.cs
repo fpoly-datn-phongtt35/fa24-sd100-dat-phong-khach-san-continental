@@ -129,6 +129,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new SqlParameter("@Status", roomBooking.Status) ,
                 new SqlParameter("@ModifiedTime",roomBooking.ModifiedTime) ,
                 new SqlParameter("@ModifiedBy", roomBooking.ModifiedBy),
+                new SqlParameter("@TotalRoomPrice", roomBooking.TotalRoomPrice.HasValue ? roomBooking.TotalRoomPrice : DBNull.Value),
                 new SqlParameter("@TotalPrice", roomBooking.TotalPrice.HasValue ? roomBooking.TotalPrice : DBNull.Value),
                 new SqlParameter("@TotalExtraPrice", roomBooking.TotalExtraPrice.HasValue ? roomBooking.TotalExtraPrice : DBNull.Value),
                 new SqlParameter("@TotalServicePrice", roomBooking.TotalServicePrice.HasValue ? roomBooking.TotalServicePrice : DBNull.Value),

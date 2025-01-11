@@ -4,10 +4,8 @@ using Domain.DTO.Customer;
 using Domain.DTO.Paging;
 using Domain.Enums;
 using Domain.Models;
-using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
@@ -109,6 +107,18 @@ namespace Domain.Services.Services
                 return model;
             }
             catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request)
+        {
+            try
+            {
+                return await _customerRepo.ClientUpdatePassword(request);
+            }
+            catch(Exception ex)
             {
                 throw ex;
             }

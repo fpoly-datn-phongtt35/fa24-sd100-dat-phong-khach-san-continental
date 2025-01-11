@@ -70,6 +70,7 @@
                 </div>
             </div>
             <input id="IdRoomBooking" style="display:none" value="@ViewBag.IdRoomBooking" />
+            <input type="hidden" id="RoomBookingStatus" value="@(RB != null? (int)RB.Status : null)" />
             <select class="select2 m-2" id="room_Id" style="width:100%">
             </select>
             <div class="table-responsive table-scroll">

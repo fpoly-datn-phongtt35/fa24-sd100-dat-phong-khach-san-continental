@@ -118,6 +118,14 @@ $(document).ready(function () {
         $("#Client_Id").select2();
         _roombooking_detail.LoadDetailCustomer($("#Client_Id").val());
         _roombooking_detail.LoadListRoomRelated($("#IdRoomBooking").val());
+        if ($('#RoomBookingStatus').val() == 2 || $('#RoomBookingStatus').val() == 3 || $('#RoomBookingStatus').val() == 4)
+        {
+            setInterval(() => {
+                _roombooking_detail.LoadListRoomRelated($("#IdRoomBooking").val());
+            }, 1000);
+        }
+        $("#fromDate").attr('disabled', 'disabled');
+        $("#toDate").attr('disabled', 'disabled');
     }
 
     $("#room_Id").select2({
@@ -192,6 +200,8 @@ var _roombooking_detail = {
     AddRoomToList: function (Id) {
         if (lstIdRoom.indexOf(Id) < 0) {
             lstIdRoom.push(Id);
+            $("#fromDate").attr('disabled', 'disabled');
+            $("#toDate").attr('disabled', 'disabled');
             $.ajax({
                 url: "/RoomBooking/GetRoomById",
                 type: "post",
@@ -232,21 +242,38 @@ var _roombooking_detail = {
                         $("#CheckOut_" + IdAdd).attr('min', moment(global.createNewDateInVietnamTimezone()).format("YYYY-MM-DD"));
                         _roombooking_detail.CalculatePrice(IdAdd);
                         IdAdd = IdAdd - 1;
+                        var lstEleCheckIn = document.getElementsByClassName('checkout_time');
+                        for (let i = 0; i < lstEleCheckIn.length; i++) {
+                            const element = lstEleCheckIn[i];
+                            element.max = $("#toDate").val();
+                        }
+                        var lstEleCheckIn = document.getElementsByClassName('checkin_time');
+                        for (let i = 0; i < lstEleCheckIn.length; i++) {
+                            const element = lstEleCheckIn[i];
+                            element.max = $("#toDate").val();
+                        }
                     }
                     _roombooking_detail.CalculatingRoomPrice();
                 }
             });
         }
     },
+    addOrSubtractDays:function(dateString, days) {
+        const date = new Date(dateString);
+        date.setDate(date.getDate() + days);
+        return date.toISOString().split('T')[0];
+    },
 
     OnchangeFromDateRow: function (Id) {
-        $("#CheckOut_" + Id).attr('min', $("#CheckIn_" + Id).val());
+        $("#CheckOut_" + Id).attr('min', _roombooking_detail.addOrSubtractDays($("#CheckIn_" + Id).val(),1));
         $("#CheckIn_" + Id).val($("#CheckIn_" + Id).val());
         _roombooking_detail.CalculatePrice(Id);
         _roombooking_detail.CalculatingRoomPrice();
     },
 
     OnchangeToDateRow: function (Id) {
+        $("#CheckIn_" + Id).attr('max', _roombooking_detail.addOrSubtractDays($("#CheckOut_" + Id).val(),-1));
+        $("#CheckOut_" + Id).val($("#CheckOut_" + Id).val());
         _roombooking_detail.CalculatePrice(Id);
         _roombooking_detail.CalculatingRoomPrice();
     },
@@ -406,6 +433,7 @@ var _roombooking_detail = {
             data: { Id: Id },
             success: function (result) {
                 if (result != null) {
+                    $("#room-related").html(``);
                     result.forEach(item => {
                         LstIdUpdate.push(item.roomBookingDetailId);
                         const datefrom = new Date(item.checkInBooking);
@@ -459,7 +487,7 @@ var _roombooking_detail = {
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
                            <td class="d-flex">
                                <a class="text-danger btn" id="btn-huy-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.cancleRoomBookingDetail('` + item.roomBookingDetailId + `','` + item.roomId + `')">Hủy</a>
-                               <a class="btn btn-info ms-2 btn-residence text-nowrap" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Danh sách</a>
+                               <a class="btn btn-info ms-2 btn-residence text-nowrap text-light" id="btn-residence-` + item.roomBookingDetailId + `" style="cursor:pointer" onclick="_roombooking_detail.getResidenceRegistrations('` + item.roomBookingDetailId + `')">Tạm trú</a>
                                <a class="btn btn-primary ms-2 btn-detail text-nowrap" id="btn-detail-` + item.roomBookingDetailId + `" href="/RoomBooking/RoomBookingDetails/RoomBookingDetailId=` + item.roomBookingDetailId + `" style="cursor:pointer">Chi tiết</a>
                            </td>
                            
@@ -1418,7 +1446,7 @@ var _roombooking_detail = {
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: null,
                 CheckOutReality: null,
-                Price: $("#Price_"+item).text(),
+                Price: $("#RoomPr_"+item).text(),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
@@ -1432,7 +1460,7 @@ var _roombooking_detail = {
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: $("#CheckInReal_" + item).val(),
                 CheckOutReality: $("#CheckOutReal_" + item).val(),
-                Price: $("#Price_" + item).text(),
+                Price: $("#RoomPr_" + item).text(),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
@@ -1446,6 +1474,8 @@ var _roombooking_detail = {
         if (confrm > 0) {
             _roombooking_detail.GetlistObjSubmit();
             if (lstRoomBookingDetail.length <= 0) {
+                lstRoomBookingDetail = [];
+                RoomBooking = [];
                 Swal.fire({
                     icon: 'error',
                     title: 'Thông báo đặt phòng',
@@ -1453,6 +1483,8 @@ var _roombooking_detail = {
                 });
             }
             else if (RoomBooking.CustomerId == null) {
+                lstRoomBookingDetail = [];
+                RoomBooking = [];
                 Swal.fire({
                     icon: 'error',
                     title: 'Thông báo đặt phòng',
