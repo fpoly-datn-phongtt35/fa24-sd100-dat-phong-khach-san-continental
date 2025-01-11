@@ -164,7 +164,7 @@ namespace ViewClient.Controllers
                     CreatedBy = customerId,
                     NewId = null,
                     TotalExpenses = 0,
-                    TotalPriceReality = 0,
+                    TotalPriceReality = Math.Round(roomBookingDetailCreateRequest.Price + roomBookingDetailCreateRequest.ServicePrice - roomBookingDetailCreateRequest.Deposit ?? 0),
                     TotalExtraPrice = 0,
                     BookingBy = BookingBy.Day
                 };
