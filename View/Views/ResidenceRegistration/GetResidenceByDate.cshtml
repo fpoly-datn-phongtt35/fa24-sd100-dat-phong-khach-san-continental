@@ -59,28 +59,28 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Khách</th>
             <th>Phòng</th>
+            <th>Khách</th>
             <th>Ngày sinh</th>
             <th>Giới tính</th>
             <th>CCCD</th>
-            <th>SĐT</th>
+            <th>SĐT</th>@* 
             <th>Giờ checkin</th>
-            <th>Giờ checkout</th>
+            <th>Giờ checkout</th> *@
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.data)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
                 <td>@Html.DisplayFor(modelItem => item.RoomName)</td>
-                <td>@Html.DisplayFor(modelItem => item.DateOfBirth)</td>
+                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                <td>@item.DateOfBirth.ToString("dd/MM/yyyy")</td>
                 <td>@Html.DisplayFor(modelItem => item.Gender)</td>
                 <td>@Html.DisplayFor(modelItem => item.IdentityNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>@* 
                 <td>@Html.DisplayFor(modelItem => item.CheckInTime)</td>
-                <td>@Html.DisplayFor(modelItem => item.CheckOutTime)</td>                
+                <td>@Html.DisplayFor(modelItem => item.CheckOutTime)</td>      *@           
             </tr>
         }
     </tbody>
