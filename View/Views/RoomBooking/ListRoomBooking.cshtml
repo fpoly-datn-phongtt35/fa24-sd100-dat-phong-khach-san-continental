@@ -1,6 +1,7 @@
 ﻿@using Domain.DTO.Paging
 @using Domain.DTO.RoomBooking
 @using View.Models.Paging
+@using View.Views.Shared.Helper
 @{
     Layout = null;
 }
@@ -41,8 +42,8 @@
                         <th scope="row">@STT</th>
                         <td>@i.CustomerFullName</td>
                         <td>@i.StaffFullName</td>
-                        <td>@i.BookingType</td>
-                        <td>@i.Status</td>
+                        <td>@((int)i.BookingType == 2 ? "Đặt trực tiếp" : "Đặt trực tuyến")</td>
+                        <td>@StatusHelper.DisplayRoomBookingStatusBadge(i.Status)</td>
                         <td>@String.Format("{0:N0}", i.TotalPriceReality)</td>
                         <td>@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-MM-yyyy hh:mm") : "N/A")</td>
                         <td class="d-flex">

@@ -194,10 +194,9 @@ namespace View.Controllers
                         }
                     }
                 }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Không có tệp nào được chọn.");
-                }
+                
+
+
 
                 var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
                 request.CreatedBy = userId;
@@ -247,10 +246,12 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(RoomUpdateRequest roomUpdateRequest, List<IFormFile> imgFiles)
         {
-            if (imgFiles != null && imgFiles.Count > 0)
+            // Kiểm tra nếu có ảnh, nếu có thì xử lý việc tải ảnh lên
+            if (imgFiles != null)
             {
                 foreach (var imgFile in imgFiles)
                 {
+                    // Nếu imgFile không null và có nội dung (tệp ảnh hợp lệ)
                     if (imgFile.Length > 0)
                     {
                         var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
@@ -272,17 +273,20 @@ namespace View.Controllers
                     roomUpdateRequest.Images = room.Images;
                 }
             }
+
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             roomUpdateRequest.ModifiedBy = userId;
 
             string requestUrl = $"api/Room/UpdateRoom?roomId={roomUpdateRequest.Id}";
 
-            var updatedRoom = await SendHttpRequest<RoomResponse>(requestUrl,HttpMethod.Put, roomUpdateRequest);
+            var updatedRoom = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Put, roomUpdateRequest);
             if (updatedRoom != null)
                 return RedirectToAction("Index");
 
             return View("Error");
         }
+
+
 
         public async Task<IActionResult> Delete(Guid roomId)
         {

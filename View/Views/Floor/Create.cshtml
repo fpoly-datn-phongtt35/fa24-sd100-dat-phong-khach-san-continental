@@ -34,9 +34,9 @@
     </div>
     
     <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow"/>
+    <button type="submit" class="btn btn-success" style="width:102px">Tạo</button>
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
 </form>
-<button type="submit" class="btn btn-success">Tạo</button>
 
 @section Scripts {
     @{

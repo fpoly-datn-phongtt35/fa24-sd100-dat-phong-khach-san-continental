@@ -91,8 +91,9 @@ namespace ViewClient.Controllers
 
         [HttpPost("logout")]
         [ValidateAntiForgeryToken]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("UserName");
             return RedirectToAction("Index", "Home");
         }

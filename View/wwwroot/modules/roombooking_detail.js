@@ -433,6 +433,7 @@ var _roombooking_detail = {
             data: { Id: Id },
             success: function (result) {
                 if (result != null) {
+                    STT = 1;
                     $("#room-related").html(``);
                     result.forEach(item => {
                         LstIdUpdate.push(item.roomBookingDetailId);
