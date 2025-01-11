@@ -180,10 +180,15 @@ namespace API.Controllers
 
                 // Lấy thông tin PaymentHistory
                 var paymentHistory = await _paymentHistoryService.GetPaymentHistoryByOrderCode(orderCode);
+                var roomBookingId = paymentHistory.RoomBookingId;
+                var roomBooking = await _roomBookingGetService.GetRoomBookingById(roomBookingId);
+                var customerId = roomBooking.CustomerId;
                 if (paymentHistory == null)
                 {
                     return NotFound(new Response(-1, "Không tìm thấy lịch sử thanh toán", null));
                 }
+
+                var url = $"https://localhost:7173/RoomBooking/BookingHistory?Id={customerId}";
 
                 // Lấy thông tin trạng thái thanh toán từ PayOS
                 var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode);
@@ -203,7 +208,7 @@ namespace API.Controllers
                     await HandleCancelledStatus(paymentHistory);
                 }
 
-                return Redirect("https://localhost:7173/Home/index");
+                return Redirect(url);
             }
             catch (Exception ex)
             {
