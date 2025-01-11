@@ -53,10 +53,11 @@
             </select>
         </div>
     </div>
-    <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow"/>
+    <input type="hidden" asp-for="ModifiedTime" value="@DateTime.UtcNow" />
+    <button type="submit" class="btn btn-warning" style="width:102px">Cập nhật</button>
+
 </form>
 
-<button type="submit" class="btn btn-warning">Cập nhật</button>
 
 @section Scripts {
     @{
