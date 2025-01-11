@@ -14,6 +14,7 @@ public class RoomBookingUpdateRequest
     public decimal? TotalExtraPrice { get; set; }
     public decimal? TotalExpenses { get; set; }
     public decimal? TotalPriceReality { get; set; }
+    public decimal? TotalRoomPrice {  get; set; }
     public RoomBookingStatus Status { get; set; }
     public DateTimeOffset? ModifiedTime { get; set; }
     public Guid? ModifiedBy { get; set; }

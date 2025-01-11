@@ -4,6 +4,7 @@ using Domain.DTO.Customer;
 using Domain.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace API.ClientControllers
 {
@@ -26,6 +27,18 @@ namespace API.ClientControllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        [HttpPut("UpdatePassword")]
+        public async Task<DataTable> UpdatePassword(ClientUpdatePassword request)
+        {
+            try
+            {
+                return await _CustomerRepo.ClientUpdatePassword(request);
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
             }
         }
     }

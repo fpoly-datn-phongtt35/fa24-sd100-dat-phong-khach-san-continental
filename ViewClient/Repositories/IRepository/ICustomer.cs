@@ -6,7 +6,9 @@ namespace ViewClient.Repositories.IRepository
 {
     public interface ICustomer
     {
-        Task<DataTable> GetCustomerById(Guid id);
+        Task<CustomerGetByIdRequest> GetCustomerById(Guid id);
         Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request);
+        Task<int> UpdateCustomer(CustomerUpdateRequest request);
+        Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request);
     }
 }

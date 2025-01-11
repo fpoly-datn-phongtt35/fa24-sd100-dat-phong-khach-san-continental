@@ -209,14 +209,14 @@ namespace ViewClient.Controllers
                 roomBookingDetailCreateRequest.Note = null;
                 var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
 
-                var roomStatus = new RoomUpdateStatusRequest
-                {
-                    Id = room.Id,
-                    Status = RoomStatus.AwaitingConfirmation,
-                    ModifiedBy = customerId,
-                    ModifiedTime = DateTime.Now
-                };
-                await _roomRepo.UpdateRoomStatus(roomStatus);
+                //var roomStatus = new RoomUpdateStatusRequest
+                //{
+                //    Id = room.Id,
+                //    Status = RoomStatus.AwaitingConfirmation,
+                //    ModifiedBy = customerId,
+                //    ModifiedTime = DateTime.Now
+                //};
+                //await _roomRepo.UpdateRoomStatus(roomStatus);
 
                 //return RedirectToAction("Index", "Home");
                 return Json(new { success = true, roomBookingId = roomBooking });
