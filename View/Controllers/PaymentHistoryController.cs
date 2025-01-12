@@ -294,6 +294,7 @@ namespace View.Controllers
                 }
                 //lấy ra customername từ customerid trong mỗi roombooking của paymenthistory
                 var customerInfos = new List<(Guid roomBookingId, string customerName)>();
+                var customerInfos2 = new List<(Guid roomBookingId, string customerName)>();
                 foreach (var item in roomBookingIds)
                 {
                     string rbRequestUrl = $"api/RoomBooking/GetRoomBookingById?roomBookingId={item}";
@@ -311,8 +312,10 @@ namespace View.Controllers
                     var cData = JsonConvert.DeserializeObject<Customer>(cResponseString);
 
                     customerInfos.Add((cData.Id, cData.FirstName + " " + cData.LastName));
+                    customerInfos2.Add((item, cData.FirstName + " " + cData.LastName));
                 }
                 ViewBag.CustomerList = customerInfos;
+                ViewBag.CustomerList2 = customerInfos2;
                 ViewBag.RoomBookingList = roomBookingIds;
                 ViewBag.PaymentMethodList = Enum.GetValues(typeof(PaymentMethod));
                 ViewBag.PaymentTypeList = Enum.GetValues(typeof(PaymentType));

@@ -71,13 +71,29 @@ $(document).ready(function () {
             {},
             function (response) {
                 if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: response.message
-                    }).then(function () {
-                        location.reload();
+                    $.ajax({
+                        url: '/ResidenceRegistration/CheckOutResideecByRBD',
+                        type: 'POST',
+                        data: { roomBookingDetailId: roomBookingDetailId },
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'CheckOut thành công!',
+                                text: response.message || 'Checkout thành công'
+                            }).then(function () {
+                                location.reload(); 
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: 'Không thể thực hiện CheckOut ResidenceRegistration: ' + error
+                            });
+                        }
                     });
                 } else {
+                    // Xử lý nếu action đầu tiên thất bại
                     Swal.fire({
                         icon: 'error',
                         title: 'Có lỗi xảy ra',
@@ -158,6 +174,27 @@ $(document).ready(function () {
     function handleUpdateCheckInAndCheckOut(roomBookingDetailId, checkInDateTime, checkOutDateTime, note, noteCheckin, 
                                             noteCheckout, expenses,ServicePrice,ExtraService, lstSerOrderDetail, ListDelete,RB_Id) {
         _Service_OrderDetail.GetListOBjService();
+        if (checkOutDateTime) {
+            $.ajax({
+                url: '/ResidenceRegistration/CheckOutResideecByRBD',
+                type: 'POST',
+                data: { roomBookingDetailId: roomBookingDetailId },
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cập nhật thành công!',
+                        text: 'Cập nhật thành công'
+                    });
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        text: 'Không thể xử lý check-out residence: ' + error
+                    });
+                }
+            });
+        }
         executeAction(
             '/RoomBooking/UpdateCheckInAndCheckOutReality',
             {
