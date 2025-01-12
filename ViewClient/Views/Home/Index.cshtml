@@ -13,15 +13,15 @@
 
 <div class="search-box container">
     <h2 class="text-center mb-4 fs-2 fw-bolder"><i class="fas fa-calendar-check text-primary"></i> ĐẶT LỊCH NGAY </h2>
-    <form method="get" action="@Url.Action("SearchRooms", "Home")" class="d-flex align-items-center justify-content-center">
+    <form class="d-flex align-items-center justify-content-center">
         <div class="row g-3">
             <div class="col-md-3">
                 <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
-                <input type="text" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+                <input type="date" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
             </div>
             <div class="col-md-3">
                 <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
-                <input type="text" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+                <input type="date" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
             </div>
             <div class="col-md-3">
                 <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>

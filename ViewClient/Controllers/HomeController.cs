@@ -88,6 +88,7 @@ namespace ViewClient.Controllers
 
             try
             {
+                
                 // Gửi yêu cầu để lấy danh sách phòng
                 var roomsResponse = await SendHttpRequest<RoomAvailableResponse>(roomsRequestUrl, HttpMethod.Post, request);
 
