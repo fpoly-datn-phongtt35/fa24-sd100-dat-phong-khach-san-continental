@@ -192,6 +192,27 @@ public class RoomBookingController : Controller
         }
     }
 
+    public DateTimeOffset ChangeTime(DateTimeOffset dateTimeOffset, int newHour, int newMinute, int newSecond)
+    {
+        // Kiểm tra tính hợp lệ của giờ, phút, giây
+        if (newHour < 0 || newHour > 23 || newMinute < 0 || newMinute > 59 || newSecond < 0 || newSecond > 59)
+        {
+            throw new ArgumentOutOfRangeException("Giờ, phút hoặc giây không hợp lệ.");
+        }
+
+        // Tạo DateTime mới với giờ, phút, giây được thay đổi
+        DateTime newDateTime = new DateTime(
+            dateTimeOffset.Year,
+            dateTimeOffset.Month,
+            dateTimeOffset.Day,
+            newHour,
+            newMinute,
+            newSecond
+        );
+
+        // Tạo DateTimeOffset mới với offset giữ nguyên
+        return new DateTimeOffset(newDateTime, dateTimeOffset.Offset);
+    }
 
     public async Task<string> submit(RoomBooking bookingcreaterequest,
         List<RoomBookingDetail> lstupsert)
@@ -243,6 +264,8 @@ public class RoomBookingController : Controller
             {
                 i.RoomBookingId = idroombooking;
                 i.CreatedBy = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                i.CheckInBooking = ChangeTime(i.CheckInBooking.Value,14,0,0);
+                i.CheckOutBooking = ChangeTime(i.CheckOutBooking.Value, 12, 0, 0);
                 await _roomBookingDetailServiceForCustomer.UpSertRoomBookingDetail(i);
                 var updateStatusRquest = new RoomUpdateStatusRequest()
                 {

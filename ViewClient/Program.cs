@@ -31,6 +31,7 @@ namespace ViewClient
             builder.Services.AddTransient<IRoomBookingDetail, RoomBookingDetail>();
             builder.Services.AddTransient<IRoombooking, RoomBooking>();
             builder.Services.AddTransient<IServiceOderDetail, ServiceOrderDetail>();
+            builder.Services.AddTransient<ISendEmail, SendEmail>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/Authoration/Login");
@@ -70,7 +71,7 @@ namespace ViewClient
             });
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
