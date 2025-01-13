@@ -443,7 +443,7 @@ var _roombooking_detail = {
                         var newFMto = moment(dateto).format("YYYY-MM-DD")
 
                         var UnnePrice = item.expenses + item.extraPrice + item.extraService + item.servicePrice;
-                        var Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking)) + UnnePrice;
+                        var Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking);
 
                         var newCIfrom;
                         var newCOto
@@ -451,18 +451,18 @@ var _roombooking_detail = {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
 
-                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking)) - UnnePrice;
+                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
-                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality)) - UnnePrice;
+                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
                         }
 
                         if (item.checkInReality != null && item.checkOutReality != null)
                         {
-                            Price = (item.price / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality)) - UnnePrice;
+                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
                         }
                         $("#room-related").append(`
                         <tr class="">
