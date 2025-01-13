@@ -787,7 +787,8 @@ hr {
     flex-direction: column;
 }
 .img-column {
-    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    height: auto;
+    max-width: 100%; /* Chiếm toàn bộ chiều rộng */
     margin-bottom: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
 }
 
@@ -1115,4 +1116,10 @@ input.form-control[readonly] {
 .no-padding {
     padding-right: 0;
     padding-left: 0;
+}
+
+@media (max-width: 768px) {
+    .info-column {
+        margin-top: 20px; /* Thêm khoảng cách cho các thiết bị nhỏ */
+    }
 }

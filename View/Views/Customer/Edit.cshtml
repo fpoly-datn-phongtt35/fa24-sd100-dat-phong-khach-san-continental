@@ -1,4 +1,6 @@
-﻿@model Domain.Models.Customer;
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.Models.Customer;
 
 @{
     ViewData["Title"] = "Edit Customer";
@@ -58,8 +60,17 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Status" class="control-label"><i class="fas fa-check-circle"></i> Trạng thái</label>
-                <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses))"></select>
+                <label asp-for="Status">Trạng thái</label>
+                <select name="status" class="form-select" id="status">
+                    <option disabled>-- Chọn trạng thái --</option>
+                    @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+                    {
+                        var statusEnum = (EntityStatus)status;
+                        <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                            @StatusHelper.DisplayNameEntityStatus(statusEnum)
+                        </option>
+                    }
+                </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
 
