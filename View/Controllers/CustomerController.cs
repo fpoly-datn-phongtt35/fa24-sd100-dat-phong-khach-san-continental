@@ -91,13 +91,6 @@ namespace View.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus))
-               .Cast<EntityStatus>()
-               .Select(e => new SelectListItem
-               {
-                   Value = ((int)e).ToString(),
-                   Text = StatusHelper.DisplayStatusBadge(e).ToString()
-               }).ToList();
             return View(new CustomerCreateRequest());
         }
 
@@ -170,13 +163,7 @@ namespace View.Controllers
                 _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             }
 
-            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus))
-                .Cast<EntityStatus>()
-                .Select(e => new SelectListItem
-                {
-                    Value = ((int)e).ToString(),
-                    Text = e.ToString()
-                }).ToList();
+            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
             ViewBag.Genders = Enum.GetValues(typeof(GenderType))
                 .Cast<GenderType>()

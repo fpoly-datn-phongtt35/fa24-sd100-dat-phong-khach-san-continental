@@ -20,7 +20,6 @@ namespace ViewClient.Repositories.Repository
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(resultString); // Ghi lại phản hồi JSON
 
                 if (string.IsNullOrEmpty(resultString))
                 {

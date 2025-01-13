@@ -14,7 +14,7 @@
 </div>
 
 <div class="d-flex">
-<div class="d-flex flex-column mb-5" style="padding:10px; width:1000px; height:700px;">
+<div class="d-flex flex-column mb-5" style="padding:10px;">
     <div class="img-column mb-3">
         @if (Model.Room.Images != null && Model.Room.Images.Any())
         {
@@ -63,15 +63,15 @@
             {
                 <div class="row">
                     @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms
-                   .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
-                    {
-                        <div class="col-4 mb-2">
-                            <div class="amenity-item">
-                                <strong>@amenityRoom.Amenity.Name</strong>
-                                <span style="font-weight: normal;">: @amenityRoom.Amount</span>
+                        .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
+                        {
+                            <div class="col-12 col-md-6 mb-2">
+                                <div class="amenity-item">
+                                        <strong>@amenityRoom.Amenity.Name</strong>
+                                        <span style="font-weight: normal;">: @amenityRoom.Amount</span>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
                 </div>
             }
             else
@@ -132,35 +132,35 @@
         {
             <div>
                 <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Vui lòng nhập thông tin cá nhân đặt phòng ?</dt>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="firstName">Họ</label>
-                                <input type="text" class="form-control" name="FirstName" id="firstName" placeholder="Nhập họ">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="firstName">Họ</label>
+                                    <input type="text" class="form-control" name="FirstName" id="firstName" placeholder="Nhập họ">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="lastName">Tên</label>
+                                    <input type="text" class="form-control" name="LastName" id="lastName" placeholder="Nhập tên">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="lastName">Tên</label>
-                                <input type="text" class="form-control" name="LastName" id="lastName" placeholder="Nhập tên">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" name="Email" id="email" placeholder="Nhập email" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="phone">Số điện thoại</label>
+                                    <input type="text" class="form-control" name="PhoneNumber" id="phone" placeholder="Nhập số điện thoại" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" name="Email" id="email" placeholder="Nhập email" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="phone">Số điện thoại</label>
-                                <input type="text" class="form-control" name="PhoneNumber" id="phone" placeholder="Nhập số điện thoại" required>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         }
@@ -221,8 +221,6 @@
                     <label for="modalCheckOut" class="form-label"><strong>Ngày trả phòng:</strong></label>
                     <input type="text" id="modalCheckOut" name="checkOut" class="form-control" title="Ngày trả phòng" style="width: 50%;" disabled>
                 </div>
-                <p><strong>Email:</strong> <span id="modalEmail"></span></p>
-                <p><strong>Số điện thoại:</strong> <span id="modalPhoneNumber"></span></p>
                 <p><strong>Dịch vụ đã chọn:</strong> <span id="modalServices"></span></p>
                 <p><strong>Tiền đặt cọc:</strong> <span id="modalDeposit"></span></p>
                 <p><strong>Tổng tiền:</strong> <span id="modalTotalPrice"></span> (đã trừ tiền đặt cọc)</p>
