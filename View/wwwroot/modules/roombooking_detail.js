@@ -447,7 +447,7 @@ var _roombooking_detail = {
 
                         var newCIfrom;
                         var newCOto
-                        if (item.checkInReality != null) {
+                        /*if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
 
@@ -463,7 +463,7 @@ var _roombooking_detail = {
                         if (item.checkInReality != null && item.checkOutReality != null)
                         {
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
-                        }
+                        }*/
                         $("#room-related").append(`
                         <tr class="">
                            <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>

@@ -13,7 +13,7 @@ public static class StatusHelper
             case EntityStatus.Active:
                 return new HtmlString("<span class='badge bg-success'>Hoạt động</span>");
             case EntityStatus.InActive:
-                return new HtmlString("<span class='badge bg-secondary'>Không hoạt động</span>");
+                return new HtmlString("<span class='badge bg-secondary'>Đã nhận phòng</span>");
             case EntityStatus.Deleted:
                 return new HtmlString("<span class='badge bg-danger'>Đã xóa</span>");
             case EntityStatus.Pending:
