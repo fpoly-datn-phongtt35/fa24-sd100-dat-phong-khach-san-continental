@@ -447,20 +447,20 @@ var _roombooking_detail = {
 
                         var newCIfrom;
                         var newCOto
-                        /*if (item.checkInReality != null) {
+                        if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
 
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
+                            /*Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);*/
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
+                           /* Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;*/
                         }
 
-                        if (item.checkInReality != null && item.checkOutReality != null)
+                        /*if (item.checkInReality != null && item.checkOutReality != null)
                         {
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
                         }*/
