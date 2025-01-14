@@ -10,9 +10,6 @@
 
 <h3>Danh sách tầng</h3>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
-</p>
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
         <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Name" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
@@ -47,7 +44,9 @@
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
 </form>
-
+<p>
+    <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+</p>
 <script>
     function clearFilters() {
         document.getElementById('Name').value = '';

@@ -254,16 +254,16 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Post request)
         {
-            var _UserLogin = Guid.Empty;
-            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
-            {
-                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            }
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            request.ModifiedBy = userId;
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-            request.ModifiedBy = _UserLogin;
             request.ModifiedTime = DateTimeOffset.Now;
             var response = await _httpClient.PutAsJsonAsync("https://localhost:7130/api/Post/UpdatePost", request);
-            return RedirectToAction("Index");
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(request);
         }
         public async Task<IActionResult> Delete(Guid id)
         {

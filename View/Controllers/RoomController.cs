@@ -265,16 +265,12 @@ namespace View.Controllers
             }
             else
             {
-                var existingServiceResponse = await _httpClient.GetAsync($"api/Room/GetRoomById?id={roomUpdateRequest.Id}");
-                if (existingServiceResponse.IsSuccessStatusCode)
+                var existedId = roomUpdateRequest.Id;
+                string roomRequestUrl = $"/api/Room/GetRoomById?roomId={existedId}";
+                var room = await SendHttpRequest<RoomResponse>(roomRequestUrl, HttpMethod.Post);
+                if (room != null)
                 {
-                    var responseString = await existingServiceResponse.Content.ReadAsStringAsync();
-                    var existingService = JsonConvert.DeserializeObject<Room>(responseString);
-
-                    if (existingService != null)
-                    {
-                        roomUpdateRequest.Images = existingService.Images;
-                    }
+                    roomUpdateRequest.Images = room.Images;
                 }
             }
 

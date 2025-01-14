@@ -11,11 +11,9 @@
     ViewData["Title"] = "Danh sách Room";
 }
 
-<h1>Danh sách Phòng</h1>
+<h3>Danh sách Phòng</h3>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
-</p>
+
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
         <div class="form-group me-2">
@@ -58,10 +56,12 @@
                 }
             </select>
         </div>
-        <button type="submit" class="btn btn-light">Tìm kiếm</button>
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
         <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
     </form>
-
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
 <table class="table table-striped" style="color: black">
     <thead>
         <tr>
