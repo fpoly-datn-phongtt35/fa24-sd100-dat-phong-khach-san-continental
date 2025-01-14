@@ -6,18 +6,18 @@
     ViewData["Title"] = "Details";
 }
 
-<h4>Chi tiết Phòng</h4>
 
-<div class="container">
+
+<div class="container mt-4">
+    <h4>Chi tiết Phòng</h4>
     <hr />
-    <dl class="row ">
+        <div class="row">
+            <div class="col-md-8 ">
 
-        <!-- Phần Hình ảnh -->
-        <div class="row ">
-            <dt class="col-4 mb-2">@Html.DisplayName("Hình ảnh")</dt>
-            <dd class="col-8 mb-2">
-                @if (Model.Images != null && Model.Images.Any())
-                {
+                <dt class="col-4 mb-2">@Html.DisplayName("Hình ảnh")</dt>
+                <dd class="col-8 mb-2">
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
                     <div class="d-flex justify-content-center">
                         @foreach (var img in Model.Images)
                         {
@@ -30,12 +30,12 @@
                             }
                         }
                     </div>
-                }
-                else
-                {
-                    <p>Không có hình ảnh</p>
-                }
-            </dd>
+                    }
+                    else
+                    {
+                        <p>Không có hình ảnh</p>
+                    }
+                </dd>
             <div class="row mb-2">
                 <dt class="col-4 mb-2">@Html.DisplayName("Tên loại phòng")</dt>
                 <dd class="col-8 mb-2">
@@ -62,6 +62,7 @@
                 <dt class="col-4 mb-2">@Html.DisplayName("Tên")</dt>
                 <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Name)</dd>
             </div>
+            <div class="row mb-2">
             <dt class="col-4 mb-2">@Html.DisplayName("Giá")</dt>
             <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Price)</dd>
 
@@ -92,49 +93,73 @@
             <dt class="col-4 mb-2">@Html.DisplayName("Xóa")</dt>
             <dd class="col-8 mb-2">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
 
-            <dt class="col-4 mb-2">@Html.DisplayName("Thời gian xóa")</dt>
+            @* <dt class="col-4 mb-2">@Html.DisplayName("Thời gian xóa")</dt>
             <dd class="col-8 mb-2">@Html.DisplayFor(model => model.DeletedTime)</dd>
 
             <dt class="col-4 mb-2">@Html.DisplayName("Được xóa bởi")</dt>
-            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.DeletedBy)</dd>
+            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.DeletedBy)</dd> *@
+            </div>
+            </div>
+
         </div>
-    </dl>
-</div>
-
-<div>
-    <hr />
-    <h3>Danh sách tiện ích của @Model.Name</h3>
-    @if (Model.RoomType.AmenityRooms != null && Model.RoomType.AmenityRooms.Any())
-    {
-        <table class="table table-bordered" style="color: whitesmoke">
-            <thead>
-                <tr>
-                    <th>Tên tiện ích</th>
-                    <th>Số lượng</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var amenityRoom in Model.RoomType.AmenityRooms
-               .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
-                {
+    <div>
+        <hr />
+        <h3>Danh sách tiện ích của @Model.Name</h3>
+        @if (Model.RoomType.AmenityRooms != null && Model.RoomType.AmenityRooms.Any())
+        {
+            <table class="table table-bordered" style="color: whitesmoke">
+                <thead>
                     <tr>
-                        <td>@amenityRoom.Amenity.Name</td>
-                        <td>@amenityRoom.Amount</td>
+                        <th>Tên tiện ích</th>
+                        <th>Số lượng</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>Phòng này hiện không có tiện ích nào được liên kết.</p>
-    }
+                </thead>
+                <tbody>
+                    @foreach (var amenityRoom in Model.RoomType.AmenityRooms
+                   .Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
+                    {
+                        <tr>
+                            <td>@amenityRoom.Amenity.Name</td>
+                            <td>@amenityRoom.Amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Phòng này hiện không có tiện ích nào được liên kết.</p>
+        }
+    </div>
+    <div>
+        @Html.ActionLink("Sửa", "Edit", new { roomId = Model.Id }, new { @class = "btn btn-warning" })
+        <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+    </div>
 </div>
+<style>
+    .container {
+        background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
 
-<div>
-    @Html.ActionLink("Sửa", "Edit", new { roomId = Model.Id }, new { @class = "btn btn-warning" })
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
-</div>
+    dt {
+        font-weight: bold;
+        color: #343a40; /* Màu chữ đậm */
+    }
+
+    dd {
+        margin-bottom: 1rem; /* Giảm khoảng cách dưới mỗi mục */
+    }
+
+    hr {
+        border-top: 2px solid #007bff; /* Đường kẻ màu xanh */
+    }
+</style>
+
+
+
 
 <style>
     dt {

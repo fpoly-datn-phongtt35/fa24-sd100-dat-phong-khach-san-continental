@@ -499,11 +499,6 @@ var _roombooking_detail = {
                             $("#btn-checkin-" + item.roomBookingDetailId).remove();
                             $("#btn-checkout-" + item.roomBookingDetailId).remove();
                             $("#ExtraPr_" + item.roomBookingDetailId).attr('disabled', 'disabled');
-                            const button = document.getElementById('residenceAddButton');
-                            if (button) {
-                                button.disabled = true;
-                                button.style.cursor = 'not-allowed';
-                            }
                         }
                         else if (item.status == "2") {
                             $("#btn-huy-" + item.roomBookingDetailId).remove();
@@ -640,6 +635,11 @@ var _roombooking_detail = {
         //#region thêm
 
         addButton.addEventListener('click', function () {
+            const status = $(`#Status_${roomBookingDetailId}`).val(); 
+            if (status === "8" || status === "3") { 
+                alert('Phòng này đã bị hủy hoặc hoàn thành. Không thể thực hiện thêm tạm trú.');
+                return; 
+            }
             //#region tạo khung form thêm mới
             const addForm = document.createElement('div');
             addForm.style.position = 'fixed';

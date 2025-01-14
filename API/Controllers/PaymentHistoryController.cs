@@ -190,6 +190,7 @@ namespace API.Controllers
                 }
 
                 var url = $"https://localhost:7173/RoomBooking/BookingHistory?Id={customerId}";
+                //var url = "https://localhost:7173/Home/index";
 
                 // Lấy thông tin trạng thái thanh toán từ PayOS
                 var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode);
@@ -201,11 +202,6 @@ namespace API.Controllers
                 }
                 else if (paymentInfo.status == "CANCELLED")
                 {
-                    // Nếu thanh toán bị hủy, xóa lịch sử thanh toán
-                    await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
-                    // Có thể cập nhật trạng thái RoomBooking nếu cần
-                    await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
-                        3); // Trạng thái hủy
                     await HandleCancelledStatus(paymentHistory);
                 }
 
@@ -257,7 +253,7 @@ namespace API.Controllers
         private async Task HandleCancelledStatus(PaymentHistory paymentHistory)
         {
             await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
-            await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
+            await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 3);
         }
 
         private async Task<string> GetRoomDetails(Guid roomBookingId)
