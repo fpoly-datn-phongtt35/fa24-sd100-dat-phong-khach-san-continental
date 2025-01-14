@@ -19,7 +19,7 @@ public class EditHistoryAddService : IEditHistoryAddService
             throw new ArgumentNullException(nameof(editHistoryCreateRequest));
         
         var editHistory = editHistoryCreateRequest.ToEditHistory();
-        editHistory.ModifiedAt = DateTime.UtcNow;
+        editHistory.ModifiedAt = editHistory.ModifiedAt;
         editHistory.Content = editHistoryCreateRequest.Content;
         editHistory.Description = editHistoryCreateRequest.Description;
         

@@ -408,7 +408,7 @@ public class RoomBookingController : Controller
     public async Task<IActionResult> UpdateCheckInAndCheckOutReality(Guid id, string checkInTime, string checkoutTime,
         string noteCheckin, string noteCheckout, string note, decimal? expenses,decimal? ServicePrice,decimal? ExtraService,
         List<ServiceOrderDetail> lstSerOrderDetail,
-        List<Guid>? ListDelete,Guid RB_Id)
+        List<Guid>? ListDelete,Guid RB_Id, bool isCheckInForced = false)
     {
         try
         {
@@ -437,8 +437,8 @@ public class RoomBookingController : Controller
             {
                 return Json(new { success = false, message = "Không tìm thấy thông tin đặt phòng." });
             }
-
-            bool isCheckInChanged = selectedCheckInTime != roomBookingDetail.CheckInReality;
+            
+            bool isCheckInChanged = !isCheckInForced && selectedCheckInTime != roomBookingDetail.CheckInReality;
             bool isExpensesChanged = expenses.HasValue && expenses.Value != roomBookingDetail.Expenses;
             bool isCheckOutChanged = selectedCheckoutTime != roomBookingDetail.CheckOutReality;
             
@@ -568,13 +568,14 @@ public class RoomBookingController : Controller
     {
         try
         {
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local);
             var editHistory = new EditHistoryCreateRequest()
             {
                 RoomBookingDetailId = roomBookingDetailId,
                 For = (For)forValue,
                 Content = content,
                 Description = description,
-                ModifiedAt = DateTimeOffset.Now
+                ModifiedAt = localTime
             };
 
             var response = await _editHistoryAddService.AddEditHistoryService(editHistory);
