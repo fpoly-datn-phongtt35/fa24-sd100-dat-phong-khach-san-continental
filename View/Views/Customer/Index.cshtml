@@ -8,9 +8,7 @@
 
 <h3>Danh sách khách hàng</h3>
 
-<p>
-    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
-</p>
+
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
@@ -18,11 +16,13 @@
         <input type="text" name="phoneNumber" id="phoneNumber" class="form-control me-2" value="@Context.Request.Query["phoneNumber"]" placeholder="Số điện thoại" style="max-width: 200px;" />
         <input type="text" name="email" id="email" class="form-control me-2" value="@Context.Request.Query["email"]" placeholder="Email" style="max-width: 200px;" />
 
-        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
 </form>
-
+<p>
+    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
+</p>
 <script>
     function clearFilters() {
         document.getElementById('userName').value = '';

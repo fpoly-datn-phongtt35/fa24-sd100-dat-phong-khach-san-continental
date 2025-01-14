@@ -5,11 +5,8 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h1>Danh sách dịch vụ</h1>
+<h3>Danh sách dịch vụ</h3>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
-</p>
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
@@ -41,10 +38,13 @@
         <input type="number" name="minPrice" id="minPrice" class="form-control" value="@Context.Request.Query["minPrice"]" placeholder="Từ giá" style="max-width: 100px;" />
         <input type="number" name="maxPrice" id="maxPrice" class="form-control" value="@Context.Request.Query["maxPrice"]" placeholder="Đến giá" style="max-width: 100px;" />
 
-        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
 </form>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
 
 <script>
     function clearFilters() {

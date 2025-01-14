@@ -65,78 +65,13 @@ namespace API.ClientControllers
         {
             try
             {
-                 UpdatePaymentHistory();
+                //await UpdatePaymentHistory();
                 return await _getListRoomBookingsService.GetListRoomBookingByCustomerId(request);
             }
             catch (Exception e)
             {
                 throw new NullReferenceException("The list of room bookings could not be retrieved", e);
             }
-        }
-        private async Task UpdatePaymentHistory()
-        {
-            // Tạo request để lấy danh sách các bản ghi cần xử lý
-            var request = new PaymentHistoryGetRequest
-            {
-                Amount = 0
-            };
-
-            // Lấy danh sách các bản ghi có Amount = 0
-            var paymentHistories = await _paymentHistoryService.GetListPaymentHistory(request);
-
-            // Tạo danh sách các tác vụ xử lý song song
-            var tasks = paymentHistories.data.Select(async paymentHistory =>
-            {
-                try
-                {
-                    if (paymentHistory.OrderCode == 0)
-                    {
-                        // Xóa bản ghi nếu OrderCode = 0
-                        await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
-                    }
-                    else
-                    {
-                        // Gọi API để lấy thông tin trạng thái
-                        var paymentInfo = await _payOS.getPaymentLinkInformation(paymentHistory.OrderCode);
-                        if (paymentInfo.status == "PAID")
-                        {
-                            // Lấy thông tin RoomBooking
-                            var roomBooking = await _getListRoomBookingsService.GetRoomBookingById(paymentHistory.RoomBookingId);
-                            if (roomBooking == null) return;
-
-                            // Cập nhật Amount dựa trên Note
-                            if (paymentHistory.Note == PaymentType.Bill)
-                            {
-                                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, paymentInfo.amount);
-                            }
-                            else if (paymentHistory.Note == PaymentType.Deposit)
-                            {
-                                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id,
-                                    (int)roomBooking.TotalRoomPrice * 20 / 100);
-                                await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
-                            }
-                        }
-                        else if (paymentInfo.status == "CANCELLED" && paymentHistory.Note == PaymentType.Bill)
-                        {
-                            // Xóa bản ghi nếu trạng thái là CANCELLED và loại là Bill
-                            await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
-                        }
-                        else if (paymentInfo.status == "CANCELLED" && paymentHistory.Note == PaymentType.Deposit)
-                        {
-                            // Xóa bản ghi nếu trạng thái là CANCELLED và loại là Deposit
-                            await _paymentHistoryService.DeletePaymentHistory(paymentHistory.Id);
-                            await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 3);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            });
-
-            // Chờ tất cả các tác vụ xử lý song song hoàn tất
-            await Task.WhenAll(tasks);
         }
     }
 }
