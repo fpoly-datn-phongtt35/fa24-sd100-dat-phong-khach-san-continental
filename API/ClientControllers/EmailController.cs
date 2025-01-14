@@ -1,4 +1,5 @@
-﻿using Domain.Services.Services.Email;
+﻿using Domain.DTO.Email;
+using Domain.Services.Services.Email;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.ClientControllers;
@@ -14,7 +15,7 @@ public class EmailController : Controller
         _sendMailService = sendMailService;
     }
 
-    [HttpPost("send-email-test")]
+    [HttpPost("send-email")]
     public async Task<IActionResult> SendEmail(EmailRequest? emailRequest)
     {
         if (emailRequest == null || string.IsNullOrEmpty(emailRequest.ToEmail))
@@ -86,14 +87,50 @@ public class EmailController : Controller
 
         return "0"; // Nếu không có giá trị, trả về "0"
     }
+    [HttpPost("send-account")]
+    public async Task<IActionResult> SendAccount(AccountRequest? emailRequest)
+    {
+        if (emailRequest == null || string.IsNullOrEmpty(emailRequest.ToEmail))
+        {
+            return BadRequest("Invalid email request");
+        }
+
+        string subject;
+        string body;
+
+        switch (emailRequest.EmailType)
+        {
+            case 1:
+                subject = "Cấp tài khoản";
+                body = $@"
+                <h3>Xin chào,</h3>
+                <p>Đây là thư cung cấp tài khoản website đặt phòng khách sạn Continental.</p>
+                <p>Chi tiết:</p>
+                <ul>
+                    <li>Tài khoản: {emailRequest.UserName}</li>
+                    <li>Mật khẩu: {emailRequest.Password}</li>
+                </ul>
+                <p>Đây là thư thông báo, không cần phải trả lời. Xin cảm ơn!</p>";
+                break;
+            default:
+                return BadRequest("Invalid email type.");
+        }
+
+        var mailContent = new MailContent
+        {
+            To = emailRequest.ToEmail,
+            Subject = subject,
+            Body = body
+        };
+
+        var result = await _sendMailService.SendMail(mailContent);
+
+        if (result == "Success")
+        {
+            return Ok("Email sent successfully.");
+        }
+
+        return StatusCode(500, "Failed to send email.");
+    }
 }
 
-public class EmailRequest
-{
-    public string ToEmail { get; set; } // Email người nhận
-    public int EmailType { get; set; } // 1: Nhắc nhở, 2: Xác nhận
-    public string? RoomDetails { get; set; }
-    public string? BookingTime { get; set; }
-    public decimal? TotalPrice { get; set; }
-    public decimal? PaidAmount { get; set; }
-}

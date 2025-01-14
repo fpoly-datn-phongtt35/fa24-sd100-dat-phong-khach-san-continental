@@ -35,14 +35,18 @@ public static class StatusHelper
     {
         switch (roomBookingStatus)
         {
+            case RoomBookingStatus.NEW:
+                return new HtmlString("<span class='badge bg-secondary'>Mới đặt</span>");
             case RoomBookingStatus.PENDING:
                 return new HtmlString("<span class='badge bg-secondary'>Chờ thanh toán</span>");
             case RoomBookingStatus.PAID:
-                return new HtmlString("<span class='badge bg-success'>Đã thanh toán</span>");
+                return new HtmlString("<span class='badge bg-success'>Hoàn thành</span>");
             case RoomBookingStatus.CANCELLED:
                 return new HtmlString("<span class='badge bg-danger'>Đã hủy</span>");
             case RoomBookingStatus.FAILED:
                 return new HtmlString("<span class='badge bg-danger'>Thất bại</span>");
+            case RoomBookingStatus.DEPOSITED:
+                return new HtmlString("<span class='badge bg-danger'>Đã cọc</span>");
             default:
                 return HtmlString.Empty;
         }

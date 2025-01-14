@@ -315,7 +315,6 @@ public class RoomTypeRepository : IRoomTypeRepository
                 new("@Id", SqlDbType.UniqueIdentifier) { Value = roomType.Id },
                 new("@Name", SqlDbType.NVarChar) { Value = roomType.Name },
                 new("@Description", SqlDbType.NVarChar) { Value = roomType.Description },
-                new("@Quantity",SqlDbType.Int){ Value = roomType.Quantity },
                 new("@MaximumOccupancy", SqlDbType.Int) { Value = roomType.MaximumOccupancy },
                 new("@Status", SqlDbType.Int) { Value = roomType.Status },
                 new("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
@@ -445,16 +444,16 @@ public class RoomTypeRepository : IRoomTypeRepository
             Id = Guid.Parse(row["Id"].ToString()!),
             Name = row["Name"].ToString()!,
             Description = row["Description"].ToString()!,
-            Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
+            Quantity = int.Parse(row["Quantity"].ToString()!),
             MaximumOccupancy = int.Parse(row["MaximumOccupancy"].ToString()!),
+            Status = (EntityStatus)Enum.Parse(typeof(EntityStatus), row["Status"].ToString()!),
             CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),
             CreatedBy = ConvertGuidToString(row, "CreatedBy"),
             ModifiedTime = ConvertDateTimeOffsetToString(row, "ModifiedTime"),
             ModifiedBy = ConvertGuidToString(row, "ModifiedBy"),
             Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
             DeletedTime = ConvertDateTimeOffsetToString(row, "DeletedTime"),
-            DeletedBy = ConvertGuidToString(row, "DeletedBy"),
-            Quantity = int.Parse(row["Quantity"].ToString()!)
+            DeletedBy = ConvertGuidToString(row, "DeletedBy")
         };
     }
 

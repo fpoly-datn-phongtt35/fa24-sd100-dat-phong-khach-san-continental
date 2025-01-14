@@ -1,5 +1,6 @@
 ﻿using API.ClientControllers;
 using API.Types;
+using Domain.DTO.Email;
 using Domain.DTO.Paging;
 using Domain.DTO.PaymentHistory;
 using Domain.DTO.RoomBooking;

@@ -41,7 +41,8 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@CreatedBy", request.CreatedBy)
                 };
 
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertCustomer, sqlParameters);
+                var work =  _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertCustomer, sqlParameters);
+                return work;
             }
             catch (Exception ex)
             {

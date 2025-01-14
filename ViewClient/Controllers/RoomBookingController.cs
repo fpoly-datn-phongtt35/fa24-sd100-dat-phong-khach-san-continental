@@ -21,13 +21,15 @@ namespace ViewClient.Controllers
         private readonly IRoom _roomRepo;
         private readonly IServiceOderDetail _serviceOderDetailRepo;
         private readonly ICustomer _customerRepo;
+        private readonly ISendEmail _emailRepo;
         private readonly HttpClient _httpClient;
         public RoomBookingController(IRoombooking roomBookingRepo,
             IRoomBookingDetail roomBookingDetailRepo,
             IRoom roomRepo,
             ICustomer customerRepo,
             HttpClient httpClient,
-            IServiceOderDetail serviceOderDetailRepo)
+            IServiceOderDetail serviceOderDetailRepo,
+            ISendEmail emailRepo)
         {
             _roomBookingRepo = roomBookingRepo;
             _roomBookingDetailRepo = roomBookingDetailRepo;
@@ -35,6 +37,7 @@ namespace ViewClient.Controllers
             _httpClient = httpClient;
             _serviceOderDetailRepo = serviceOderDetailRepo;
             _customerRepo = customerRepo;
+            _emailRepo = emailRepo;
         }
         [HttpGet]
         public async Task<IActionResult> BookingHistory(RoomBookingGetRequestByCustomer request)
@@ -129,10 +132,11 @@ namespace ViewClient.Controllers
                 if (_UserLogin == Guid.Empty)
                 {
                     string[] parts = roomBookingDetailCreateRequest.Customer!.Email.Split('@');
+                    var passwordHash = PasswordHashingHelper.RandomPassword();
                     var customer = new ClientCreateCustomerRequest
                     {
                         UserName = parts[0],
-                        Password = PasswordHashingHelper.RandomPassword(),
+                        Password = passwordHash,
                         FirstName = roomBookingDetailCreateRequest.Customer.FirstName,
                         LastName = roomBookingDetailCreateRequest.Customer.LastName,
                         Email = roomBookingDetailCreateRequest.Customer.Email,
@@ -141,6 +145,8 @@ namespace ViewClient.Controllers
                     };
                     var insertCustomer = await _customerRepo.ClientInsertCustomer(customer);
                     customerId = insertCustomer.Id;
+
+                    //_emailRepo.SendAccountAsync
                     if (customerId == Guid.Empty)
                     {
                         return StatusCode(422, new { error = "Thông tin của bạn cần chính xác.", message = insertCustomer.Messenger });
@@ -219,6 +225,7 @@ namespace ViewClient.Controllers
                 //await _roomRepo.UpdateRoomStatus(roomStatus);
 
                 //return RedirectToAction("Index", "Home");
+
                 return Json(new { success = true, roomBookingId = roomBooking });
             }
             catch (Exception ex)

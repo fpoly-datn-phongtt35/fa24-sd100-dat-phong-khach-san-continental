@@ -24,33 +24,53 @@
    
 
     function convertToISO(dateString) {
-        var parts = dateString.split('-'); 
-        // Kiểm tra độ dài của mảng parts để đảm bảo nó có 3 phần
-        if (parts.length === 3) {
-            var day = parts[0];
-            var month = parts[1];
-            var year = parts[2];
-            return `${year}-${month}-${day}`;
-        }
-        return null; 
+        const parts = dateString.split('/');
+        const day = parts[0].padStart(2, '0');
+        const month = convertMonth(parts[1]);
+        const year = "20" + parts[2];
+        return `${day}-${month}-${year}`;
+    }
+    function convertMonth(monthString) {
+        const months = {
+            'Jan': '01',
+            'Feb': '02',
+            'Mar': '03',
+            'Apr': '04',
+            'May': '05',
+            'Jun': '06',
+            'Jul': '07',
+            'Aug': '08',
+            'Sep': '09',
+            'Oct': '10',
+            'Nov': '11',
+            'Dec': '12'
+        };
+        return months[monthString] || monthString;
+    }
+    function parseDate(dateString) {
+        const parts = dateString.split('/');
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(convertMonth(parts[1]), 10) - 1;
+        const year ="20" + parseInt(parts[2], 10);
+        return new Date(year, month, day);
     }
 
     // Lấy giá trị từ localStorage ngay khi trang được tải
+
     const checkIn = localStorage.getItem("CheckIn");
     const checkOut = localStorage.getItem("CheckOut");
+
     var pricePerNight = roomPrice;
     // Cập nhật nội dung cho checkIn và checkOut
-    $('#checkIn').text("Từ 14:00 " + checkIn);
-    $('#checkOut').text("Trước 12:00 " + checkOut);
-    function parseDate(dateString) {
-        const parts = dateString.split('-');
-        return new Date(parts[2], parts[1] - 1, parts[0]);
-    }
+    $('#checkIn').text("Từ 14:00 " + convertToISO(checkIn));
+    $('#checkOut').text("Trước 12:00 " + convertToISO(checkOut));
+
     // Kiểm tra điều kiện checkIn và checkOut
     if (checkIn && checkOut && checkOut > checkIn) {
         const checkInDate = parseDate(checkIn);
         const checkOutDate = parseDate(checkOut);
-        var days = Math.ceil((checkOutDate - checkInDate) / (1000 * 3600 * 24));
+        var days = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24));
+
         var totalPayment = Math.round(days * pricePerNight);
         var depositPayment = Math.round(totalPayment * 0.2);
 
@@ -105,6 +125,12 @@
     });
 
     // Xác nhận đặt phòng
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
     document.getElementById('confirmBookingButton').addEventListener('click', function () {
         //var email = document.getElementById('email').value;
         //var phoneNumber = document.getElementById('phone').value;
@@ -118,11 +144,13 @@
             var quantity = document.getElementById('quantity_' + checkbox.value).value;
             services.push(serviceName + ' (x' + quantity + ')');
         });
-
+        var checkInDate = new Date(parseDate(checkIn));
+        var checkOutDate = new Date(parseDate(checkOut));
+        console.log(checkInDate);
         // Cập nhật thông tin vào modal
         document.getElementById('modalRoomName').innerText = roomName;
-        document.getElementById('modalCheckIn').value = checkIn;
-        document.getElementById('modalCheckOut').value = checkOut;
+        document.getElementById('modalCheckIn').value = formatDate(checkInDate);
+        document.getElementById('modalCheckOut').value = formatDate(checkOutDate);
         //document.getElementById('modalEmail').innerText = email;
         //document.getElementById('modalPhoneNumber').innerText = phoneNumber;
         document.getElementById('modalDeposit').innerText = depositPayment.toLocaleString() + " VNĐ";
@@ -134,8 +162,9 @@
     });
     $('#confirmBooking').click(function () {
         $('#validationMessage').html('').hide();
-        var checkInDate = new Date(convertToISO(checkIn));
-        var checkOutDate = new Date(convertToISO(checkOut));
+        var checkInDate = new Date(parseDate(checkIn));
+        var checkOutDate = new Date(parseDate(checkOut));
+
 
         var depositText = $('#depositPayment').text();
         var deposit = parseFloat(depositText.replace("Đặt cọc: ", "").replace(" VNĐ", "").replace(/,/g, ""));
@@ -144,8 +173,8 @@
         var servicePriceText = $('#totalServicePayment').text();
         var servicePrice = parseFloat(servicePriceText.replace("Tiền dịch vụ: ", "").replace(" VNĐ", "").replace(/,/g, ""));
 
-        checkInDate.setUTCHours(14, 0, 0);
-        checkOutDate.setUTCHours(12, 0, 0); 
+        checkInDate.setHours(14, 0, 0);
+        checkOutDate.setHours(12, 0, 0); 
 
         // Tạo đối tượng bookingDetails
         var bookingDetails = {
