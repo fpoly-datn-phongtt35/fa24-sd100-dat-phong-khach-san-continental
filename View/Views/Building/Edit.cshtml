@@ -12,13 +12,13 @@
 <form asp-action="Edit" method="post" class="row mt-3">
     <div class="col-md-6">
         <div class="form-group mb-3">
-            <label asp-for="Name" class="control-label1"></label>
+            <label asp-for="Name" class="control-label1">Tên tòa</label>
             <input asp-for="Name" class="form-control"/>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Deleted" class="control-label1"></label>
+            <label asp-for="Deleted" class="control-label1">Trạng thái xóa</label>
             <input asp-for="Deleted" type="checkbox"/>
             <span asp-validation-for="Deleted" class="text-danger"></span>
         </div>
@@ -38,7 +38,7 @@
                 }
             </select>
             <span asp-validation-for="Status" class="text-danger"></span>
-        </div>
+        </div>      
     </div>
     <button type="submit" class="btn btn-warning" style="width:102px">Cập nhật</button>
 </form>
@@ -50,3 +50,4 @@
     }
 }
 
+                 
