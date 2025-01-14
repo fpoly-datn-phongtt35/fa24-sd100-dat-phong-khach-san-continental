@@ -19,12 +19,12 @@
         <p class="button-group">
             @if(Model.Status != Domain.Enums.EntityStatus.Deleted && Model.Status != Domain.Enums.EntityStatus.Locked)
             {
-                <button id="checkInButton" data-id="@Model.Id" class="btn btn-primary">
+                /*<button id="checkInButton" data-id="@Model.Id" class="btn btn-primary">
                     Đã nhận phòng
                 </button>
                 <button id="checkOutButton" data-id="@Model.Id" class="btn btn-danger">
                     Đã trả phòng
-                </button>
+                </button>*/
                 <button id="btnUpdate" class="btn btn-warning"
                         data-room-booking-detail-id="@Model.Id">
                     Cập nhật
@@ -103,8 +103,8 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label1">Tổng dịch vụ</label>
-                        <p id="total_service_price" class="form-control-static bordered-text">0</p>
+                        <label class="control-label1">Tổng phụ thu dịch vụ</label>
+                        <p id="total_service_extra_price" class="form-control-static bordered-text">0</p>
                     </div>
                 </div>
 
@@ -138,13 +138,13 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label1">Tổng tiền phòng</label>
+                        <label class="control-label1 text-danger">Tổng tiền phòng</label>
                         <p class="form-control-static bordered-text">@Model.Price?.ToString("N0")</p>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label1">Tổng phụ thu dịch vụ</label>
-                        <p id="total_service_extra_price" class="form-control-static bordered-text">0</p>
+                        <label class="control-label1 text-danger">Tổng dịch vụ</label>
+                        <p id="total_service_price" class="form-control-static bordered-text">0</p>
                     </div>
                 </div>
 
