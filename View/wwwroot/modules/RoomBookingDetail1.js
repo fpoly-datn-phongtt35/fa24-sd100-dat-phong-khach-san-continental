@@ -326,7 +326,7 @@ function validateExpenses() {
 
     expensesInput.value = value;
 }
-
+var price_Rl = 0;
 ////////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function ()
 {
@@ -579,6 +579,13 @@ var _Service_OrderDetail =
                     })
                     _Service_OrderDetail.CalculatingTotalPriceSer();
                     _Service_OrderDetail.ResetIndex();
+                    price_Rl = 0;
+                    price_Rl =parseInt($('#room_Price').text().replaceAll(',', '')) +
+                        parseInt($('#total_service_price').text().replaceAll(',', '')) +
+                        parseInt($('#Expenses').val().replaceAll(',', '')) +
+                        parseInt($('#total_service_extra_price').text().replaceAll(',', '')) +
+                        parseInt($('#extra_price').text().replaceAll(',', ''))
+                    $("#total_RBD_RL").text(global.NumberVNFormated(price_Rl));
                 }
             }
         });

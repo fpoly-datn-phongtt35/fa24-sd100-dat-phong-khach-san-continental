@@ -91,7 +91,7 @@
                         </div>
                         <div class="top-customer-info">
                             <h5>@($"{customer.FirstName} {customer.LastName}")</h5>
-                            <p>Tiền: @customer.TotalPrice VND / Lần đặt: @customer.BookingCount</p>
+                            <p>Tiền: @String.Format("{0:N0}",@customer.TotalPrice) VND / Lần đặt: @customer.BookingCount</p>
                         </div>
                     </div>
                 }
@@ -313,7 +313,7 @@
                         <td>@(i + 1)</td>
                         <td>@room.Name</td>
                         <td>@room.RoomTypeName</td>
-                        <td>@room.Price.ToString("C")</td>
+                        <td>@String.Format("{0:N0}",@room.Price) VNĐ</td>
                         <td>@room.Address</td>
                         <td>@room.RoomSize</td>
                         <td>@room.BookingCount</td>
