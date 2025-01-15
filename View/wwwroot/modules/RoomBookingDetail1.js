@@ -247,6 +247,34 @@ $(document).ready(function () {
         const expensesInput = $('#Expenses').val().replace(/,/g, '');  // Loại bỏ dấu phẩy
         const expenses = parseFloat(expensesInput) || 0;  // Chuyển thành số thực
 
+
+
+        const outTimeRaw = $('#checkOutRealityPicker').val();
+        // Tách và phân tích cú pháp ngày giờ
+        const [datePart, timePart, amPm] = outTimeRaw.split(/\s+/); // Tách ngày và giờ, am/pm cách nhau bằng khoảng trắng
+
+        const [day, month, year] = datePart.split('/').map(Number); // Tách ngày, tháng, năm
+
+        // Chuyển đổi giờ sang 24h
+        let hour = parseInt(timePart, 10);  // Lấy giờ từ chuỗi timePart
+        if (amPm === 'PM' && hour !== 12) {
+            hour += 12;  // Chuyển PM sang 24h
+        } else if (amPm === 'AM' && hour === 12) {
+            hour = 0;  // 12 AM là 0 giờ
+        }
+
+        // Tạo đối tượng Date theo Local Time
+        const outTimeLocal = new Date(year, month - 1, day, hour, 0);
+
+        // Chuyển đổi sang UTC để gửi
+        const outTime = new Date(outTimeLocal.getTime() - outTimeLocal.getTimezoneOffset() * 60000).toISOString();
+
+        console.log("Thời gian đã chuyển đổi:", outTime);
+
+
+
+
+
         console.log('note input:', note);
 
         if (expenses > 0 && !note) {
@@ -278,6 +306,28 @@ $(document).ready(function () {
             cancelButtonText: 'Hủy'
         }).then(function (result) {
             if (result.isConfirmed) {
+                $.ajax({
+                    url: '/ResidenceRegistration/CheckOutResideecByRBD',
+                    type: 'POST',
+                    data: {
+                        roomBookingDetailId: roomBookingDetailId,
+                        outTime: outTime 
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Cập nhật thành công!',
+                            text: 'Cập nhật thành công'
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Có lỗi xảy ra!',
+                            text: 'Không thể xử lý check-out residence: ' + error
+                        });
+                    }
+                });
                 handleUpdateCheckInAndCheckOut(roomBookingDetailId, selectedCheckInDateTime, selectedCheckOutDateTime, 
                     note, noteCheckin, noteCheckout, expenses, ServicePrice, ExtraService, lstServiceOrderDetail, LstDelete, $('#RB_Id').val());
             }
