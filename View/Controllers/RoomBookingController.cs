@@ -736,6 +736,8 @@ public class RoomBookingController : Controller
             await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailWithEditHistoryById(roomBookingDetailId);
         if (roomBookingDetailResponse == null)
             return View("Error");
+        var roomBooking = await _roomBookingService.GetRoomBookingById(roomBookingDetailResponse.RoomBookingId);
+        ViewBag.RoomBooking = roomBooking;
         return View(roomBookingDetailResponse);
     }
 

@@ -49,7 +49,7 @@
             </div>
             <button type="submit" style="display:none" class="btn btn-success btn-Thanhtoan">Thanh toán</button>
             <button type="button" class="btn btn-success btn-Thanhtoan" onclick="_Payment.Paid()">Thanh toán</button>
-            <a href="/PaymentHistory/Id=@roomBooking.Id" class="btn btn-secondary">Hủy</a>
+            <a href="/BookingRoom/Id=@roomBooking.Id&&Client=@roomBooking.CustomerId" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </div>

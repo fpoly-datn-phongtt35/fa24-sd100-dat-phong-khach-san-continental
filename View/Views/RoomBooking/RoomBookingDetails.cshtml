@@ -1,10 +1,12 @@
-﻿@using Domain.DTO.RoomBookingDetail
+﻿@using Domain.DTO.RoomBooking
+@using Domain.DTO.RoomBookingDetail
 @using View.Views.Shared.Helper
 @model Domain.DTO.RoomBookingDetail.RoomBookingDetailResponse
 
 @{
     ViewData["Title"] = "Thông tin chi tiết đặt phòng";
     //var roomBookingDetail = (RoomBookingDetailResponse)ViewBag.roomBookingDetail;
+    var roomBooking = (RoomBookingResponse)ViewBag.RoomBooking;
 }
 <style>
     .element-shadow {
@@ -28,6 +30,7 @@
                 <button id="btnUpdate" class="btn btn-warning" data-room-booking-detail-id="@Model.Id">
                     Cập nhật
                 </button>
+                <a href="/BookingRoom/Id=@roomBooking.Id&&Client=@roomBooking.CustomerId" class="btn btn-secondary">Hủy</a>
             }
         </p>
         <p class="button-group">
