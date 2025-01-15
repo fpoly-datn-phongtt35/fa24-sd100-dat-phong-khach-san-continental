@@ -25,7 +25,7 @@ public static class StatusHelper
             case EntityStatus.PendingForApproval:
                 return new HtmlString("<span class='badge bg-secondary'>Đang chờ phê duyệt</span>");
             case EntityStatus.Locked:
-                return new HtmlString("<span class='badge bg-gradient'>Đã khóa</span>");
+                return new HtmlString("<span class='badge bg-danger'>Đã khóa</span>");
             default:
                 return HtmlString.Empty;
         }
@@ -46,7 +46,7 @@ public static class StatusHelper
             case RoomBookingStatus.FAILED:
                 return new HtmlString("<span class='badge bg-danger'>Thất bại</span>");
             case RoomBookingStatus.DEPOSITED:
-                return new HtmlString("<span class='badge bg-danger'>Đã cọc</span>");
+                return new HtmlString("<span class='badge bg-warning'>Đã cọc</span>");
             default:
                 return HtmlString.Empty;
         }
