@@ -93,7 +93,7 @@ $(document).ready(function () {
                     return {
                         results: $.map(response.data, function (item) {
                             return {
-                                text: item.userName + ' - ' + item.email,
+                                text: item.userName + ' - ' + item.email + ' - ' + item.phoneNumber,
                                 id: item.id,
                             }
                         })
@@ -479,10 +479,10 @@ var _roombooking_detail = {
                                <input id="CheckOut_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + item.roomBookingDetailId + `"></td>
-                           <td>
+                           <td style="display:none">
                                <input id="CheckInReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCIfrom + `" type="datetime-local">
                            </td>
-                           <td>
+                           <td style="display:none">
                                <input id="CheckOutReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCOto + `" type="datetime-local">
                            </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
@@ -591,8 +591,8 @@ var _roombooking_detail = {
             }
 
             // Tính tuổi
-            const age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var monthDiff = today.getMonth() - birthDate.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }

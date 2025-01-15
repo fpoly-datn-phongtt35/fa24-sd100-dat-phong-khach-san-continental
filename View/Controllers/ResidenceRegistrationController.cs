@@ -76,18 +76,38 @@ namespace View.Controllers
                 throw ex;
             }
         }
-        public async Task<IActionResult> CheckOutResideecByRBD(Guid roomBookingDetailId)
+        public async Task<IActionResult> CheckOutResideecByRBD(Guid roomBookingDetailId, DateTimeOffset outTime)
         {
             try
             {
-                var result = await _residenceRegistrationService.CheckOutResidenceByRBD(roomBookingDetailId);
+                // Kiểm tra kiểu dữ liệu của outTime và chuyển đổi nếu cần thiết
+                if (outTime == null || outTime == DateTimeOffset.MinValue) // hoặc bất kỳ kiểm tra giá trị không hợp lệ nào
+                {
+                    // Giả sử bạn nhận giá trị outTime từ phía client là kiểu string hoặc DateTime và cần phải chuyển đổi nó
+                    string outTimeString = outTime.ToString(); // Lấy giá trị string của outTime nếu có
+
+                    if (DateTimeOffset.TryParse(outTimeString, out DateTimeOffset parsedOutTime))
+                    {
+                        outTime = parsedOutTime;  // Cập nhật outTime bằng giá trị đã chuyển đổi
+                    }
+                    else
+                    {
+                        // Nếu không thể chuyển đổi, bạn có thể xử lý ngoại lệ hoặc trả về lỗi
+                        return BadRequest("Invalid check-out time format.");
+                    }
+                }
+
+                // Gọi service để xử lý check-out
+                var result = await _residenceRegistrationService.CheckOutResidenceByRBD(roomBookingDetailId, outTime);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Log và xử lý ngoại lệ nếu cần
+                return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
+
 
         public async Task<IActionResult> GetMaximumOccupancyByRoomBookingDetailId(Guid Id)
         {

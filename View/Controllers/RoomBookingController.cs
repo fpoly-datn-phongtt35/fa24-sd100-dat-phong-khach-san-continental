@@ -412,13 +412,16 @@ public class RoomBookingController : Controller
     {
         try
         {
-            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
 
-            await HandleServiceOrderDetails(id, lstSerOrderDetail, ListDelete, userId);
-
+            
+            if (!roomBookingDetail.CheckInReality.HasValue && string.IsNullOrWhiteSpace(checkInTime))
+            {
+                throw new InvalidOperationException("Phòng chưa được Check-In.");
+            }
             if (!TryParseDateTime(checkInTime, out var selectedCheckInTime))
             {
-                return Json(new { success = false, message = "Định dạng thời gian Check-In không hợp lệ." });
+                throw new InvalidOperationException("Định dạng thời gian Check-In không hợp lệ..");
             }
 
             DateTimeOffset? selectedCheckoutTime = null;
@@ -432,7 +435,6 @@ public class RoomBookingController : Controller
                 selectedCheckoutTime = checkoutTimeParsed;
             }
 
-            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
             if (roomBookingDetail == null)
             {
                 return Json(new { success = false, message = "Không tìm thấy thông tin đặt phòng." });
@@ -472,7 +474,9 @@ public class RoomBookingController : Controller
             {
                 return Json(new { success = false, message = "Cập nhật thất bại. Vui lòng thử lại sau." });
             }
+            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            await HandleServiceOrderDetails(id, lstSerOrderDetail, ListDelete, userId);
             try
             {
                 await AddEditHistoryIfChanged(id, roomBookingDetail, selectedCheckInTime, selectedCheckoutTime,
@@ -730,12 +734,24 @@ public class RoomBookingController : Controller
     }
 
     [Route("RoomBooking/RoomBookingDetails/RoomBookingDetailId={roomBookingDetailId}")]
-    public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId)
+    public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId, Guid clientId)
     {
         var roomBookingDetailResponse =
             await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailWithEditHistoryById(roomBookingDetailId);
         if (roomBookingDetailResponse == null)
             return View("Error");
+        
+        ViewBag.IdRoomBooking = roomBookingDetailResponse.RoomBookingId;
+        ViewBag.IdClient = null;
+        ViewBag.Client = null;
+        
+        if (clientId != Guid.Empty)
+        {
+            ViewBag.IdClient = clientId;
+            var client = await _customerService.GetCustomerById(clientId);
+            ViewBag.Client = client;
+        }
+        
         return View(roomBookingDetailResponse);
     }
 

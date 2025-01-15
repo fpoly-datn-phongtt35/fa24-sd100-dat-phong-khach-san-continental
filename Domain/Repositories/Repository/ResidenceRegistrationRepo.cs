@@ -63,13 +63,14 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<int> CheckOutByRBD(Guid roomBookingDetailId)
+        public async Task<int> CheckOutByRBD(Guid roomBookingDetailId, DateTimeOffset checkOutTime)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter(@"RoomBookingDetailId", roomBookingDetailId)
+                    new SqlParameter(@"RoomBookingDetailId", roomBookingDetailId),
+                    new SqlParameter(@"CheckOutTime", checkOutTime)
                 };
                 return _dbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_CheckOutResidencesByRoomBookingDetail, sqlParameters);
             }

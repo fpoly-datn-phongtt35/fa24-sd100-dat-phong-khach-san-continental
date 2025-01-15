@@ -247,6 +247,42 @@ $(document).ready(function () {
         const expensesInput = $('#Expenses').val().replace(/,/g, '');  // Loại bỏ dấu phẩy
         const expenses = parseFloat(expensesInput) || 0;  // Chuyển thành số thực
 
+        let outTime = null;
+
+        const outTimeRaw = $('#checkOutRealityPicker').val();
+        if (outTimeRaw) {
+            // Tách và phân tích cú pháp ngày giờ
+            const [datePart, timePart, amPm] = outTimeRaw.split(/\s+/); // Tách ngày và giờ, am/pm cách nhau bằng khoảng trắng
+
+            const [day, month, year] = datePart.split('/').map(Number); // Tách ngày, tháng, năm
+
+            // Tách giờ và phút từ timePart
+            const [hourPart, minutePart] = timePart.split(':').map(Number);
+            let hour = hourPart;  // Lấy giờ từ chuỗi timePart
+            const minute = minutePart || 0;  // Lấy phút hoặc mặc định là 0
+
+            // Chuyển đổi giờ sang 24h
+            if (amPm === 'PM' && hour !== 12) {
+                hour += 12;  // Chuyển PM sang 24h
+            } else if (amPm === 'AM' && hour === 12) {
+                hour = 0;  // 12 AM là 0 giờ
+            }
+
+            // Tạo đối tượng Date theo Local Time
+            const outTimeLocal = new Date(year, month - 1, day, hour, minute);
+
+            // Chuyển đổi sang UTC để gửi
+            outTime = new Date(outTimeLocal.getTime() - outTimeLocal.getTimezoneOffset() * 60000).toISOString();
+
+            console.log("Thời gian đã chuyển đổi:", outTime);
+        }
+
+        
+
+
+
+
+
         console.log('note input:', note);
 
         if (expenses > 0 && !note) {
@@ -277,8 +313,32 @@ $(document).ready(function () {
             confirmButtonText: 'Xác nhận',
             cancelButtonText: 'Hủy'
         }).then(function (result) {
-            if (result.isConfirmed) {
-                handleUpdateCheckInAndCheckOut(roomBookingDetailId, selectedCheckInDateTime, selectedCheckOutDateTime, 
+            if (result.isConfirmed ) {
+                if (outTime) {
+                    $.ajax({
+                        url: '/ResidenceRegistration/CheckOutResideecByRBD',
+                        type: 'POST',
+                        data: {
+                            roomBookingDetailId: roomBookingDetailId,
+                            outTime: outTime
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cập nhật thành công!',
+                                text: 'Cập nhật thành công'
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: 'Không thể xử lý check-out residence: ' + error
+                            });
+                        }
+                    });
+                }
+                handleUpdateCheckInAndCheckOut(roomBookingDetailId, selectedCheckInDateTime, selectedCheckOutDateTime,
                     note, noteCheckin, noteCheckout, expenses, ServicePrice, ExtraService, lstServiceOrderDetail, LstDelete, $('#RB_Id').val());
             }
         });
@@ -474,7 +534,7 @@ var _Service_OrderDetail =
                                 <input id="QuantitySer_`+ IdSerAdd + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `')" class="form-control" type="number" value="1" min="1" />
                             </td>
                             <td scope="col">
-                                ${result.unit}
+                                ${global.getResponseStatus(result.unit, constant.UnitType)}
                             </td>
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
@@ -553,6 +613,8 @@ var _Service_OrderDetail =
             success: function (result) {
                 if (result != null) {
                     result.forEach(item => {
+                        var pri_Ser = (parseFloat(item.amount) / parseFloat(item.quantity)).toLocaleString('vi-VN');
+                        pri_Ser = pri_Ser.replaceAll('.', ',');
                         var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
                         formattedprice = formattedprice.replaceAll('.', ',');
                         $("#service-related").append(`
@@ -562,13 +624,13 @@ var _Service_OrderDetail =
                             <td scope="col" class="STT_Ser">${STT2}</td>
                             <td scope="col">${item.name}</td>
                             <td scope="col">
-                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${formattedprice}" disabled />
+                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${pri_Ser}" disabled />
                             </td>
                             <td scope="col">
                                 <input id="QuantitySer_`+ item.id + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + item.id + `')" class="form-control" type="number" value="${item.quantity}" min="1" />
                             </td>
                             <td scope="col">
-                                ${item.unit}
+                                ${global.getResponseStatus(item.unit, constant.UnitType)}
                             </td>
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
