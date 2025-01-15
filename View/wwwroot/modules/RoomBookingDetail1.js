@@ -290,11 +290,16 @@ $(document).ready(function () {
         noCalendar: false,            
         dateFormat: "d/m/Y h:i K",  
         time_24hr: false,            
-        defaultHour: 8,            
-        defaultMinute: 0, 
+        defaultHour: null,            
+        defaultMinute: null, 
         minuteIncrement: 1,
         disableMobile: true, 
         static: true,
+        onOpen: function(selectedDates, dateStr, instance) {
+            if (!instance.input.value) {
+                instance.setDate(new Date());
+            }
+        }
     });
 
     $('#checkOutRealityPicker').flatpickr({
@@ -307,6 +312,11 @@ $(document).ready(function () {
         minuteIncrement: 1,
         disableMobile: true,
         static: true,
+        onOpen: function(selectedDates, dateStr, instance) {
+            if (!instance.input.value) {
+                instance.setDate(new Date());
+            }
+        }
     });
 });
 

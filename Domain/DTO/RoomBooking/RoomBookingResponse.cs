@@ -110,9 +110,9 @@ public static class RoomBookingResponseExtensions
             // Kiểm tra null trước khi ghép
             StaffFullName = roomBooking.Staff != null 
                 ? roomBooking.Staff.LastName + " " + roomBooking.Staff.FirstName 
-                : "No Staff Assigned",
+                : "không nhân viên",
             CustomerFullName = roomBooking.Customer != null 
-                ? roomBooking.Customer.LastName + " " + roomBooking.Customer.FirstName 
+                ? roomBooking.Customer.LastName + " " + roomBooking.Customer.FirstName
                 : "No Customer Assigned", 
         };
     }
