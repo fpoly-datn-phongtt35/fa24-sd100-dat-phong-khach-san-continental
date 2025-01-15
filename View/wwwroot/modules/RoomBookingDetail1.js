@@ -474,7 +474,7 @@ var _Service_OrderDetail =
                                 <input id="QuantitySer_`+ IdSerAdd + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `')" class="form-control" type="number" value="1" min="1" />
                             </td>
                             <td scope="col">
-                                ${result.unit}
+                                ${global.getResponseStatus(result.unit, constant.UnitType)}
                             </td>
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
@@ -553,6 +553,8 @@ var _Service_OrderDetail =
             success: function (result) {
                 if (result != null) {
                     result.forEach(item => {
+                        var pri_Ser = (parseFloat(item.amount) / parseFloat(item.quantity)).toLocaleString('vi-VN');
+                        pri_Ser = pri_Ser.replaceAll('.', ',');
                         var formattedprice = parseFloat(item.amount).toLocaleString('vi-VN');
                         formattedprice = formattedprice.replaceAll('.', ',');
                         $("#service-related").append(`
@@ -562,13 +564,13 @@ var _Service_OrderDetail =
                             <td scope="col" class="STT_Ser">${STT2}</td>
                             <td scope="col">${item.name}</td>
                             <td scope="col">
-                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${formattedprice}" disabled />
+                                <input id="PriceSer_`+ item.id + `" class="form-control" value="${pri_Ser}" disabled />
                             </td>
                             <td scope="col">
                                 <input id="QuantitySer_`+ item.id + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + item.id + `')" class="form-control" type="number" value="${item.quantity}" min="1" />
                             </td>
                             <td scope="col">
-                                ${item.unit}
+                                ${global.getResponseStatus(item.unit, constant.UnitType)}
                             </td>
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />

@@ -12,6 +12,20 @@
         "PendingForApproval" : 7,
         "Đã khóa" : 8,
     },
+    UnitType:{
+        "Lượt" : 0,
+        "Vé" : 1,
+        "Gam" : 3,
+        "Kg" : 4,
+        "Tấn" : 5,
+        "Giờ" : 6,
+        "Túi" : 7,
+        "Chai" : 8,
+        "Bát" : 9,
+        "Cốc" : 10,
+        "Thùng" : 11,
+        "Phần" : 12,
+    },
     Room_Status :
     {
         "Phòng trống" : 1,//trống
