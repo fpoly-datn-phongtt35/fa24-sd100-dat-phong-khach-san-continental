@@ -115,6 +115,7 @@ namespace View.Controllers
             try
             {
                 var roomBooking = await _roomBookingGetService.GetRoomBookingById(IdRoomBooking);
+                var customerId = roomBooking.CustomerId;
                 var totalPaid = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(IdRoomBooking);
 
                 decimal amountToPay;
