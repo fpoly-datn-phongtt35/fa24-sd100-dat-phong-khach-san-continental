@@ -451,19 +451,19 @@ var _roombooking_detail = {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
 
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
+                            /*Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);*/
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
+                           /* Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;*/
                         }
 
-                        if (item.checkInReality != null && item.checkOutReality != null)
+                        /*if (item.checkInReality != null && item.checkOutReality != null)
                         {
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
-                        }
+                        }*/
                         $("#room-related").append(`
                         <tr class="">
                            <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>
@@ -499,11 +499,6 @@ var _roombooking_detail = {
                             $("#btn-checkin-" + item.roomBookingDetailId).remove();
                             $("#btn-checkout-" + item.roomBookingDetailId).remove();
                             $("#ExtraPr_" + item.roomBookingDetailId).attr('disabled', 'disabled');
-                            const button = document.getElementById('residenceAddButton');
-                            if (button) {
-                                button.disabled = true;
-                                button.style.cursor = 'not-allowed';
-                            }
                         }
                         else if (item.status == "2") {
                             $("#btn-huy-" + item.roomBookingDetailId).remove();
@@ -640,6 +635,11 @@ var _roombooking_detail = {
         //#region thêm
 
         addButton.addEventListener('click', function () {
+            const status = $(`#Status_${roomBookingDetailId}`).val(); 
+            if (status === "8" || status === "3") { 
+                alert('Phòng này đã bị hủy hoặc hoàn thành. Không thể thực hiện thêm tạm trú.');
+                return; 
+            }
             //#region tạo khung form thêm mới
             const addForm = document.createElement('div');
             addForm.style.position = 'fixed';

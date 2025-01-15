@@ -8,18 +8,18 @@
 
 <h3>Trang loại bài đăng</h3>
 
-<p>
-    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
-</p>
 
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
         <input type="text" id="titleOfType" name="titleOfType" class="form-control me-2" placeholder="Tiêu đề" value="@Context.Request.Query["titleOfType"]" style="max-width: 200px;" />
-        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
 </form>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
 
 <script>
     function clearFilters() {
