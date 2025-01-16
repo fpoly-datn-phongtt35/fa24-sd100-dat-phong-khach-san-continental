@@ -127,12 +127,8 @@ body {
     .nav-button:focus {
         outline: none; /* Xóa đường viền khi focus */
     }
-
-.profile-menu {
-    position: relative;
-}
-
 .profile-button {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -145,7 +141,7 @@ body {
 }
 
     .profile-button:hover {
-        box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
     }
 
 .profile-icon {
@@ -163,14 +159,14 @@ body {
     background-color: #FFFFFF;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 8px 0;
     min-width: 200px;
 }
 
     .profile-dropdown.show {
         display: block;
-        z-index:1200;
+        z-index: 1200;
     }
 
     .profile-dropdown a {
@@ -183,6 +179,13 @@ body {
         .profile-dropdown a:hover {
             background-color: #F7F7F7;
         }
+
+@media (max-width: 768px) {
+    .profile-dropdown {
+        min-width: 100%;
+        right: 0;
+    }
+}
 .button {
     font-size: 14px;
     font-weight: 600;
