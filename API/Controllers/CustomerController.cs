@@ -26,7 +26,8 @@ namespace API.Controllers
         {
             try
             {
-                return await _CustomerRepo.AddCustomer(request);
+                var result = await _CustomerRepo.AddCustomer(request);
+                return result;
             }
             catch (Exception ex)
             {

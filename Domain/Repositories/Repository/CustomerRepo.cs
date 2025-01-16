@@ -109,8 +109,8 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
-
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters);
+                var work = _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters);
+                return work;
             }
             catch (Exception ex)
             {
