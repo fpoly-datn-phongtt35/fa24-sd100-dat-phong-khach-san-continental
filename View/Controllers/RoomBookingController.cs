@@ -740,18 +740,8 @@ public class RoomBookingController : Controller
             await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailWithEditHistoryById(roomBookingDetailId);
         if (roomBookingDetailResponse == null)
             return View("Error");
-        
-        ViewBag.IdRoomBooking = roomBookingDetailResponse.RoomBookingId;
-        ViewBag.IdClient = null;
-        ViewBag.Client = null;
-        
-        if (clientId != Guid.Empty)
-        {
-            ViewBag.IdClient = clientId;
-            var client = await _customerService.GetCustomerById(clientId);
-            ViewBag.Client = client;
-        }
-        
+        var roomBooking = await _roomBookingService.GetRoomBookingById(roomBookingDetailResponse.RoomBookingId);
+        ViewBag.RoomBooking = roomBooking;            
         return View(roomBookingDetailResponse);
     }
 
