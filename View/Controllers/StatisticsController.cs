@@ -120,7 +120,7 @@ namespace View.Controllers
 
                 // Ánh xạ dữ liệu doanh thu
                 var periods = revenueData.Select(x => x.Period).ToList();
-                var totalAmounts = revenueData.Select(x => x.TotalAmount).ToList();
+                    var totalAmounts = revenueData.Select(x => x.TotalAmount).ToList();
 
                 // Lấy dữ liệu top khách hàng
                 if (selectedMonthCustomer == null) selectedMonthCustomer = DateTime.Now.Month; // Mặc định là tháng hiện tại
