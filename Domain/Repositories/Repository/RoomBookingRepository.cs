@@ -41,6 +41,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                 new("@StaffId", roomBookingGetRequest.StaffId),
                 new("@BookingType", roomBookingGetRequest.BookingType),
                 new("@Status", roomBookingGetRequest.Status),
+                new("@Status2", roomBookingGetRequest.Status2),
                 new("@CustomerId", roomBookingGetRequest.CustomerId),
                 new("@BookingBy", roomBookingGetRequest.BookingBy)
 
