@@ -152,8 +152,8 @@ namespace Utilities.StoredProcedure
         public const string SP_UpdateRoomBookingPrice = "SP_UpdateRoomBookingPrice";
 
         // RoomBookingDetail
-        public const string SP_BookRoomDetailForCustomer = "SP_BookRoomDetailForCustomer";
-        public const string SP_InsertRoomBookingDetail = "SP_InsertRoomBookingDetail";
+        public const string SP_InsertRoomBookingDetailForCustomer = "SP_InsertRoomBookingDetailForCustomer";
+        public const string SP_InsertRoomBookingDetail = "SP_InsertRoomBookingDetailFor";
         public const string SP_UpdateRoomBookingDetail = "SP_UpdateRoomBookingDetail";
         public const string SP_GetRoomBookingDetailById = "SP_GetRoomBookingDetailById";
         public const string SP_GetRoomBookingDetailById2 = "SP_GetRoomBookingDetailById2";

@@ -14,11 +14,17 @@ namespace API.ClientControllers
             _roomBookingDetailService = roomBookingDetailService;
         }
         [HttpPost("BookingRoomDetail")]
-        public async Task<int> BookingRoomDetail(RoomBookingDetailCreateRequestForCustomer request)
+        public async Task<ActionResult<Guid>> BookingRoomDetail(RoomBookingDetailCreateRequestForCustomer request)
         {
             try
             {
-                return await _roomBookingDetailService.CreateRoomBookingDetailForCustomer(request);
+                Guid newId = await _roomBookingDetailService.CreateRoomBookingDetailForCustomer(request);
+                if (newId == Guid.Empty)
+                {
+                    return BadRequest("Unable to create room booking.");
+                }
+
+                return Ok(newId);
             }
             catch (Exception ex)
             {

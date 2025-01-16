@@ -156,13 +156,13 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request)
+        public async Task<Guid> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request)
         {
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@RoomIds", request.RoomIdsAsString),
+                    new SqlParameter("@RoomId", request.RoomId),
                     new SqlParameter("@RoomBookingId", request.RoomBookingId),
                     new SqlParameter("@CheckInBooking", request.CheckInBooking),
                     new SqlParameter("@CheckOutBooking", request.CheckOutBooking),
@@ -170,13 +170,20 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@CheckOutReality", request.CheckOutReality),
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@ExtraPrice", request.ExtraPrice),
+                    new SqlParameter("@ServicePrice", request.ServicePrice),
+                    new SqlParameter("@ExtraService", request.ExtraService),
                     new SqlParameter("@Deposit", request.Deposit),
+                    new SqlParameter("@Expenses", request.Expenses),
+                    new SqlParameter("@Note", request.Note),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
-                    new SqlParameter("@CreatedTime", request.CreatedTime),
-                    new SqlParameter("@CreatedBy", request.CreatedBy)
+                    new SqlParameter("@CreatedBy", request.CreatedBy),
+                    new SqlParameter("@NewId", SqlDbType.UniqueIdentifier) { Direction = ParameterDirection.Output }
                 };
 
-                return _worker.ExecuteNonQuery(StoredProcedureConstant.SP_BookRoomDetailForCustomer, sqlParameters);
+                await _worker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_InsertRoomBookingDetailForCustomer, sqlParameters);
+                var newId = (Guid)sqlParameters.First(p => p.ParameterName == "@NewId").Value;
+
+                return newId;
             }
             catch (Exception ex)
             {

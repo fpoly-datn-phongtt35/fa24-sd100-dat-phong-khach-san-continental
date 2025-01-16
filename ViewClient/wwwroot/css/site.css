@@ -155,18 +155,18 @@ body {
     display: none;
     position: absolute;
     top: 100%;
-    right: 0;
+    right: 70px;
     background-color: #FFFFFF;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 8px 0;
     min-width: 200px;
+    z-index:1100;
 }
 
     .profile-dropdown.show {
         display: block;
-        z-index: 1200;
     }
 
     .profile-dropdown a {
@@ -399,7 +399,6 @@ body {
         color: #fff;
         font-weight: 400;
         width: 92.5%;
-        margin-top: 32px;
     }
 
         .form-v7-content .form-left img {
