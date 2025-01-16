@@ -1,10 +1,12 @@
-﻿@using Domain.DTO.RoomBookingDetail
+﻿@using Domain.DTO.RoomBooking
+@using Domain.DTO.RoomBookingDetail
 @using View.Views.Shared.Helper
 @model Domain.DTO.RoomBookingDetail.RoomBookingDetailResponse
 
 @{
     ViewData["Title"] = "Thông tin chi tiết đặt phòng";
     //var roomBookingDetail = (RoomBookingDetailResponse)ViewBag.roomBookingDetail;
+    var roomBooking = (RoomBookingResponse)ViewBag.RoomBooking;
 }
 <style>
     .element-shadow {
@@ -25,10 +27,10 @@
                 <button id="checkOutButton" data-id="@Model.Id" class="btn btn-danger">
                     Đã trả phòng
                 </button>*/
-                <button id="btnUpdate" class="btn btn-warning"
-                        data-room-booking-detail-id="@Model.Id">
+                <button id="btnUpdate" class="btn btn-warning" data-room-booking-detail-id="@Model.Id">
                     Cập nhật
                 </button>
+                <a href="/BookingRoom/Id=@roomBooking.Id&&Client=@roomBooking.CustomerId" class="btn btn-secondary">Hủy</a>
             }
         </p>
         <p class="button-group">
@@ -98,8 +100,8 @@
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label class="control-label1">Phụ thu</label>
-                        <p class="form-control-static bordered-text">@Model.ExtraPrice.ToString("N0")</p>
+                        <label class="control-label1">Phụ thu phòng</label>
+                        <p id="extra_price" class="form-control-static bordered-text">@Model.ExtraPrice.ToString("N0")</p>
                     </div>
 
                     <div class="form-group mb-3">
@@ -138,8 +140,8 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label1 text-danger">Tổng tiền phòng</label>
-                        <p class="form-control-static bordered-text">@Model.Price?.ToString("N0")</p>
+                        <label class="control-label1 text-danger">Tiền phòng</label>
+                        <p id="room_Price" class="form-control-static bordered-text">@Model.Price?.ToString("N0")</p>
                     </div>
 
                     <div class="form-group mb-3">
@@ -170,7 +172,10 @@
                         <label class="control-label1" for="Note">Ghi chú</label>
                         <textarea id="Note" name="Note" class="form-control" rows="3" placeholder="Nhập ghi chú">@Model.Note</textarea>
                     </div>
-
+                    <div class="form-group form-control-static p-0 mt-5 bordered-text">
+                        <label class="control-label1 text-center fs-5 text-danger mt-5" for="">Tổng tiền phòng</label>
+                        
+                    <p class="text-center fs-5 pt-1 fw-bold" id="total_RBD_RL">0</p></div>
                 </div>
             </div>
         </div>
@@ -254,7 +259,6 @@
     <!-- Thêm Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 }
-
 <style>
     .bordered-text {
         border: 1px solid #ccc;

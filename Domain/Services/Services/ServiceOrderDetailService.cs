@@ -39,7 +39,7 @@ namespace Domain.Services.Services
                               ServiceId = row.Field<Guid>("ServiceId"),
                               Amount = row.Field<double>("Amount"),
                               Name = row.Field<string?>("Name"),
-                              Unit = row.Field<UnitType>("Unit").ToString(),
+                              Unit = (int)row.Field<UnitType>("Unit"),
                               Price = row.Field<decimal>("Price"),
                               Quantity = row.Field<int>("Quantity"),
                               Description = row.Field<string?>("Description"),

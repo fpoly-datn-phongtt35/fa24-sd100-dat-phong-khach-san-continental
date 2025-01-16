@@ -408,17 +408,20 @@ public class RoomBookingController : Controller
     public async Task<IActionResult> UpdateCheckInAndCheckOutReality(Guid id, string checkInTime, string checkoutTime,
         string noteCheckin, string noteCheckout, string note, decimal? expenses,decimal? ServicePrice,decimal? ExtraService,
         List<ServiceOrderDetail> lstSerOrderDetail,
-        List<Guid>? ListDelete,Guid RB_Id)
+        List<Guid>? ListDelete,Guid RB_Id, bool isCheckInForced = false)
     {
         try
         {
-            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
 
-            await HandleServiceOrderDetails(id, lstSerOrderDetail, ListDelete, userId);
-
+            
+            if (!roomBookingDetail.CheckInReality.HasValue && string.IsNullOrWhiteSpace(checkInTime))
+            {
+                throw new InvalidOperationException("Phòng chưa được Check-In.");
+            }
             if (!TryParseDateTime(checkInTime, out var selectedCheckInTime))
             {
-                return Json(new { success = false, message = "Định dạng thời gian Check-In không hợp lệ." });
+                throw new InvalidOperationException("Định dạng thời gian Check-In không hợp lệ..");
             }
 
             DateTimeOffset? selectedCheckoutTime = null;
@@ -432,13 +435,12 @@ public class RoomBookingController : Controller
                 selectedCheckoutTime = checkoutTimeParsed;
             }
 
-            var roomBookingDetail = await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailById2(id);
             if (roomBookingDetail == null)
             {
                 return Json(new { success = false, message = "Không tìm thấy thông tin đặt phòng." });
             }
-
-            bool isCheckInChanged = selectedCheckInTime != roomBookingDetail.CheckInReality;
+            
+            bool isCheckInChanged = !isCheckInForced && selectedCheckInTime != roomBookingDetail.CheckInReality;
             bool isExpensesChanged = expenses.HasValue && expenses.Value != roomBookingDetail.Expenses;
             bool isCheckOutChanged = selectedCheckoutTime != roomBookingDetail.CheckOutReality;
             
@@ -472,7 +474,9 @@ public class RoomBookingController : Controller
             {
                 return Json(new { success = false, message = "Cập nhật thất bại. Vui lòng thử lại sau." });
             }
+            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            await HandleServiceOrderDetails(id, lstSerOrderDetail, ListDelete, userId);
             try
             {
                 await AddEditHistoryIfChanged(id, roomBookingDetail, selectedCheckInTime, selectedCheckoutTime,
@@ -568,13 +572,14 @@ public class RoomBookingController : Controller
     {
         try
         {
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local);
             var editHistory = new EditHistoryCreateRequest()
             {
                 RoomBookingDetailId = roomBookingDetailId,
                 For = (For)forValue,
                 Content = content,
                 Description = description,
-                ModifiedAt = DateTimeOffset.Now
+                ModifiedAt = localTime
             };
 
             var response = await _editHistoryAddService.AddEditHistoryService(editHistory);
@@ -729,12 +734,14 @@ public class RoomBookingController : Controller
     }
 
     [Route("RoomBooking/RoomBookingDetails/RoomBookingDetailId={roomBookingDetailId}")]
-    public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId)
+    public async Task<IActionResult> RoomBookingDetails(Guid roomBookingDetailId, Guid clientId)
     {
         var roomBookingDetailResponse =
             await _roomBookingDetailServiceForCustomer.GetRoomBookingDetailWithEditHistoryById(roomBookingDetailId);
         if (roomBookingDetailResponse == null)
             return View("Error");
+        var roomBooking = await _roomBookingService.GetRoomBookingById(roomBookingDetailResponse.RoomBookingId);
+        ViewBag.RoomBooking = roomBooking;            
         return View(roomBookingDetailResponse);
     }
 

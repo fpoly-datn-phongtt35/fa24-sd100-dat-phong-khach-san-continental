@@ -6,6 +6,8 @@
     ViewData["Title"] = "GetResidenceByDate";
 }
 
+<h3>Danh sách lưu trú</h3>
+
 <form method="get" action="@Url.Action("GetResidenceByDate")" class="p-3 bg-light rounded shadow-sm">
     <div class="row g-2 align-items-center">
         <div class="col-auto">
@@ -41,7 +43,7 @@
         </div> *@
 
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Lọc</button>
+            <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
             <button type="submit" class="btn btn-danger" onclick="clearFilters()">Xóa lọc</button>
         </div>
     </div>

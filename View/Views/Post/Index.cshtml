@@ -15,7 +15,7 @@
     <div class="input-group mb-3 w-100">
         <input type="text" id="title" name="title" class="form-control me-2" placeholder="Title" value="@Context.Request.Query["title"]" style="max-width: 200px;" />
         <input type="text" id="contentOfPost" name="contentOfPost" class="form-control me-2" placeholder="Content" value="@Context.Request.Query["contentOfPost"]" style="max-width: 200px;" />
-        <button class="btn btn-secondary ms-2" type="submit">Lọc</button>
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
 </form>
@@ -28,7 +28,7 @@
 </script>
 
 <p>
-    <a asp-action="Create" class="btn btn-outline-primary">Tạo mới</a>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
 </p>
 <table class="table">
     <thead>

@@ -12,27 +12,27 @@
             <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Name</label>
+                <label asp-for="Name" class="control-label">Tên</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label">Price</label>
+                <label asp-for="Price" class="control-label">Giá Phòng</label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label">Address</label>
+                <label asp-for="Address" class="control-label">Địa chỉ</label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label">Description</label>
+                <label asp-for="Description" class="control-label">Mô tả</label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoomSize" class="control-label">RoomSize</label>
+                <label asp-for="RoomSize" class="control-label">Cỡ phòng</label>
                 <input asp-for="RoomSize" class="form-control" />
                 <span asp-validation-for="RoomSize" class="text-danger"></span>
             </div>
@@ -63,15 +63,15 @@
                 <span asp-validation-for="CreatedTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FloorId">Floor</label>
+                <label asp-for="FloorId">Tầng</label>
                 <select asp-for="FloorId" class="form-control" asp-items="@(new SelectList(ViewBag.Floors, "Id", "Name"))">
-                    <option value="">-- Select Floor --</option>
+                    <option value="">--Chọn Tầng--</option>
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="RoomTypeId">Room Type</label>
+                <label asp-for="RoomTypeId">Loại Phòng</label>
                 <select asp-for="RoomTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.RoomTypes, "Id", "Name"))">
-                    <option value="">-- Select Room Type --</option>
+                    <option value="">--Chọn Loại Phòng--</option>
                 </select>
             </div>
 

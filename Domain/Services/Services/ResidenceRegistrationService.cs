@@ -52,11 +52,11 @@ namespace Domain.Services.Services
             }
         }
 
-        public async Task<int> CheckOutResidenceByRBD(Guid roomBookingDetailId)
+        public async Task<int> CheckOutResidenceByRBD(Guid roomBookingDetailId, DateTimeOffset checkOutTime)
         {
             try
             {
-                return await _residenceRegistrationRepo.CheckOutByRBD(roomBookingDetailId);
+                return await _residenceRegistrationRepo.CheckOutByRBD(roomBookingDetailId, checkOutTime);
             }
             catch (Exception ex)
             {

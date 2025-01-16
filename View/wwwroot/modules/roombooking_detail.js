@@ -93,7 +93,7 @@ $(document).ready(function () {
                     return {
                         results: $.map(response.data, function (item) {
                             return {
-                                text: item.userName + ' - ' + item.email,
+                                text: item.userName + ' - ' + item.email + ' - ' + item.phoneNumber,
                                 id: item.id,
                             }
                         })
@@ -451,19 +451,19 @@ var _roombooking_detail = {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
 
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
+                            /*Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);*/
                         }
                         if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
+                           /* Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;*/
                         }
 
-                        if (item.checkInReality != null && item.checkOutReality != null)
+                        /*if (item.checkInReality != null && item.checkOutReality != null)
                         {
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
-                        }
+                        }*/
                         $("#room-related").append(`
                         <tr class="">
                            <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>
@@ -479,10 +479,10 @@ var _roombooking_detail = {
                                <input id="CheckOut_` + item.roomBookingDetailId + `" disabled onchange="_roombooking_detail.OnchangeToDateRow(` + item.roomBookingDetailId + `)" class="form-control checkout_time select_time" value="` + newFMto + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + item.roomBookingDetailId + `"></td>
-                           <td>
+                           <td style="display:none">
                                <input id="CheckInReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCIfrom + `" type="datetime-local">
                            </td>
-                           <td>
+                           <td style="display:none">
                                <input id="CheckOutReal_`+ item.roomBookingDetailId + `" disabled class="form-control" value="` + newCOto + `" type="datetime-local">
                            </td>
                            <td id="StatusRBD_`+ item.roomBookingDetailId + `">` + global.getResponseStatus(item.status, constant.Entity_Status) + `</td>
@@ -499,11 +499,6 @@ var _roombooking_detail = {
                             $("#btn-checkin-" + item.roomBookingDetailId).remove();
                             $("#btn-checkout-" + item.roomBookingDetailId).remove();
                             $("#ExtraPr_" + item.roomBookingDetailId).attr('disabled', 'disabled');
-                            const button = document.getElementById('residenceAddButton');
-                            if (button) {
-                                button.disabled = true;
-                                button.style.cursor = 'not-allowed';
-                            }
                         }
                         else if (item.status == "2") {
                             $("#btn-huy-" + item.roomBookingDetailId).remove();
@@ -596,8 +591,8 @@ var _roombooking_detail = {
             }
 
             // Tính tuổi
-            const age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var monthDiff = today.getMonth() - birthDate.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
@@ -640,6 +635,11 @@ var _roombooking_detail = {
         //#region thêm
 
         addButton.addEventListener('click', function () {
+            const status = $(`#Status_${roomBookingDetailId}`).val(); 
+            if (status === "8" || status === "3") { 
+                alert('Phòng này đã bị hủy hoặc hoàn thành. Không thể thực hiện thêm tạm trú.');
+                return; 
+            }
             //#region tạo khung form thêm mới
             const addForm = document.createElement('div');
             addForm.style.position = 'fixed';
