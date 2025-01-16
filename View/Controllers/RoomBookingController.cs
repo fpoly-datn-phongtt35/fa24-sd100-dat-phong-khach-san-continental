@@ -766,6 +766,8 @@ public class RoomBookingController : Controller
         {
             if (roomRequest.StartDate != null && roomRequest.EndDate != null)
             {
+                roomRequest.StartDate = ChangeTime(roomRequest.StartDate.Value,21,0,0).ToUniversalTime();
+                roomRequest.EndDate = ChangeTime(roomRequest.EndDate.Value, 19, 0, 0).ToUniversalTime();
                 response = await _roomGetService.GetAvailableRooms(roomRequest);
             }
         }
