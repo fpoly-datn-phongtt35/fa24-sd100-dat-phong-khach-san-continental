@@ -162,4 +162,14 @@ public static class StatusHelper
                 return HtmlString.Empty;
         }
     }
+    public static IHtmlContent DisplayNameForGender(this GenderType gender)
+    {
+        return gender switch
+        {
+            GenderType.Unknown => new HtmlString("Không rõ"),
+            GenderType.Nam => new HtmlString("Nam"),
+            GenderType.Nữ => new HtmlString("Nữ"),
+            _ => new HtmlString("null")
+        };
+    }
 }
