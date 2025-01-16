@@ -8,5 +8,21 @@ namespace ViewClient.Controllers
         {
             return View();
         }
+        public IActionResult Datphong()
+        {
+            return View();
+        }
+        public IActionResult DoiLich()
+        {
+            return View();
+        }
+        public IActionResult ChonPhong()
+        {
+            return View();
+        }
+        public IActionResult Thongtin()
+        {
+            return View();
+        }
     }
 }

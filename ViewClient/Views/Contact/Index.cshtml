@@ -46,7 +46,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             padding: 20px;
             font-weight: bold;
-            height:341px
+            height:295px
         }
 
         .blue-box {
@@ -111,7 +111,7 @@
             border-bottom: none;
         }
     </style>
-    <div class="container" >
+    <div class="container" style="margin-top:30px">
         <div class="header">
             <h1>Xin chào bạn,</h1>
             <p>Chúng tôi có thể giúp gì cho bạn?</p>
@@ -152,7 +152,7 @@
                 <p>
                     Cung cấp mã đặt chỗ của bạn khi liên hệ với chúng tôi.
                 </p>
-                <p><a style="color:rgb(1 148 244)">Xem số điện thoại bộ phận Dịch Vụ Khách Hàng của chúng tôi</a></p>
+                    <p><a style="color:rgb(1 148 244)">Theo số điện thoại 0968458834 bộ phận Dịch Vụ Khách Hàng của chúng tôi</a></p>
                 </div>
 
 
@@ -171,12 +171,11 @@
             <h3 style="color:black">Chủ đề phổ biến</h3>
                 <div class="popular-topics">
                     <ul>
-                        <li><a href="#">Cách đổi lịch vé máy bay của tôi</a></li>
-                        <li><a href="#">Đặt chỗ trực tiếp để đảm bảo an toàn</a></li>
-                        <li><a href="#">Cách huỷ vé và hoàn tiền cho đặt chỗ máy bay</a></li>
-                        <li><a href="#">Cách sửa hoặc đổi tên hành khách bay</a></li>
-                        <li><a href="#">Cách huỷ phòng và hoàn tiền cho đặt phòng khách sạn</a></li>
-                    <li><a href="#">Hiển thị thêm</a></li>
+                        <li><a href="@Url.Action("Datphong", "Contact")">Cách đặt phòng khách sạn trực tuyến an toàn</a></li>
+                        <li><a href="@Url.Action("DoiLich", "Contact")">Cách đổi lịch đặt phòng khách sạn của tôi</a></li>
+                        <li><a href="@Url.Action("ChonPhong", "Contact")">Mẹo để chọn khách sạn phù hợp với ngân sách</a></li>
+                        <li><a href="@Url.Action("Thongtin", "Contact")">Làm sao để chỉnh sửa thông tin đặt phòng khách sạn</a></li>
+                        <li><a href="#">Xem thêm</a></li>
                     </ul>
                 </div>
             </div>
@@ -193,4 +192,4 @@
             dropdown.style.display = "none";
         }
     }
-</script>
+</script>r

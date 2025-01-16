@@ -15,6 +15,8 @@ namespace Domain.Enums
         ServiceAgreement = 4, 
         PaymentPolicy = 5,     
         CancellationPolicy = 6, 
+        BookingPolicy = 7,
+        CheckInAndCheckOutPolicy = 8,
         Other = 99
     }
 }

@@ -17,33 +17,41 @@
         <p style="text-align: left; margin-top: 10px;">
             Xin lưu ý rằng chúng tôi có thể thay đổi, sửa đổi, bổ sung và loại bỏ các Điều Khoản này vào bất cứ thời điểm nào mà không cần thông báo trước. Bạn phải đọc các Điều Khoản này một cách định kỳ. Bằng việc tiếp tục sử dụng Trang Web này sau khi đã có những thay đổi như vậy đối với các Điều Khoản, người truy cập, người dùng hoặc Người Dùng Đã Đăng Ký (“bạn” hay “Người Dùng”) đồng ý và chấp thuận với những thay đổi đó. Nếu bạn sử dụng bất kỳ dịch vụ nào khác của chúng tôi, thì việc sử dụng của bạn được dựa trên sự chấp thuận và tuân thủ các điều khoản và điều kiện được áp dụng đối với các dịch vụ đó.
         </p>
-        <p style="text-align: left; margin-top: 10px;">
-            Các quy định của Điều Khoản Sử Dụng này được dịch từ phiên bản gốc tiếng Anh, và được cung cấp nhằm tạo sự thuận tiện cho việc xem xét của bạn. Có thể có một số khác biệt giữa bản dịch và bản gốc tiếng Anh, và trong trường hợp có bất kỳ sự khác biệt nào như vậy, thì sự khác biệt đó được coi là lỗi dịch thuật và bản tiếng Anh sẽ được ưu tiên áp dụng. Nếu nghi ngờ về tính chính xác của thông tin chứa trong bản dịch, xin vui lòng tham khảo phiên bản tiếng Anh.
-        </p>
         <hr style="border: 0.0px solid rgba(0, 0, 0, 0.1); width: 100%; margin-top: 10px;">
 
         @if (Model != null && Model.Any())
         {
             <div>
-                @foreach (var group in Model)
+                @for (int groupIndex = 0; groupIndex < Model.Count; groupIndex++)
                 {
+                    var group = Model[groupIndex];
                     <div style="flex: 1 0 22%; margin-bottom: 20px">
-                        <strong style="font-size: 0.9em; font-weight: 700;">
-                            @(string.IsNullOrWhiteSpace(group.PostTypeTitle) ? "Unknown Type" : group.PostTypeTitle)
+                        <!-- Đánh số PostTypeTitle -->
+                        <strong style="font-size: 1.1em; font-weight: 700;">
+                            @(groupIndex + 1). @(string.IsNullOrWhiteSpace(group.PostTypeTitle) ? "Unknown Type" : group.PostTypeTitle)
                         </strong>
 
                         <div style="text-align: left; margin-top: 10px; margin-bottom: 10px">
                             @for (int i = 0; i < group.PostTitles.Count; i++)
                             {
-                                <p style="margin: 0; padding-left: 20px; font-size: 0.95em; font-weight: 450;">
-                                    @group.PostTitles[i] - @group.PostContents[i]
-                                </p>
+                                <div style="display: flex; align-items: flex-start; margin-bottom: 5px;">
+                                    <!-- Đánh số thứ tự theo định dạng groupIndex.i -->
+                                    <div style="width: 50px; text-align: right; margin-right: 10px; font-size: 0.95em; font-weight: 450;">
+                                        @(groupIndex + 1).@(i + 1)
+                                    </div>
+
+                                    <!-- Nội dung -->
+                                    <div style="flex: 1; font-size: 0.95em; font-weight: 450;">
+                                        @group.PostTitles[i]: @group.PostContents[i]
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>
                 }
             </div>
         }
+
         else
         {
             <p style="text-align: center; color: red;">Không có dữ liệu để hiển thị.</p>

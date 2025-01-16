@@ -45,12 +45,19 @@ var searchModel =
     SearchString: null,
     Status: null,
     StaffId: null,
+    Status2: document.querySelector('input[name="inlineRadioOptions"]:checked').value,
     PageIndex: 1,
     PageSize: 10
 }
 
 var _roomBooking =
 {
+    handleRadioChange: function (value)
+    {
+        searchModel.Status2 = value;
+        searchModel.PageIndex = 1;
+        this.LoadListRoomBooking(searchModel)
+    },
     RedirecDetail: function (IdRoomBooking,IdUser)
     {
         location.href = "/BookingRoom/Id=" + IdRoomBooking + "&&Client=" + IdUser; 

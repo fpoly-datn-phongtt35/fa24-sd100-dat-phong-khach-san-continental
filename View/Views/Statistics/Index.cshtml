@@ -191,7 +191,7 @@
         @if (coverageRatio != null)
         {
             <div style="font-size: 1.5rem; font-weight: bold; color: #4CAF50; padding: 10px; border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); display: inline-block; margin-left: 20px;">
-                @coverageRatio %
+                @String.Format("{0:0.00}", @coverageRatio) %
             </div>
         }
     </div>
@@ -212,7 +212,6 @@
 
 
 
-</div>
 
 @* <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 

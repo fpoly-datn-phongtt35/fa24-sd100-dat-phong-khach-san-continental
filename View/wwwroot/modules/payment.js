@@ -1,4 +1,11 @@
-﻿var _Payment = {
+﻿$(document).ready(function () {
+    var amountToPay = $('#amount').val();
+    console.log(amountToPay);
+    if (amountToPay == 0) {
+        $('#btn-thanhToanVisible').prop('disabled', 'disabled');
+    }
+})
+var _Payment = {
     Paid: async function () {
         var type = $('select[name="PaymentMethod"]').val();
         var amount = $('input[name="Amount"]').val();

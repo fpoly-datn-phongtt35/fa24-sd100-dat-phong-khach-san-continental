@@ -897,7 +897,7 @@ var _roombooking_detail = {
                             });
                             document.body.removeChild(addForm);
                         } else {
-                            alert('Thêm mới thất bại');
+                            alert('Khách đã được thêm vào 1 phòng khác!!!');
                         }
                     },
                     error: function () {
