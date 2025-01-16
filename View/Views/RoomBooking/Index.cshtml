@@ -7,6 +7,32 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    .form-check-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .form-check-inline { /* Kiểu dáng mặc định cho div cha */
+        cursor: pointer;
+        padding: 5px 10px;
+        margin-right: 5px;
+        transition: all 0.3s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+    }
+
+    .form-check-input:checked ~ .form-check-inline { /* Chọn tất cả các anh em liền kề */
+        border-color: transparent; /* Loại bỏ border khi được chọn */
+        text-decoration: underline;
+    }
+
+    .form-check-input:checked + .form-check-label {
+        color: #198754; /* Màu chữ khi được chọn */
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+
 <div class="m-2">
     <h3>Danh sách Đặt phòng</h3>
     <div class="d-flex justify-content-between">
@@ -37,6 +63,20 @@
                     Đặt Phòng +
                 </button>
             </a>
+        </div>
+    </div>
+    <div class="d-flex">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" style="display:none" type="radio" onchange="_roomBooking.handleRadioChange(this.value)" checked name="inlineRadioOptions" id="inlineRadio1" value="1">
+            <label class="form-check-label" for="inlineRadio1">Tất cả</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" style="display:none" type="radio" onchange="_roomBooking.handleRadioChange(this.value)" name="inlineRadioOptions" id="inlineRadio2" value="2">
+            <label class="form-check-label" for="inlineRadio2">Nhận phòng hôm nay</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" style="display:none" type="radio" onchange="_roomBooking.handleRadioChange(this.value)" name="inlineRadioOptions" id="inlineRadio3" value="3">
+            <label class="form-check-label" for="inlineRadio3">Trả phòng hôm nay</label>
         </div>
     </div>
     <div id="ListRoomBooking" class="">
