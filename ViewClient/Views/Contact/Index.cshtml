@@ -1,0 +1,196 @@
+﻿@using ViewClient.ViewModels
+
+    <style>
+        .dropdown{
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        background-color: #fff; /*
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); */
+        padding: 15px;
+        font-weight: bold;
+        }
+
+    .dropdown p{
+        margin-left:31px
+    }
+        .Time{
+            border-radius:8px ;
+            border: 1px solid black;
+            padding : 10px
+
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 20px;
+        }
+
+
+        .left-section {
+            flex: 1.5;
+        }
+
+        .right-section {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            font-weight: bold;
+            height:341px
+        }
+
+        .blue-box {
+        background-color: rgb(27 160 226);
+            color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .blue-box img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .contact-section {
+            background-color: #fff;/* 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); */
+            padding: 20px;
+        }
+
+
+        .contact-section h3 {
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+            .contact-section h3:hover {
+                color: #1b80e2;
+            }
+
+        .contact-section p {
+            font-size: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        .popular-topics ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .popular-topics ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .popular-topics ul li a {
+            text-decoration: none;
+            
+            font-size: 17px;
+        }
+
+        .popular-topics ul li:last-child {
+            border-bottom: none;
+        }
+    </style>
+    <div class="container" >
+        <div class="header">
+            <h1>Xin chào bạn,</h1>
+            <p>Chúng tôi có thể giúp gì cho bạn?</p>
+        </div>
+
+        <div class="row">
+            <div class="col-7">
+            <div class="left-section">
+            <div class="blue-box" style="border-radius: 8px;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); ">
+                <p>Để thắc mắc của bạn được giải quyết nhanh hơn, vui lòng <a href="/login" style="color: #fff; text-decoration: underline;">đăng nhập</a> hoặc <a href="/register" style="color: #fff; text-decoration: underline;">đăng ký</a> tài khoản Continental.</p>
+                </div>
+
+            <div class="contact-section" style="border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); ">
+                <h3 style="color:black"><img src="img/contact.png"style="height:60px;width:60px"> Hãy liên hệ với bộ phận Dịch Vụ Khách Hàng của chúng tôi.</h3>
+                <div class="Time">
+                    <p>
+                        <i class="fa-solid fa-circle-info"></i>
+                        Giờ hoạt động của Trung tâm chăm sóc khách hàng
+                    </p>
+                    <p><strong>Gọi điện: Thứ hai - Chủ nhật (8 giờ sáng - 10 giờ tối)</strong></p>
+                    <p><strong>Tin nhắn và email: Hoạt động 24/7</strong></p>
+                </div>
+             </div>
+                
+            <div class="contact-section" style="
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); background-color:rgb(236 248 255)"
+                 onclick="toggleDropdown('call-dropdown')">
+                <h3 style="color:black">
+                    <i class="fa-solid fa-phone" style="margin-right:5px"></i>
+                    Gọi cho bộ phận Dịch Vụ Khách Hàng của chúng tôi
+                </h3>
+                <p style="margin-left:30px">Áp dụng mức cước thông thường</p>
+            </div>
+
+
+                <div style="display: none;background-color:white" id="call-dropdown" class="dropdown">
+                <p>
+                    Cung cấp mã đặt chỗ của bạn khi liên hệ với chúng tôi.
+                </p>
+                <p><a style="color:rgb(1 148 244)">Xem số điện thoại bộ phận Dịch Vụ Khách Hàng của chúng tôi</a></p>
+                </div>
+
+
+            <div class="contact-section" style="background-color:rgb(236 248 255); border-radius:0 0 8px 8px ;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); height:103px" onclick="toggleDropdown('call-dropdown1')">
+                <h3 style="color:black"><i class="fa-solid fa-envelope" style="margin-right:5px"></i>Gửi thư điện tử cho bộ phận Dịch Vụ Khách Hàng của chúng tôi</h3>
+                </div>
+            </div>
+
+            <div style="display: none;background-color:white;border-radius:0 0 8px 8px" id="call-dropdown1" class="dropdown">
+                <p>Vui lòng gửi thư điện tử đến bộ phận Dịch Vụ Khách Hàng của chúng tôi tại cs@Continental.com</p>
+            </div>
+        </div>
+            <div class="col-5 ">
+            <div class="right-section">
+            <h3 style="color:black">Chủ đề phổ biến</h3>
+                <div class="popular-topics">
+                    <ul>
+                        <li><a href="#">Cách đổi lịch vé máy bay của tôi</a></li>
+                        <li><a href="#">Đặt chỗ trực tiếp để đảm bảo an toàn</a></li>
+                        <li><a href="#">Cách huỷ vé và hoàn tiền cho đặt chỗ máy bay</a></li>
+                        <li><a href="#">Cách sửa hoặc đổi tên hành khách bay</a></li>
+                        <li><a href="#">Cách huỷ phòng và hoàn tiền cho đặt phòng khách sạn</a></li>
+                    <li><a href="#">Hiển thị thêm</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+<script>
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
+        }
+    }
+</script>
