@@ -15,19 +15,19 @@ namespace ViewClient.Repositories.Repository
             _httpClient = httpClient;
         }
 
-        public async Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request)
+        public async Task<Guid> CreateRoomBookingDetail(RoomBookingDetailCreateRequestForCustomer request)
         {
-            string url = $"https://localhost:7130/api/RoomBookingDetail/CreateRoomBookingDetail";
+            string url = $"https://localhost:7130/api/RoomBookingDetail/BookingRoomDetail";
             var response = await _httpClient.PostAsJsonAsync(url, request);
 
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<int>(resultString);
+                var result = JsonConvert.DeserializeObject<Guid>(resultString);
 
-                if (result != null && result == 1)
+                if (result != Guid.Empty)
                 {
-                    return 1;
+                    return result;
                 }
                 else
                 {

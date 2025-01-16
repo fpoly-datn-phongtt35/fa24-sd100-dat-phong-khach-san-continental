@@ -170,12 +170,34 @@ namespace ViewClient.Controllers
                     CreatedBy = customerId,
                     NewId = null,
                     TotalExpenses = 0,
-                    TotalPriceReality = Math.Round(roomBookingDetailCreateRequest.Price + roomBookingDetailCreateRequest.ServicePrice - roomBookingDetailCreateRequest.Deposit ?? 0),
+                    TotalPriceReality = Math.Round(roomBookingDetailCreateRequest.Deposit + roomBookingDetailCreateRequest.Price + roomBookingDetailCreateRequest.ServicePrice - roomBookingDetailCreateRequest.Deposit ?? 0),
                     TotalExtraPrice = 0,
                     BookingBy = BookingBy.Day
                 };
 
                 var roomBooking = await _roomBookingRepo.CreateRoomBooking(roomBookingCreate);
+
+                var roomBookingDetailCreateRequestForCustomer = new RoomBookingDetailCreateRequestForCustomer
+                {
+                    RoomId = room.Id,
+                    RoomBookingId = roomBooking,
+                    CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking,
+                    CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking,
+                    CheckInReality = roomBookingDetailCreateRequest.CheckInReality,
+                    CheckOutReality = roomBookingDetailCreateRequest.CheckOutReality,
+                    Price = roomBookingDetailCreateRequest.Price,
+                    ExtraPrice = 0,
+                    ExtraService = 0,
+                    ServicePrice = roomBookingDetailCreateRequest.ServicePrice,
+                    Expenses = 0,
+                    Deposit = roomBookingDetailCreateRequest.Deposit,
+                    Note = null,
+                    Status = RoomBookingStatus.PENDING,
+                    CreatedBy = customerId,
+                    NewId = null
+                };
+
+                var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequestForCustomer);
 
                 if (roomBookingDetailCreateRequest.SelectedServices != null && roomBookingDetailCreateRequest.SelectedServices.Count > 0)
                 {
@@ -183,7 +205,7 @@ namespace ViewClient.Controllers
                     {
                         var serviceOrderDetail = new Domain.Models.ServiceOrderDetail
                         {
-                            RoomBookingDetailId = roomBooking,
+                            RoomBookingDetailId = roomBookingDetail,
                             ServiceId = service.ServiceId,
                             Amount = Convert.ToDouble((service.Quantity) * (service.Price)),
                             Description = null,
@@ -198,22 +220,7 @@ namespace ViewClient.Controllers
                         await _serviceOderDetailRepo.AddServiceOrderDetail(serviceOrderDetail);
                     }
                 }
-                roomBookingDetailCreateRequest.RoomId = room.Id;
-                roomBookingDetailCreateRequest.RoomBookingId = roomBooking;
-                roomBookingDetailCreateRequest.CheckInBooking = roomBookingDetailCreateRequest.CheckInBooking;
-                roomBookingDetailCreateRequest.CheckOutBooking = roomBookingDetailCreateRequest.CheckOutBooking;
-                roomBookingDetailCreateRequest.CreatedBy = customerId;
-                roomBookingDetailCreateRequest.Status = RoomBookingStatus.PENDING;
-                roomBookingDetailCreateRequest.Deposit = roomBookingDetailCreateRequest.Deposit;
-                roomBookingDetailCreateRequest.Price = roomBookingDetailCreateRequest.Price;
-                roomBookingDetailCreateRequest.ExtraPrice = 0;
-                roomBookingDetailCreateRequest.SelectedServices = null;
-                roomBookingDetailCreateRequest.Customer = null;
-                roomBookingDetailCreateRequest.ServicePrice = null;
-                roomBookingDetailCreateRequest.TotalPrice = null;
-                roomBookingDetailCreateRequest.Expenses = null;
-                roomBookingDetailCreateRequest.Note = null;
-                var roomBookingDetail = await _roomBookingDetailRepo.CreateRoomBookingDetail(roomBookingDetailCreateRequest);
+               
 
                 //var roomStatus = new RoomUpdateStatusRequest
                 //{

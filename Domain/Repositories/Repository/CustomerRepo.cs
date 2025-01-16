@@ -109,8 +109,17 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@ModifiedTime",DateTime.Now),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
                 };
-                var work = _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters);
-                return work;
+                using (var reader = await _DbWorker.ExecuteReaderAsync(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters))
+                {
+                    if (reader.Read())
+                    {
+                        return reader.GetInt32(0); 
+                    }
+                    else
+                    {
+                        throw new Exception("No rows were returned by the stored procedure.");
+                    }
+                }
             }
             catch (Exception ex)
             {

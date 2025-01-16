@@ -81,7 +81,8 @@ namespace ViewClient.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Thông tin đã tồn tại. Hãy nhập thông tin cá nhân của bạn.");
+                    ModelState.AddModelError(string.Empty, "Thông tin đã tồn tại. Hãy nhập thông tin cá nhân của bạn. " +
+                        "Hãy thử thay đổi tài khoản!");
                 }
             }
 
@@ -89,8 +90,7 @@ namespace ViewClient.Controllers
             return View(registerInput);
         }
 
-        [HttpPost("logout")]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
