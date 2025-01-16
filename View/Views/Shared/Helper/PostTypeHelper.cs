@@ -25,6 +25,10 @@ namespace View.Views.Shared.Helper
                     return "Chính sách hủy";
                 case PostTypeEnum.Other:
                     return "Chính sách khác";
+                case PostTypeEnum.BookingPolicy:
+                    return "Chính sách đặt phòng";
+                case PostTypeEnum.CheckInAndCheckOutPolicy:
+                    return "Chính sách nhận phòng và trả phòng";
                 default:
                     return "Unknown";
             }

@@ -67,7 +67,7 @@ namespace View.Controllers
             }
         }
 
-        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, string title = null, string contentOfPost = null)
+        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 5, string title = null, string contentOfPost = null)
         {
             string requestURL = "https://localhost:7130/api/Post/GetListPost";
 
