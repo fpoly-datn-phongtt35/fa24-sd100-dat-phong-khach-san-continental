@@ -1,18 +1,13 @@
 ﻿using Domain.DTO.Customer;
 using Domain.DTO.Paging;
-using Domain.DTO.Service;
-using Domain.DTO.ServiceType;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.MSIdentity.Shared;
 using Newtonsoft.Json;
-using NuGet.Protocol;
-using System.Drawing.Printing;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using View.Views.Shared.Helper;
 using WEB.CMS.Customize;
 
 namespace View.Controllers
@@ -115,7 +110,19 @@ namespace View.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                    if (int.TryParse(jsonResponse, out int responseData))
+                    {
+                        if (responseData == -1)
+                        {
+                            ModelState.AddModelError(string.Empty, "Thông tin của khách hàng đã bị trùng.");
+                        }
+                        else if (responseData == 1)
+                        {
+                            return RedirectToAction("Index");
+                        }
+                    }
                 }
             }
             return View(request);
@@ -164,28 +171,7 @@ namespace View.Controllers
             }
 
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
-            ViewBag.Genders = Enum.GetValues(typeof(GenderType))
-                .Cast<GenderType>()
-                .Select(g => new SelectListItem
-                {
-                    Value = ((int)g).ToString(),
-                    Text = g.ToString() 
-                }).ToList();
-
-
-            if (request.Gender.HasValue)
-            {
-                var genderString = request.Gender.Value.ToString();
-                if (Enum.TryParse<GenderType>(genderString, out var gender))
-                {
-                    request.Gender = gender;
-                }
-                else
-                {
-                    ModelState.AddModelError("Gender", "Giá trị giới tính không hợp lệ.");
-                }
-            }
+            ViewBag.Genderes = Enum.GetValues(typeof(GenderType));
             request.ModifiedBy = _UserLogin;
             request.ModifiedTime = DateTimeOffset.Now;
 
@@ -193,10 +179,21 @@ namespace View.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                if (int.TryParse(jsonResponse, out int responseData))
+                {
+                    if (responseData == -1)
+                    {
+                        ModelState.AddModelError(string.Empty, "Thông tin của khách hàng đã bị trùng.");
+                    }
+                    else if (responseData == 1)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
             }
 
-            ModelState.AddModelError("", "Không thể sửa khách hàng.");
             return View("Error", new Exception("Không thể sửa khách hàng."));
         }
         public async Task<IActionResult> Delete(Guid id)
