@@ -180,8 +180,8 @@
         var servicePriceText = $('#totalServicePayment').text();
         var servicePrice = parseFloat(servicePriceText.replace("Tiền dịch vụ: ", "").replace(" VNĐ", "").replace(/,/g, ""));
 
-        checkInDate.setHours(14, 0, 0);
-        checkOutDate.setHours(12, 0, 0); 
+        checkInDate.setHours(21);
+        checkOutDate.setHours(19); 
 
         // Tạo đối tượng bookingDetails
         var bookingDetails = {
