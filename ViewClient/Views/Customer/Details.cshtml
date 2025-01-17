@@ -14,13 +14,13 @@
                     </div>
                     <h5 class="mt-2">@Model.FirstName @Model.LastName</h5>
                 </div>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="/Customer/Details" class="list-group-item list-group-item-action">
                     <i class="fas fa-user"></i> Tài khoản
                 </a>
                 <a href="#" class="list-group-item list-group-item-action">
                     <i class="fas fa-bell"></i> Thông báo
                 </a>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="@Url.Action("Logout", "Authoration")" class="list-group-item list-group-item-action">
                     <i class="fas fa-sign-out-alt"></i> Đăng xuất
                 </a>
             </div>
@@ -48,7 +48,7 @@
                     <div class="tab-content">
                         <!-- Profile Tab -->
                         <div class="tab-pane fade show active" id="profile" role="tabpanel">
-                            <form asp-action="Edit">
+                            <form id="edit-form" asp-action="Edit" method="post">
                                 <input type="hidden" asp-for="Id" />
                                 <div class="mb-3">
                                     <label asp-for="UserName" class="form-label">Tên người dùng</label>
@@ -90,24 +90,6 @@
                                 </div>
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Password Tab -->
-                        <div class="tab-pane fade" id="password" role="tabpanel">
-                            <form id="changePasswordForm">
-                                <input type="hidden" name="Id" value="@Model.Id" />
-                                <div class="mb-3">
-                                    <label for="Password" class="form-label">Mật khẩu hiện tại</label>
-                                    <input type="password" class="form-control" id="Password" name="Password" required />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="NewPassword" class="form-label">Mật khẩu mới</label>
-                                    <input type="password" class="form-control" id="NewPassword" name="NewPassword" required />
-                                </div>
-                                <div class="text-end">
-                                    <button type="button" id="changePasswordBtn" class="btn btn-primary">Đổi mật khẩu</button>
                                 </div>
                             </form>
                         </div>
@@ -176,6 +158,42 @@
                     });
                 }
             });
+            document.getElementById('edit-form').addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                const form = e.target;
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: data.message,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Thất bại!',
+                                text: data.message,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Đã xảy ra lỗi khi gửi yêu cầu.',
+                        });
+                    });
+            });
+
         </script>
+
     }
 }
