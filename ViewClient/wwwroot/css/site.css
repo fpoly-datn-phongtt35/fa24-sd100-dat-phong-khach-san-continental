@@ -121,7 +121,6 @@ body {
 
     .nav-button:hover {
         background-color: rgb(239, 165, 188); /* Màu nền khi hover */
-        color: #fff; /* Màu chữ khi hover */
     }
 
     .nav-button:focus {
@@ -177,7 +176,7 @@ body {
     }
 
         .profile-dropdown a:hover {
-            background-color: #F7F7F7;
+            background-color: #e5e5e5;
         }
 
 @media (max-width: 768px) {
@@ -290,7 +289,6 @@ body {
         width: 100%;
         padding: 12px;
         border: 1px solid #ddd;
-        border-radius: 40px;
         margin-bottom: 15px; /* Tăng khoảng cách giữa các input */
         box-sizing: border-box;
         transition: border-color 0.3s; /* Thêm hiệu ứng chuyển tiếp cho border */

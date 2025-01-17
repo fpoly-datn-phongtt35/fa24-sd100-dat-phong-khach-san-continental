@@ -23,5 +23,6 @@ namespace Domain.DTO.Customer
 
         public DateTimeOffset? ModifiedTime { get; set; }
         public Guid? ModifiedBy { get; set; }
+        public int? Number { get; set; }
     }
 }

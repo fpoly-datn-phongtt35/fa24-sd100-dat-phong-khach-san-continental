@@ -16,6 +16,7 @@ namespace ViewClient.Controllers
     {
         private readonly ILogin _loginRepo;
         private readonly IRegister _registerRepo;
+        private readonly ISendEmail _sendEmail;
         public AuthorationController(ILogin loginRepo, IRegister registerRepo)
         {
             _loginRepo = loginRepo;
@@ -76,6 +77,25 @@ namespace ViewClient.Controllers
                 var result = await _registerRepo.RegisterAsync(registerInput);
                 if (result != null)
                 {
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.UserData, result.Id.ToString())
+            };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var authProperties = new AuthenticationProperties
+                    {
+                        AllowRefresh = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
+                        IsPersistent = true
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties
+                    );
+
                     HttpContext.Session.SetString("UserName", result.UserName);
                     return RedirectToAction("Index", "Home");
                 }
