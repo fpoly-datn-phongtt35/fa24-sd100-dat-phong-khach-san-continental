@@ -189,8 +189,8 @@ namespace API.Controllers
                     return NotFound(new Response(-1, "Không tìm thấy lịch sử thanh toán", null));
                 }
 
-                var url = $"https://localhost:7173/RoomBooking/BookingHistory?Id={customerId}";
-                //var url = "https://localhost:7173/Home/index";
+                //var url = $"https://localhost:7173/RoomBooking/BookingHistory?Id={customerId}";
+                var url = "https://localhost:7173/Home/index";
 
                 // Lấy thông tin trạng thái thanh toán từ PayOS
                 var paymentInfo = await _payOS.getPaymentLinkInformation(orderCode);

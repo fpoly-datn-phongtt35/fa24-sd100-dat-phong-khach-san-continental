@@ -1,5 +1,6 @@
 'use strict';
 
+   
 $(document).ready(function () {
     function executeAction(actionUrl, roomBookingDetailId, additionalData = {}, successCallback, errorCallback) {
         $.ajax({

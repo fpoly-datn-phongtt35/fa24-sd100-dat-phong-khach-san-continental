@@ -50,24 +50,19 @@
                                 </svg>
                             </div>
                         </button>
-                        @if (Context.User.FindFirst(ClaimTypes.UserData)?.Value == null)
-                        {
-                            <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown" id="profileDropdown">
+                            @if (Context.User.FindFirst(ClaimTypes.UserData)?.Value == null)
+                            {
                                 <a href="/login">Đăng Nhập</a>
                                 <a href="/register">Đăng ký</a>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="profile-dropdown" id="profileDropdown">
+                            }
+                            else
+                            {
                                 <span style="color:black; margin-left:30px;">Thông tin cá nhân, @Context.Session.GetString("UserName")!</span>
                                 <a href="@Url.Action("BookingHistory", "RoomBooking", new { Id = userLogin })" class="nav-button">Lịch sử đặt phòng</a>
-                                @Html.AntiForgeryToken()
-                                <form asp-action="Logout" asp-controller="Authoration" method="post" style="display:inline;">
-                                    <button type="submit" class="nav-button">Đăng Xuất</button>
-                                </form>
-                            </div>
-                        }
+                                <a href="@Url.Action("Logout", "Authoration")" class="nav-button">Đăng xuất</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -161,6 +156,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/module/Button-Login.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)
-   
+    
 </body>
 </html>

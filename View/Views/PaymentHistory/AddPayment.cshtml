@@ -4,7 +4,7 @@
 @{
     var roomBooking = (RoomBookingResponse)ViewBag.RoomBooking;
     var message = (string)ViewBag.Message;
-    var amountToPay = ViewBag.AmountToPay != null ? (decimal)ViewBag.AmountToPay : 0;
+    var amountToPay = ViewBag.AmountToPay != null ? (int)ViewBag.AmountToPay : 0;
     var totalPaid = ViewBag.TotalPaid != null ? (decimal)ViewBag.TotalPaid : 0;
     var expenses = ViewBag.Expenses != null ? (decimal)ViewBag.Expenses : 0;
     var service = ViewBag.Service != null ? (decimal)ViewBag.Service : 0;
@@ -31,7 +31,6 @@
             @* <p class="text-info"><strong>@message</strong></p> *@
         </div>
     </div>
-
     <div class="mt-4">
         <h5>Nhập thông tin thanh toán:</h5>
         <form id="paymentForm" method="post" action="/PaymentHistory/ProcessPayment">
@@ -48,7 +47,7 @@
                 </select>
             </div>
             <button type="submit" style="display:none" class="btn btn-success btn-Thanhtoan">Thanh toán</button>
-            <button type="button" class="btn btn-success btn-Thanhtoan" onclick="_Payment.Paid()">Thanh toán</button>
+            <button type="button" id="btn-thanhToanVisible" class="btn btn-success btn-Thanhtoan" onclick="_Payment.Paid()">Thanh toán</button>
             <a href="/BookingRoom/Id=@roomBooking.Id&&Client=@roomBooking.CustomerId" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
@@ -61,6 +60,10 @@
 
     <!-- Thêm Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+
+    </script>
 }
+
 
 
