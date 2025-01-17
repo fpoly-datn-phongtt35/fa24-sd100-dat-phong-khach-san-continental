@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Customer;
+using Domain.DTO.Email;
 using Domain.DTO.Order;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
@@ -145,8 +146,14 @@ namespace ViewClient.Controllers
                     };
                     var insertCustomer = await _customerRepo.ClientInsertCustomer(customer);
                     customerId = insertCustomer.Id;
-
-                    //_emailRepo.SendAccountAsync
+                    var gmail = new AccountRequest
+                    {
+                        UserName = parts[0],
+                        EmailType = 1,
+                        Password = passwordHash,
+                        ToEmail = roomBookingDetailCreateRequest.Customer.Email
+                    };
+                    var sendEmail = _emailRepo.SendAccountAsync(gmail);
                     if (customerId == Guid.Empty)
                     {
                         return StatusCode(422, new { error = "Thông tin của bạn cần chính xác.", message = insertCustomer.Messenger });

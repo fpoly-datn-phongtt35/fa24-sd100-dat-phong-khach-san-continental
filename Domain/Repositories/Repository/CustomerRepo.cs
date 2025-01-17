@@ -107,19 +107,14 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@DateOfBirth", request.DateOfBirth == default(DateTime) ? DBNull.Value : (object)request.DateOfBirth),
                     new SqlParameter("@Status", SqlDbType.Int) { Value = request.Status },
                     new SqlParameter("@ModifiedTime",DateTime.Now),
-                    new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
+                    new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value),
+                    new SqlParameter("@Number", SqlDbType.Int) { Direction = ParameterDirection.Output }
                 };
-                using (var reader = await _DbWorker.ExecuteReaderAsync(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters))
-                {
-                    if (reader.Read())
-                    {
-                        return reader.GetInt32(0); 
-                    }
-                    else
-                    {
-                        throw new Exception("No rows were returned by the stored procedure.");
-                    }
-                }
+                await _DbWorker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdateCustomer, sqlParameters);
+
+                var number = (int)sqlParameters.First(p => p.ParameterName == "@Number").Value;
+                return number;
+
             }
             catch (Exception ex)
             {
