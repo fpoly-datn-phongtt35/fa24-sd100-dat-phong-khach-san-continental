@@ -1,70 +1,181 @@
 ﻿@model Domain.DTO.Customer.CustomerGetByIdRequest
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Thông tin tài khoản";
 }
 
-<div>
-    <h4>Thông tin  cá nhân</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-3">
+            <div class="list-group">
+                <div class="text-center mb-3">
+                    <div class="rounded-circle bg-light d-inline-block p-3">
+                        <h3 class="m-0">@Model.FirstName?.FirstOrDefault()@Model.LastName?.FirstOrDefault()</h3>
+                    </div>
+                    <h5 class="mt-2">@Model.FirstName @Model.LastName</h5>
+                </div>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-user"></i> Tài khoản
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-bell"></i> Thông báo
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#profile" role="tab">
+                                Thông tin tài khoản
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#password" role="tab">
+                                Mật khẩu & Bảo mật
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="tab-content">
+                        <!-- Profile Tab -->
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel">
+                            <form asp-action="Edit">
+                                <input type="hidden" asp-for="Id" />
+                                <div class="mb-3">
+                                    <label asp-for="UserName" class="form-label">Tên người dùng</label>
+                                    <input asp-for="UserName" class="form-control" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label asp-for="FirstName" class="form-label">Họ</label>
+                                        <input asp-for="FirstName" class="form-control" />
+                                    </div>
+                                    <div class="col">
+                                        <label asp-for="LastName" class="form-label">Tên</label>
+                                        <input asp-for="LastName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">Email</label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label">Số điện thoại</label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Gender" class="form-label">Giới tính</label>
+                                    <select asp-for="Gender" class="form-select">
+                                        <option value="">Chọn giới tính</option>
+                                        <option value="1">Nam</option>
+                                        <option value="2">Nữ</option>
+                                        <option value="3">Khác</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="DateOfBirth" class="form-label">Ngày sinh</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control" />
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Password Tab -->
+                        <div class="tab-pane fade" id="password" role="tabpanel">
+                            <form id="changePasswordForm">
+                                <input type="hidden" name="Id" value="@Model.Id" />
+                                <div class="mb-3">
+                                    <label for="Password" class="form-label">Mật khẩu hiện tại</label>
+                                    <input type="password" class="form-control" id="Password" name="Password" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="NewPassword" class="form-label">Mật khẩu mới</label>
+                                    <input type="password" class="form-control" id="NewPassword" name="NewPassword" required />
+                                </div>
+                                <div class="text-end">
+                                    <button type="button" id="changePasswordBtn" class="btn btn-primary">Đổi mật khẩu</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script>
+        // Enable Bootstrap tabs
+        var triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
+        triggerTabList.forEach(function (triggerEl) {
+            new bootstrap.Tab(triggerEl)
+        })
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const changePasswordBtn = document.getElementById("changePasswordBtn");
+                const changePasswordForm = document.getElementById("changePasswordForm");
+
+                if (changePasswordBtn && changePasswordForm) {
+                    changePasswordBtn.addEventListener("click", function (e) {
+                        e.preventDefault(); // Ngăn form tự động submit
+
+                        const formData = new FormData(changePasswordForm);
+
+                        fetch("@Url.Action("EditPassword", "Customer")", {
+                            method: "POST",
+                            body: formData,
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Thành công!",
+                                        text: data.message,
+                                        confirmButtonText: "OK"
+                                    }).then(() => {
+                                        // Chuyển hướng về trang Details sau khi hiển thị thông báo
+                                        window.location.href = "@Url.Action("Details", "Customer")";
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Thất bại!",
+                                        text: data.message,
+                                        confirmButtonText: "OK"
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Lỗi hệ thống",
+                                    text: "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+                                    confirmButtonText: "OK"
+                                });
+                            });
+                    });
+                }
+            });
+        </script>
+    }
+}
