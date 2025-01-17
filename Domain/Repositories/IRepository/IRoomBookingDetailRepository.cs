@@ -12,7 +12,7 @@ namespace Domain.Repositories.IRepository
         Task<RoomBookingDetail?> GetRoomBookingDetailWithEditHistory(Guid roomBookingDetailId);
         Task<RoomBookingDetail?> UpdateRoomBookingDetail2(RoomBookingDetail roomBookingDetail);
         Task<int> UpSertRoomBookingDetail(RoomBookingDetail request);
-        Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
+        Task<Guid> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);
         Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request);
         Task<DataTable> GetRoomBookingDetailByCustomerId(Guid customerId);

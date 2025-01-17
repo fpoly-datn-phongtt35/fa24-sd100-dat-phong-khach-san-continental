@@ -4,7 +4,7 @@ namespace ViewClient.Repositories.IRepository
 {
     public interface IRoomBookingDetail
     {
-        Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);
+        Task<Guid> CreateRoomBookingDetail(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request);
     }
 }

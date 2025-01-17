@@ -49,7 +49,7 @@ namespace Domain.Services.Services
             }
         }
 
-        public async Task<int> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request)
+        public async Task<Guid> CreateRoomBookingDetailForCustomer(RoomBookingDetailCreateRequestForCustomer request)
         {
             try
             {
