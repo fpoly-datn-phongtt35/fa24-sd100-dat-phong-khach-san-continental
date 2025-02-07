@@ -290,7 +290,8 @@ namespace API.Controllers
             
             return await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(roomBooking.Id);
         }
-        
+
+
         [HttpPost("send-email")]
         public async Task<IActionResult> SendEmail(EmailRequest? emailRequest)
         {
