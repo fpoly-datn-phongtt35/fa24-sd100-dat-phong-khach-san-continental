@@ -110,7 +110,7 @@ public class EmailController : Controller
                     <li>Tài khoản: {emailRequest.UserName}</li>
                     <li>Mật khẩu: {emailRequest.Password}</li>
                 </ul>
-                <p>Đây là thư thông báo, không cần phải trả lời. Xin cảm ơn!</p>";
+                <p>Bạn có thể thay đổi mật khẩu trong trang web, hãy đăng nhập vào trang web để có trải nghiệm tốt hơn. Xin cảm ơn!</p>";
                 break;
             default:
                 return BadRequest("Invalid email type.");
