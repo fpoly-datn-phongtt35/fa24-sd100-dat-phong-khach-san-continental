@@ -15,6 +15,8 @@ namespace Domain.Repositories.IRepository
         Task<ResponseData<RoomResponse>> GetAllRooms(RoomRequest roomResponse);
         Task<Room?> GetRoomById(Guid RoomId);
         Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest);
+        Task<bool> CheckedAvailableRooms(List<Guid> LstRoomId /*đây là list room hiện tại muốn đặt*/,
+            SearchRoomsRequest request);
         Task<Room> AddRoom(Room Room);
         Task<Room?> UpdateRoom(Room Room);
         Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request);
