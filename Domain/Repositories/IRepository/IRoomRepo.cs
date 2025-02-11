@@ -18,6 +18,8 @@ namespace Domain.Repositories.IRepository
         Task<bool> CheckedAvailableRooms(List<Guid> LstRoomId /*đây là list room hiện tại muốn đặt*/,
             SearchRoomsRequest request);
         Task<Room> AddRoom(Room Room);
+        Task<bool> CheckedAvailableRooms2(List<Guid> LstRoomId /*đây là list room hiện tại muốn đặt*/,
+            RoomAvailableRequest request);
         Task<Room?> UpdateRoom(Room Room);
         Task<int> UpdateRoomStatus(RoomUpdateStatusRequest request);
         Task<Room?> DeleteRoom(Room Room);

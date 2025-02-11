@@ -1477,37 +1477,55 @@ var _roombooking_detail = {
     },
 
     submit: async function () {
-        const confrm = await global.Noti("Xác nhận cập nhật","Bạn có chắc chắn muốn cập nhật không?");
+        const confrm = await global.Noti("Xác nhận cập nhật", "Bạn có chắc chắn muốn cập nhật không?");
+        var flag = true;
         if (confrm > 0) {
             _roombooking_detail.GetlistObjSubmit();
-            if (lstRoomBookingDetail.length <= 0) {
-                lstRoomBookingDetail = [];
-                RoomBooking = [];
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Thông báo đặt phòng',
-                    text: 'Bạn phải chọn ít nhất 1 phòng.'
-                });
-            }
-            else if (RoomBooking.CustomerId == null) {
-                lstRoomBookingDetail = [];
-                RoomBooking = [];
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Thông báo đặt phòng',
-                    text: 'Bạn chưa nhập thông tin khách hàng.'
-                });
-            }
-            else {
-                $.ajax({
-                    url: "/RoomBooking/submit",
-                    type: "post",
-                    data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
-                    success: function (result) {
-                        window.location.href = result;
+            $.ajax({
+                url: "/RoomBooking/CheckedAvailableRooms",
+                type: "post",
+                data: { LstId: lstIdRoom, request: getRoomRq },
+                success: function (result) {
+                    if (result == false) {
+                        lstRoomBookingDetail = [];
+                        RoomBooking = [];
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thông báo đặt phòng',
+                            text: 'Rất tiếc phòng bạn chọn không còn trống! \n Nhanh tay hơn 1 chút nhé!'
+                        });
+                        window.location.reload();
                     }
-                });
-            }
+                    else if (lstRoomBookingDetail.length <= 0) {
+                        lstRoomBookingDetail = [];
+                        RoomBooking = [];
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thông báo đặt phòng',
+                            text: 'Bạn phải chọn ít nhất 1 phòng.'
+                        });
+                    }
+                    else if (RoomBooking.CustomerId == null) {
+                        lstRoomBookingDetail = [];
+                        RoomBooking = [];
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thông báo đặt phòng',
+                            text: 'Bạn chưa nhập thông tin khách hàng.'
+                        });
+                    }
+                    else {
+                        $.ajax({
+                            url: "/RoomBooking/submit",
+                            type: "post",
+                            data: { bookingcreaterequest: RoomBooking, lstupsert: lstRoomBookingDetail },
+                            success: function (result) {
+                                window.location.href = result;
+                            }
+                        });
+                    }
+                }
+            });
         }
         else {
             lstRoomBookingDetail = [];

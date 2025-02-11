@@ -1,5 +1,4 @@
-﻿
-using Domain.DTO.Paging;
+﻿using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.Enums;
 using Domain.Models;
@@ -19,6 +18,7 @@ namespace Domain.Services.IServices.IRoom
         Task<bool> CheckedAvailableRooms(List<Guid> LstRoomId /*đây là list room hiện tại muốn đặt*/,
             SearchRoomsRequest request);
         //Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId);
+        Task<bool> CheckedAvailableRooms2(List<Guid> LstRoomId, RoomAvailableRequest request);
         Task<RoomAvailableResponse> SearchRooms(SearchRoomsRequest request);
         Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(int SelectedMonthRoom, int SelectedYearRoom);
         Task<List<TopCustomerBooking>> GetTopCustomerBookings(int SelectedMonthCustomer, int SelectedYearCustomer);

@@ -37,7 +37,7 @@ namespace Domain.Repositories.Repository
             try
             {
                 var lstAvailableRooms = await SearchRooms(request);
-                if(lstAvailableRooms == null || lstAvailableRooms.LstRoom.Count == 0)
+                if(lstAvailableRooms == null || lstAvailableRooms.LstRoom == null)
                 {
                     return false;
                 }
@@ -57,7 +57,32 @@ namespace Domain.Repositories.Repository
                 throw new ArgumentNullException("An error occurred while checking available rooms", ex);
             }
         }
+        public async Task<bool> CheckedAvailableRooms2(List<Guid> LstRoomId /*đây là list room hiện tại muốn đặt*/,
+            RoomAvailableRequest request)
+        {
+            try
+            {
+                var lstAvailableRooms = await GetAvailableRooms(request);
+                if (lstAvailableRooms == null || lstAvailableRooms.LstRoom == null)
+                {
+                    return false;
+                }
 
+                var lstIdAvailablesRooms = lstAvailableRooms.LstRoom.Select(x => x.Id).ToList();
+                foreach (var i in LstRoomId)
+                {
+                    if (!lstIdAvailablesRooms.Contains(i))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException("An error occurred while checking available rooms", ex);
+            }
+        }
         public async Task<RoomAvailableResponse> GetAvailableRooms(RoomAvailableRequest roomRequest)
         {
             var Response = new RoomAvailableResponse();
