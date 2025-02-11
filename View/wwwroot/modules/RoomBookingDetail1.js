@@ -532,7 +532,7 @@ var _Service_OrderDetail =
                                 <input id="PriceSer_`+ IdSerAdd + `" class="form-control" value="${formattedprice}" disabled />
                             </td>
                             <td scope="col">
-                                <input id="QuantitySer_`+ IdSerAdd + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `')" class="form-control" type="number" value="1" min="1" />
+                                <input id="QuantitySer_`+ IdSerAdd + `" oninput="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `','QuantitySer_')" class="form-control" type="text" value="1" min="1" max="100"/>
                             </td>
                             <td scope="col">
                                 ${global.getResponseStatus(result.unit, constant.UnitType)}
@@ -541,7 +541,7 @@ var _Service_OrderDetail =
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
                             <td class="">
-                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="0" min="0" type="number">
+                               <input id="ExtraSerPr_` + IdSerAdd + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.OnchangeExTra('` + IdSerAdd +`','ExtraSerPr_')" value="0" min="0" type="text">
                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ IdSerAdd + `" class="form-control text-start" placeholder="Thêm ghi chú"></textarea>
@@ -580,12 +580,86 @@ var _Service_OrderDetail =
             STT2++;
         });
     },
-    OnchangeQuantity: function (Id) {
-        var TotalPriceSer = $("#PriceSer_" + Id).val().replaceAll(',', '') * $("#QuantitySer_" + Id).val();
-        var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
-        formattedprice = formattedprice.replaceAll('.', ',')
-        $("#TotalPriceSer_" + Id).val(formattedprice);
-        _Service_OrderDetail.CalculatingTotalPriceSer();
+    OnchangeExTra: function (id, Code) {
+        var ExTrapriceEle = $('input#' + Code + id);
+        ExTrapriceEle.prop('disabled', 'true')
+        var ExTraprice = ExTrapriceEle.val().replaceAll(',', '');
+        if (ExTraprice == null || ExTraprice == '' || ExTraprice == undefined || ExTraprice < 0) {
+            ExTrapriceEle.val(0);
+            _Service_OrderDetail.CalculatingTotalPriceSer()
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
+        else if (/^\d+$/.test(ExTraprice)) {
+            var formattedExtraprice = parseFloat(ExTraprice).toLocaleString('vi-VN');
+            formattedExtraprice = formattedExtraprice.replaceAll('.', ',');
+            ExTrapriceEle.val(formattedExtraprice);
+
+            _Service_OrderDetail.CalculatingTotalPriceSer()
+
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
+        else {
+            ExTraprice = ExTrapriceEle.val().replace(/[^\d]/g, "")
+            var formattedExtraprice = parseFloat(ExTraprice).toLocaleString('vi-VN');
+            formattedExtraprice = formattedExtraprice.replaceAll('.', ',')
+            ExTrapriceEle.val(formattedExtraprice)
+            _Service_OrderDetail.CalculatingTotalPriceSer()
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
+    },
+    OnchangeQuantity: function (id, Code) {
+        var ExTrapriceEle = $('input#' + Code + id);
+        ExTrapriceEle.prop('disabled', 'true')
+        var ExTraprice = ExTrapriceEle.val().replaceAll(',', '');
+        if (ExTraprice == null || ExTraprice == '' || ExTraprice == undefined || ExTraprice < 0) {
+            ExTrapriceEle.val(0);
+            var TotalPriceSer = $("#PriceSer_" + id).val().replaceAll(',', '') * $("#QuantitySer_" + id).val();
+            var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
+            formattedprice = formattedprice.replaceAll('.', ',')
+            $("#TotalPriceSer_" + id).val(formattedprice);
+            _Service_OrderDetail.CalculatingTotalPriceSer()
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
+        else if (ExTraprice >= 100)
+        {
+            ExTrapriceEle.val(100);
+            var TotalPriceSer = $("#PriceSer_" + id).val().replaceAll(',', '') * $("#QuantitySer_" + id).val();
+            var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
+            formattedprice = formattedprice.replaceAll('.', ',')
+            $("#TotalPriceSer_" + id).val(formattedprice);
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
+        else if (/^\d+$/.test(ExTraprice)) {
+            var formattedExtraprice = parseFloat(ExTraprice).toLocaleString('vi-VN');
+            formattedExtraprice = formattedExtraprice.replaceAll('.', ',');
+            ExTrapriceEle.val(formattedExtraprice);
+            var TotalPriceSer = $("#PriceSer_" + id).val().replaceAll(',', '') * $("#QuantitySer_" + id).val();
+            var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
+            formattedprice = formattedprice.replaceAll('.', ',')
+            $("#TotalPriceSer_" + id).val(formattedprice);
+            _Service_OrderDetail.CalculatingTotalPriceSer()
+
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
+        else {
+            ExTraprice = ExTrapriceEle.val().replace(/[^\d]/g, "")
+            var formattedExtraprice = parseFloat(ExTraprice).toLocaleString('vi-VN');
+            formattedExtraprice = formattedExtraprice.replaceAll('.', ',')
+            ExTrapriceEle.val(formattedExtraprice)
+            var TotalPriceSer = $("#PriceSer_" + id).val().replaceAll(',', '') * $("#QuantitySer_" + id).val();
+            var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
+            formattedprice = formattedprice.replaceAll('.', ',')
+            $("#TotalPriceSer_" + id).val(formattedprice);
+            _Service_OrderDetail.CalculatingTotalPriceSer()
+            ExTrapriceEle.prop('disabled', false)
+            ExTrapriceEle.focus();
+        }
     },
     CalculatingTotalPriceSer: function () {
         var AmountPriceService = 0;
@@ -599,7 +673,7 @@ var _Service_OrderDetail =
 
         for (let i = 0; i < lstExtraSerElete.length; i++) {
             const element = lstExtraSerElete[i];
-            AmountExtraSer = AmountExtraSer + parseInt(element.value);
+            AmountExtraSer = AmountExtraSer + parseInt(element.value.replaceAll(',', ''));
         }
         AmountExtraSer = global.NumberVNFormated(AmountExtraSer).toString();
         AmountPriceService = global.NumberVNFormated(AmountPriceService).toString();
@@ -628,7 +702,7 @@ var _Service_OrderDetail =
                                 <input id="PriceSer_`+ item.id + `" class="form-control" value="${pri_Ser}" disabled />
                             </td>
                             <td scope="col">
-                                <input id="QuantitySer_`+ item.id + `" onchange="_Service_OrderDetail.OnchangeQuantity('` + item.id + `')" class="form-control" type="number" value="${item.quantity}" min="1" />
+                                <input id="QuantitySer_`+ item.id + `" oninput="_Service_OrderDetail.OnchangeQuantity('` + item.id +`','QuantitySer_')" class="form-control" type="text" value="${global.NumberVNFormated(item.quantity)}" min="1" max="100"/>
                             </td>
                             <td scope="col">
                                 ${global.getResponseStatus(item.unit, constant.UnitType)}
@@ -637,7 +711,7 @@ var _Service_OrderDetail =
                                 <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
                             </td>
                             <td class="">
-                               <input id="ExtraSerPr_` + item.id + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.CalculatingTotalPriceSer()" value="${item.extraPrice}" min="0" type="number">
+                               <input id="ExtraSerPr_` + item.id + `" class="form-control priceSer_extra" oninput="_Service_OrderDetail.OnchangeExTra('` + item.id +`','ExtraSerPr_')" value="${global.NumberVNFormated(item.extraPrice)}" min="0" type="text">
                            </td>
                             <td scope="col">
                                 <textarea id="NoteSer_`+ item.id + `" class="form-control text-start" placeholder="Thêm ghi chú">${item.description != null ? item.description : ""}</textarea>
