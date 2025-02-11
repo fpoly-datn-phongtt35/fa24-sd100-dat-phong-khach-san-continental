@@ -214,6 +214,20 @@ public class RoomBookingController : Controller
         return new DateTimeOffset(newDateTime, dateTimeOffset.Offset);
     }
 
+    public async Task<bool> CheckedAvailableRooms(List<Guid> LstId, RoomAvailableRequest request) 
+    {
+        var flag = true;
+        try
+        {
+            flag = await _roomGetService.CheckedAvailableRooms2(LstId, request);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        return flag;
+    }
+
     public async Task<string> submit(RoomBooking bookingcreaterequest,
         List<RoomBookingDetail> lstupsert)
     {
