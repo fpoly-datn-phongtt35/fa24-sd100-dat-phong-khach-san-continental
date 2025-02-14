@@ -174,9 +174,11 @@
                     <div class="form-check" style="display: flex; align-items: center; margin-bottom: 10px;">
                         <input class="form-check-input service-checkbox" type="checkbox" value="@service.Id" id="service_@service.Id" style="margin-right: 10px;">
                         <label class="form-check-label" for="service_@service.Id" style="flex-grow: 1;">
-                            <strong>@service.Name</strong> - <span style="color: green;" data-price="@service.Price">
+                            <strong>@service.Name</strong> - 
+                            <span style="color: green;" data-price="@service.Price">
                                 @(Math.Round(@service.Price).ToString("N0")) VNĐ
-                            </span> / @StatusHelper.UnitDictonary(service.Unit)
+                            </span> / 
+                            @* @StatusHelper.UnitDictonary(service.UnitId) *@
                         </label>
                         <input type="number" class="form-control quantity-input service-quantity" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
                     </div>
