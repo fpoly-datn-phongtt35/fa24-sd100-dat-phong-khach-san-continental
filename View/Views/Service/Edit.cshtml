@@ -25,12 +25,12 @@
     </div>
     <div class="form-group">
         <label asp-for="Unit">Đơn vị</label>
-        <select name="status" class="form-select" id="status">
-            <option disabled>-- Chọn đơn vị --</option>
+        <select asp-for="Unit" class="form-select" id="Unit">
+            <option disabled value="">-- Chọn đơn vị --</option>
             @foreach (var status in Enum.GetValues(typeof(UnitType)))
             {
                 var statusEnum = (UnitType)status;
-                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["unit"].ToString() == ((int)status).ToString())">
+                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["Unit"].ToString() == ((int)status).ToString())">
                     @UnitHelper.DisplayUnit(statusEnum)
                 </option>
             }
@@ -47,18 +47,19 @@
         <input asp-for="Image" type="file" name="img" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Status">Trạng thái</label>
-        <select name="status" class="form-select" id="status">
-            <option disabled>-- Chọn trạng thái --</option>
+    <div class="form-group mb-3">
+        <label asp-for="Status" class="control-label1">Trạng thái</label>
+        <select asp-for="Status" class="form-select">
+            <option value="">-- Chọn trạng thái --</option>
             @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
             {
                 var statusEnum = (EntityStatus)status;
-                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                <option value="@((int)statusEnum)">
                     @StatusHelper.DisplayNameEntityStatus(statusEnum)
                 </option>
             }
         </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Lưu</button>
     <a asp-action="Index" class="btn btn-secondary">Quay lại</a>

@@ -181,20 +181,19 @@ namespace View.Controllers
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
 
-                if (int.TryParse(jsonResponse, out int responseData))
+                var result = JsonConvert.DeserializeObject<int>(jsonResponse);
+
+                if (result == 1)
                 {
-                    if (responseData == -1)
-                    {
-                        ModelState.AddModelError(string.Empty, "Thông tin của khách hàng đã bị trùng.");
-                    }
-                    else if (responseData == 1)
-                    {
-                        return RedirectToAction("Index");
-                    }
+                    return Json(new { success = true, message = "Cập nhật khách hàng thành công." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Thông tin của khách hàng đã bị trùng." });
                 }
             }
 
-            return View("Error", new Exception("Không thể sửa khách hàng."));
+            return Json(new { success = false, message = "Đã xảy ra lỗi khi cập nhật thông tin khách hàng." });
         }
         public async Task<IActionResult> Delete(Guid id)
         {

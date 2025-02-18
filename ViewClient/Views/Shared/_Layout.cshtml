@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <header>
@@ -58,7 +59,8 @@
                             }
                             else
                             {
-                                <span style="color:black; margin-left:30px;">Thông tin cá nhân, @Context.Session.GetString("UserName")!</span>
+                                <span style="color:black; margin-left:30px;"><i class="fas fa-user"></i> @Context.Session.GetString("UserName")</span>
+                                <a href="@Url.Action("Details", "Customer")" class="nav-button">Thông tin cá nhân</a>
                                 <a href="@Url.Action("BookingHistory", "RoomBooking", new { Id = userLogin })" class="nav-button">Lịch sử đặt phòng</a>
                                 <a href="@Url.Action("Logout", "Authoration")" class="nav-button">Đăng xuất</a>
                             }

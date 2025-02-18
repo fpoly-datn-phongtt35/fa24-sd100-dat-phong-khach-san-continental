@@ -89,6 +89,16 @@ namespace Domain.Services.Services.Room
         {
             return await _roomRepository.GetCoverageRatio(month, year);
         }
+
+        public async Task<bool> CheckedAvailableRooms(List<Guid> LstRoomId, SearchRoomsRequest request)
+        {
+            return await _roomRepository.CheckedAvailableRooms(LstRoomId, request);
+        }
+
+        public async Task<bool> CheckedAvailableRooms2(List<Guid> LstRoomId, RoomAvailableRequest request)
+        {
+            return await _roomRepository.CheckedAvailableRooms2(LstRoomId, request);
+        }
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
         //{
         //    var room = await _roomRepository.GetRoomTypeWithAmenityRoomById(roomId); // Lấy Room từ repository

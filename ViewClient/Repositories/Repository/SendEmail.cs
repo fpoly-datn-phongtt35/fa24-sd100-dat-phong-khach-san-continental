@@ -15,7 +15,7 @@ namespace ViewClient.Repositories.Repository
 
         public async Task<int> SendAccountAsync(AccountRequest request)
         {
-            string url = $"https://localhost:7130/api/Email/SendAccount";
+            string url = $"https://localhost:7130/api/Email/send-account";
             var response = await _httpClient.PostAsJsonAsync(url, request);
             if (response.IsSuccessStatusCode)
             {

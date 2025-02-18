@@ -14,7 +14,7 @@ namespace Domain.Configuration
             builder.Property(x => x.Name).IsUnicode(true).IsRequired();
             builder.Property(x => x.Description).IsUnicode(true).IsRequired();
             builder.Property(x => x.Price).IsRequired();
-            builder.Property(x => x.Unit).IsRequired();
+            builder.HasOne(x => x.Unit).WithMany(x => x.Services).HasForeignKey(x => x.UnitId);
             builder.HasOne(x => x.ServiceType).WithMany(x => x.Services).HasForeignKey(x => x.ServiceTypeId);
         }
     }

@@ -196,7 +196,7 @@ namespace View.Controllers
 
 
             //lấy view hiện tại
-            string requestUrl = $"api/Service/GetServiceById?id={id}";
+            string requestUrl = $"api/Service/GetServiceById?Id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");

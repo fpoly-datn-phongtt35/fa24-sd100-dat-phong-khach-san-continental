@@ -1,16 +1,16 @@
-﻿//$(document).ready(function () {
-//    setInterval(() => {
-//        $.ajax({
-//            type: 'POST',
-//            url: '/RoomBooking/CheckDepositRoomBooking',
-//            success: function (data) {
-//            },
-//            error: function (xhr, status, error) {
-//                console.log("Error: " + error);
-//            }
-//        });
-//    }, 3000);
-//})
+﻿$(document).ready(function () {
+    setInterval(() => {
+        $.ajax({
+            type: 'POST',
+            url: '/RoomBooking/CheckDepositRoomBooking',
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    }, 3000);
+})
 var global =
 {
     Noti: async function (title ="Xác nhận cập nhật",txt = "Bạn có chắc chắn muốn cập nhật không?") {

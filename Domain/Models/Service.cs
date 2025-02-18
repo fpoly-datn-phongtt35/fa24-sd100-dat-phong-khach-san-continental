@@ -11,7 +11,7 @@ namespace Domain.Models
         public string? Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? Image { get; set; }
-        public UnitType? Unit { get; set; } = UnitType.Times;
+        public Guid UnitId { get; set; }
         public Guid ServiceTypeId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 
@@ -24,6 +24,7 @@ namespace Domain.Models
         public DateTimeOffset? DeletedTime { get; set; }
 
         public ServiceType ServiceType { get; set; }
+        public Unit? Unit { get; set; }
         public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
         public List<RoomTypeService> RoomTypeServices { get; set; }
     }

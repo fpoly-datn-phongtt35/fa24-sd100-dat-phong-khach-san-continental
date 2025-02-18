@@ -8,10 +8,27 @@
 
 <h3 class="text-center">Sửa thông tin khách hàng</h3>
 <hr />
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle"></i> <strong>Lỗi:</strong>
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
 <div class="row">
     <div class="col-md-8 offset-md-2">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"><i class="fas fa-user"></i> Tên người dùng</label>
                 <input asp-for="UserName" class="form-control" required placeholder="Nhập tên người dùng" />
@@ -89,6 +106,47 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+                const formData = $(this).serialize();
+
+                $.ajax({
+                    url: "/Customer/Edit", // Replace with your action URL
+                    method: "POST",
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: response.message,
+                                icon: "success",
+                                confirmButtonText: "OK"
+                            }).then(() => {
+                                window.location.href = "/Customer/Index"; // Redirect after success
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                text: response.message,
+                                icon: "error",
+                                confirmButtonText: "Đóng"
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: "Đã xảy ra lỗi không mong muốn.",
+                            icon: "error",
+                            confirmButtonText: "Đóng"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 }
 
 <!-- Font Awesome for icons -->
@@ -96,6 +154,39 @@
 
 <style>
     /* Custom styles */
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 8px;
+        position: relative;
+    }
+
+        .alert-danger i {
+            margin-right: 10px;
+        }
+
+    .alert-dismissible .close {
+        color: #721c24;
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+
+        .alert-dismissible .close:hover {
+            opacity: 1;
+        }
+
+    .alert ul {
+        list-style-type: none;
+        margin: 0;
+        padding-left: 20px;
+    }
+
+        .alert ul li {
+            margin-bottom: 5px;
+        }
+
     h3 {
         color: #007bff;
         margin-bottom: 20px;

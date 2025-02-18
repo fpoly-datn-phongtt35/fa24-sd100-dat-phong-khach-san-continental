@@ -34,8 +34,8 @@ namespace ViewClient.Repositories.Repository
 
         public async Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request)
         {
-            string url = $"https://localhost:7130/api/Customer/ClientUpdatePassword";
-            var response = await _httpClient.PostAsJsonAsync(url, request);
+            string url = $"https://localhost:7130/api/Customer/UpdatePassword";
+            var response = await _httpClient.PutAsJsonAsync(url, request);
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
@@ -65,7 +65,7 @@ namespace ViewClient.Repositories.Repository
         public async Task<int> UpdateCustomer(CustomerUpdateRequest request)
         {
             string url = $"https://localhost:7130/api/Customer/UpdateCustomer";
-            var response = await _httpClient.PostAsJsonAsync(url, request);
+            var response = await _httpClient.PutAsJsonAsync(url, request);
             if (response.IsSuccessStatusCode)
             {
                 var resultString = await response.Content.ReadAsStringAsync();
