@@ -144,6 +144,35 @@ public class AmenityRepository : IAmenityRepository
         }
     }
 
+    public async Task<Amenity?> GetAmenityExists(string name)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new ("@Name", SqlDbType.NVarChar) { Value = name }
+            };
+
+            // Get data from Stored Procedure
+            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAmenityByName, parameters);
+
+            if (dataTable.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            // Convert data row 
+            var row = dataTable.Rows[0];
+            var amenity = ConvertDataRowToAmenity(row);
+
+            return amenity;
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentNullException("Error checking for duplicate amenity", e);
+        }
+    }
+    
     public async Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenity(AmenityGetRequest amenityGetRequest)
     {
         var model = new ResponseData<AmenityResponse>();

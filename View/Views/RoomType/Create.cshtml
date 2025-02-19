@@ -14,7 +14,6 @@
 
 <div class="row">
     <form asp-action="Create" class="row mt-3">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="col-md-6">
             <div class="form-group mb-3">
@@ -64,6 +63,8 @@
                 <input type="submit" value="Tạo" class="btn btn-success"/>
             </div>
         </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     </form>
 </div>
 

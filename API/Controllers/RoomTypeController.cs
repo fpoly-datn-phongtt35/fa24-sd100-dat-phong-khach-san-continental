@@ -28,15 +28,16 @@ public class RoomTypeController : Controller
     }
 
     [HttpPost(nameof(CreateRoomType))]
-    public async Task<RoomTypeResponse> CreateRoomType(RoomTypeAddRequest roomTypeAddRequest)
+    public async Task<IActionResult> CreateRoomType(RoomTypeAddRequest roomTypeAddRequest)
     {
         try
         {
-            return await _roomTypeAddService.AddRoomType(roomTypeAddRequest);
+            var response = await _roomTypeAddService.AddRoomType(roomTypeAddRequest);
+            return Ok(response);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            throw new Exception(e.Message);
+            return BadRequest(new { error = ex.Message });
         }
     }
 
