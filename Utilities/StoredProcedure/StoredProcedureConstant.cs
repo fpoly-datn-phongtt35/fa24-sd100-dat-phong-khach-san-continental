@@ -67,6 +67,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetFilteredAmenities = "SP_GetFilteredAmenities";
         public const string SP_GetFilteredDeletedAmenities = "SP_GetFilteredDeletedAmenities";
         public const string SP_GetAmenityById = "SP_GetAmenityById";
+        public const string SP_GetAmenityByName = "SP_GetAmenityByName";
         public const string SP_UpdateAmenity = "SP_UpdateAmenity";
         public const string SP_DeleteAmenity = "SP_DeleteAmenity";
         public const string SP_RecoverDeletedAmenity= "SP_RecoverDeletedAmenity";
@@ -75,6 +76,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetFilteredRoomTypes = "SP_GetFilteredRoomTypes";
         public const string SP_GetFilteredDeletedRoomTypes = "SP_GetFilteredDeletedRoomTypes";
         public const string SP_GetRoomTypeById = "SP_GetRoomTypeById";
+        public const string SP_GetRoomTypeByName = "SP_GetRoomTypeByName";
         public const string SP_UpdateRoomType = "SP_UpdateRoomType";
         public const string SP_DeleteRoomType = "SP_DeleteRoomType";
         public const string SP_RecoverDeletedRoomType = "SP_RecoverDeletedRoomType";

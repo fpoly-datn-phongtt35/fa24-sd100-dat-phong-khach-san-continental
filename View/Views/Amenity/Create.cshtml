@@ -20,7 +20,6 @@
     </div>
     
     <form asp-action="Create" class="row mt-3">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="col-md-6">
             <div class="form-group mb-3">
@@ -32,7 +31,7 @@
             <div class="form-group mb-3">
                 <label asp-for="Status" class="control-label1">Trạng thái</label>
                 <select name="status" class="form-select" id="status">
-                    <option hidden>Chọn trạng thái</option>
+                    <option disabled="disabled">-- Chọn trạng thái --</option>
                     @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
                     var statusEnum = (EntityStatus)status;
@@ -58,6 +57,8 @@
                 <input type="submit" value="Tạo" class="btn btn-success"/>
             </div>
         </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     </form>
 </div>
 
