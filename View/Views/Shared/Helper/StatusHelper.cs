@@ -47,6 +47,8 @@ public static class StatusHelper
                 return new HtmlString("<span class='badge bg-danger'>Thất bại</span>");
             case RoomBookingStatus.DEPOSITED:
                 return new HtmlString("<span class='badge bg-warning'>Đã cọc</span>");
+            case RoomBookingStatus.PARTIALLY:
+                return new HtmlString("<span class='badge bg-info'>Thanh toán 1 phần</span>");
             default:
                 return HtmlString.Empty;
         }
