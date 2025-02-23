@@ -7,5 +7,6 @@ public enum RoomBookingStatus
     PAID = 2,
     CANCELLED = 3,
     FAILED = 4,
-    DEPOSITED = 5
+    DEPOSITED = 5,
+    PARTIALLY = 6
 }
