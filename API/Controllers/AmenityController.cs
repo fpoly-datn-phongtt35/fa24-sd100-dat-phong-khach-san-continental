@@ -27,16 +27,16 @@ public class AmenityController : ControllerBase
     }
 
     [HttpPost(nameof(CreateAmenity))]
-    public async Task<AmenityResponse> CreateAmenity(AmenityCreateRequest amenityCreateRequest)
+    public async Task<IActionResult> CreateAmenity(AmenityCreateRequest amenityCreateRequest)
     {
         try
         {
-            return await _amenityAddService.AddAmenity(amenityCreateRequest);
+            var response = await _amenityAddService.AddAmenity(amenityCreateRequest);
+            return Ok(response);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            throw;
+            return BadRequest(new { error = ex.Message });
         }
     }
     
