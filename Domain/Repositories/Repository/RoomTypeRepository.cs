@@ -96,6 +96,38 @@ public class RoomTypeRepository : IRoomTypeRepository
             throw new ArgumentNullException("An error occurred while retrieving the room type", e);
         }
     }
+    
+    public async Task<RoomType?> GetRoomTypeExists(string name)
+    {
+        try
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new ("@Name", SqlDbType.NVarChar) { Value = name }
+            };
+
+            // Get data from Stored Procedure
+            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetRoomTypeByName, parameters);
+
+            if (dataTable.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            // Convert data row 
+            var row = dataTable.Rows[0];
+            var roomType = new RoomType
+            {
+                Name = row["Name"] != DBNull.Value ? row["Name"].ToString() : string.Empty
+            };
+
+            return roomType;
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentNullException("Error checking for duplicate room type", e);
+        }
+    }
 
     public async Task<RoomType?> GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(Guid roomTypeId)
     {
@@ -437,7 +469,7 @@ public class RoomTypeRepository : IRoomTypeRepository
         }
     }
 
-    private RoomType ConvertDataRowToRoomType(DataRow row)
+    public RoomType ConvertDataRowToRoomType(DataRow row)
     {
         return new RoomType()
         {

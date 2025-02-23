@@ -11,6 +11,7 @@ public interface IRoomTypeRepository
     public Task<ResponseData<RoomTypeResponse>> GetFilteredRoomTypes(RoomTypeGetRequest roomTypeGetRequest);
     public Task<ResponseData<RoomTypeResponse>> GetFilteredDeletedRoomTypes(RoomTypeGetRequest roomTypeGetRequest);
     public Task<RoomType?> GetRoomTypeById(Guid roomTypeId);
+    public Task<RoomType?> GetRoomTypeExists(string name);
     public Task<RoomType?> GetRoomTypeWithAmenityRoomsAndRoomTypeServicesById(Guid roomTypeId);
     public Task<RoomType> AddRoomType(RoomType roomType);
     public Task<RoomType?> UpdateRoomType(RoomType roomType);

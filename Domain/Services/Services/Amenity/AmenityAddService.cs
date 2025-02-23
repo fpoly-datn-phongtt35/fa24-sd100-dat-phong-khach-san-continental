@@ -21,11 +21,17 @@ public class AmenityAddService : IAmenityAddService
             throw new ArgumentNullException(nameof(amenityCreateRequest));
         }
         // Convert amenityCreateRequest into Amenity type
+        var exists = await _amenityRepository.GetAmenityExists(amenityCreateRequest.Name);
+        if (exists != null)
+        {
+            // Ném ra exception với thông báo lỗi phù hợp
+            throw new Exception($"Đã tồn tại tiện ích với tên '{amenityCreateRequest.Name}'");
+        }
+        
         var amenity = amenityCreateRequest.ToAmenity();
         
         // Add amenity object to AmenityResponse type
         await _amenityRepository.AddAmenity(amenity);
-
         return amenity.ToAmenityResponse();
     }
 }
