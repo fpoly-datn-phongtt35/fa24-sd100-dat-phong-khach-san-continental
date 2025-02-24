@@ -189,5 +189,13 @@ namespace Utilities.StoredProcedure
         //Edit History
         public const string SP_InsertEditHistory = "SP_InsertEditHistory";
         public const string SP_GetEditHistoryByRoomBookingDetailId = "SP_GetEditHistoryByRoomBookingDetailId";
+        
+        // unit
+        public const string SP_InsertUnit = "SP_InsertUnit";
+        public const string SP_UpdateUnit = "SP_UpdateUnit";
+        public const string SP_DeleteUnit = "SP_DeleteUnit";
+        public const string SP_GetFilteredUnits = "SP_GetFilteredUnits";
+        public const string SP_GetUnitById = "SP_GetUnitById";
+        public const string SP_GetUnitByName = "SP_GetUnitByName";
     }
 }
