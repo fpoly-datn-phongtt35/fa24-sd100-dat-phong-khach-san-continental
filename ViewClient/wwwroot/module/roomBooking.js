@@ -22,6 +22,12 @@
         checkCustomerInfo();
     }
    
+    $('.service-quantity').on('input', function () {
+        var value = $(this).val();
+        // Loại bỏ dấu âm bằng cách lấy trị tuyệt đối
+        value = Math.abs(parseInt(value, 10) || 1);
+        $(this).val(value);
+    });
 
     function convertToISO(dateString) {
         const parts = dateString.split('/');
