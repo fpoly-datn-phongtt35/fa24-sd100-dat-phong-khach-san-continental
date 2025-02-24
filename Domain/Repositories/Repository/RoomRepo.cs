@@ -378,7 +378,7 @@ namespace Domain.Repositories.Repository
                 Price = decimal.Parse(row["Price"].ToString()!),
                 Address = row["Address"].ToString()!,
                 RoomSize = double.Parse(row["RoomSize"].ToString()!),
-                Images = row["Images"].ToString()!.Split(',').ToList(),
+                ImagesId = Guid.Parse(row["ImagesId"].ToString()!),
                 Description = row["Description"].ToString()!,
                 Status = row.Table.Columns.Contains("Status") ? (RoomStatus)int.Parse(row["Status"].ToString()!) : default,
                 CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),

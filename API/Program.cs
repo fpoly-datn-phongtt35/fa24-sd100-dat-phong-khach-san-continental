@@ -108,7 +108,8 @@ namespace API
             builder.Services.AddTransient<IServiceOrderDetailService, ServiceOrderDetailService>();
 
             builder.Services.AddTransient<BuildingRepo>();
-
+            builder.Services.AddTransient<IImagesRepository, ImagesRepo>();
+            builder.Services.AddTransient<IImagesService, ImagesService>();
             builder.Services.AddTransient<IUnitRepository, UnitRepository>();
             builder.Services.AddTransient<IFloorRepo, FloorRepo>();
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
