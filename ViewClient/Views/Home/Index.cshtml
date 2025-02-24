@@ -60,7 +60,7 @@
                             <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link">
                                 <div class="card no-border">
                                     <div id="carousel-@room.Id" class="carousel slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
-                                        <div class="carousel-inner">
+                                        @* <div class="carousel-inner">
                                             @foreach (var img in room.Images)
                                             {
                                                 var extension = System.IO.Path.GetExtension(img);
@@ -74,7 +74,7 @@
                                                     </div>
                                                 }
                                             }
-                                        </div>
+                                        </div> *@
                                         <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id" data-bs-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                             <span class="visually-hidden">Previous</span>

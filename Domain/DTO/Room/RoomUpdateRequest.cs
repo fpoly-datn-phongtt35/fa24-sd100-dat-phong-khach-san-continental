@@ -15,7 +15,7 @@ namespace Domain.DTO.Room
         public string? Address { get; set; }
         public string? Description { get; set; } = string.Empty;
         public double? RoomSize { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
+        public Guid? ImagesId { get; set; }
         public Guid? FloorId { get; set; }
         public Guid RoomTypeId { get; set; }
         public RoomStatus Status { get; set; } = RoomStatus.Vacant;
@@ -32,7 +32,7 @@ namespace Domain.DTO.Room
                 Address = Address,
                 Description = Description,
                 RoomSize = RoomSize,
-                Images = Images,
+                ImagesId = ImagesId,
                 FloorId = FloorId,
                 RoomTypeId = RoomTypeId,
                 Status = Status,

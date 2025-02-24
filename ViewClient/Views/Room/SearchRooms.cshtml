@@ -91,7 +91,7 @@
                         <a href="@Url.Action("Details", new { roomId = room.Id })" class="card-link">
                             <div class="card">
                                 <h5 class="card-title" style="color:black;">@room.Name</h5>
-                                <div class="d-flex justify-content-center">
+                                @* <div class="d-flex justify-content-center">
                                     @foreach (var img in room.Images)
                                     {
                                         var extension = System.IO.Path.GetExtension(img);
@@ -103,7 +103,7 @@
                                             </div>
                                         }
                                     }
-                                </div>
+                                </div> *@
                                 <p>Giá: @Html.DisplayFor(modelItem => room.Price)</p>
                                 <p class="status-badge">@StatusHelper.DisplayRoomStatusBadge(room.Status)</p>
                             </div>

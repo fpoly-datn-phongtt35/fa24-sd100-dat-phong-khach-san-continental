@@ -1,0 +1,46 @@
+﻿@using View.Views.Shared.Helper
+@model Domain.DTO.Unit.UnitResponse
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Chi tiết đơn vị </h3>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Tên đơn vị</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.Name)</p>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Trạng thái</label>
+            <p class="form-control-static">@StatusHelper.DisplayStatusBadge(Model.Status)</p>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Mô tả</label>
+            <p class="form-control-static">@Html.DisplayFor(model => model.Description)</p>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    @Html.ActionLink("Sửa", "Edit", new { unitId = Model.Id }, new { @class = "button1 button-warning" })
+</div>
+
+<style>
+    dt {
+        margin-bottom: 10px;
+    }
+    dd {
+        margin-bottom: 20px;
+    }
+</style>

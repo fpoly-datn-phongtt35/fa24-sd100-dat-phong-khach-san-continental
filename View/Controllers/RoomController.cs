@@ -179,21 +179,21 @@ namespace View.Controllers
                 request.CreatedTime = DateTimeOffset.Now;
 
                 // Xử lý các tệp hình ảnh
-                if (imgFiles != null && imgFiles.Count > 0)
-                {
-                    foreach (var imgFile in imgFiles)
-                    {
-                        if (imgFile.Length > 0)
-                        {
-                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
-                            using (var stream = new FileStream(path, FileMode.Create))
-                            {
-                                await imgFile.CopyToAsync(stream);
-                            }
-                            request.Images.Add(imgFile.FileName);
-                        }
-                    }
-                }
+                //if (imgFiles != null && imgFiles.Count > 0)
+                //{
+                //    foreach (var imgFile in imgFiles)
+                //    {
+                //        if (imgFile.Length > 0)
+                //        {
+                //            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
+                //            using (var stream = new FileStream(path, FileMode.Create))
+                //            {
+                //                await imgFile.CopyToAsync(stream);
+                //            }
+                //            request.Images.Add(imgFile.FileName);
+                //        }
+                //    }
+                //}
                 
 
 
@@ -247,32 +247,32 @@ namespace View.Controllers
         public async Task<IActionResult> Edit(RoomUpdateRequest roomUpdateRequest, List<IFormFile> imgFiles)
         {
             // Kiểm tra nếu có ảnh, nếu có thì xử lý việc tải ảnh lên
-            if (imgFiles != null)
-            {
-                foreach (var imgFile in imgFiles)
-                {
-                    // Nếu imgFile không null và có nội dung (tệp ảnh hợp lệ)
-                    if (imgFile.Length > 0)
-                    {
-                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await imgFile.CopyToAsync(stream);
-                        }
-                        roomUpdateRequest.Images.Add(imgFile.FileName);
-                    }
-                }
-            }
-            else
-            {
-                var existedId = roomUpdateRequest.Id;
-                string roomRequestUrl = $"/api/Room/GetRoomById?roomId={existedId}";
-                var room = await SendHttpRequest<RoomResponse>(roomRequestUrl, HttpMethod.Post);
-                if (room != null)
-                {
-                    roomUpdateRequest.Images = room.Images;
-                }
-            }
+            //if (imgFiles != null)
+            //{
+            //    foreach (var imgFile in imgFiles)
+            //    {
+            //        // Nếu imgFile không null và có nội dung (tệp ảnh hợp lệ)
+            //        if (imgFile.Length > 0)
+            //        {
+            //            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
+            //            using (var stream = new FileStream(path, FileMode.Create))
+            //            {
+            //                await imgFile.CopyToAsync(stream);
+            //            }
+            //            roomUpdateRequest.Images.Add(imgFile.FileName);
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    var existedId = roomUpdateRequest.Id;
+            //    string roomRequestUrl = $"/api/Room/GetRoomById?roomId={existedId}";
+            //    var room = await SendHttpRequest<RoomResponse>(roomRequestUrl, HttpMethod.Post);
+            //    if (room != null)
+            //    {
+            //        roomUpdateRequest.Images = room.Images;
+            //    }
+            //}
 
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             roomUpdateRequest.ModifiedBy = userId;

@@ -51,6 +51,7 @@ namespace Domain.Models
         public DbSet<VoucherDetail> VouchersDetails { get; set; }
         public DbSet<EditHistory> EditHistories { get; set; }
         public DbSet<Unit> Units { get; set; }
+        public DbSet<Images> Images { get; set; }
         #endregion
     }
 }
