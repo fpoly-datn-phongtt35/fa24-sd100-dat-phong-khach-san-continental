@@ -219,6 +219,8 @@ public class RoomBookingController : Controller
         var flag = true;
         try
         {
+            request.StartDate = ChangeTime(request.StartDate.Value, 21, 0, 0).ToUniversalTime();
+            request.EndDate = ChangeTime(request.EndDate.Value, 19, 0, 0).ToUniversalTime();
             flag = await _roomGetService.CheckedAvailableRooms2(LstId, request);
         }
         catch (Exception ex)
