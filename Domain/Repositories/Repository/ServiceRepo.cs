@@ -41,7 +41,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Description", !string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Price", request.Price),
                     new SqlParameter("@Image", request.Image != null ? request.Image : DBNull.Value),
-                    new SqlParameter("@Unit", request.Unit),
+                    new SqlParameter("@UnitId", request.UnitId),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),
                     new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
@@ -160,7 +160,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Description",!string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Price",request.Price),
                     new SqlParameter("@Image", request.Image),
-                    new SqlParameter("@Unit",request.Unit),
+                    new SqlParameter("@UnitId",request.UnitId),
                     new SqlParameter("@Status",request.Status),
                     new SqlParameter("@Deleted",request.Deleted),
                     new SqlParameter("@ModifiedTime",DateTime.Now),

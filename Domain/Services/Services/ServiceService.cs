@@ -64,12 +64,12 @@ namespace Domain.Services.Services
                                   Name = row.Field<string>("Name"),
                                   Description = row.Field<string>("Description"),
                                   Price = row.Field<decimal>("Price"),
-                                  //Unit = (UnitType)row.Field<int>("Unit"),
                                   Image = row.Field<string>("Image"),
                                   Status = row.Field<EntityStatus>("Status"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
+                                  UnitId = row.Field<Guid>("UnitId"),
                               }).ToList();
 
                 //phân trang
@@ -127,8 +127,8 @@ namespace Domain.Services.Services
                                    Status = row.Field<EntityStatus>("Status"),
                                    Price = row.Field<decimal>("Price"),
                                    Image = row.Field<string>("Image"),
-                                   //Unit = (UnitType)row.Field<int>("Unit"),
                                    ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
+                                   UnitId = row.Field<Guid>("UnitId"),
                                    CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                    CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty
                                    ,

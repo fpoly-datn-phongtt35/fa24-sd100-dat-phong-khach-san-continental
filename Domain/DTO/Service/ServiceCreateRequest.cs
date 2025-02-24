@@ -14,7 +14,7 @@ namespace Domain.DTO.Service
         public string? Description { get; set; } = string.Empty;
         public string? Image { get; set; }
         public decimal? Price { get; set; }
-        public UnitType? Unit { get; set; }
+        public Guid UnitId { get; set; }
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
         public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }

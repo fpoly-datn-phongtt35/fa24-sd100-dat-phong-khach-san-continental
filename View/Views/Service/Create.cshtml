@@ -10,45 +10,34 @@
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="ServiceTypeId">Loại dịch vụ</label>
-        <select asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name"))">
+        <select required asp-for="ServiceTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.ServiceTypes, "Id", "Name"))">
             <option value="">-- Chọn loại dịch vụ --</option>
         </select>
     </div>
     <div class="form-group">
         <label asp-for="Name">Tên dịch vụ</label>
-        <input asp-for="Name" class="form-control" />
+        <input required asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Description">Mô tả</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <textarea required asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Price">Giá</label>
-        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <input required min="1" asp-for="Price" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <div class="form-group mb-3">
-            <label asp-for="Unit">Đơn vị</label>
-            <select name="Unit" class="form-select" id="Unit">
-                <option hidden>Chọn đơn vị</option>
-                @foreach (var status in Enum.GetValues(typeof(UnitType)))
-                {
-                    var statusEnum = (UnitType)status;
-                    <option value="@((int)statusEnum)" selected="@(Context.Request.Query["Unit"].ToString() == ((int)status).ToString())">
-                        @UnitHelper.DisplayUnit(statusEnum)
-                    </option>
-                }
-            </select>
-        </div>
-
-
+        <label asp-for="UnitId">Loại đơn vị</label>
+        <select required asp-for="UnitId" class="form-control" asp-items="@(new SelectList(ViewBag.Units, "Id", "Name"))">
+            <option value="">-- Chọn đơn vị --</option>
+        </select>
     </div>
     <div class="form-group">
         <label asp-for="Image">Hình ảnh</label>
-        <input asp-for="Image" type="file" name="img" class="form-control" />
+        <input required asp-for="Image" type="file" name="img" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
 

@@ -24,16 +24,9 @@
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Unit">Đơn vị</label>
-        <select asp-for="Unit" class="form-select" id="Unit">
-            <option disabled value="">-- Chọn đơn vị --</option>
-            @foreach (var status in Enum.GetValues(typeof(UnitType)))
-            {
-                var statusEnum = (UnitType)status;
-                <option value="@((int)statusEnum)" selected="@(Context.Request.Query["Unit"].ToString() == ((int)status).ToString())">
-                    @UnitHelper.DisplayUnit(statusEnum)
-                </option>
-            }
+        <label asp-for="UnitId">Đơn vị</label>
+        <select asp-for="UnitId" class="form-control" asp-items="@(new SelectList(ViewBag.Units, "Id", "Name", Model.UnitId))">
+            <option value="">-- Chọn đơn vị --</option>
         </select>
     </div>
     <div class="form-group">

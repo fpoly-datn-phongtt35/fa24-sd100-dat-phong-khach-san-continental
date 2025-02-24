@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="TitleOfType" class="control-label">Loại bài đăng</label>
-                <select name="TitleOfType" class="form-select" id="TitleOfType">
+                <select required name="TitleOfType" class="form-select" id="TitleOfType">
                     <option hidden>Chọn loại bài đăng</option>
                     @foreach (var item in Enum.GetValues(typeof(PostTypeEnum)))
                     {
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label">Nội dung</label>
-                <input asp-for="Content" class="form-control" />
+                <input required asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">

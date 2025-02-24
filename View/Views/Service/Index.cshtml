@@ -84,7 +84,14 @@
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                 <td>@item.Price.ToString("N0")</td>
-                @* <td>@(item.Unit.HasValue ? UnitHelper.DisplayUnit(item.Unit.Value) : "N/A")</td> *@
+                <td>
+                    @{
+                        var unitList = ViewBag.UnitList as List<Domain.Models.Unit>;
+                        var unit = unitList?.FirstOrDefault(s => s.Id == item.UnitId);
+                    }
+                    @(unit != null ? unit.Name : item.UnitId.ToString())
+                </td>
+
                 <td>
                     <div class="d-flex justify-content-start">
                         @if (!string.IsNullOrEmpty(item.Image))

@@ -38,10 +38,12 @@
         <dt class = "col-sm-2">
             Đơn vị
         </dt>
-        <dd class = "col-sm-10">
-            @* @((Model.Unit != null) *@
-            @*     ? UnitHelper.DisplayUnit(Model.Unit.Value) *@
-            @*     : "Unknown") *@
+        <dd class="col-sm-10">
+            @{
+                var units = ViewBag.UnitList as List<Unit>;
+                var unit = units?.FirstOrDefault(t => t.Id == Model.UnitId);
+            }
+            @unit.Name
         </dd>
         <dt class="col-sm-2">
             Hình ảnh
