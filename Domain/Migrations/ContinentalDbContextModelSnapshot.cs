@@ -367,6 +367,48 @@ namespace Domain.Migrations
                     b.ToTable("Floor", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.Images", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("Domain.Models.PaymentHistory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -617,9 +659,8 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Images")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ImagesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
@@ -649,6 +690,8 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FloorId");
+
+                    b.HasIndex("ImagesId");
 
                     b.HasIndex("RoomTypeId");
 
@@ -1400,6 +1443,10 @@ namespace Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Models.Images", "Images")
+                        .WithMany("Rooms")
+                        .HasForeignKey("ImagesId");
+
                     b.HasOne("Domain.Models.RoomType", "RoomType")
                         .WithMany("Rooms")
                         .HasForeignKey("RoomTypeId")
@@ -1407,6 +1454,8 @@ namespace Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("Floor");
+
+                    b.Navigation("Images");
 
                     b.Navigation("RoomType");
                 });
@@ -1552,6 +1601,11 @@ namespace Domain.Migrations
                 });
 
             modelBuilder.Entity("Domain.Models.Floor", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Domain.Models.Images", b =>
                 {
                     b.Navigation("Rooms");
                 });

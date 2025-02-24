@@ -22,7 +22,7 @@ namespace Domain.DTO.Room
         public string? RoomTypeName { get; set; }
         public string? Description { get; set; } = string.Empty;
         public double? RoomSize { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
+        public Guid? ImagesId { get; set; }
         public Guid? FloorId { get; set; }
         public Guid RoomTypeId { get; set; }
         public RoomStatus Status { get; set; } = RoomStatus.Vacant;
@@ -50,7 +50,7 @@ namespace Domain.DTO.Room
                 Price == room.Price &&
                 Address == room.Address &&
                 RoomSize == room.RoomSize &&
-                Images == room.Images &&
+                ImagesId == room.ImagesId &&
                    Description == room.Description &&
                    Status == room.Status && CreatedTime == room.CreatedTime &&
                    CreatedBy == room.CreatedBy && ModifiedTime == room.ModifiedTime &&
@@ -73,6 +73,7 @@ namespace Domain.DTO.Room
                 Address = Address,
                 Description = Description,
                 RoomSize = RoomSize,
+                ImagesId= ImagesId,
                 FloorId = FloorId,
                 RoomTypeId = RoomTypeId,
                 Status = Status,
@@ -107,7 +108,7 @@ namespace Domain.DTO.Room
                 Price = room.Price,
                 Address = room.Address,
                 Description = room.Description,
-                Images=room.Images,
+                ImagesId = room.ImagesId,
                 FloorId = room.FloorId,
                 RoomTypeId = room.RoomTypeId,
                 RoomSize=room.RoomSize,

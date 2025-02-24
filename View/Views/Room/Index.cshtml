@@ -86,7 +86,7 @@
                 @* <td>@Html.DisplayFor(modelItem => item.Address)</td> *@
                 @* <td>@Html.DisplayFor(modelItem => item.Description)</td> *@
                 <td>@Html.DisplayFor(modelItem => item.RoomSize)</td>
-                <td>
+                @* <td>
                     <div class="d-flex justify-content-center">
                         @if (item.Images != null && item.Images.Count > 0)
                         {
@@ -100,7 +100,7 @@
                             }
                         }
                     </div>
-                </td>
+                </td> *@
                 <td>
                     @{
                         var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;

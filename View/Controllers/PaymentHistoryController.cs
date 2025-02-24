@@ -21,24 +21,24 @@ namespace View.Controllers
         IPaymentHistoryService _paymentHistoryService;
         IRoomBookingGetService _roomBookingGetService;
         IRoomBookingUpdateService _roomBookingUpdateService;
- 
-        public PaymentHistoryController(HttpClient client, IPaymentHistoryService paymentHistoryService, IRoomBookingGetService roomBookingGetService, IRoomBookingUpdateService roomBookingUpdateService )
+
+        public PaymentHistoryController(HttpClient client, IPaymentHistoryService paymentHistoryService, IRoomBookingGetService roomBookingGetService, IRoomBookingUpdateService roomBookingUpdateService)
         {
             _client = client;
             _paymentHistoryService = paymentHistoryService;
             _client.BaseAddress = new Uri("https://localhost:7130/");
             _roomBookingGetService = roomBookingGetService;
             _roomBookingUpdateService = roomBookingUpdateService;
-         }
+        }
 
 
         [Route("/PaymentHistory/Id={IdRoomBooking}")]
-        public async Task<IActionResult> PaymentHistoryByBooking(Guid IdRoomBooking) 
+        public async Task<IActionResult> PaymentHistoryByBooking(Guid IdRoomBooking)
         {
             try
             {
                 string requestUrl = "api/PaymentHistory/GetListPaymentHistory";
-                PaymentHistoryGetRequest request = new PaymentHistoryGetRequest() 
+                PaymentHistoryGetRequest request = new PaymentHistoryGetRequest()
                 {
                     RoomBookingId = IdRoomBooking
                 };
@@ -67,7 +67,7 @@ namespace View.Controllers
                     throw ex;
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -120,22 +120,13 @@ namespace View.Controllers
 
                 decimal amountToPay;
                 string message;
-
-                if (totalPaid == 0)
+                var temp = (decimal)(roomBooking.TotalPriceReality - totalPaid);
+                if (temp < 0)
                 {
-                    amountToPay = (decimal)(roomBooking.TotalRoomPrice * 0.2m); 
-                    message = $"Số tiền cần thanh toán là: {amountToPay}";
+                    temp = 0;
                 }
-                else
-                {
-                    var temp = (decimal)(roomBooking.TotalPriceReality - totalPaid);
-                    if (temp < 0)
-                    {
-                        temp = 0;
-                    }
-                    amountToPay = temp;
-                    message = $"Số tiền cần thanh toán là: {amountToPay}";
-                }
+                amountToPay = temp;
+                message = $"Số tiền cần thanh toán là: {amountToPay}";
                 var totalExpenses = roomBooking.TotalExpenses;
                 var totalServicePrice = roomBooking.TotalServicePrice;
                 var totalExtraPrice = roomBooking.TotalExtraPrice;
@@ -168,7 +159,7 @@ namespace View.Controllers
 
                 var totalPaid = await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(RoomBookingId);
 
-                var paymentType = totalPaid == 0 ? PaymentType.Deposit : PaymentType.Bill;
+                var paymentType = PaymentType.Bill;
 
                 if (PaymentMethod == PaymentMethod.Cash)
                 {
@@ -195,14 +186,14 @@ namespace View.Controllers
                 }
                 else if (PaymentMethod == PaymentMethod.BankTransfer)
                 {
-                     var requestData = new PaymentLinkCreateRequest
+                    var requestData = new PaymentLinkCreateRequest
                     {
                         RoomBookingId = RoomBookingId,
                         Money = (int?)Amount,
                         PaymentType = paymentType
                     };
 
-                     var apiUrl = "https://localhost:7130/api/Order/admin-create";
+                    var apiUrl = "https://localhost:7130/api/Order/admin-create";
                     var jsonContent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
 
                     try
@@ -216,7 +207,7 @@ namespace View.Controllers
 
                             if (result != null && result.Error == 0)
                             {
-                                 return Redirect(result.Data);
+                                return Redirect(result.Data);
                             }
                             else
                             {
@@ -260,7 +251,7 @@ namespace View.Controllers
                 return Redirect("https://localhost:7114/PaymentHistory");
             }
         }
-        
+
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null, Guid? customerId = null, PaymentType? note = null, decimal? amount = null, PaymentMethod? paymentMethod = null, decimal? fromAmount = null, decimal? toAmount = null)
         {
             string requestUrl = "api/PaymentHistory/GetListPaymentHistory";

@@ -1,0 +1,87 @@
+﻿@using Domain.Enums
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.Unit.UnitResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Danh sách đơn vị</h3>
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" 
+      class="d-flex align-items-center">
+    <div class="form-group me-2">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm"
+               value="@Context.Request.Query["searchString"]" />
+    </div>
+    
+    <div class="form-group me-2">
+        <select name="status" class="form-select" id="status">
+            <option hidden>-- Chọn trạng thái --</option>
+            @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
+            {
+            var statusEnum = (EntityStatus)status;
+            <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
+                @StatusHelper.DisplayNameEntityStatus(statusEnum)
+            </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-outline-success">Lọc</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa bộ lọc</a>
+</form>
+
+<p class="button-group">
+    <a asp-action="Create" class="btn btn-primary mt-2">Tạo mới</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th style="width: 20%">Tên đơn vị</th>
+        <th style="width: 30%">Mô tả</th>
+        <th style="width: 20%">Trạng thái</th>
+        <th style="width: 15%">Chức năng</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var unit in Model.data)
+    {
+    <tr>
+        <td>@unit.Name</td>
+        <td>@unit.Description</td>
+        <td>@StatusHelper.DisplayStatusBadge(unit.Status)</td>
+        <td>
+            <div class="dropdown">
+                <button class="button1" type="button" id="dropdownMenuButton-@unit.Id"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="@Url.Content("~/images/icons/menu.png")">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@unit.Id">
+                    <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { unitId = unit.Id }, new { @class = "dropdown-item" })</li>
+                    <li>@Html.ActionLink("Chi tiết", "Details", new { unitId = unit.Id }, new { @class = "dropdown-item" })</li>
+                    <li>@Html.ActionLink("Xóa", "Delete", new { unitId = unit.Id }, new { @class = "dropdown-item text-danger" })</li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    }
+    </tbody>
+</table>
+
+<div>
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        searchString = Context.Request.Query["searchString"].ToString(),
+                        status = Context.Request.Query["status"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -17,9 +17,7 @@ namespace Domain.Configuration
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.Description).IsUnicode(true).IsRequired();
             builder.Property(x => x.RoomSize).IsRequired();
-            builder.Property(x => x.Images).HasConversion(
-                v => JsonConvert.SerializeObject(v),
-                v => JsonConvert.DeserializeObject<List<string>>(v));
+            builder.HasOne(x => x.Images).WithMany(x => x.Rooms).HasForeignKey(x => x.ImagesId);
             builder.HasOne(x => x.Floor).WithMany(x => x.Rooms).HasForeignKey(x => x.FloorId);
             builder.HasOne(x => x.RoomType).WithMany(x => x.Rooms).HasForeignKey(x => x.RoomTypeId);
         }

@@ -49,7 +49,11 @@ namespace Utilities.StoredProcedure
         public const string SP_GetTopMostBookedRoomsCustomer = "SP_GetTopMostBookedRoomsCustomer";
         public const string SP_GetRevenue = "SP_GetRevenue";
         public const string SP_GetCoverageRatio = "SP_GetCoverageRatio";
-
+        //image
+        public const string SP_UpdateImage = "SP_UpdateImage";
+        public const string SP_InsertImage = "SP_InsertImage";
+        public const string SP_GetListImage = "SP_GetListImage";
+        public const string SP_DeleteImage = "SP_DeleteImage";
         //building
         public const string SP_InsertBuilding = "SP_InsertBuilding";
         public const string SP_GetListBuilding = "SP_GetListBuilding";
@@ -189,5 +193,13 @@ namespace Utilities.StoredProcedure
         //Edit History
         public const string SP_InsertEditHistory = "SP_InsertEditHistory";
         public const string SP_GetEditHistoryByRoomBookingDetailId = "SP_GetEditHistoryByRoomBookingDetailId";
+        
+        // unit
+        public const string SP_InsertUnit = "SP_InsertUnit";
+        public const string SP_UpdateUnit = "SP_UpdateUnit";
+        public const string SP_DeleteUnit = "SP_DeleteUnit";
+        public const string SP_GetFilteredUnits = "SP_GetFilteredUnits";
+        public const string SP_GetUnitById = "SP_GetUnitById";
+        public const string SP_GetUnitByName = "SP_GetUnitByName";
     }
 }
