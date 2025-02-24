@@ -1,6 +1,7 @@
 ﻿using Domain.DTO.Paging;
 using Domain.DTO.Service;
 using Domain.DTO.ServiceType;
+using Domain.DTO.Unit;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -25,6 +27,47 @@ namespace View.Controllers
         {
             _client = client;
             _client.BaseAddress = new Uri("https://localhost:7130/");
+        }
+
+        private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
+        where T : class
+        {
+            try
+            {
+                HttpRequestMessage request = new HttpRequestMessage(method, requestUrl);
+
+                if (body != null)
+                {
+                    var json = JsonConvert.SerializeObject(body);
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+
+                var response = await _client.SendAsync(request);
+                if (response == null)
+                {
+                    throw new NullReferenceException("Response is null");
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Đọc nội dung phản hồi
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    // Deserialize thành đối tượng T
+                    return JsonConvert.DeserializeObject<T>(responseString);
+                }
+                else
+                {
+                    // Đọc nội dung lỗi từ response
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    // Ném exception với thông báo lỗi
+                    throw new Exception(errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         // GET: ServiceController
@@ -77,6 +120,15 @@ namespace View.Controllers
                 ViewBag.ServiceTypeList = serviceTypes.data;
                 #endregion
 
+                // Unit
+                string requestUrl1 = $"api/Unit/GetFilteredUnits";
+
+                var unitGetRequest = new UnitGetRequest();
+
+                var units = await SendHttpRequest<ResponseData<Unit>>
+                    (requestUrl1, HttpMethod.Get, unitGetRequest);
+                ViewBag.UnitList = units.data;
+
                 ViewBag.StatusList = Enum.GetValues(typeof(EntityStatus));
 
                 return View(services);
@@ -105,6 +157,15 @@ namespace View.Controllers
             var serviceTypes = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
 
             ViewBag.ServiceTypeList = serviceTypes.data;
+
+            // Unit
+            string requestUrl1 = $"api/Unit/GetFilteredUnits";
+
+            var unitGetRequest = new UnitGetRequest();
+
+            var units = await SendHttpRequest<ResponseData<Unit>>
+                (requestUrl1, HttpMethod.Get, unitGetRequest);
+            ViewBag.UnitList = units.data;
 
             string requestUrl = $"api/Service/GetServiceById?id={id}";
 
@@ -143,8 +204,16 @@ namespace View.Controllers
             var serviceType = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
 
 
+            // Unit
+            string requestUrl = $"api/Unit/GetFilteredUnits";
+
+            var unitGetRequest = new UnitGetRequest();
+
+            var units = await SendHttpRequest<ResponseData<UnitResponse>>
+                (requestUrl, HttpMethod.Get, unitGetRequest);
+
             ViewBag.ServiceTypes = serviceType?.data;
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
+            ViewBag.Units = units?.data;
             return View(new ServiceCreateRequest());
         }
 
@@ -192,7 +261,17 @@ namespace View.Controllers
             var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
             var serviceType = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
 
+            // Unit
+            string requestUrl1 = $"api/Unit/GetFilteredUnits";
+
+            var unitGetRequest = new UnitGetRequest();
+
+            var units = await SendHttpRequest<ResponseData<UnitResponse>>
+                (requestUrl1, HttpMethod.Get, unitGetRequest);
+
+
             ViewBag.ServiceTypes = serviceType?.data;
+            ViewBag.Units = units?.data;
 
 
             //lấy view hiện tại
@@ -201,7 +280,6 @@ namespace View.Controllers
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
             try
@@ -230,8 +308,6 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Service request, IFormFile img)
         {
-            ViewBag.Units = Enum.GetValues(typeof(UnitType));
-            ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             request.ModifiedBy = userId;
             //xử lý ảnh
