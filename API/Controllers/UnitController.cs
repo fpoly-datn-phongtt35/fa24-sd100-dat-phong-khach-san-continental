@@ -38,7 +38,7 @@ public class UnitController : Controller
         }
     }
 
-    [HttpPost(nameof(GetFilteredUnits))]
+    [HttpGet(nameof(GetFilteredUnits))]
     public async Task<ResponseData<UnitResponse>> GetFilteredUnits(UnitGetRequest request)
     {
         try

@@ -7,6 +7,8 @@ public class UnitCreateRequest
 {
     [Required(ErrorMessage = "Tên đơn vị không được để trống")]
     public string Name { get; set; }
+    
+    [Required(ErrorMessage = "Mô tả không được để trống")]
     public string Description { get; set; }
     public EntityStatus Status { get; set; }
 
