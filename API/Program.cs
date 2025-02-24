@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Domain.DTO.Unit;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IAmenity;
 using Domain.Services.IServices.IAmenityRoom;
@@ -18,10 +19,12 @@ using Utilities.StoredProcedure;
 using Domain.Services.IServices.IRoom;
 using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomTypeService;
+using Domain.Services.IServices.IUnit;
 using Domain.Services.Services.Email;
 using Domain.Services.Services.Room;
 using Domain.Services.Services.RoomBooking;
 using Domain.Services.Services.RoomTypeService;
+using Domain.Services.Services.Unit;
 using Net.payOS;
 
 namespace API
@@ -106,6 +109,7 @@ namespace API
 
             builder.Services.AddTransient<BuildingRepo>();
 
+            builder.Services.AddTransient<IUnitRepository, UnitRepository>();
             builder.Services.AddTransient<IFloorRepo, FloorRepo>();
             builder.Services.AddTransient<IAmenityRepository, AmenityRepository>();
             builder.Services.AddTransient<IRoomTypeRepository, RoomTypeRepository>();
@@ -128,6 +132,11 @@ namespace API
             builder.Services.AddTransient<IAmenityDeleteService, AmenityDeleteService>();
             builder.Services.AddTransient<IAmenityGetService, AmenityGetService>();
             builder.Services.AddTransient<IAmenityUpdateService, AmenityUpdateService>();
+            //UnitService
+            builder.Services.AddTransient<IUnitAddService, UnitAddService>();
+            builder.Services.AddTransient<IUnitDeleteService, UnitDeleteService>();
+            builder.Services.AddTransient<IUnitGetService, UnitGetService>();
+            builder.Services.AddTransient<IUnitUpdateService, UnitUpdateService>();
             //RoomTypeService
             builder.Services.AddTransient<IRoomTypeAddService, RoomTypeAddService>();
             builder.Services.AddTransient<IRoomTypeDeleteService, RoomTypeDeleteService>();

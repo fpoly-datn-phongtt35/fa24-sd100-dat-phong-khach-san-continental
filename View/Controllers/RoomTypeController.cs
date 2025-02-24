@@ -49,20 +49,21 @@ public class RoomTypeController : Controller
             {
                 // Đọc nội dung phản hồi
                 var responseString = await response.Content.ReadAsStringAsync();
-
                 // Deserialize thành đối tượng T
                 return JsonConvert.DeserializeObject<T>(responseString);
             }
             else
             {
-                Console.WriteLine($"Request failed with status code: {response.StatusCode}");
-                return null;
+                // Đọc nội dung lỗi từ response
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                // Ném exception với thông báo lỗi
+                throw new Exception(errorMessage);
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            return null;
+            throw;
         }
     }
 
@@ -102,16 +103,26 @@ public class RoomTypeController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(RoomTypeAddRequest roomTypeAddRequest)
     {
+        if(!ModelState.IsValid)
+            return View(roomTypeAddRequest);
+        
         var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         roomTypeAddRequest.CreatedBy = userId;
         string requestUrl = $"/api/RoomType/CreateRoomType";
 
-        var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl,
-            HttpMethod.Post, roomTypeAddRequest);
-        if (createdRoomType != null)
-            return RedirectToAction("Index");
+        try
+        {
+            var createdRoomType = await SendHttpRequest<RoomTypeResponse>(requestUrl,
+                HttpMethod.Post, roomTypeAddRequest);
+            if (createdRoomType != null)
+                return RedirectToAction("Index");
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError(string.Empty, e.Message);
+        }
 
-        return View("Error");
+        return View(roomTypeAddRequest);
     }
 
     public async Task<IActionResult> Edit(Guid roomTypeId)

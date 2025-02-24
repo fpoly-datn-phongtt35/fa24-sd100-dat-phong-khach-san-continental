@@ -13,6 +13,7 @@ public interface IAmenityRepository
     Task<Amenity?> UpdateAmenity(Amenity amenity);
     Task<Amenity?> DeleteAmenityById(Amenity amenity);
     Task<Amenity?> GetAmenityById(Guid amenityId);
+    Task<Amenity?> GetAmenityExists(string name);
     Task<Amenity?> RecoverDeletedAmenity(Amenity amenity);
     Task<ResponseData<AmenityResponse>> GetFilteredDeletedAmenity(AmenityGetRequest amenityGetRequest);
     Task<ResponseData<AmenityResponse>> GetFilteredAmenities(AmenityGetRequest amenityGetRequest);

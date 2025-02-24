@@ -29,16 +29,13 @@ namespace View.Controllers
             {
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUrl);
 
-                // Nếu có body thì serialize nó thành JSON
                 if (body != null)
                 {
                     var json = JsonConvert.SerializeObject(body);
                     request.Content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
 
-                // Gửi request
                 var response = await _httpClient.SendAsync(request);
-
                 if (response == null)
                 {
                     throw new NullReferenceException("Response is null");
@@ -48,20 +45,21 @@ namespace View.Controllers
                 {
                     // Đọc nội dung phản hồi
                     var responseString = await response.Content.ReadAsStringAsync();
-
                     // Deserialize thành đối tượng T
                     return JsonConvert.DeserializeObject<T>(responseString);
                 }
                 else
                 {
-                    Console.WriteLine($"Request failed with status code: {response.StatusCode}");
-                    return null;
+                    // Đọc nội dung lỗi từ response
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    // Ném exception với thông báo lỗi
+                    throw new Exception(errorMessage);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw;
             }
         }
 
@@ -141,16 +139,27 @@ namespace View.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AmenityCreateRequest amenityCreateRequest)
         {
+            if (!ModelState.IsValid)
+                return View(amenityCreateRequest);
+            
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             amenityCreateRequest.CreatedBy = userId;
             string requestUrl = "/api/Amenity/CreateAmenity";
 
-            var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl,
-                HttpMethod.Post, amenityCreateRequest);
-            if (createdAmenity != null)
-                return RedirectToAction("Index");
+            try
+            {
+                var createdAmenity = await SendHttpRequest<AmenityResponse>(requestUrl,
+                    HttpMethod.Post, amenityCreateRequest);
+                if (createdAmenity != null)
+                    return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Thêm lỗi vào ModelState để hiển thị ra view
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
-            return View("Error");
+            return View(amenityCreateRequest);
         }
 
         public async Task<IActionResult> Edit(Guid amenityId)
