@@ -285,7 +285,7 @@ namespace Domain.Repositories.Repository
                 new SqlParameter("@Price", SqlDbType.Decimal) { Value = room.Price },
                 new SqlParameter("@Address", SqlDbType.NVarChar) { Value = room.Address },
                 new SqlParameter("@RoomSize", SqlDbType.Float) { Value = room.RoomSize },
-                new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
+                //new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
                 new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
                 new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = room.CreatedTime },
@@ -323,7 +323,7 @@ namespace Domain.Repositories.Repository
                 new SqlParameter("@Price", SqlDbType.Decimal) { Value = room.Price },
                 new SqlParameter("@Address", SqlDbType.NVarChar) { Value = room.Address },
                 new SqlParameter("@RoomSize", SqlDbType.Float) { Value = room.RoomSize },
-                new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
+                //new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
                 new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description },
                 new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
                 new SqlParameter("@Deleted",SqlDbType.Int) { Value = room.Deleted },
@@ -378,7 +378,7 @@ namespace Domain.Repositories.Repository
                 Price = decimal.Parse(row["Price"].ToString()!),
                 Address = row["Address"].ToString()!,
                 RoomSize = double.Parse(row["RoomSize"].ToString()!),
-                ImagesId = Guid.Parse(row["ImagesId"].ToString()!),
+                //ImagesId = Guid.Parse(row["ImagesId"].ToString()!),
                 Description = row["Description"].ToString()!,
                 Status = row.Table.Columns.Contains("Status") ? (RoomStatus)int.Parse(row["Status"].ToString()!) : default,
                 CreatedTime = ConvertDateTimeOffsetToString(row, "CreatedTime"),
@@ -507,7 +507,7 @@ namespace Domain.Repositories.Repository
                     Price = Convert.ToDecimal(row["Price"]),
                     RoomSize = Convert.ToDouble(row["RoomSize"]),
                     Address = row["Address"]?.ToString(),
-                    Images = row["Images"]?.ToString()?.Split(',').ToList() ?? new List<string>(),
+                    //Images = row["Images"]?.ToString()?.Split(',').ToList() ?? new List<string>(),
                     BookingCount = Convert.ToInt32(row["BookingCount"])
                 };
 

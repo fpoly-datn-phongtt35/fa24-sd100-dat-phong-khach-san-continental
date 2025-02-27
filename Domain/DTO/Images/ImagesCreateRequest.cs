@@ -9,6 +9,7 @@ namespace Domain.DTO.Image
 {
     public class ImagesCreateRequest
     {
+        public Guid? RoomId { get; set; }
         public string? Name { get; set; }
         public string? Image { get; set; }
         public EntityStatus Status { get; set; }

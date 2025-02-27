@@ -13,7 +13,6 @@ namespace Domain.Models
         public string? Address { get; set; }
         public string? Description { get; set; } = string.Empty;
         public double? RoomSize { get; set; }
-        public Guid? ImagesId { get; set; }
         public Guid? FloorId { get; set; }
         public Guid RoomTypeId { get; set; }
         public RoomStatus Status { get; set; } = RoomStatus.Vacant;
@@ -25,7 +24,7 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-        public Images? Images { get; set; }
+        public List<Images> Images { get; set; }
         public Floor Floor { get; set; }
         public RoomType RoomType { get; set; }
         public List<RoomBookingDetail> RoomBookingDetails { get; set; }

@@ -100,8 +100,6 @@ namespace View.Controllers
             var buildingResponse = await _client.PostAsync(buildingRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
             var buildingResponseString = await buildingResponse.Content.ReadAsStringAsync();
             var building = JsonConvert.DeserializeObject<ResponseData<Building>>(buildingResponseString);
-
-
             ViewBag.Buildings = building?.data;
             return View(new FloorCreateRequest());
         }

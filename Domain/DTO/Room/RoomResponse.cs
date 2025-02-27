@@ -4,6 +4,7 @@ using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
 using Domain.Enums;
+using Domain.Models;
 using Domain.Repositories.Repository;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Domain.DTO.Room
         public string? RoomTypeName { get; set; }
         public string? Description { get; set; } = string.Empty;
         public double? RoomSize { get; set; }
-        public Guid? ImagesId { get; set; }
+        //public Guid? ImagesId { get; set; }
         public Guid? FloorId { get; set; }
         public Guid RoomTypeId { get; set; }
         public RoomStatus Status { get; set; } = RoomStatus.Vacant;
@@ -34,7 +35,7 @@ namespace Domain.DTO.Room
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-
+        public List<Images> Images { get; set; }
         public RoomTypeResponse RoomType { get; set; } = new RoomTypeResponse();
         public FloorGetRequest Floor { get; set; } = new FloorGetRequest();
         public override bool Equals(object? obj)
@@ -50,7 +51,7 @@ namespace Domain.DTO.Room
                 Price == room.Price &&
                 Address == room.Address &&
                 RoomSize == room.RoomSize &&
-                ImagesId == room.ImagesId &&
+                //ImagesId == room.ImagesId &&
                    Description == room.Description &&
                    Status == room.Status && CreatedTime == room.CreatedTime &&
                    CreatedBy == room.CreatedBy && ModifiedTime == room.ModifiedTime &&
@@ -73,7 +74,7 @@ namespace Domain.DTO.Room
                 Address = Address,
                 Description = Description,
                 RoomSize = RoomSize,
-                ImagesId= ImagesId,
+                //ImagesId= ImagesId,
                 FloorId = FloorId,
                 RoomTypeId = RoomTypeId,
                 Status = Status,
@@ -108,7 +109,7 @@ namespace Domain.DTO.Room
                 Price = room.Price,
                 Address = room.Address,
                 Description = room.Description,
-                ImagesId = room.ImagesId,
+                //ImagesId = room.ImagesId,
                 FloorId = room.FloorId,
                 RoomTypeId = room.RoomTypeId,
                 RoomSize=room.RoomSize,
