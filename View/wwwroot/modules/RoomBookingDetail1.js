@@ -615,7 +615,7 @@ var _Service_OrderDetail =
         ExTrapriceEle.prop('disabled', 'true')
         var ExTraprice = ExTrapriceEle.val().replaceAll(',', '');
         if (ExTraprice == null || ExTraprice == '' || ExTraprice == undefined || ExTraprice < 0) {
-            ExTrapriceEle.val(0);
+            ExTrapriceEle.val(1);
             var TotalPriceSer = $("#PriceSer_" + id).val().replaceAll(',', '') * $("#QuantitySer_" + id).val();
             var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
             formattedprice = formattedprice.replaceAll('.', ',')
