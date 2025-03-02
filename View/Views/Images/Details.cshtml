@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using View.Views.Shared.Helper
+@model Domain.Models.Images
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Chi tiết Ảnh</h3>
+<a asp-action="Index" class="btn btn-outline-primary mt-3 mb-3">
+    Quay lại
+</a>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Tên </label>
+            @Html.DisplayFor(model => model.Name)
+        </div>
+        <div class="form-group mb-3">
+            <label class="control-label1">Room Id </label>
+            @Html.DisplayFor(model => model.RoomId)
+        </div>
+        <dt class="col-sm-2">
+            Hình ảnh
+        </dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                var extension = System.IO.Path.GetExtension(Model.Image);
+                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                {
+                    <div style="width: 200px; height: 200px; overflow: hidden;">
+                        <img src="~/images/@Model.Image" alt="@Model.Name" style="object-fit: cover; width: 100%; height: 100%;">
+                    </div>
+                }
+                else
+                {
+                    <span>Invalid Image Format</span>
+                }
+            }
+            else
+            {
+                <span>No Image Available</span>
+            }
+        </dd>
+        <div class="form-group mb-3">
+            <label class="control-label1">Trạng thái</label>
+            @StatusHelper.DisplayStatusBadge(Model.Status)
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thời gian tạo</label>
+            @Html.DisplayFor(model => model.CreatedTime)
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Được tạo bởi</label>
+            @Html.DisplayFor(model => model.CreatedTime)
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label1">Thởi gian sửa</label>
+            @Html.DisplayFor(model => model.CreatedTime)
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label class="control-label1">Thởi gian sửa</label>
+            @Html.DisplayFor(model => model.CreatedTime)
+        </div>
+        <div class="form-group mb-3">
+            <label class="control-label1">Được sửa bởi</label>
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </div>
+        <div class="form-group mb-3">
+            <label class="control-label1">Trạng thái xóa</label>
+            <p class="form-control-static">@((Model.Deleted ? "Đã xóa" : "Chưa xóa"))</p>
+        </div>
+        <div class="form-group mb-3">
+            <label class="control-label1">Thởi gian xóa</label>
+            @Html.DisplayFor(model => model.DeletedTime)
+        </div>
+        <div class="form-group mb-3">
+            <label class="control-label1">Được xóa bởi</label>
+            @Html.DisplayFor(model => model.DeletedBy)
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
+</div>

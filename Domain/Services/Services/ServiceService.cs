@@ -129,6 +129,7 @@ namespace Domain.Services.Services
                                    Image = row.Field<string>("Image"),
                                    ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
                                    UnitId = row.Field<Guid>("UnitId"),
+                                   UnitName = row.Field<string?>("Unit"),
                                    CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
                                    CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty
                                    ,

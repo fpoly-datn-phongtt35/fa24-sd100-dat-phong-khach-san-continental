@@ -10,6 +10,7 @@ namespace Domain.DTO.Image
     public class ImagesUpdateRequest
     {
         public Guid Id { get; set; }
+        public Guid? RoomId { get; set; }
         public string Name { get; set; }
         public string? Image { get; set; }
         public EntityStatus Status { get; set; }

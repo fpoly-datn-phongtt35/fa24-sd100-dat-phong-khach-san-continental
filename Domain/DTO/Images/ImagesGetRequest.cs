@@ -10,6 +10,7 @@ namespace Domain.DTO.Image
 {
     public class ImagesGetRequest : PagingRequest
     {
+        public Guid? RoomId { get; set; }
         public string? Name { get; set; }
         public EntityStatus? Status { get; set; }
     }

@@ -26,6 +26,17 @@
                 }
             </select>
         </div>
+        
+        <select name="RoomId" id="RoomId" class="form-select me-2" style="max-width: 200px;">
+            <option hidden>-- Phong --</option>
+            @foreach (var room in ViewBag.Room)
+            {
+                <option value="@room.Id"
+                        selected="@(room.Id.ToString() == Context.Request.Query["RoomId"])">
+                    @room.Name
+                </option>
+            }
+        </select>
         <button class="btn btn-outline-success ms-2" type="submit">Lọc</button>
         <button type="submit" class="btn btn-secondary ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>
@@ -82,6 +93,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
                             <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "dropdown-item" })</li>
                             <li>@Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "dropdown-item text-danger" })</li>
                         </ul>
                     </div>

@@ -53,6 +53,7 @@ namespace Domain.Services.Services
                             {
                                 Id = row.Field<Guid>("Id"),
                                 Name = row.Field<string>("Name"),
+                                RoomId = row.IsNull("RoomId") ? (Guid?)null : row.Field<Guid>("RoomId"),
                                 Image = row.Field<string>("Image"),
                                 Status = row.Field<EntityStatus>("Status"),
                                 CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
@@ -82,6 +83,7 @@ namespace Domain.Services.Services
                               {
                                   Id = row.Field<Guid>("Id"),
                                   Name = row.Field<string>("Name"),
+                                  RoomId = row.IsNull("RoomId") ? (Guid?)null : row.Field<Guid>("RoomId"),
                                   Image = row.Field<string>("Image"),
                                   Status = row.Field<EntityStatus>("Status"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),

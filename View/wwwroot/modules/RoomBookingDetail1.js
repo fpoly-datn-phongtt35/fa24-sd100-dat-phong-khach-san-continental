@@ -535,7 +535,7 @@ var _Service_OrderDetail =
                                 <input id="QuantitySer_`+ IdSerAdd + `" oninput="_Service_OrderDetail.OnchangeQuantity('` + IdSerAdd + `','QuantitySer_')" class="form-control" type="text" value="1" min="1" max="100"/>
                             </td>
                             <td scope="col">
-                                ${global.getResponseStatus(result.unit, constant.UnitType)}
+                                ${result.unitName}
                             </td>
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ IdSerAdd + `" class="form-control total_price_ser" value="${formattedprice}" disabled />
@@ -615,7 +615,7 @@ var _Service_OrderDetail =
         ExTrapriceEle.prop('disabled', 'true')
         var ExTraprice = ExTrapriceEle.val().replaceAll(',', '');
         if (ExTraprice == null || ExTraprice == '' || ExTraprice == undefined || ExTraprice < 0) {
-            ExTrapriceEle.val(0);
+            ExTrapriceEle.val(1);
             var TotalPriceSer = $("#PriceSer_" + id).val().replaceAll(',', '') * $("#QuantitySer_" + id).val();
             var formattedprice = parseFloat(TotalPriceSer).toLocaleString('vi-VN');
             formattedprice = formattedprice.replaceAll('.', ',')
@@ -705,7 +705,7 @@ var _Service_OrderDetail =
                                 <input id="QuantitySer_`+ item.id + `" oninput="_Service_OrderDetail.OnchangeQuantity('` + item.id +`','QuantitySer_')" class="form-control" type="text" value="${global.NumberVNFormated(item.quantity)}" min="1" max="100"/>
                             </td>
                             <td scope="col">
-                                ${global.getResponseStatus(item.unit, constant.UnitType)}
+                                ${item.unit}
                             </td>
                             <td scope="col">
                                 <input id="TotalPriceSer_`+ item.id + `" class="form-control total_price_ser" value="${formattedprice}" disabled />

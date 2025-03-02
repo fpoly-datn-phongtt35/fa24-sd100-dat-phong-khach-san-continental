@@ -17,6 +17,12 @@
         <input asp-for="Image" type="file" name="img" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="RoomId">Phong</label>
+        <select asp-for="RoomId" class="form-control" asp-items="@(new SelectList(ViewBag.Room, "Id", "Name"))">
+            <option value="">--Chọn Phong--</option>
+        </select>
+    </div>
     <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />
     @* <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" /> *@
 

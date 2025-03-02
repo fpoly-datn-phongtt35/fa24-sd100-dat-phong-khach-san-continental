@@ -1,9 +1,12 @@
 ﻿using Domain.DTO.Image;
 using Domain.DTO.Paging;
+using Domain.DTO.Room;
+using Domain.DTO.RoomType;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 
@@ -18,14 +21,49 @@ namespace View.Controllers
             _client = client;
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
+        private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
+            where T : class
+        {
+            try
+            {
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? name = null, EntityStatus? status = null)
+                HttpRequestMessage request = new HttpRequestMessage(method, requestUrl);
+                if (body != null)
+                {
+                    var json = JsonConvert.SerializeObject(body);
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+                var response = await _client.SendAsync(request);
+
+                if (response == null)
+                {
+                    throw new NullReferenceException("Response is null");
+                }
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseString);
+                }
+                else
+                {
+                    Console.WriteLine($"Request failed with status code: {response.StatusCode}");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? name = null, EntityStatus? status = null, Guid? RoomId = null)
         {
             // api url
             string requestUrl = "https://localhost:7130/api/Images/GetListImages";
 
             var request = new ImagesGetRequest
             {
+                RoomId=RoomId,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
                 Name = name,
@@ -38,10 +76,15 @@ namespace View.Controllers
             try
             {
                 var response = await _client.PostAsync(requestUrl, content);
-
-                // đọc nội dung trả về từ api
                 var responseString = await response.Content.ReadAsStringAsync();
+                // đọc nội dung trả về từ api
 
+
+                var roomRequest = new RoomRequest();
+                string roomRequestUrl = "https://localhost:7130/api/Room/GetAllRooms";
+                var roomTask = await SendHttpRequest<ResponseData<RoomResponse>>
+                    (roomRequestUrl, HttpMethod.Post, roomRequest);
+                ViewBag.Room = roomTask?.data ?? new List<RoomResponse>();
                 // chuyển đổi lại thành respondata 
                 var images = JsonConvert.DeserializeObject<ResponseData<Images>>(responseString);
                 ViewBag.StatusList = Enum.GetValues(typeof(EntityStatus));
@@ -54,38 +97,43 @@ namespace View.Controllers
         }
 
 
-        //public async Task<IActionResult> Details(Guid id)
-        //{
-        //    string requestUrl = $"https://localhost:7130/api/Images/GetImagesById?id={id}";
+        public async Task<IActionResult> Details(Guid id)
+        {
+            string requestUrl = $"https://localhost:7130/api/Images/GetImagesById?id={id}";
 
-        //    // Tạo nội dung json cho request
-        //    var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
-        //    var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+            // Tạo nội dung json cho request
+            var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-        //    try
-        //    {
-        //        var response = await _client.PostAsync(requestUrl, content);
+            try
+            {
+                var response = await _client.PostAsync(requestUrl, content);
 
-        //        if (!response.IsSuccessStatusCode)
-        //        {
-        //            return View("Error");
-        //        }
+                if (!response.IsSuccessStatusCode)
+                {
+                    return View("Error");
+                }
 
-        //        var responseString = await response.Content.ReadAsStringAsync();
-        //        var services = JsonConvert.DeserializeObject<Images>(responseString);
+                var responseString = await response.Content.ReadAsStringAsync();
+                var services = JsonConvert.DeserializeObject<Images>(responseString);
 
 
 
-        //        return View(services);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+                return View(services);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         public async Task<IActionResult> Create()
         {
+            string RequestUrl = "api/Room/GetAllRooms";
+            var Response = await _client.PostAsync(RequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var ResponseString = await Response.Content.ReadAsStringAsync();
+            var room = JsonConvert.DeserializeObject<ResponseData<RoomResponse>>(ResponseString);
+            ViewBag.Room = room?.data;
             return View(new ImagesCreateRequest());
         }
 
@@ -124,13 +172,18 @@ namespace View.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
+
             string requestUrl = $"api/Images/GetImagesById?id={id}";
 
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-
+            string RequestUrl = "api/Room/GetAllRooms";
+            var Response = await _client.PostAsync(RequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var ResponseString = await Response.Content.ReadAsStringAsync();
+            var room = JsonConvert.DeserializeObject<ResponseData<RoomResponse>>(ResponseString);
+            ViewBag.Room = room?.data;
             try
             {
                 var response = await _client.PostAsync(requestUrl, content);

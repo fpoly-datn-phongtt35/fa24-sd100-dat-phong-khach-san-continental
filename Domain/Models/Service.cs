@@ -11,6 +11,7 @@ namespace Domain.Models
         public string? Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? Image { get; set; }
+        public string? UnitName { get; set; }
         public Guid UnitId { get; set; }
         public Guid ServiceTypeId { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;

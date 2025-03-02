@@ -83,24 +83,53 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@String.Format("{0:N0}", item.Price) VND</td>
-                @* <td>@Html.DisplayFor(modelItem => item.Address)</td> *@
-                @* <td>@Html.DisplayFor(modelItem => item.Description)</td> *@
                 <td>@Html.DisplayFor(modelItem => item.RoomSize)</td>
-                @* <td>
-                    <div class="d-flex justify-content-center">
-                        @if (item.Images != null && item.Images.Count > 0)
-                        {
-                            var firstImage = item.Images.FirstOrDefault();
-                            var extension = System.IO.Path.GetExtension(firstImage);
-                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
-                            {
-                                <div class="img-container d-flex justify-content-start" style="width: 100px; height: 100px; margin: 5px;">
-                                    <img class="responsive-img" src="~/images/@firstImage" alt="@item.Name" style="object-fit: cover; width: 100%; height: 100%;">
-                                </div>
-                            }
-                        }
-                    </div>
-                </td> *@
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <hr />
+                    @if (item.Images != null && item.Images.Count > 0)
+                    {
+                        <table class="table table-bordered" style="color: whitesmoke">
+                            <tbody>
+                                @foreach (var image in item.Images)
+                                {
+                                    var extension = System.IO.Path.GetExtension(image.Name);
+                                    if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
+                                                    <img class="responsive-img" src="/images/@image.Name" alt="@item.Name"
+                                                         style="object-fit: cover; width: 100%; height: 100%;">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="2"><span>Invalid Image Format</span></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>Không có hình ảnh nào cho phòng này.</p>
+                    }
+                </td>
+        
+
+
+
+
+
+
+
                 <td>
                     @{
                         var floorList = ViewBag.FloorList as List<Domain.Models.Floor>;
