@@ -12,9 +12,8 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public string Name { get; set; }
         public string? Image { get; set; }
-        public Guid? RoomId { get; set; }
+        public Guid? ObjId { get; set; }
         public EntityStatus Status { get; set; }
         public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
@@ -23,6 +22,5 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-        public Room? Room { get; set; }
     }
 }

@@ -29,8 +29,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
-                    new SqlParameter("@RoomId", request.RoomId != null ? request.RoomId : DBNull.Value),
+                    new SqlParameter("@ObjId", request.ObjId != null ? request.ObjId : DBNull.Value),
                     new SqlParameter("@Status",(int)request.Status),
                     new SqlParameter("@Image", request.Image != null ? request.Image : DBNull.Value),
                     new SqlParameter("@CreatedTime",DateTime.Now),
@@ -70,9 +69,8 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@RoomId", Search.RoomId ),
+                    new SqlParameter("@RoomId", Search.ObjId ),
                     new SqlParameter("@Status", Search.Status),
-                    new SqlParameter("@Name", Search.Name),
                     new SqlParameter("@PageSize", Search.PageSize),
                     new SqlParameter("@PageIndex", Search.PageIndex)
                 };
@@ -109,8 +107,7 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
-                    new SqlParameter("@RoomId", request.RoomId != null ? request.RoomId : DBNull.Value),
-                    new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
+                    new SqlParameter("@ObjId", request.ObjId != null ? request.ObjId : DBNull.Value),
                     new SqlParameter("@Image", request.Image),
                     new SqlParameter("@Status",request.Status),
                     new SqlParameter("@Deleted",request.Deleted),

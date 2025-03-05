@@ -11,22 +11,22 @@
 
 <form asp-action="Edit" method="post" class="row mt-3" enctype="multipart/form-data">
     <div class="col-md-6">
-        <div class="form-group mb-3">
+@*         <div class="form-group mb-3">
             <label asp-for="Name" class="control-label1">Tên tòa</label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+        </div> *@
         <div class="form-group">
             <label asp-for="Image">Hình ảnh</label>
             <input asp-for="Image" type="file" name="img" class="form-control" />
             <span asp-validation-for="Image" class="text-danger"></span>
         </div>
-        <div class="form-group">
+@*         <div class="form-group">
             <label asp-for="RoomId">Phong</label>
             <select asp-for="RoomId" class="form-control" asp-items="@(new SelectList(ViewBag.Room, "Id", "Name"))">
                 <option value="">--Chọn Phong--</option>
             </select>
-        </div>
+        </div> *@
         <div class="form-group mb-3">
             <label asp-for="Deleted" class="control-label1">Trạng thái xóa</label>
             <input asp-for="Deleted" type="checkbox" />
