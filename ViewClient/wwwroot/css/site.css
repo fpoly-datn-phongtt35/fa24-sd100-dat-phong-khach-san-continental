@@ -1123,3 +1123,40 @@ input.form-control[readonly] {
         margin-top: 20px; /* Thêm khoảng cách cho các thiết bị nhỏ */
     }
 }
+
+<style >
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.text-gold {
+    color: #d4af37;
+}
+
+.btn-gold {
+    background-color: #d4af37;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.luxury-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+}
+
+.luxury-modal {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+}
+
+.luxury-img {
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(212, 175, 55, 0.2);
+}
+
+</style >
