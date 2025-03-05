@@ -143,7 +143,9 @@ namespace Domain.Repositories.Repository
                 foreach (DataRow row in dataTable.Rows)
                 {
                     var room = RowToRoom(row);
+                    room.Images = await GetImagesByRoomId(room.Id);
                     var roomResponse = room.ToRoomResponse();
+                    roomResponse.Images = room.Images;
                     roomlist.Add(roomResponse);
                 }
                 try
@@ -158,6 +160,7 @@ namespace Domain.Repositories.Repository
                 rooms.data = roomlist;
                 rooms.CurrentPage = roomRequest.PageIndex;
                 rooms.PageSize = roomRequest.PageSize;
+                
             }
             catch (Exception e)
             {
@@ -187,7 +190,7 @@ namespace Domain.Repositories.Repository
 
                 // Lấy danh sách tiện ích liên quan đến RoomType
                 room.RoomType.AmenityRooms = await GetAmenityRoomsByRoomTypeId(room.RoomTypeId);
-
+                room.Images = await GetImagesByRoomId(room.Id);
                 return room;
             }
             catch (Exception e)
@@ -270,6 +273,38 @@ namespace Domain.Repositories.Repository
             catch (Exception e)
             {
                 throw new ArgumentNullException("An error occurred while retrieving the amenity", e);
+            }
+        }
+        public async Task<List<Images>> GetImagesByRoomId(Guid Id)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new("@Id", SqlDbType.UniqueIdentifier) { Value = Id }
+                };
+
+                var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetImagesByRoomId, parameters);
+
+                var images = new List<Images>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    images.Add(new Images()
+                    {
+                        Id = (Guid)row["Id"],
+                        Name = row["Name"].ToString(),
+                        Image = row["Image"].ToString(),
+                        Status = (EntityStatus)row["Status"],
+                        //Room = await GetRoomById((Guid)row["RoomId"])
+                    });
+                }
+
+                return images;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Lỗi khi lấy danh sách ảnh của phòng", e);
             }
         }
 
