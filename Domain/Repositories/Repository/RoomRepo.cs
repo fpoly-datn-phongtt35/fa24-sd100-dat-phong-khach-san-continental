@@ -293,7 +293,6 @@ namespace Domain.Repositories.Repository
                     images.Add(new Images()
                     {
                         Id = (Guid)row["Id"],
-                        Name = row["Name"].ToString(),
                         Image = row["Image"].ToString(),
                         Status = (EntityStatus)row["Status"],
                         //Room = await GetRoomById((Guid)row["RoomId"])

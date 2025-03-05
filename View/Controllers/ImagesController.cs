@@ -56,17 +56,16 @@ namespace View.Controllers
                 return null;
             }
         }
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? name = null, EntityStatus? status = null, Guid? RoomId = null)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, string? name = null, EntityStatus? status = null, Guid? ObjId = null)
         {
             // api url
             string requestUrl = "https://localhost:7130/api/Images/GetListImages";
 
             var request = new ImagesGetRequest
             {
-                RoomId=RoomId,
+                ObjId=ObjId,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                Name = name,
                 Status = status
             };
 
