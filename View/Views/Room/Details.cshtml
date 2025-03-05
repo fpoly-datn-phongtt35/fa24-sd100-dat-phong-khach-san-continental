@@ -14,28 +14,26 @@
         <div class="row">
             <div class="col-md-8 ">
 
-                <dt class="col-4 mb-2">@Html.DisplayName("Hình ảnh")</dt>
-                @* <dd class="col-8 mb-2">
-                    @if (Model.Images != null && Model.Images.Any())
-                    {
-                    <div class="d-flex justify-content-center">
-                        @foreach (var img in Model.Images)
+            <dt class="col-4 mb-2">@Html.DisplayName("Hình ảnh")</dt>
+            <dd class="col-8 mb-2">
+
+                        @if (Model.Images != null && Model.Images.Any())
                         {
-                            var extension = System.IO.Path.GetExtension(img);
-                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
-                            {
-                                <div class="img-container d-flex justify-content-center" style="width: 100px; height: 100px; margin: 5px;">
-                                    <img class="responsive-img" src="~/images/@img" alt="Hình ảnh" style="object-fit: cover; width: 100%; height: 100%;">
+                            <div class="d-flex flex-wrap">
+                                @foreach (var img in Model.Images)
+                                {
+                                <div class="img-container" style="width: 100px; height: 100px; margin: 5px; overflow: hidden; border-radius: 5px;">
+                                <img class="responsive-img" src="~/images/@img.Image" alt="Hình ảnh"
+                                     style="object-fit: cover; width: 100%; height: 100%;">
                                 </div>
-                            }
+                                }
+                            </div>
                         }
-                    </div>
-                    }
-                    else
-                    {
-                        <p>Không có hình ảnh</p>
-                    }
-                </dd> *@
+                        else
+                        {
+                            <p>Không có hình ảnh</p>
+                        }
+            </dd>
             <div class="row mb-2">
                 <dt class="col-4 mb-2">@Html.DisplayName("Tên loại phòng")</dt>
                 <dd class="col-8 mb-2">
