@@ -7,6 +7,7 @@ using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -70,6 +71,9 @@ namespace Domain.Services.Services
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
                                   UnitId = row.Field<Guid>("UnitId"),
+                                  Images = row.Field<string>("Images") != null
+                                   ? JsonConvert.DeserializeObject<List<Images>>(row.Field<string>("Images"))
+                                   : new List<Images>()
                               }).ToList();
 
                 //phân trang
@@ -119,87 +123,36 @@ namespace Domain.Services.Services
             {
                 DataTable table = await _serviceRepo.GetServiceById(Id);
                 service = (from row in table.AsEnumerable()
-                               select new Service
-                               {
-                                   Id = row.Field<Guid>("Id"),
-                                   Name = row.Field<string>("Name"),
-                                   Description = row.Field<string>("Description"),
-                                   Status = row.Field<EntityStatus>("Status"),
-                                   Price = row.Field<decimal>("Price"),
-                                   Image = row.Field<string>("Image"),
-                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
-                                   UnitId = row.Field<Guid>("UnitId"),
-                                   UnitName = row.Field<string?>("Unit"),
-                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
-                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty
-                                   ,
-                                   ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
-                                   ModifiedBy = row.Field<Guid?>("ModifiedBy") != null ? row.Field<Guid>("ModifiedBy") : Guid.Empty,
-                                   Deleted = row.Field<bool>("Deleted"),
-                                   DeletedBy = row.Field<Guid?>("DeletedBy") != null ? row.Field<Guid>("DeletedBy") : Guid.Empty,
-                                   DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
-                               }).FirstOrDefault();
+                           select new Service
+                           {
+                               Id = row.Field<Guid>("Id"),
+                               Name = row.Field<string>("Name"),
+                               Description = row.Field<string>("Description"),
+                               Status = row.Field<EntityStatus>("Status"),
+                               Price = row.Field<decimal>("Price"),
+                               ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
+                               UnitId = row.Field<Guid>("UnitId"),
+                               UnitName = row.Field<string?>("Unit"),
+                               CreatedTime = row.IsNull("CreatedTime") ? (DateTimeOffset?)null : row.Field<DateTimeOffset>("CreatedTime"),
+                               CreatedBy = row.IsNull("CreatedBy") ? Guid.Empty : row.Field<Guid>("CreatedBy"),
+
+                               ModifiedTime = row.IsNull("ModifiedTime") ? (DateTimeOffset?)null : row.Field<DateTimeOffset>("ModifiedTime"),
+                               ModifiedBy = row.IsNull("ModifiedBy") ? Guid.Empty : row.Field<Guid>("ModifiedBy"),
+
+                               Deleted = row.Field<bool>("Deleted"),
+                               DeletedBy = row.IsNull("DeletedBy") ? Guid.Empty : row.Field<Guid>("DeletedBy"),
+                               DeletedTime = row.IsNull("DeletedTime") ? (DateTimeOffset?)null : row.Field<DateTimeOffset>("DeletedTime"),
+                               Images = row.Field<string>("Images") != null
+                                   ? JsonConvert.DeserializeObject<List<Images>>(row.Field<string>("Images"))
+                                   : new List<Images>()
+                           }).FirstOrDefault();
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("Lỗi khi lấy dịch vụ", ex);
             }
             return service;
         }
-
-        //public async Task<ResponseData<Service>> GetServiceByTypeId(ServiceGetRequest request, Guid serviceTypeId)
-        //{
-        //    var model = new ResponseData<Service>();
-        //    try
-        //    {
-        //        // Gọi repo để lấy DataTable
-        //        DataTable table = await _serviceRepo.GetServiceByTypeId(request, serviceTypeId);
-
-        //        model.data = (from row in table.AsEnumerable()
-        //                      select new Service
-        //                      {
-        //                          Id = row.Field<Guid>("Id"),
-        //                          Name = row.Field<string>("Name"),
-        //                          Description = row.Field<string>("Description"),
-        //                          Status = row.Field<EntityStatus>("Status"),
-        //                          Price = row.Field<decimal>("Price"),
-        //                          Unit = (UnitType)row.Field<int>("Unit"),
-        //                          CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
-        //                          CreatedBy = row.Field<Guid?>("CreatedBy") ?? Guid.Empty,
-        //                          ModifiedTime = row.Field<DateTimeOffset>("ModifiedTime"),
-        //                          ModifiedBy = row.Field<Guid?>("ModifiedBy") ?? Guid.Empty,
-        //                          Deleted = row.Field<bool>("Deleted"),
-        //                          DeletedBy = row.Field<Guid?>("DeletedBy") ?? Guid.Empty,
-        //                          DeletedTime = row.Field<DateTimeOffset>("DeletedTime")
-        //                      }).ToList();
-
-        //        // Phân trang
-        //        model.CurrentPage = request.PageIndex;
-        //        model.PageSize = request.PageSize;
-
-        //        try
-        //        {
-        //            // Gán giá trị tổng số bản ghi
-        //            model.totalRecord = table.AsEnumerable().FirstOrDefault()?.Field<int>("TotalRows") ?? 0;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Nếu có lỗi, gán totalRecord = 0
-        //            model.totalRecord = 0;
-        //        }
-
-        //        // Tổng số trang
-        //        model.totalPage = (int)Math.Ceiling((double)model.totalRecord / request.PageSize);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //    return model;
-        //}
-
-
 
 
         public Task<int> UpdateService(ServiceUpdateRequest request)

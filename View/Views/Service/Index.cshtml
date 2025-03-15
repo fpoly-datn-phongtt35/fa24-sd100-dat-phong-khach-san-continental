@@ -65,7 +65,7 @@
             <th>Mô tả</th>
             <th>Giá tiền</th>
             <th>Đơn vị</th>
-            <th>Hình ảnh</th>
+            @* <th>Hình ảnh</th> *@
             <th>Trạng thái</th>
             <th></th>
         </tr>
@@ -92,7 +92,7 @@
                     @(unit != null ? unit.Name : item.UnitId.ToString())
                 </td>
 
-                <td>
+                @* <td>
                     <div class="d-flex justify-content-start">
                         @if (!string.IsNullOrEmpty(item.Image))
                         {
@@ -113,7 +113,7 @@
                             <span>No Image</span>
                         }
                     </div>
-                </td>
+                </td> *@
                 <td>                
                     @if (item.Status != null)
                     {

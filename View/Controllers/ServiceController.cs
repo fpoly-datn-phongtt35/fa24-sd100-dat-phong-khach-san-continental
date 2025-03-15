@@ -5,15 +5,18 @@ using Domain.DTO.Unit;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Services.IServices;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using View.Models;
+using View.Models.Service;
 using WEB.CMS.Customize;
 
 namespace View.Controllers
@@ -22,11 +25,13 @@ namespace View.Controllers
     public class ServiceController : Controller
     {
         HttpClient _client;
+        private readonly IWebHostEnvironment _environment;
 
-        public ServiceController(HttpClient client)
+        public ServiceController(HttpClient client, IWebHostEnvironment environment)
         {
             _client = client;
             _client.BaseAddress = new Uri("https://localhost:7130/");
+            _environment = environment;
         }
 
         private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
@@ -214,42 +219,59 @@ namespace View.Controllers
 
             ViewBag.ServiceTypes = serviceType?.data;
             ViewBag.Units = units?.data;
-            return View(new ServiceCreateRequest());
+            return View(new ServiceCreateViewModel());
         }
 
         // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiceCreateRequest request, IFormFile img)
+        public async Task<IActionResult> Create(ServiceCreateViewModel model)
         {
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            request.CreatedBy = userId;
-            if (ModelState.IsValid)
-            {
-                // Xử lý ảnh
-                if (img != null && img.Length > 0)
-                {
-                    var fileName = Path.GetFileName(img.FileName);
+            model.CreatedBy = userId;
+            model.Status = EntityStatus.Active;
+            model.CreatedTime = DateTimeOffset.Now;
 
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/service", fileName);
+            // upload ảnh và lưu đường dẫn
+            var imagePaths = new List<string>();
+
+            if (model.Images != null && model.Images.Count > 0)
+            {
+                string uploadFolder = Path.Combine(_environment.WebRootPath, "images", "service");
+                foreach (var file in model.Images)
+                {
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                    var filePath = Path.Combine(uploadFolder, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        await img.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
 
-                    request.Image = fileName;
-                }
-                request.Status = EntityStatus.Active;
-                request.CreatedTime = DateTimeOffset.Now;
-                var response = await _client.PostAsJsonAsync("api/Service/CreateService", request);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index");
+                    imagePaths.Add($"/images/service/{fileName}");
                 }
             }
-            return View(request);
+
+            var requestData = new
+            {
+                model.Name,
+                model.Description,
+                model.Price,
+                model.UnitId,
+                model.ServiceTypeId,
+                model.Status,
+                model.CreatedBy,
+                model.CreatedTime,
+                Images = imagePaths
+            };
+
+            var response = await _client.PostAsJsonAsync("api/Service/CreateService", requestData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
 
         // GET: ServiceController/Edit/5
@@ -294,9 +316,20 @@ namespace View.Controllers
                 var responseString = await response.Content.ReadAsStringAsync();
                 var services = JsonConvert.DeserializeObject<Service>(responseString);
 
+                var updateModel = new ServiceUpdateModel
+                {
+                    Id = services.Id,
+                    Name = services.Name,
+                    Description = services.Description,
+                    Price = services.Price,
+                    ServiceTypeId = services.ServiceTypeId,
+                    UnitId = services.UnitId,
+                    Status = services.Status,
+                    Deleted = services.Deleted,
+                    ExistingImages = services.Images?.Select(i => i.Image).ToList()
+                };
 
-
-                return View(services);
+                return View(updateModel);
             }
             catch (Exception ex)
             {
@@ -306,49 +339,62 @@ namespace View.Controllers
 
         // POST: ServiceController/Edit/5
         [HttpPost]
-        public async Task<IActionResult> Edit(Service request, IFormFile img)
+        public async Task<IActionResult> Edit(ServiceUpdateModel request)
         {
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             request.ModifiedBy = userId;
-            //xử lý ảnh
-            if (img != null && img.Length > 0)
+
+            string requestUrl = $"api/Service/GetServiceById?Id={request.Id}";
+
+            var jsonRequest = JsonConvert.SerializeObject(new { Id = request.Id });
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+
+            var response = await _client.PostAsync(requestUrl, content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var existingService = JsonConvert.DeserializeObject<Service>(responseString);
+
+
+            // xử lý ảnh mới
+            List<string> newImageUrls = new();
+            if (request.NewImages != null && request.NewImages.Count > 0)
             {
-                var fileName = Path.GetFileName(img.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/service", fileName);
-
-                if (System.IO.File.Exists(filePath))
+                foreach (var image in request.NewImages)
                 {
-                    System.IO.File.Delete(filePath);
-                }
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await img.CopyToAsync(stream);
-                }
-
-                request.Image = fileName;
-            }
-            else
-            {
-                var existingServiceResponse = await _client.GetAsync($"api/Service/GetServiceById?id={request.Id}");
-                if (existingServiceResponse.IsSuccessStatusCode)
-                {
-                    var responseString = await existingServiceResponse.Content.ReadAsStringAsync();
-                    var existingService = JsonConvert.DeserializeObject<Service>(responseString);
-
-                    if (existingService != null)
+                    var fileName = $"{Guid.NewGuid()}_{image.FileName}";
+                    var filePath = Path.Combine(_environment.WebRootPath, "images", "service", fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        request.Image = existingService.Image;
+                        await image.CopyToAsync(stream);
                     }
+                    newImageUrls.Add($"/images/service/{fileName}");
                 }
             }
 
-            request.ModifiedTime = DateTimeOffset.Now;
+            var finalImageList = existingService.Images
+                .Where(i => request.DeletedImages == null || !request.DeletedImages.Contains(i.Image))
+                .Select(i => i.Image)
+                .Concat(newImageUrls)
+                .ToList();
 
-            // Gửi request chỉnh sửa lên API
-            var response = await _client.PutAsJsonAsync("api/Service/UpdateService", request);
+            // gửi rq
+            var updateServiceRequest = new ServiceUpdateModel
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Description = request.Description,
+                Price = request.Price,
+                ServiceTypeId = request.ServiceTypeId,
+                UnitId = request.UnitId,
+                Status = request.Status,
+                Deleted = request.Deleted,
+                ModifiedTime = DateTimeOffset.Now,
+                Images = finalImageList  
+            };
 
-            if (response.IsSuccessStatusCode)
+            var response1 = await _client.PutAsJsonAsync("api/Service/UpdateService", updateServiceRequest);
+
+            if (response1.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
