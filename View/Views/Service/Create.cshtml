@@ -1,6 +1,7 @@
 ﻿@using Domain.Enums
+@using View.Models.Service
 @using View.Views.Shared.Helper
-@model Domain.DTO.Service.ServiceCreateRequest
+@model ServiceCreateViewModel
 @{
     ViewData["Title"] = "Create Service";
 }
@@ -35,10 +36,14 @@
             <option value="">-- Chọn đơn vị --</option>
         </select>
     </div>
+    @* <div class="form-group">
+        <label asp-for="Images">Hình ảnh</label>
+        <input required asp-for="Images" type="file" name="img" class="form-control" />
+        <span asp-validation-for="Images" class="text-danger"></span>
+    </div> *@
     <div class="form-group">
-        <label asp-for="Image">Hình ảnh</label>
-        <input required asp-for="Image" type="file" name="img" class="form-control" />
-        <span asp-validation-for="Image" class="text-danger"></span>
+        <label>Hình ảnh</label>
+        <input type="file" asp-for="Images" multiple class="form-control" />
     </div>
 
     <input type="hidden" asp-for="CreatedTime" value="@DateTime.UtcNow" />

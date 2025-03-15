@@ -397,12 +397,13 @@ namespace Domain.Migrations
                     b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ObjId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("RoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -411,6 +412,8 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("Images", (string)null);
                 });
@@ -1399,11 +1402,13 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Images", b =>
                 {
-                    b.HasOne("Domain.Models.Room", "Room")
+                    b.HasOne("Domain.Models.Room", null)
                         .WithMany("Images")
                         .HasForeignKey("RoomId");
 
-                    b.Navigation("Room");
+                    b.HasOne("Domain.Models.Service", null)
+                        .WithMany("Images")
+                        .HasForeignKey("ServiceId");
                 });
 
             modelBuilder.Entity("Domain.Models.PaymentHistory", b =>
@@ -1659,6 +1664,8 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Service", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("RoomTypeServices");
 
                     b.Navigation("ServiceOrderDetails");

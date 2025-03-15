@@ -16,8 +16,6 @@ namespace Domain.Configuration
             builder.ToTable("Images");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.Name).IsUnicode(true).IsRequired();
-            builder.HasOne(x => x.Room).WithMany(x => x.Images).HasForeignKey(x => x.RoomId);
         }
     }
 }

@@ -52,8 +52,7 @@ namespace Domain.Services.Services
                             select new Images
                             {
                                 Id = row.Field<Guid>("Id"),
-                                Name = row.Field<string>("Name"),
-                                RoomId = row.IsNull("RoomId") ? (Guid?)null : row.Field<Guid>("RoomId"),
+                                ObjId = row.IsNull("ObjId") ? (Guid?)null : row.Field<Guid>("ObjId"),
                                 Image = row.Field<string>("Image"),
                                 Status = row.Field<EntityStatus>("Status"),
                                 CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
@@ -82,8 +81,7 @@ namespace Domain.Services.Services
                               select new Images
                               {
                                   Id = row.Field<Guid>("Id"),
-                                  Name = row.Field<string>("Name"),
-                                  RoomId = row.IsNull("RoomId") ? (Guid?)null : row.Field<Guid>("RoomId"),
+                                  ObjId = row.IsNull("ObjId") ? (Guid?)null : row.Field<Guid>("ObjId"),
                                   Image = row.Field<string>("Image"),
                                   Status = row.Field<EntityStatus>("Status"),
                                   CreatedTime = row.Field<DateTimeOffset>("CreatedTime"),
