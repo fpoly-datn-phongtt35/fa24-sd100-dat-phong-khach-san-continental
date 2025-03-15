@@ -28,5 +28,6 @@ namespace Domain.Models
         public Unit? Unit { get; set; }
         public List<ServiceOrderDetail> ServiceOrderDetails { get; set; }
         public List<RoomTypeService> RoomTypeServices { get; set; }
+        public List<Images> Images { get; set; }
     }
 }

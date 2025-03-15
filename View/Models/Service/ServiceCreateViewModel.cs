@@ -1,13 +1,9 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace Domain.DTO.Service
+namespace View.Models.Service
 {
-    public class ServiceCreateRequest
+    public class ServiceCreateViewModel
     {
         public Guid ServiceTypeId { get; set; }
         public string? Name { get; set; } = string.Empty;
@@ -17,6 +13,6 @@ namespace Domain.DTO.Service
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
         public DateTimeOffset? CreatedTime { get; set; }
         public Guid? CreatedBy { get; set; }
-        public List<string> Images { get; set; } = new();
+        public List<IFormFile> Images { get; set; } = new();
     }
 }

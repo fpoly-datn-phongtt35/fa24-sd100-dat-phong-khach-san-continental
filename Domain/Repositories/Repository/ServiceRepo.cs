@@ -34,17 +34,22 @@ namespace Domain.Repositories.Repository
                     throw new ArgumentException("ServiceType not found");
                 }
 
+                Guid newServiceId = Guid.NewGuid();
+
+                string imagesString = request.Images != null ? string.Join(",", request.Images) : null;
+
                 SqlParameter[] sqlParameters = new SqlParameter[]
-                {                   
+                {
+                    new SqlParameter("@Id", newServiceId),
                     new SqlParameter("@ServiceTypeId", request.ServiceTypeId),
                     new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
                     new SqlParameter("@Description", !string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
                     new SqlParameter("@Price", request.Price),
-                    new SqlParameter("@Image", request.Image != null ? request.Image : DBNull.Value),
                     new SqlParameter("@UnitId", request.UnitId),
                     new SqlParameter("@Status", (int)request.Status),
                     new SqlParameter("@CreatedTime", request.CreatedTime),
-                    new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value)
+                    new SqlParameter("@CreatedBy", request.CreatedBy != null ? request.CreatedBy : DBNull.Value),
+                    new SqlParameter("@Images", (object?)imagesString ?? DBNull.Value)
                 };
 
                 return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_InsertService, sqlParameters);
@@ -150,29 +155,35 @@ namespace Domain.Repositories.Repository
             {
                 throw new ArgumentException("ServiceType not found");
             }
+
             try
             {
+                string imagesString = request.Images != null && request.Images.Any()
+                    ? string.Join(",", request.Images)
+                    : DBNull.Value.ToString();
+
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Id", request.Id != null ? request.Id : DBNull.Value),
+                    new SqlParameter("@Id", request.Id),
                     new SqlParameter("@ServiceTypeId", request.ServiceTypeId),
-                    new SqlParameter("@Name",!string.IsNullOrEmpty(request.Name) ? request.Name : DBNull.Value),
-                    new SqlParameter("@Description",!string.IsNullOrEmpty(request.Description) ? request.Description : DBNull.Value),
-                    new SqlParameter("@Price",request.Price),
-                    new SqlParameter("@Image", request.Image),
-                    new SqlParameter("@UnitId",request.UnitId),
-                    new SqlParameter("@Status",request.Status),
-                    new SqlParameter("@Deleted",request.Deleted),
-                    new SqlParameter("@ModifiedTime",DateTime.Now),
-                    new SqlParameter("@ModifiedBy", request.ModifiedBy!= null ? request.ModifiedBy : DBNull.Value)
+                    new SqlParameter("@Name", !string.IsNullOrEmpty(request.Name) ? request.Name : (object)DBNull.Value),
+                    new SqlParameter("@Description", !string.IsNullOrEmpty(request.Description) ? request.Description : (object)DBNull.Value),
+                    new SqlParameter("@Price", request.Price ?? (object)DBNull.Value),
+                    new SqlParameter("@UnitId", request.UnitId),
+                    new SqlParameter("@Images", imagesString),
+                    new SqlParameter("@Status", request.Status),
+                    new SqlParameter("@Deleted", request.Deleted),
+                    new SqlParameter("@ModifiedTime", DateTime.Now),
+                    new SqlParameter("@ModifiedBy", request.ModifiedBy ?? (object)DBNull.Value)
                 };
 
-                return _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateService, sqlParameters);
+                return  _DbWorker.ExecuteNonQuery(StoredProcedureConstant.SP_UpdateService, sqlParameters);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("Error updating service", ex);
             }
         }
+
     }
 }
