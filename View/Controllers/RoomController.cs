@@ -10,10 +10,13 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Security.Claims;
 using System.Text;
+using View.Models.Room;
+using View.Models.Service;
 using WEB.CMS.Customize;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -23,10 +26,12 @@ namespace View.Controllers
     public class RoomController : Controller
     {
         private readonly HttpClient _httpClient;
-        public RoomController(HttpClient httpClient)
+        private readonly IWebHostEnvironment _environment;
+        public RoomController(HttpClient httpClient, IWebHostEnvironment environment)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("https://localhost:7130/");
+            _environment = environment;
         }
 
         private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
@@ -167,41 +172,55 @@ namespace View.Controllers
 
 
 
-            return View(new RoomCreateRequest());
+            return View(new RoomCreateViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RoomCreateRequest request, List<IFormFile> imgFiles)
+        public async Task<IActionResult> Create(RoomCreateViewModel request)
         {
             if (ModelState.IsValid)
             {
                 request.CreatedTime = DateTimeOffset.Now;
-
-                // Xử lý các tệp hình ảnh
-                //if (imgFiles != null && imgFiles.Count > 0)
-                //{
-                //    foreach (var imgFile in imgFiles)
-                //    {
-                //        if (imgFile.Length > 0)
-                //        {
-                //            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
-                //            using (var stream = new FileStream(path, FileMode.Create))
-                //            {
-                //                await imgFile.CopyToAsync(stream);
-                //            }
-                //            request.Images.Add(imgFile.FileName);
-                //        }
-                //    }
-                //}
-                
-
-
-
                 var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
                 request.CreatedBy = userId;
+                var imagePaths = new List<string>();
+
+                if (request.Images != null && request.Images.Count > 0)
+                {
+                    string uploadFolder = Path.Combine(_environment.WebRootPath, "images");
+                    foreach (var file in request.Images)
+                    {
+                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                        var filePath = Path.Combine(uploadFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        imagePaths.Add($"/images/{fileName}");
+                    }
+                }
+                var requestData = new
+                {
+                    request.Name,
+                    request.Description,
+                    request.Price,
+                    request.Address,
+                    request.RoomSize,
+                    request.FloorId,
+                    request.RoomTypeId,
+                    request.Status,
+                    request.CreatedBy,
+                    request.CreatedTime,
+                    Images = imagePaths
+                };
+
+
+                
                 // Gửi request đến API
-                var response = await _httpClient.PostAsJsonAsync("api/Room/CreateRoom", request);
+                var response = await _httpClient.PostAsJsonAsync("/api/Room/CreateRoom", requestData);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -233,58 +252,102 @@ namespace View.Controllers
             var roomTypes = JsonConvert.DeserializeObject<ResponseData<RoomType>>(roomTypeResponseString);
             ViewBag.RoomTypes = roomTypes?.data; // Chỉ lấy dữ liệu
 
-            string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
+            try
+            {
+                string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
 
-            var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
-            if (room != null)
+                // Gọi phương thức SendHttpRequest
+                var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
 
+                if (room == null)
+                {
+                    return View("Error");
+                }
 
-            return View(room);
-            return View("Error");
+                var updateModel = new RoomUpdateViewModel()
+                {
+                    Id = room.Id,
+                    Name = room.Name,
+                    Description = room.Description,
+                    Price = room.Price,
+                    Address = room.Address,
+                    FloorId = room.FloorId,
+                    RoomTypeId = room.RoomTypeId,
+                    RoomSize = room.RoomSize,
+                    Status = room.Status,
+                    ExistingImages = room.Images?.Select(i => i.Image).ToList()
+                };
+
+                return View(updateModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
         [HttpPost]
-        public async Task<IActionResult> Edit(RoomUpdateRequest roomUpdateRequest, List<IFormFile> imgFiles)
+        public async Task<IActionResult> Edit(RoomUpdateViewModel roomUpdateRequest)
         {
-            // Kiểm tra nếu có ảnh, nếu có thì xử lý việc tải ảnh lên
-            //if (imgFiles != null)
-            //{
-            //    foreach (var imgFile in imgFiles)
-            //    {
-            //        // Nếu imgFile không null và có nội dung (tệp ảnh hợp lệ)
-            //        if (imgFile.Length > 0)
-            //        {
-            //            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgFile.FileName);
-            //            using (var stream = new FileStream(path, FileMode.Create))
-            //            {
-            //                await imgFile.CopyToAsync(stream);
-            //            }
-            //            roomUpdateRequest.Images.Add(imgFile.FileName);
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    var existedId = roomUpdateRequest.Id;
-            //    string roomRequestUrl = $"/api/Room/GetRoomById?roomId={existedId}";
-            //    var room = await SendHttpRequest<RoomResponse>(roomRequestUrl, HttpMethod.Post);
-            //    if (room != null)
-            //    {
-            //        roomUpdateRequest.Images = room.Images;
-            //    }
-            //}
+            string requestUrl = $"/api/Room/GetRoomById?roomId={roomUpdateRequest.Id}";
+            var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
+
+            List<string> newImageUrls = new();
+            if (roomUpdateRequest.NewImages != null && roomUpdateRequest.NewImages.Count > 0)
+            {
+                foreach (var image in roomUpdateRequest.NewImages)
+                {
+                    var fileName = $"{Guid.NewGuid()}_{image.FileName}";
+                    var filePath = Path.Combine(_environment.WebRootPath, "images", fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+                    newImageUrls.Add($"/images/{fileName}");
+                }
+            }
+
+            // Kết hợp các ảnh còn lại và ảnh mới
+            var finalImageList = room.Images
+                .Where(i => roomUpdateRequest.DeletedImages == null || !roomUpdateRequest.DeletedImages.Contains(i.Image))
+                .Select(i => i.Image)
+                .Concat(newImageUrls)
+                .ToList();
+
+            // Chuyển danh sách ảnh thành chuỗi
+            string imagesString = string.Join(",", finalImageList);
+
+            // Gửi Request cập nhật phòng
+            var updateroomRequest = new RoomUpdateRequest
+            {
+                Id = roomUpdateRequest.Id,
+                Name = roomUpdateRequest.Name,
+                Description = roomUpdateRequest.Description,
+                Address = roomUpdateRequest.Address,
+                Price = roomUpdateRequest.Price,
+                FloorId = roomUpdateRequest.FloorId,
+                RoomSize = roomUpdateRequest.RoomSize,
+                Status = roomUpdateRequest.Status,
+                RoomTypeId = roomUpdateRequest.RoomTypeId,
+                ModifiedTime = DateTimeOffset.Now,
+                Images = finalImageList, // Giữ nguyên kiểu List<string> để chuyển đổi bên trong phương thức UpdateRoom
+            };
 
             var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            roomUpdateRequest.ModifiedBy = userId;
+            updateroomRequest.ModifiedBy = userId;
+            var response1 = await _httpClient.PutAsJsonAsync("api/Room/UpdateRoom", updateroomRequest);
 
-            string requestUrl = $"api/Room/UpdateRoom?roomId={roomUpdateRequest.Id}";
-
-            var updatedRoom = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Put, roomUpdateRequest);
-            if (updatedRoom != null)
+            if (response1.IsSuccessStatusCode)
+            {
                 return RedirectToAction("Index");
+            }
 
-            return View("Error");
+            ModelState.AddModelError(string.Empty, "Lỗi khi cập nhật phòng.");
+            return View(roomUpdateRequest);
         }
+
+
 
 
 

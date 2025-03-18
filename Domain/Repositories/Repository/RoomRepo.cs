@@ -191,6 +191,10 @@ namespace Domain.Repositories.Repository
                 // Lấy danh sách tiện ích liên quan đến RoomType
                 room.RoomType.AmenityRooms = await GetAmenityRoomsByRoomTypeId(room.RoomTypeId);
                 room.Images = await GetImagesByRoomId(room.Id);
+                var images = await GetImagesByRoomId(room.Id);
+                Console.WriteLine($"Số lượng ảnh lấy được: {images.Count}");
+                room.Images = images;
+
                 return room;
             }
             catch (Exception e)
@@ -281,7 +285,7 @@ namespace Domain.Repositories.Repository
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new("@Id", SqlDbType.UniqueIdentifier) { Value = Id }
+                    new("@Id", SqlDbType.UniqueIdentifier) { Value = Id }
                 };
 
                 var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetImagesByRoomId, parameters);
@@ -294,9 +298,8 @@ namespace Domain.Repositories.Repository
                     {
                         Id = (Guid)row["Id"],
                         Image = row["Image"].ToString(),
-                        Status = (EntityStatus)row["Status"],
-                        //Room = await GetRoomById((Guid)row["RoomId"])
                     });
+
                 }
 
                 return images;
@@ -311,20 +314,28 @@ namespace Domain.Repositories.Repository
         {
             try
             {
+                Guid newroomId = Guid.NewGuid();
+
+                // Chuyển đổi List<Images> thành chuỗi
+                string imagesString = room.Images != null && room.Images.Any()
+                    ? string.Join(",", room.Images.Select(i => i.Image))
+                    : null;
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                new SqlParameter("@FloorId", SqlDbType.UniqueIdentifier) { Value = room.FloorId },
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = room.RoomTypeId },
-                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = room.Name },
-                new SqlParameter("@Price", SqlDbType.Decimal) { Value = room.Price },
-                new SqlParameter("@Address", SqlDbType.NVarChar) { Value = room.Address },
-                new SqlParameter("@RoomSize", SqlDbType.Float) { Value = room.RoomSize },
-                //new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
-                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
-                new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = room.CreatedTime },
-                new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = room.CreatedBy },
-                new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted }
+            new SqlParameter("@Id", newroomId),
+            new SqlParameter("@FloorId", SqlDbType.UniqueIdentifier) { Value = room.FloorId },
+            new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = room.RoomTypeId },
+            new SqlParameter("@Name", SqlDbType.NVarChar) { Value = room.Name },
+            new SqlParameter("@Price", SqlDbType.Decimal) { Value = room.Price ?? (object)DBNull.Value },
+            new SqlParameter("@Address", SqlDbType.NVarChar) { Value = room.Address ?? (object)DBNull.Value },
+            new SqlParameter("@RoomSize", SqlDbType.Float) { Value = room.RoomSize ?? (object)DBNull.Value },
+            new SqlParameter("@Images", SqlDbType.NVarChar) { Value = imagesString ?? (object)DBNull.Value },
+            new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description ?? (object)DBNull.Value },
+            new SqlParameter("@Status", SqlDbType.Int) { Value = (int)room.Status },
+            new SqlParameter("@CreatedTime", SqlDbType.DateTimeOffset) { Value = room.CreatedTime ?? (object)DBNull.Value },
+            new SqlParameter("@CreatedBy", SqlDbType.UniqueIdentifier) { Value = room.CreatedBy ?? (object)DBNull.Value },
+            new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted }
                 };
 
                 await _worker.GetDataTableAsync(StoredProcedureConstant.SP_InsertRoom, parameters);
@@ -338,6 +349,8 @@ namespace Domain.Repositories.Repository
             }
         }
 
+
+
         public async Task<Room?> UpdateRoom(Room room)
         {
             try
@@ -345,34 +358,41 @@ namespace Domain.Repositories.Repository
                 var existingRoom = GetRoomById(room.Id);
                 if (existingRoom == null)
                 {
-                    throw new Exception("There is no amenity room with the provided Id.");
+                    throw new Exception("There is no room with the provided Id.");
                 }
+
+                // Chuyển đổi danh sách ảnh sang chuỗi
+                string imagesString = room.Images != null && room.Images.Any()
+                    ? string.Join(",", room.Images.Select(i => i.Image))
+                    : DBNull.Value.ToString();
 
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = room.Id },
-                new SqlParameter("@FloorId", SqlDbType.UniqueIdentifier) { Value = room.FloorId },
-                new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = room.RoomTypeId },
-                new SqlParameter("@Name", SqlDbType.NVarChar) { Value = room.Name },
-                new SqlParameter("@Price", SqlDbType.Decimal) { Value = room.Price },
-                new SqlParameter("@Address", SqlDbType.NVarChar) { Value = room.Address },
-                new SqlParameter("@RoomSize", SqlDbType.Float) { Value = room.RoomSize },
-                //new SqlParameter("@Images", SqlDbType.NVarChar) { Value = string.Join(",", room.Images) },
-                new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description },
-                new SqlParameter("@Status", SqlDbType.Int) { Value = room.Status },
-                new SqlParameter("@Deleted",SqlDbType.Int) { Value = room.Deleted },
-                new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
-                new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = room.ModifiedBy }
+            new SqlParameter("@Id", SqlDbType.UniqueIdentifier) { Value = room.Id },
+            new SqlParameter("@FloorId", SqlDbType.UniqueIdentifier) { Value = room.FloorId },
+            new SqlParameter("@RoomTypeId", SqlDbType.UniqueIdentifier) { Value = room.RoomTypeId },
+            new SqlParameter("@Name", SqlDbType.NVarChar) { Value = room.Name },
+            new SqlParameter("@Price", SqlDbType.Decimal) { Value = room.Price ?? (object)DBNull.Value },
+            new SqlParameter("@Address", SqlDbType.NVarChar) { Value = room.Address ?? (object)DBNull.Value },
+            new SqlParameter("@RoomSize", SqlDbType.Float) { Value = room.RoomSize ?? (object)DBNull.Value },
+            new SqlParameter("@Images", SqlDbType.NVarChar) { Value = imagesString },
+            new SqlParameter("@Description", SqlDbType.NVarChar) { Value = room.Description ?? (object)DBNull.Value },
+            new SqlParameter("@Status", SqlDbType.Int) { Value = (int)room.Status },
+            new SqlParameter("@Deleted", SqlDbType.Bit) { Value = room.Deleted },
+            new SqlParameter("@ModifiedTime", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now },
+            new SqlParameter("@ModifiedBy", SqlDbType.UniqueIdentifier) { Value = room.ModifiedBy ?? (object)DBNull.Value }
                 };
+
                 await _worker.GetDataTableAsync(StoredProcedureConstant.SP_UpdateRoom, parameters);
 
-                return await existingRoom;
+                return room;
             }
             catch (Exception e)
             {
                 throw new Exception("An error occurred while updating the room", e);
             }
         }
+
 
         public async Task<Room?> DeleteRoom(Room room)
         {

@@ -78,7 +78,7 @@
         </tr>
     </thead>
     <tbody>
-        @* @foreach (var item in Model.data)
+        @foreach (var item in Model.data)
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
@@ -94,7 +94,7 @@
                             if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
                             {
                                 <div class="img-container" style="width: 100px; height: 100px; margin: 5px; overflow: hidden; border-radius: 5px;">
-                                    <img src="~/images/@firstImage.Image" alt="@firstImage.Name"
+                                    <img src="@firstImage.Image" 
                                          style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                             }
@@ -143,7 +143,7 @@
                     </div>
                 </td>
             </tr>
-        } *@
+        }
     </tbody>
 </table>
 <div>

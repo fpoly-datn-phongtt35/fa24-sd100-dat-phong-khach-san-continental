@@ -46,22 +46,21 @@ namespace Domain.DTO.Room
 
             RoomResponse room = (RoomResponse)obj;
             return Id == room.Id && Name == room.Name &&
-                RoomTypeId == room.RoomTypeId &&
-                FloorId == room.FloorId &&
-                Price == room.Price &&
-                Address == room.Address &&
-                RoomSize == room.RoomSize &&
-                //ImagesId == room.ImagesId &&
+                   RoomTypeId == room.RoomTypeId &&
+                   FloorId == room.FloorId &&
+                   Price == room.Price &&
+                   Address == room.Address &&
+                   RoomSize == room.RoomSize &&
                    Description == room.Description &&
-                   Status == room.Status && CreatedTime == room.CreatedTime &&
-                   CreatedBy == room.CreatedBy && ModifiedTime == room.ModifiedTime &&
-                   ModifiedBy == room.ModifiedBy && Deleted == room.Deleted &&
-                   DeletedTime == room.DeletedTime && DeletedBy == room.DeletedBy;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+                   Status == room.Status &&
+                   CreatedTime == room.CreatedTime &&
+                   CreatedBy == room.CreatedBy &&
+                   ModifiedTime == room.ModifiedTime &&
+                   ModifiedBy == room.ModifiedBy &&
+                   Deleted == room.Deleted &&
+                   DeletedTime == room.DeletedTime &&
+                   DeletedBy == room.DeletedBy &&
+                   Images.SequenceEqual(room.Images);
         }
 
         public RoomUpdateRequest ToRoomUpdateRequest()
@@ -74,7 +73,7 @@ namespace Domain.DTO.Room
                 Address = Address,
                 Description = Description,
                 RoomSize = RoomSize,
-                //ImagesId= ImagesId,
+                Images = Images.Select(image => image.Image).ToList(),  // Convert List<Images> to List<string>
                 FloorId = FloorId,
                 RoomTypeId = RoomTypeId,
                 Status = Status,
@@ -82,6 +81,7 @@ namespace Domain.DTO.Room
                 ModifiedBy = ModifiedBy
             };
         }
+
 
 
         public RoomDeleteRequest ToRoomDeleteRequest()
@@ -109,7 +109,7 @@ namespace Domain.DTO.Room
                 Price = room.Price,
                 Address = room.Address,
                 Description = room.Description,
-                //ImagesId = room.ImagesId,
+                Images = room.Images,
                 FloorId = room.FloorId,
                 RoomTypeId = room.RoomTypeId,
                 RoomSize=room.RoomSize,
