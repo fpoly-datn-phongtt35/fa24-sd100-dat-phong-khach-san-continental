@@ -16,15 +16,23 @@
 <div class="content-container">
     <div class="service-details">
         <div class="image-container pt-3">
-            @if (!string.IsNullOrEmpty(Model.Image))
+            @if (Model.Images != null && Model.Images.Count > 0)
             {
-                var extension = System.IO.Path.GetExtension(Model.Image);
-                if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
-                {
-                    var imagePath = Url.Content($"/View/wwwroot/images/service/{Model.Image}");
+                <div class="d-flex flex-wrap image-gallery">
+                    @foreach (var image in Model.Images)
+                    {
+                        var extension = System.IO.Path.GetExtension(image.Image);
+                        if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+                        {
+                            var fileName = System.IO.Path.GetFileName(image.Image);
+                            var imagePath = Url.Content($"/View/wwwroot/images/service/{fileName}");
 
-                    <img src="@imagePath" alt="Service Image" class="service-image" />
-                }
+                            <div class="image-item m-2">
+                                <img src="@imagePath" alt="Service Image" class="service-image" />
+                            </div>
+                        }
+                    }
+                </div>
             }
             else
             {
@@ -41,16 +49,16 @@
 <style>
     /* Vùng chứa header */
     .header-wrapper {
-        width: 100%; /* Full chiều ngang */
+        width: 100%;
         background: linear-gradient(135deg, #0078D7, #4DAFFF);
-        border-bottom-left-radius: 50px; /* Bo góc dưới trái */
-        position: relative; /* Để sử dụng pseudo-element */
-        overflow: hidden; /* Đảm bảo không cho nội dung bên trong vượt ra ngoài */
+        border-bottom-left-radius: 50px;
+        position: relative;
+        overflow: hidden;
     }
 
     /* Nền xanh và kiểm soát chiều cao */
     .header-background {
-        padding: 120px 0; /* Điều chỉnh chiều cao */
+        padding: 120px 0;
         text-align: left;
     }
 
@@ -59,7 +67,7 @@
         max-width: 70%;
         margin: 0 auto;
         color: white;
-        transform: translateY(-50px); /* Dịch lên trên một chút */
+        transform: translateY(-50px);
     }
 
         .header-content .title {
@@ -85,8 +93,8 @@
         padding: 20px;
         background: white;
         border-radius: 10px;
-        box-shadow: none; /* Bỏ hiệu ứng */
-        border: none; /* Loại bỏ viền */
+        box-shadow: none;
+        border: none;
     }
 
     /* Hình ảnh dịch vụ */
@@ -97,21 +105,32 @@
         z-index: 1;
     }
 
+    .image-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; /* Khoảng cách giữa các ảnh */
+    }
+
+    .image-item {
+        flex: 0 0 calc(33.33% - 10.67px); /* 33.33% cho 3 ảnh mỗi hàng, trừ đi phần khoảng cách */
+        max-width: calc(33.33% - 10.67px);
+    }
+
     .service-image {
         width: 100%;
-        max-width: 100%;
-        height: auto;
+        height: 500px; /* Chiều cao cố định cho tất cả ảnh */
+        object-fit: cover; /* Giữ tỷ lệ ảnh, cắt bớt nếu cần */
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .service-info {
         margin-top: 20px;
-        padding: 20px; /* Thêm khoảng cách bên trong */
-        background: #fff; /* Nền trắng */
-        border-radius: 8px; /* Bo góc */
-        border: 1px solid rgba(0, 0, 0, 0.1); /* Đường viền nhẹ */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
         .service-info p {
