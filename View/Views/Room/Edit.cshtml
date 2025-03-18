@@ -1,6 +1,6 @@
 ﻿@using Domain.Enums
-@model Domain.DTO.Room.RoomResponse
-
+@using View.Models.Room
+@model RoomUpdateViewModel
 @{
     ViewData["Title"] = "Edit";
 }
@@ -47,6 +47,7 @@
                 <span asp-validation-for="Images" class="text-danger"></span>
 
             </div> *@
+            
             <div class="form-group">
                 <label asp-for="FloorId" class="control-label">Loại phòng</label>
                 <select asp-for="FloorId" class="form-control">
@@ -89,16 +90,65 @@
             <div class="form-group mt-3">
                 <input type="submit" value="Cập nhật" class="btn btn-warning" />
             </div>
+            <div class="form-group">
+                <label>Hình ảnh hiện tại</label>
+                <div id="imagePreview" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    @if (Model.ExistingImages != null)
+                    {
+                        foreach (var img in Model.ExistingImages)
+                        {
+                            <div style="position: relative; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+                                <img src="@img" style="width: 200px; height: 200px; object-fit: cover;" />
+                                <button type="button" onclick="removeImage(this, '@img')" style="display: none; position: absolute; top: 5px; right: 5px; background: #444; color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 12px; line-height: 16px;">× Delete</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label>Thêm ảnh mới</label>
+                <input type="file" id="imageUpload" name="NewImages" class="form-control" multiple />
+            </div>
         </form>
     </div>
 </div>
 <div>
     <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
 </div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        function removeImage(button, imageUrl) {
+            button.parentElement.remove();
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'DeletedImages';
+            input.value = imageUrl;
+            document.querySelector('form').appendChild(input);
+        }
+
+        document.getElementById('imageUpload').addEventListener('change', function (event) {
+            let imagePreview = document.getElementById('imagePreview');
+            for (let file of event.target.files) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let div = document.createElement("div");
+                    div.style.position = "relative";
+                    div.style.border = "1px solid #ddd";
+                    div.style.borderRadius = "4px";
+                    div.style.padding = "5px";
+                    div.innerHTML = `<img src="${e.target.result}" style="width: 200px; height: 200px; object-fit: cover;" /><button type="button" onclick="this.parentElement.remove()" style="display: none; position: absolute; top: 5px; right: 5px; background: #444; color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 12px; line-height: 16px;">× Delete</button>`;
+                    div.onmouseover = () => div.querySelector('button').style.display = 'block';
+                    div.onmouseout = () => div.querySelector('button').style.display = 'none';
+                    imagePreview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.querySelectorAll('#imagePreview > div').forEach(div => {
+            div.onmouseover = () => div.querySelector('button').style.display = 'block';
+            div.onmouseout = () => div.querySelector('button').style.display = 'none';
+        });
+    </script>
 }

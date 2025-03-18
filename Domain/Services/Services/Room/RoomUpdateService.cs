@@ -1,5 +1,6 @@
 ﻿
 using Domain.DTO.Room;
+using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Services.IServices.IRoom;
 using System;
@@ -29,7 +30,7 @@ namespace Domain.Services.Services.Room
             var existingRoom = await _roomRepository.GetRoomById(roomUpdateRequest.Id);
             if (existingRoom is null)
             {
-                throw new Exception("Id  room does not exist");
+                throw new Exception("Id room does not exist");
             }
             existingRoom.RoomSize = roomUpdateRequest.RoomSize;
             existingRoom.FloorId = roomUpdateRequest.FloorId;
@@ -42,9 +43,13 @@ namespace Domain.Services.Services.Room
             existingRoom.ModifiedBy = roomUpdateRequest.ModifiedBy;
             existingRoom.Status = roomUpdateRequest.Status;
 
+            // Convert List<string> to List<Images>
+            existingRoom.Images = roomUpdateRequest.Images.Select(image => new Images { Image = image }).ToList();
+
             await _roomRepository.UpdateRoom(existingRoom);
 
             return existingRoom.ToRoomResponse();
         }
+
     }
 }

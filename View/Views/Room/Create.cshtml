@@ -1,5 +1,6 @@
 ﻿@using Domain.Enums
-@model Domain.DTO.Room.RoomCreateRequest
+@using View.Models.Room
+@model RoomCreateViewModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -55,7 +56,10 @@
                 <input asp-for="Images" type="file" name="imgFiles" class="form-control" multiple />
                 <span asp-validation-for="Images" class="text-danger"></span>
             </div> *@
-
+            <div class="form-group">
+                <label>Hình ảnh</label>
+                <input type="file" asp-for="Images" multiple class="form-control" />
+            </div>
 
             <div class="form-group" hidden>
                 <label asp-for="CreatedTime" class="control-label">Thời gian tạo</label>
