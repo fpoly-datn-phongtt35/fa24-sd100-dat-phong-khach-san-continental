@@ -37,7 +37,7 @@
             <input type="hidden" name="RoomBookingId" value="@roomBooking.Id" />
             <div class="form-group mb-3">
                 <label for="amount">Số tiền thanh toán:</label>
-                <input type="number" class="form-control" id="amount" name="Amount" min="2000" max="@amountToPay" value="@amountToPay" required />
+                <input type="number" class="form-control" id="amount" name="Amount" min="1" max="@amountToPay" value="@amountToPay" required oninput="validateAmount(this)" />
             </div>
             <div class="form-group mb-3">
                 <label for="paymentMethod">Phương thức thanh toán:</label>
@@ -51,7 +51,6 @@
             <a href="/BookingRoom/Id=@roomBooking.Id&&Client=@roomBooking.CustomerId" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
-</div>
 @section scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script asp-append-version="true" src="~/modules/payment.js"></script>
@@ -63,6 +62,7 @@
     <script>
 
     </script>
+
 }
 
 
