@@ -1,26 +1,26 @@
 ﻿$(document).ready(function () {
-    if (!isUserLoggedIn) {
-        function checkCustomerInfo() {
-            var firstName = $('#firstName').val().trim();
-            var lastName = $('#lastName').val().trim();
-            var email = $('#email').val().trim();
-            var phoneNumber = $('#phone').val().trim();
+    //if (!isUserLoggedIn) {
+    //    function checkCustomerInfo() {
+    //        var firstName = $('#firstName').val().trim();
+    //        var lastName = $('#lastName').val().trim();
+    //        var email = $('#email').val().trim();
+    //        var phoneNumber = $('#phone').val().trim();
 
-            // Kiểm tra nếu tất cả thông tin đều đã được nhập
-            if (firstName && lastName && email && phoneNumber) {
-                $('#confirmBookingButton').prop('disabled', false); // Kích hoạt nút
-            } else {
-                $('#confirmBookingButton').prop('disabled', true); // Vô hiệu hóa nút
-            }
-        }
+    //        // Kiểm tra nếu tất cả thông tin đều đã được nhập
+    //        if (firstName && lastName && email && phoneNumber) {
+    //            $('#confirmBookingButton').prop('disabled', false); // Kích hoạt nút
+    //        } else {
+    //            $('#confirmBookingButton').prop('disabled', true); // Vô hiệu hóa nút
+    //        }
+    //    }
 
-        $('#firstName, #lastName, #email, #phone').on('input change', function () {
-            checkCustomerInfo();
-        });
+    //    $('#firstName, #lastName, #email, #phone').on('input change', function () {
+    //        checkCustomerInfo();
+    //    });
 
-        // Kiểm tra khi trang được tải
-        checkCustomerInfo();
-    }
+    //    // Kiểm tra khi trang được tải
+    //    checkCustomerInfo();
+    //}
    
     $('.service-quantity').on('input', function () {
         var value = $(this).val();
@@ -144,6 +144,9 @@
         return `${day}/${month}/${year}`;
     }
     document.getElementById('confirmBookingButton').addEventListener('click', function () {
+        if (confirmBtn.length > 0) {
+            confirmBtn.prop('disabled', true);
+        }
         //var email = document.getElementById('email').value;
         //var phoneNumber = document.getElementById('phone').value;
         var roomName = document.querySelector('.card-title').innerText;

@@ -24,13 +24,14 @@
                             @for (int i = 0; i < Model.Room.Images.Count; i++)
                             {
                                 var img = Model.Room.Images[i];
-                                var imagePath = Url.Content($"/View/wwwroot/images/{img}");
-                                var activeClass = (i == 0) ? "active" : "";
-
-                                <div class="carousel-item @activeClass">
-                                    <img src="@imagePath" class="d-block w-100 luxury-img" alt="" />
+                                var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
+       
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@imagePath" class="d-block w-100 luxury-img" alt="Room Image"
+                                         onerror="this.onerror=null; this.src='/images/default.jpg';" />
                                 </div>
                             }
+
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon"></span>
@@ -75,27 +76,92 @@
     </div>
 </div>
 
-<!-- Modal Xác Nhận -->
-<div class="modal fade" id="bookingConfirmationModal" tabindex="-1" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content luxury-modal">
-            <div class="modal-header">
-                <h5 class="modal-title text-gold">Xác nhận đặt phòng</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="card" style="width: 600px; margin-left: 20px;">
+    <div class="card-header">
+        Đặt Phòng
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">@Model.Room.Name</h5>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top:10px;">
+            <h6 style="margin: 0;"><i class="fa-regular fa-clock"></i> Giờ nhận phòng: <strong id="checkIn">Từ 14:00</strong></h6>
+            <h6 style="margin: 0;"><i class="fa-regular fa-clock"></i> Giờ trả phòng: <strong id="checkOut">Trước 12:00</strong></h6>
+        </div>
+        <p class="card-text">Giá: @Math.Round(Model.Room.Price ?? 0) VNĐ/đêm</p>
+
+        @if (!isUserLoggedIn)
+        {
+            <div>
+                <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Vui lòng nhập thông tin cá nhân đặt phòng ?</dt>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="firstName">Họ</label>
+                                <input type="text" class="form-control" name="FirstName" id="firstName" placeholder="Nhập họ">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="lastName">Tên</label>
+                                <input type="text" class="form-control" name="LastName" id="lastName" placeholder="Nhập tên">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" name="Email" id="email" placeholder="Nhập email" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="phone">Số điện thoại</label>
+                                <input type="text" class="form-control" name="PhoneNumber" id="phone" placeholder="Nhập số điện thoại" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <p><strong>Tên phòng:</strong> @Model.Room.Name</p>
-                <p><strong>Ngày nhận phòng:</strong> <span id="modalCheckIn"></span></p>
-                <p><strong>Ngày trả phòng:</strong> <span id="modalCheckOut"></span></p>
-                <p><strong>Tổng tiền:</strong> <span id="modalTotalPrice"></span> VNĐ</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-gold">Xác nhận</button>
-            </div>
+        }
+
+        <dt style="padding: 3px 3px 0 0"><i class="fa-regular fa-lightbulb"></i> Bạn có muốn đặt thêm dịch vụ không ?</dt>
+        <div class="service-list" style="max-height: 200px; overflow-y: auto;">
+            @if (Model.Services != null && Model.Services.Any())
+            {
+                foreach (var service in Model.Services)
+                {
+                    <div class="form-check" style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <input class="form-check-input service-checkbox" type="checkbox" value="@service.Id" id="service_@service.Id" style="margin-right: 10px;">
+                        <label class="form-check-label" for="service_@service.Id" style="flex-grow: 1;">
+                            <strong>@service.Name</strong> - <span style="color: green;" data-price="@service.Price">
+                                @(Math.Round(@service.Price).ToString("N0")) VNĐ
+                            </span> / @(service.UnitName)
+                        </label>
+                        <input type="number" class="form-control quantity-input service-quantity" id="quantity_@service.Id" min="1" value="1" style="width: 80px; margin-left: 10px;">
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Không có dịch vụ nào hiện có.</p>
+            }
+        </div>
+
+        <hr />
+        <div style="text-align: end;">
+            <p style="font-weight: 600;" id="depositPayment">Đặt cọc: 0 VNĐ</p>
+            <p style="font-weight: 600;" id="totalRoomPayment">Tiền phòng: 0 VNĐ</p>
+            <p style="font-weight: 600;" id="totalServicePayment">Tiền dịch vụ: 0 VNĐ</p>
+            <p style="font-weight: 600;" id="totalPrice">Tổng tiền sau khi đặt cọc: 0 VNĐ</p>
         </div>
     </div>
+    <div class="card-footer">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Hủy</a>
+        <button type="button" class="btn btn-primary" id="confirmBookingButton" data-bs-toggle="modal" data-bs-target="#bookingConfirmationModal">Đặt phòng</button>
+    </div>
 </div>
+
 
 <script>
     var isUserLoggedIn = @isUserLoggedIn.ToString().ToLower();
