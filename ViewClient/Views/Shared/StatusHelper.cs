@@ -111,7 +111,7 @@ namespace ViewClient.Views.Shared
                     badgeClass = "badge bg-info"; // Badge màu xanh
                     break;
                 case RoomBookingStatus.PENDING:
-                    statusText = "Đang chờ";
+                    statusText = "Chờ thanh toán";
                     badgeClass = "badge bg-warning"; // Badge màu vàng
                     break;
                 case RoomBookingStatus.PAID:
