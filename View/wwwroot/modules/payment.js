@@ -29,3 +29,16 @@ var _Payment = {
         }
     }
 }
+
+function validateAmount(input) {
+    const min = parseFloat(input.min);
+    const max = parseFloat(input.max);
+    let value = parseFloat(input.value);
+
+    if (isNaN(value) || value < min) {
+        input.value = min;
+    }
+    else if (value > max) {
+        input.value = max;
+    }
+}

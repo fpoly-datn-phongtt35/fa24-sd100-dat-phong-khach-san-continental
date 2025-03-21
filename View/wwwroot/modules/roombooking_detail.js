@@ -224,12 +224,6 @@ var _roombooking_detail = {
                                <input id="CheckOut_` + IdAdd + `" onchange="_roombooking_detail.OnchangeToDateRow(` + IdAdd + `)" class="form-control checkout_time select_time" value="` + $("#toDate").val() + `" type="date">
                            </td>
                            <td class="price_room" id="RoomPr_` + IdAdd + `"></td>
-                           <td>
-                               <input id="CheckInReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
-                           </td>
-                           <td >
-                               <input id="CheckOutReal_`+ IdAdd + `" class="form-control" disabled value="" type="datetime-local">
-                           </td>
                            <td id="StatusRBD_`+ IdAdd + `">Tạo mới</td>
                            <td class="d-flex">
                                <button class="btn btn-danger" onclick="_roombooking_detail.RemoveOutList(` + IdAdd +`)">Xóa</button>
