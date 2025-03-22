@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ContinentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322030644_FixFeedbackTable")]
+    partial class FixFeedbackTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,8 +307,6 @@ namespace Domain.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoomBookingDetailId");
 
                     b.ToTable("FeedBack", (string)null);
                 });
@@ -1361,7 +1362,7 @@ namespace Domain.Migrations
                 {
                     b.HasOne("Domain.Models.RoomBookingDetail", "RoomBookingDetail")
                         .WithMany("FeedBacks")
-                        .HasForeignKey("RoomBookingDetailId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

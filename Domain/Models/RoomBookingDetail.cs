@@ -34,5 +34,7 @@ namespace Domain.Models
         public RoomBooking RoomBooking { get; set; }
         public virtual List<ResidenceRegistration> ResidenceRegistrations { get; set; }
         public virtual List<EditHistory>? EditHistory { get; set; }
+
+        public virtual List<FeedBack>? FeedBacks { get; set; }
     }
 }

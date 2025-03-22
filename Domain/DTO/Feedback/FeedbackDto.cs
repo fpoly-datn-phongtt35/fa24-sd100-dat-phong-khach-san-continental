@@ -1,12 +1,15 @@
 ﻿using Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.DTO.Feedback
 {
-    public class FeedBack
+    public class FeedbackDto
     {
-        [Key]
-        public Guid Id  { get; set; }
+        public Guid Id { get; set; }
         public Guid RoomBookingDetailId { get; set; }
         public string? Comments { get; set; }
         public int? Rating { get; set; }
@@ -19,7 +22,7 @@ namespace Domain.Models
         public bool Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTimeOffset? DeletedTime { get; set; }
-
-        public RoomBookingDetail? RoomBookingDetail { get; set; }
+        public Guid RoomId { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

@@ -37,7 +37,7 @@
             <input type="hidden" name="RoomBookingId" value="@roomBooking.Id" />
             <div class="form-group mb-3">
                 <label for="amount">Số tiền thanh toán:</label>
-                <input type="number" class="form-control" id="amount" name="Amount" min="1" max="@amountToPay" value="@amountToPay" required oninput="validateAmount(this)" />
+                <input type="number" class="form-control" id="amount" name="Amount" min="0" max="@amountToPay" value="@amountToPay" required oninput="validateAmount(this)" />
             </div>
             <div class="form-group mb-3">
                 <label for="paymentMethod">Phương thức thanh toán:</label>

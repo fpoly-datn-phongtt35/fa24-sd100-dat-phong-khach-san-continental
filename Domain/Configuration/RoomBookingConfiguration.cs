@@ -14,7 +14,6 @@ namespace Domain.Configuration
             builder.Property(x => x.BookingType).IsRequired();
             builder.HasOne(x => x.Customer).WithMany(x => x.RoomBookings).HasForeignKey(x => x.CustomerId);
             builder.HasOne(x => x.Staff).WithMany(x => x.RoomBookings).HasForeignKey(x => x.StaffId).IsRequired(false);
-            builder.HasMany(x => x.FeedBacks).WithOne(x => x.RoomBooking).HasForeignKey(x => x.Id);
         }
     }
 }

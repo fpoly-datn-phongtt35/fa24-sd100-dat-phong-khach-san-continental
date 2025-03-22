@@ -35,6 +35,5 @@ namespace Domain.Models
         public DateTimeOffset? DeletedTime { get; set; }
 
         public List<RoomBooking> RoomBookings { get; set; }
-        public ICollection<FeedBack> FeedBacks { get; set; }
     }
 }
