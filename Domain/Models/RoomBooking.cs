@@ -41,7 +41,6 @@ namespace Domain.Models
         public Customer Customer { get; set; }
         public Staff Staff { get; set; }
         public List<RoomBookingDetail> RoomBookingDetails { get; set; }
-        public ICollection<FeedBack> FeedBacks { get; set; }
         public List<VoucherDetail> VoucherDetails { get; set; }
         public virtual List<PaymentHistory> PaymentHistorys { get; set; }
     }

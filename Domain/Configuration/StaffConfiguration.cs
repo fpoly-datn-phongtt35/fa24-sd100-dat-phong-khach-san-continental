@@ -20,7 +20,6 @@ namespace Domain.Configuration
             builder.HasIndex(x => x.Email).IsUnique();
             builder.Property(x => x.PhoneNumber).IsUnicode(false).IsRequired().HasMaxLength(20);
             builder.HasOne(x => x.Role).WithMany(x => x.Staffs).HasForeignKey(x => x.RoleId);
-            builder.HasMany(x => x.FeedBacks).WithOne(x => x.Staff).HasForeignKey(x => x.StaffId);
         }
     }
 }
