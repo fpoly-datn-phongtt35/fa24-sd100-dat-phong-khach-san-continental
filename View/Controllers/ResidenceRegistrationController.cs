@@ -5,6 +5,7 @@ using Domain.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
+using Rotativa.AspNetCore;
 
 namespace View.Controllers
 {
@@ -170,6 +171,69 @@ namespace View.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public async Task<IActionResult> ResidenceRegistrationPDF()
+        {
+            var residenceRegistrationGetRequest = new ResidenceGetRequest()
+            {
+                PageIndex = 1,
+                PageSize = int.MaxValue,
+            };
+            
+            string requestUrl = $"api/ResidenceRegistration/GetResidenceRegistrations";
+            var residenceRegis = await SendHttpRequest<ResponseData<ResidenceResponse>>
+                (requestUrl, HttpMethod.Post, residenceRegistrationGetRequest);
+            
+            if(residenceRegis == null) return View("Error");
+
+            return new ViewAsPdf("ResidenceRegistrationPDF", residenceRegis, ViewData)
+            {
+                PageMargins =
+                    new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
+        }
+        
+        private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
+            where T : class
+        {
+            try
+            {
+                HttpRequestMessage request = new HttpRequestMessage(method, requestUrl);
+
+                if (body != null)
+                {
+                    var json = JsonConvert.SerializeObject(body);
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+
+                var response = await _client.SendAsync(request);
+                if (response == null)
+                {
+                    throw new NullReferenceException("Response is null");
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Đọc nội dung phản hồi
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    // Deserialize thành đối tượng T
+                    return JsonConvert.DeserializeObject<T>(responseString);
+                }
+                else
+                {
+                    // Đọc nội dung lỗi từ response
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    // Ném exception với thông báo lỗi
+                    throw new Exception(errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
     }
