@@ -95,6 +95,9 @@ namespace API
             builder.Services.AddTransient<IVoucherDetailRepo, VoucherDetailRepo>();
             builder.Services.AddTransient<IVoucherDetailService, VoucherDetailService>();
 
+            builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+            builder.Services.AddTransient<IFeedbackService, FeedbackService>();
+
             builder.Services.AddTransient<IResidenceRegistrationRepo, ResidenceRegistrationRepo>();
             builder.Services.AddTransient<IResidenceRegistrationService, ResidenceRegistrationService>();
 

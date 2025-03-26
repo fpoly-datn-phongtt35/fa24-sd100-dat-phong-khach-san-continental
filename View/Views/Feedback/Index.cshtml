@@ -1,0 +1,59 @@
+﻿<h3>Danh sách phản hồi</h3>
+<div class="d-flex align-items-center">
+    <div class="pe-2">
+        <select name="CusId" class="form-select select2" id="CusId" onchange="_feedback.OnChangeCustomer()" style="min-width: 180px">
+            <option hidden>-- Khách hàng --</option>
+        </select>
+    </div>
+
+    <div class="pe-2">
+        <select name="roomid" class="form-select select2" id="roomid" onchange="_feedback.OnChangeRoom()" style="min-width: 150px">
+            <option hidden>-- Phòng --</option>
+        </select>
+    </div>
+
+    <div class="pe-2">
+        <select name="rating" class="select2" id="rating" onchange="_feedback.OnChangeRating()" style="min-width:150px">
+            <option hidden>-- Đánh giá --</option>
+            <option value="5">5 Sao</option>
+            <option value="4">4 Sao</option>
+            <option value="3">3 Sao</option>
+            <option value="2">2 Sao</option>
+            <option value="1">1 Sao</option>
+        </select>
+    </div>
+
+    <div class="pe-2">
+        <select name="status" class="select2" id="status" onchange="_feedback.OnChangeStatus()" style="min-width:150px">
+            <option hidden>-- Trạng thái --</option>
+            <option value="2" class="text-danger">Đã được ẩn</option>
+            <option value="1" class="text-success">Đang hiển thị</option>
+        </select>
+    </div>
+
+    
+</div>
+
+<div class="d-flex pt-2 align-items-center">
+    <p class="pe-1 m-0">Từ :</p>
+    <div class="pe-3">
+        <input class="form-control" id="FromDate" style="width: 160px" type="date" onchange="_feedback.OnchangeFromDateRow()" />
+    </div>
+    <p class="pe-1 m-0">Đến :</p>
+    <div class="pe-2 d-flex">
+        <input class="form-control" id="ToDate" style="width: 160px" type="date" onchange="_feedback.OnchangeToDateRow()" />
+    </div>
+    <button class="btn ms-3 btn-outline-secondary" onclick="_feedback.ResetConditions()">Làm mới bộ lọc</button>
+</div>
+
+<div id="ListCMT" class="pt-3">
+    <div class="d-flex justify-content-center pt-5">
+        <div id="loading-spinner" style="width: 5rem; height: 5rem;" class="spinner-border text-success pt-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script asp-append-version="true" src="/modules/feedback.js"></script>
+}

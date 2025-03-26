@@ -202,5 +202,11 @@ namespace Utilities.StoredProcedure
         public const string SP_GetFilteredUnits = "SP_GetFilteredUnits";
         public const string SP_GetUnitById = "SP_GetUnitById";
         public const string SP_GetUnitByName = "SP_GetUnitByName";
+
+        //
+        public const string SP_InsertFeedback = "SP_InsertFeedback";
+        public const string SP_GetListFeedback = "SP_GetListFeedback";
+        public const string SP_UpdateFeedback = "SP_UpdateFeedback";
+        public const string SP_DeleteFeedback = "SP_DeleteFeedback";
     }
 }

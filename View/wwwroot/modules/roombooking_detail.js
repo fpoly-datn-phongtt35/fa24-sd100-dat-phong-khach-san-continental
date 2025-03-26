@@ -1,14 +1,5 @@
-﻿//#region $(document).ready
+﻿
 $(document).ready(function () {
-
-    /*    $('.select_time"]').on('change', function ()
-        {
-    
-        });*/
-
-    /*    if ($("#IdRoomBooking").val()) {
-            $(".btn-luu").remove();
-        }*/
     $("#RoomType_Id").select2({
         placeholder: "Chọn loại phòng",
         maximumSelectionLength: 1,
@@ -437,27 +428,28 @@ var _roombooking_detail = {
                         var newFMto = moment(dateto).format("YYYY-MM-DD")
 
                         var UnnePrice = item.expenses + item.extraPrice + item.extraService + item.servicePrice;
-                        var Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking);
+                        var Price = 0;
 
                         var newCIfrom;
                         var newCOto
-                        if (item.checkInReality != null) {
+                        if (item.checkInReality != null && item.checkOutReality != null) {
+                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
+                        }
+
+                        else if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
 
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
                         }
-                        if (item.checkOutReality != null) {
+                        else if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
                         }
 
-                        if (item.checkInReality != null && item.checkOutReality != null)
-                        {
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
-                        }
+                        
                         $("#room-related").append(`
                         <tr class="">
                            <td style="display:none"><input id="Idroom_`+ item.roomBookingDetailId + `" value="${item.roomId}"></input></td>

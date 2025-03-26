@@ -1,0 +1,47 @@
+﻿@using Domain.DTO.Amenity
+@using Domain.DTO.ResidenceRegistration
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<Domain.DTO.ResidenceRegistration.ResidenceResponse>
+
+@{
+Layout = null;
+}
+<link href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" rel="stylesheet" />
+<h1>Danh sách tạm trú</h1>
+
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+        <th style="border: 1px solid black;">Phòng</th>
+        <th style="border: 1px solid black;">Khách</th>
+        <th style="border: 1px solid black;">Ngày sinh</th>
+        <th style="border: 1px solid black;">Giới tính</th>
+        <th style="border: 1px solid black;">CCCD</th>
+        <th style="border: 1px solid black;">SĐT</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (ResidenceResponse residence in Model.data)
+    {
+    <tr>
+        <td style="border: 1px solid black; width: 12%">@residence.RoomName</td>
+        <td style="border: 1px solid black; width: 20%">@residence.FullName</td>
+        <td style="border: 1px solid black; width: 10%">@residence.DateOfBirth</td>
+        <td style="border: 1px solid black; width: 15%">@residence.Gender</td>
+        <td style="border: 1px solid black; width: 15%">@residence.IdentityNumber</td>
+        <td style="border: 1px solid black; width: 15%">@residence.PhoneNumber</td>
+    </tr>
+    @if ((Model.data.IndexOf(residence) + 1) % 2 == 0)
+    {
+    <tr style="page-break-after: always;"></tr>
+    }
+    }
+    </tbody>
+</table>
+
+<style>
+    .pdf-page-break {
+        page-break-after: always;
+    }
+</style>
+
