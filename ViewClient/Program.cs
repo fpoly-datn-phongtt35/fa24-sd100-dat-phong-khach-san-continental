@@ -65,9 +65,8 @@ namespace ViewClient
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), @"..\View\wwwroot\images")),
-                RequestPath = "/View/wwwroot/images"
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "View", "wwwroot", "images")),
+                RequestPath = "/images"
             });
 
             app.UseRouting();

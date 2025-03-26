@@ -445,6 +445,43 @@ namespace Domain.Repositories.Repository
                 RoomType = new RoomType()
             };
         }
+        private Room RowToRoomClient(DataRow row)
+        {
+            return new Room()
+            {
+                Id = Guid.Parse(row["Id"].ToString()!),
+                Name = row["Name"].ToString()!,
+                FloorId = row.Table.Columns.Contains("FloorId") && row["FloorId"] != DBNull.Value
+                            ? Guid.Parse(row["FloorId"].ToString()!) : (Guid?)null,
+                RoomTypeId = Guid.Parse(row["RoomTypeId"].ToString()!),
+                Price = row["Price"] != DBNull.Value ? decimal.Parse(row["Price"].ToString()!) : null,
+                Address = row["Address"].ToString()!,
+                RoomSize = row["RoomSize"] != DBNull.Value ? double.Parse(row["RoomSize"].ToString()!) : null,
+                Description = row["Description"].ToString()!,
+                Status = row.Table.Columns.Contains("Status") ? (RoomStatus)int.Parse(row["Status"].ToString()!) : default,
+                CreatedTime = row.Table.Columns.Contains("CreatedTime") && row["CreatedTime"] != DBNull.Value
+                                ? (DateTimeOffset?)row["CreatedTime"] : null,
+                CreatedBy = row.Table.Columns.Contains("CreatedBy") && row["CreatedBy"] != DBNull.Value
+                                ? Guid.Parse(row["CreatedBy"].ToString()!) : (Guid?)null,
+                ModifiedTime = row.Table.Columns.Contains("ModifiedTime") && row["ModifiedTime"] != DBNull.Value
+                                ? (DateTimeOffset?)row["ModifiedTime"] : null,
+                ModifiedBy = row.Table.Columns.Contains("ModifiedBy") && row["ModifiedBy"] != DBNull.Value
+                                ? Guid.Parse(row["ModifiedBy"].ToString()!) : (Guid?)null,
+                Deleted = row["Deleted"] != DBNull.Value && (bool)row["Deleted"],
+                DeletedTime = row.Table.Columns.Contains("DeletedTime") && row["DeletedTime"] != DBNull.Value
+                                ? (DateTimeOffset?)row["DeletedTime"] : null,
+                DeletedBy = row.Table.Columns.Contains("DeletedBy") && row["DeletedBy"] != DBNull.Value
+                                ? Guid.Parse(row["DeletedBy"].ToString()!) : (Guid?)null,
+
+                Images = row.Table.Columns.Contains("RoomImages") && row["RoomImages"] != DBNull.Value
+                    ? new List<Images> { new Images { Image = row["RoomImages"].ToString()! } }
+                    : new List<Images>(),
+
+                RoomType = new RoomType()
+            };
+        }
+
+
 
         private static DateTimeOffset ConvertDateTimeOffsetToString(DataRow row, string columnName)
         {
@@ -508,7 +545,7 @@ namespace Domain.Repositories.Repository
                 var roomlist = new List<RoomResponse>();
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    var room = RowToRoom(row);
+                    var room = RowToRoomClient(row);
                     var roomResponse = room.ToRoomResponse();
                     roomlist.Add(roomResponse);
                 }
