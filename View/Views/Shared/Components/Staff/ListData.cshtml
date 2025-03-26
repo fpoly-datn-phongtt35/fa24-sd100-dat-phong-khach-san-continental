@@ -1,10 +1,10 @@
 ﻿@using Domain.DTO.Paging
 @using View.Models.Paging
 @model ResponseData<Domain.Models.Staff>
-<table class="table mt-3 rounded-3">
+<table class="table table-bordered mt-3 rounded-3">
     <thead>
         <tr class="text-dark">
-            <th scope="col">#</th>
+            <th scope="col">STT</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
             <th scope="col">Email</th>
@@ -35,8 +35,17 @@
                     <td>@i.PhoneNumber</td>
                     <td>@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-mm-yyy hh:mm") : "N/A")</td>
                     <td>
-                        <button class="btn btn-outline-warning" onclick="_staff.LoadForm('@i.Id')">Update</button>
-                        <button class="btn btn-outline-danger ps-1" onclick="_staff.Delete('@i.Id')">Delete</button>
+                        <div class="dropdown">
+                            <button class="button1" type="button" id="dropdownMenuButton-@i.Id"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="@Url.Content("~/images/icons/menu.png")">
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@i.Id">
+                                <button class="btn text-warning dropdown-item" onclick="_staff.LoadForm('@i.Id')">Update</button>
+                                <button class="btn text-danger dropdown-item" onclick="_staff.Delete('@i.Id')">Delete</button>
+                            </ul>
+                        </div>
+                       
                     </td>
                 </tr>
                 STT += 1;
