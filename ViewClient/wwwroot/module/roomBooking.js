@@ -169,15 +169,23 @@
 
     });
 
-    $('#confirmBookingButton').on('click', function () {
-        $('#bookingModal').modal('hide');
-        var dcm = $('#bookingConfirmationModal');
-        if (dcm != undefined && dcm != null && dcm != '') {
-            dcm.addClass('show');
-            dcm.css('display', 'block');
-            dcm.attr('aria-modal', 'true');
-            dcm.attr('role', 'modal');
+    $('#confirmBookingButton').on('click', async function () {
+        var aa = await hideConfirmModal();
+
+        if (aa > 0) {
+            return;
         }
+
+        $('#bookingModal').modal('hide').on('hidden.bs.modal', function () {
+            var dcm = $('#bookingConfirmationModal');
+            if (dcm.length > 0) {
+                dcm.addClass('show');
+                dcm.css('display', 'block');
+                dcm.attr('aria-modal', 'true');
+                dcm.attr('role', 'modal');
+            }
+        });
+
 
 
         // Tiếp tục xử lý nếu modal không mở
