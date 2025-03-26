@@ -105,10 +105,10 @@ namespace Domain.Repositories.Repository
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
                     new SqlParameter("@Id", request.Id),
-                    new SqlParameter("@Comments", request.Comments),
-                    new SqlParameter("@Rating", request.Rating),
-                    new SqlParameter("@Status", request.Status),
-                    new SqlParameter("@Deleted", request.Deleted),
+                    new SqlParameter("@Comments", request.Comments != null ? request.Comments : DBNull.Value),
+                    new SqlParameter("@Rating", request.Rating != null ? request.Rating : DBNull.Value),
+                    new SqlParameter("@Status", request.Status != null ? request.Status.Value : DBNull.Value),
+                    new SqlParameter("@Deleted", request.Deleted != null ? request.Deleted : DBNull.Value),
                     new SqlParameter("@ModifiedTime", DateTimeOffset.UtcNow),
                     new SqlParameter("@ModifiedBy", request.ModifiedBy)
                 };

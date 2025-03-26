@@ -10,7 +10,7 @@ namespace Domain.DTO.Feedback
 {
     public class FeedbackGetRequest : PagingRequest
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public Guid? CustomerId { get; set; }
         public Guid? RoomId { get; set; }
         public int? Rating { get; set; }
