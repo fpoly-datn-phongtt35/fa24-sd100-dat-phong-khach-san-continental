@@ -24,5 +24,7 @@ namespace Domain.DTO.Feedback
         public DateTimeOffset? DeletedTime { get; set; }
         public Guid RoomId { get; set; }
         public Guid CustomerId { get; set; }
+        public string? RoomName { get; set; }
+        public string? CustomerName { get; set; }
     }
 }
