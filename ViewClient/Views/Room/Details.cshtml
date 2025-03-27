@@ -66,12 +66,14 @@
         </div>
     </div>
 </div>
-<div class="container d-flex justify-content-between pt-2">
-    <div class="p-5 pt-3 rounded-2" style="background-color: rgb(239 239 239);width: 65%">
+<div class="container pt-2">
+    <div class="p-5 pb-1 pt-3 rounded-2" style="background-color: rgb(239 239 239);">
         <h4 class="text-gold fw-bold">Mô tả</h4>
         <p>@Html.DisplayFor(model => model.Room.Description)</p>
     </div>
-    <div class="p-5 pt-3 rounded-2" style="background-color: rgb(239 239 239);width: 34.5%">
+</div>
+<div class="container pt-2">
+    <div class="p-5 pb-1 pt-3 rounded-2" style="background-color: rgb(239 239 239);">
         <h4 class="text-gold fw-bold">Tiện ích</h4>
         @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
         {
