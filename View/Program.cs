@@ -55,8 +55,10 @@ namespace View
             builder.Services.AddTransient<IPaymentHistoryRepository, PaymentHistoryRepository>();
             builder.Services.AddTransient<IPaymentHistoryService, PaymentHistoryService>();
             builder.Services.AddTransient<IEditHistoryRepository, EditHistoryRepository>();
-            builder.Services.AddTransient<IEditHistoryAddService, EditHistoryAddService>();
-            
+            builder.Services.AddTransient<IEditHistoryAddService, EditHistoryAddService>(); 
+            builder.Services.AddTransient<IFeedbackService, FeedbackService>();
+            builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+
             builder.Services.AddSession(option =>
             {
                 option.IdleTimeout = TimeSpan.FromSeconds(100);
