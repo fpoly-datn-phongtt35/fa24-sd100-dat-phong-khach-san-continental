@@ -71,6 +71,7 @@ namespace Domain.Services.Services
                                   CreatedBy = row.Field<Guid?>("CreatedBy") != null ? row.Field<Guid>("CreatedBy") : Guid.Empty,
                                   ServiceTypeId = row.Field<Guid>("ServiceTypeId"),
                                   UnitId = row.Field<Guid>("UnitId"),
+                                  UnitName = row.Field<string>("Unit"),
                                   Images = row.Field<string>("Images") != null
                                    ? JsonConvert.DeserializeObject<List<Images>>(row.Field<string>("Images"))
                                    : new List<Images>()

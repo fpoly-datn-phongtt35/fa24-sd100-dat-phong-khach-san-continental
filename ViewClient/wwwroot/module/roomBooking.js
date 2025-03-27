@@ -21,7 +21,8 @@
         // Kiểm tra khi trang được tải
         checkCustomerInfo();
     }
-   
+
+
     $('.service-quantity').on('input', function () {
         var value = $(this).val();
         // Loại bỏ dấu âm bằng cách lấy trị tuyệt đối
@@ -33,7 +34,7 @@
         const parts = dateString.split('/');
         const day = parts[0].padStart(2, '0');
         const month = convertMonth(parts[1]);
-        const year = "20" + parts[2];
+        const year =  parts[2];
         return `${day}-${month}-${year}`;
     }
     function convertMonth(monthString) {
@@ -57,7 +58,7 @@
         const parts = dateString.split('/');
         const day = parseInt(parts[0], 10);
         const month = parseInt(convertMonth(parts[1]), 10) - 1;
-        const year ="20" + parseInt(parts[2], 10);
+        const year = parseInt(parts[2], 10);
         return new Date(year, month, day);
     }
 
@@ -123,6 +124,7 @@
         // Ensure all values are valid numbers
         if (!isNaN(depositPayment) && !isNaN(roomPrice) && !isNaN(servicePrice)) {
             var totalPrice = Math.round(roomPrice + servicePrice - depositPayment);
+            console.log(totalPrice);
             $('#totalPrice').text("Tổng tiền sau khi đặt cọc: " + totalPrice.toLocaleString() + " VNĐ");
         }
     }
@@ -143,35 +145,74 @@
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     }
-    document.getElementById('confirmBookingButton').addEventListener('click', function () {
-        //var email = document.getElementById('email').value;
-        //var phoneNumber = document.getElementById('phone').value;
+    async function hideConfirmModal() {
+        return new Promise(function (resolve, reject) {
+            $('#bookingModal').modal('show');
+            setTimeout(() => resolve(1), 500);
+        })
+    }
+
+    $('#booking').on('click', async function () {
+        var aa = await hideConfirmModal();
+
+        if (aa > 0) {
+            var dcm = $('#bookingConfirmationModal');
+            if (dcm != undefined && dcm != null && dcm != '') {
+                dcm.removeClass('show');
+                dcm.css('display', 'none');
+                dcm.removeAttr('aria-modal');
+                dcm.removeAttr('role');
+            }
+        }
+        $('.modal-backdrop').remove();
+
+
+    });
+
+    $('#confirmBookingButton').on('click', async function () {
+        var aa = await hideConfirmModal();
+
+        if (aa > 0) {
+            return;
+        }
+
+        $('#bookingModal').modal('hide').on('hidden.bs.modal', function () {
+            var dcm = $('#bookingConfirmationModal');
+            if (dcm.length > 0) {
+                dcm.addClass('show');
+                dcm.css('display', 'block');
+                dcm.attr('aria-modal', 'true');
+                dcm.attr('role', 'modal');
+            }
+        });
+
+
+
+        // Tiếp tục xử lý nếu modal không mở
         var roomName = document.querySelector('.card-title').innerText;
         var totalPrice = document.getElementById('totalPrice').innerText.replace('Tổng tiền sau khi đặt cọc: ', '').replace(' VNĐ', '').trim();
 
-        // Lấy danh sách dịch vụ đã chọn
         var services = [];
         document.querySelectorAll('.service-checkbox:checked').forEach(function (checkbox) {
             var serviceName = checkbox.nextElementSibling.querySelector('strong').innerText;
             var quantity = document.getElementById('quantity_' + checkbox.value).value;
             services.push(serviceName + ' (x' + quantity + ')');
         });
+
         var checkInDate = new Date(parseDate(checkIn));
         var checkOutDate = new Date(parseDate(checkOut));
-        console.log(checkInDate);
-        // Cập nhật thông tin vào modal
+
         document.getElementById('modalRoomName').innerText = roomName;
         document.getElementById('modalCheckIn').value = formatDate(checkInDate);
         document.getElementById('modalCheckOut').value = formatDate(checkOutDate);
-        //document.getElementById('modalEmail').innerText = email;
-        //document.getElementById('modalPhoneNumber').innerText = phoneNumber;
         document.getElementById('modalDeposit').innerText = depositPayment.toLocaleString() + " VNĐ";
         document.getElementById('modalTotalPrice').innerText = totalPrice + ' VNĐ';
         document.getElementById('modalServices').innerText = services.join(', ') || 'Không có dịch vụ nào';
 
-        // Hiển thị modal
-        $('#bookingConfirmationModal').modal('show');
+        $('#bookingModal').modal('hide');
     });
+
+
     $('#confirmBooking').click(function () {
         $('#validationMessage').html('').hide();
         var checkInDate = new Date(parseDate(checkIn));

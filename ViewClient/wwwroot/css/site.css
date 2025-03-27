@@ -1019,6 +1019,8 @@ footer p {
     padding: 0.5rem 1rem;
     border-radius: 5px;
 }
+
+
 .toast {
     background-color: #ffffff; 
     border: none; 
@@ -1121,5 +1123,125 @@ input.form-control[readonly] {
 @media (max-width: 768px) {
     .info-column {
         margin-top: 20px; /* Thêm khoảng cách cho các thiết bị nhỏ */
+    }
+}
+
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.text-gold {
+    color: #d4af37;
+}
+
+.btn-gold {
+    background-color: #d4af37;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.luxury-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+}
+
+.luxury-modal {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+}
+
+.luxury-img {
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(212, 175, 55, 0.2);
+}
+
+.modal-content {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Header modal */
+.modal-header {
+    background: #004466; /* Màu xanh đậm sang trọng */
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 15px;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Nút đóng modal */
+.btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
+.btn-close:hover {
+    opacity: 1;
+}
+
+/* Body modal */
+.modal-body {
+    padding: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Các trường input */
+.modal-body input {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+/* Footer modal */
+.modal-footer {
+    background: #f8f9fa;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 15px;
+}
+
+/* Nút hành động */
+.btn-primary {
+    background: #007bff;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Nút hủy */
+.btn-secondary {
+    background: #6c757d;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Animation cho modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }

@@ -32,9 +32,10 @@
 </script>
 
 
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
+            <th>STT</th>
             <th> Tên tài khoản </th>
             <th> Họ </th>
             <th> Tên </th>
@@ -43,34 +44,57 @@
             <th> Giới tính </th>
             <th> Ngày sinh nhật </th>
             <th> Trạng thái </th>
-            <th></th>
+            <th> Thao tác</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.data)
+        @if(Model != null && Model.data.Count > 0)
         {
-            <tr>
-                <td> @Html.DisplayFor(modelItem => item.UserName)</td>
-                <td> @Html.DisplayFor(modelItem => item.FirstName)</td>
-                <td> @Html.DisplayFor(modelItem => item.LastName)</td>
-                <td> @Html.DisplayFor(modelItem => item.Email)</td>
-                <td> @Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                <td>@GenderHelper.DisplayGenderBadge(item.Gender ?? Domain.Enums.GenderType.Unknown)</td>
-                <td> @String.Format("{0:dd/MM/yyyy}", item.DateOfBirth)</td>
-                <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
-                <td>
-                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },
-                             new { @class = "btn btn-warning" })
-                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id },
-                             new { @class = "btn btn-info" })
-                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id },
-                             new { @class = "btn btn-danger" })
-                </td>
-            </tr>
+            int STT = 0;
+            if (Model.CurrentPage == 1)
+            {
+                STT = 1;
+            }
+            else
+            {
+                STT = ((Model.CurrentPage - 1) * Model.PageSize) + 1;
+            }
+            @foreach (var item in Model.data)
+            {
+
+                <tr>
+                    <th scope="row">@STT</th>
+                    <td> @Html.DisplayFor(modelItem => item.UserName)</td>
+                    <td> @Html.DisplayFor(modelItem => item.FirstName)</td>
+                    <td> @Html.DisplayFor(modelItem => item.LastName)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Email)</td>
+                    <td> @Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                    <td>@GenderHelper.DisplayGenderBadge(item.Gender ?? Domain.Enums.GenderType.Unknown)</td>
+                    <td> @String.Format("{0:dd/MM/yyyy}", item.DateOfBirth)</td>
+                    <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="@Url.Content("~/images/icons/menu.png")">
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                                @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },
+                                         new { @class = "btn btn-warning dropdown-item" })
+                                @Html.ActionLink("Chi tiết", "Details", new { id = item.Id },
+                                         new { @class = "btn btn-info dropdown-item" })
+                                @Html.ActionLink("Xóa", "Delete", new { id = item.Id },
+                                         new { @class = "btn btn-danger dropdown-item" })
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                STT += 1;
+            }
         }
     </tbody>
 </table>
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-start">
     <nav>
         <ul class="pagination">
             @for (var i = 1; i <= Model.totalPage; i++)
