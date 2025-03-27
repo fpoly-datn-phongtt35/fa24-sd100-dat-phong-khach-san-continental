@@ -80,6 +80,7 @@ namespace View.Controllers
                 string requestUrl = "api/PaymentHistory/GetListPaymentHistory";
                 PaymentHistoryGetRequest request = new PaymentHistoryGetRequest()
                 {
+                    FromAmount = 1,
                     RoomBookingId = IdRoomBooking
                 };
                 var jsonRequest = JsonConvert.SerializeObject(request);
