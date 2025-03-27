@@ -1,8 +1,8 @@
 ﻿$(document).ready(function () {
     _feedback.LoadListFeedback();
-    /*setInterval(() => {
+    setInterval(() => {
         _feedback.LoadListFeedback();
-    }, 3000);*/
+    }, 3000);
 })
 
 var searchModel =
@@ -43,4 +43,18 @@ var _feedback =
         searchModel.PageIndex = 1;
         this.LoadListFeedback()
     },
+    toggleButton: function () {
+        let input = document.getElementById("messageInput");
+        let button = document.getElementById("sendButton");
+
+        if (input.value.trim() !== "") {
+            button.style.display = "inline-block"; // Hiện nút
+        } else {
+            button.style.display = "none"; // Ẩn nút
+        }
+    },
+    SendComment: function ()
+    {
+        
+    }
 }
