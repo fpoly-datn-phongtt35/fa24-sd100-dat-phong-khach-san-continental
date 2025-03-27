@@ -1,3 +1,7 @@
+using Domain.Repositories.IRepository;
+using Domain.Repositories.Repository;
+using Domain.Services.IServices;
+using Domain.Services.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders;
 using ViewClient.Repositories.IRepository;
@@ -32,6 +36,8 @@ namespace ViewClient
             builder.Services.AddTransient<IRoombooking, RoomBooking>();
             builder.Services.AddTransient<IServiceOderDetail, ServiceOrderDetail>();
             builder.Services.AddTransient<ISendEmail, SendEmail>();
+            builder.Services.AddTransient<IFeedbackService, FeedbackService>();
+            builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/Authoration/Login");
