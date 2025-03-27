@@ -552,7 +552,7 @@ var _roombooking_detail = {
             return phoneNumber === "" || phoneRegex.test(phoneNumber);
         }//bắt đầu = 0, + 9 số đằng sau
         function isIdentityNumberValid(identityNumber) {
-            const identityRegex = /^\d{12}$/;
+            const identityRegex = /^0\d{11}$/;
             return identityNumber === "" || identityRegex.test(identityNumber);
         }// 12 số
         function isFullNameValid(name) {
@@ -782,7 +782,12 @@ var _roombooking_detail = {
                     data: newResidence,
                     success: function (response) {
                         if (response === 1) {
-                            alert('Thêm mới thành công');
+                            /*alert('Thêm mới thành công');*/
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thêm mới thành công',
+                                text: 'Thêm mới thành công'
+                            });
                             console.log(response)
                             const newData = {
                                 id: newResidence.id, 
@@ -891,11 +896,19 @@ var _roombooking_detail = {
                             });
                             document.body.removeChild(addForm);
                         } else {
-                            alert('Thêm mới thất bại!!!');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: 'Có lỗi xảy ra' 
+                            });
                         }
                     },
-                    error: function () {
-                        alert('Có lỗi xảy ra');
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Có lỗi xảy ra!',
+                            text: 'Có lỗi xảy ra' + error
+                        });
                     }
                 });
             });
@@ -1134,7 +1147,11 @@ var _roombooking_detail = {
                         data: updatedResidence,
                         success: function (response) {
                             if (response === 1) {
-                                alert('Cập nhật thành công');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Cập nhật thành công!',
+                                    text: 'Cập nhật thành công'
+                                });
                                 row.cells[0].innerText = updatedResidence.fullName;
                                 row.cells[1].innerText = updatedResidence.dateOfBirth;
                                 row.cells[2].innerText = updatedResidence.gender === '1' ? 'Nam' : updatedResidence.gender === '2' ? 'Nữ' : 'Khác';
@@ -1147,7 +1164,11 @@ var _roombooking_detail = {
                             }
                         },
                         error: function (xhr, status, error) {
-                            alert('Có lỗi xảy ra: ' + error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: 'Không thể xử lý check-out residence: ' + error
+                            });
                         }
                     });
                 });//ajax edit
@@ -1186,7 +1207,11 @@ var _roombooking_detail = {
                         data: { id: id },
                         success: function (response) {
                             if (response === 1) {
-                                alert('Xóa thành công');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Xóa thành công!',
+                                    text: 'Xóa thành công'
+                                });
                                 const rowToDelete = deleteButton.closest('tr');
                                 rowToDelete.remove();
 
@@ -1195,11 +1220,19 @@ var _roombooking_detail = {
                                 temp = dataRessidence.length;
                                 title.innerText = 'Danh sách khách hàng ' + temp + '/' + maximumOccupancy;
                             } else {
-                                alert('Xóa thất bại: ' + response.message);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Có lỗi xảy ra!',
+                                    text: 'Không thể xử lý check-out residence: ' + response.message
+                                });
                             }
                         },
                         error: function (xhr, status, error) {
-                            alert('Có lỗi xảy ra: ' + error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: 'Không thể xử lý check-out residence: ' + error
+                            });
                         }
                     });
                 }
@@ -1237,43 +1270,65 @@ var _roombooking_detail = {
             //thực hiện rời
             leaveButton.addEventListener('click', function () {
                 const id = leaveButton.getAttribute('data-id');
-                const confirmation = confirm('Bạn có chắc chắn muốn check out khách hàng này?');
 
-                if (confirmation) {
-                    $.ajax({
-                        url: '/ResidenceRegistration/CheckOut1Residence',
-                        type: 'put', 
-                        data: { id: id },
-                        success: function (response) {
-                            if (response === 1) {
-                                alert('Check Out thành công');
-                                leaveButton.disabled = true;
-                                leaveButton.style.backgroundColor = '#D3D3D3';
-                                leaveButton.style.cursor = 'default';
+                Swal.fire({
+                    title: 'Xác nhận cập nhật',
+                    text: "Bạn có chắc chắn muốn check out khách hàng này?",
+                    icon: 'questtion',
+                    showcancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/ResidenceRegistration/CheckOut1Residence',
+                            type: 'put',
+                            data: { id: id },
+                            success: function (response) {
+                                if (response === 1) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Check Out thành công',
+                                        text: 'Check Out thành công'
+                                    });
+                                    leaveButton.disabled = true;
+                                    leaveButton.style.backgroundColor = '#D3D3D3';
+                                    leaveButton.style.cursor = 'default';
 
-                                deleteButton.disabled = true;
-                                deleteButton.style.backgroundColor = '#D3D3D3';
-                                deleteButton.style.cursor = 'default';
+                                    deleteButton.disabled = true;
+                                    deleteButton.style.backgroundColor = '#D3D3D3';
+                                    deleteButton.style.cursor = 'default';
 
-                                editButton.disabled = true;
-                                editButton.style.backgroundColor = '#D3D3D3';
-                                editButton.style.cursor = 'default';
+                                    editButton.disabled = true;
+                                    editButton.style.backgroundColor = '#D3D3D3';
+                                    editButton.style.cursor = 'default';
 
-                                const checkOutTime = moment().format("YYYY-MM-DD HH:mm");
-                                row.cells[5].innerText = checkOutTime;
+                                    const checkOutTime = moment().format("YYYY-MM-DD HH:mm");
+                                    row.cells[5].innerText = checkOutTime;
 
-                                dataRessidence = dataRessidence.map(item =>
-                                    item.id === id ? { ...item, checkOutTime: new Date().toISOString() } : item
-                                );
-                            } else {
-                                alert('Check Out thất bại: ' + response.message);
+                                    dataRessidence = dataRessidence.map(item =>
+                                        item.id === id ? { ...item, checkOutTime: new Date().toISOString() } : item
+                                    );
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Có lỗi xảy ra!',
+                                        text: 'Không thể xử lý check-out residence: '
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Có lỗi xảy ra!',
+                                    text: 'Không thể xử lý check-out residence: ' + error
+                                });
                             }
-                        },
-                        error: function (xhr, status, error) {
-                            alert('Có lỗi xảy ra: ' + error);
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
             //#endregion
 
