@@ -4,7 +4,7 @@
 @{
     Layout = null;
 }
-@if (Model != null && Model.data != null)
+@if (Model != null && Model.data.Count > 0)
 {
     foreach (var i in Model.data)
     {
@@ -35,18 +35,26 @@
         </div>
         <hr style="border: 1px solid lightgray; width: 100%;">
     }
-    
-    @await Component.InvokeAsync("Paging", new
-        {
-            pageModel = new Paging()
-       {
-           TotalRecord = Model.totalRecord,
-           TotalPage = Model.totalPage,
-           CurrentPage = Model.CurrentPage,
-           PageSize = Model.PageSize,
-           RecordName = "Góp ý",
-           PageAction = "_feedback.OnPanging({0})",
-           PageAction1 = "_feedback.OnChangePageSize()"
-       }
-        })
+
+    if(Model.data.Count() > 0)
+    {
+        @await Component.InvokeAsync("Paging", new
+            {
+                pageModel = new Paging()
+      {
+          TotalRecord = Model.totalRecord,
+          TotalPage = Model.totalPage,
+          CurrentPage = Model.CurrentPage,
+          PageSize = Model.PageSize,
+          RecordName = "Góp ý",
+          PageAction = "_feedback.OnPanging({0})",
+          PageAction1 = "_feedback.OnChangePageSize()"
+      }
+            })
+    }
+}else
+{
+    <div class="d-flex justify-content-center align-items-center" style="height:300px">
+        <h4 class="fw-bold text-center text-secondary">Phòng chưa có phản hồi</h4>
+    </div>
 }
