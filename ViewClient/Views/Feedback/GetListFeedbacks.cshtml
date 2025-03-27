@@ -1,0 +1,52 @@
+﻿@using Domain.DTO.Paging
+@using ViewClient.Models.Paging
+@model ResponseData<Domain.DTO.Feedback.FeedbackDto>
+@{
+    Layout = null;
+}
+@if (Model != null && Model.data != null)
+{
+    foreach (var i in Model.data)
+    {
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-start">
+                <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-2" style="width:40px; height:40px; font-weight: bold;">@i.CustomerName[0]</div>
+                <div>
+                    <p class="mb-0 fw-bold me-2">@i.CustomerName</p>
+                    <div class="d-flex align-items-start mb-2">
+                        @for (int j = 1; j <= 5; j++)
+                        {
+                            <i class="fa-star text-gold @(j <= i.Rating ? "fas" : "far")"></i>
+                        }
+                    </div>
+                </div>
+
+
+                
+            </div>
+            <div class="d-flex align-items-start">
+                <div class="rounded-circle text-white d-flex justify-content-center align-items-center me-2" style="width:40px; height:40px; font-weight: bold;"></div>
+                <p class="mb-0">@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-MM-yyyy hh:mm") : "N/A")</p>
+            </div>
+            
+            <p class="text-dark ps-5 mb">
+                @i.Comments
+            </p>
+        </div>
+        <hr style="border: 1px solid lightgray; width: 100%;">
+    }
+    
+    @await Component.InvokeAsync("Paging", new
+        {
+            pageModel = new Paging()
+       {
+           TotalRecord = Model.totalRecord,
+           TotalPage = Model.totalPage,
+           CurrentPage = Model.CurrentPage,
+           PageSize = Model.PageSize,
+           RecordName = "Góp ý",
+           PageAction = "_feedback.OnPanging({0})",
+           PageAction1 = "_feedback.OnChangePageSize()"
+       }
+        })
+}

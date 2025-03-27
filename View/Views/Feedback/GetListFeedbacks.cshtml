@@ -12,6 +12,8 @@
             <th>Nội dung</th>
             <th>Rating</th>
             <th>Ngày tạo</th>
+            <th>Người tạo</th>
+            <th>Thuộc phòng</th>
             <th>Trạng thái</th>
             <th class="text-center">Chức năng</th>
         </tr>
@@ -37,6 +39,8 @@
                         <td>@i.Comments</td>
                         <td>@i.Rating</td>
                         <td>@(i.CreatedTime.HasValue ? i.CreatedTime.Value.ToString("dd-MM-yyyy hh:mm") : "N/A")</td>
+                        <td>@i.CustomerName</td>
+                        <td>@i.RoomName</td>
                         <td>@if ((int)i.Status == 1)
                             {
                                 <span class='badge bg-success'>Đang hiển thị</span>

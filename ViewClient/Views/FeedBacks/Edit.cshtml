@@ -1,0 +1,84 @@
+﻿@model Domain.Models.FeedBack
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>FeedBack</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="RoomBookingDetailId" class="control-label"></label>
+                <select asp-for="RoomBookingDetailId" class="form-control" asp-items="ViewBag.RoomBookingDetailId"></select>
+                <span asp-validation-for="RoomBookingDetailId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comments" class="control-label"></label>
+                <input asp-for="Comments" class="form-control" />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedTime" class="control-label"></label>
+                <input asp-for="CreatedTime" class="form-control" />
+                <span asp-validation-for="CreatedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label"></label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedTime" class="control-label"></label>
+                <input asp-for="ModifiedTime" class="form-control" />
+                <span asp-validation-for="ModifiedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedBy" class="control-label"></label>
+                <input asp-for="ModifiedBy" class="form-control" />
+                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Deleted" /> @Html.DisplayNameFor(model => model.Deleted)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedBy" class="control-label"></label>
+                <input asp-for="DeletedBy" class="form-control" />
+                <span asp-validation-for="DeletedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedTime" class="control-label"></label>
+                <input asp-for="DeletedTime" class="form-control" />
+                <span asp-validation-for="DeletedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

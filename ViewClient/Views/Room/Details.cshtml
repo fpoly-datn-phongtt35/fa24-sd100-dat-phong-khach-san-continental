@@ -8,74 +8,112 @@
     ViewData["Title"] = "Details";
     bool isUserLoggedIn = Context.Session.GetString("UserName") != null;
 }
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-gold">@Html.DisplayFor(model => model.Room.Name)</h2>
-        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-light">Quay lại</a>
+<div class="container">
+    <input id="Id_Room" value="@Model.Room.Id" style="display:none"></input>
+    <div class="mt-3">
+        <h6 class="text-gold fw-bold">Contiental > Chi tiết phòng > @Html.DisplayFor(model => model.Room.Name)</h6>
     </div>
-
-    <div class="row">
-        <div class="col-md-7">
-            <div class="luxury-carousel">
-                @if (Model.Room.Images != null && Model.Room.Images.Any())
-                {
-                    <div id="roomImageCarousel" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            @for (int i = 0; i < Model.Room.Images.Count; i++)
-                            {
-                                var img = Model.Room.Images[i];
-                                var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
-       
-                                <div class="carousel-item @(i == 0 ? "active" : "")">
-                                    <img src="@imagePath" class="d-block w-100 luxury-img" alt="Room Image"
-                                         onerror="this.onerror=null; this.src='/images/default.jpg';" />
-                                </div>
-                            }
-
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    </div>
-                }
-                else
-                {
-                    <p>Không có hình ảnh</p>
-                }
-            </div>
+    <div class="p-5 rounded-2" style="background-color: rgb(239 239 239)">
+        <div class="d-flex justify-content-end align-items-center mb-4">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-light">Quay lại</a>
         </div>
 
-        <div class="col-md-5">
-            <div class="luxury-card p-4">
-                <h3 class="text-gold">Thông tin phòng</h3>
-                <p><strong>Diện tích:</strong> @Html.DisplayFor(model => model.Room.RoomSize) m²</p>
-                <p><strong>Giá:</strong> @Math.Round(Model.Room.Price ?? 0) VNĐ/đêm</p>
-                <p><strong>Địa chỉ:</strong> @Html.DisplayFor(model => model.Room.Address)</p>
-                <p><strong>Mô tả:</strong> @Html.DisplayFor(model => model.Room.Description)</p>
-                <hr>
-                <h4 class="text-gold">Tiện ích</h4>
-                @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
-                {
-                    <ul>
-                        @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms.Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
-                        {
-                            <li><strong>@amenityRoom.Amenity.Name:</strong> @amenityRoom.Amount</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p>Phòng này không có tiện ích nào.</p>
-                }
-                <button class="btn btn-gold mt-3" id="booking" data-bs-toggle="modal" data-bs-target="#bookingConfirmationModal">Đặt phòng ngay</button>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="luxury-carousel">
+                    @if (Model.Room.Images != null && Model.Room.Images.Any())
+                    {
+                        <div id="roomImageCarousel" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < Model.Room.Images.Count; i++)
+                                {
+                                    var img = Model.Room.Images[i];
+                                    var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
+
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@imagePath" class="d-block w-100 luxury-img" alt="Room Image"
+                                             onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                                    </div>
+                                }
+
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Không có hình ảnh</p>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="luxury-card p-4">
+                    <h3 class="text-gold">Thông tin phòng</h3>
+                    <p><strong>Loại phòng:</strong> @Html.DisplayFor(model => model.RoomType.Name)</p>
+                    <p><strong>Diện tích:</strong> @Html.DisplayFor(model => model.Room.RoomSize) m²</p>
+                    <p><strong>Sức chứa tối đa:</strong> @Html.DisplayFor(model => model.RoomType.MaximumOccupancy) người</p>
+                    <p><strong>Giá:</strong> @Math.Round(Model.Room.Price ?? 0).ToString("N0") VNĐ/đêm</p>
+                    <hr>
+                    <button class="btn btn-gold mt-3" id="booking" data-bs-toggle="modal" data-bs-target="#bookingConfirmationModal">Đặt phòng ngay</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div class="container d-flex justify-content-between pt-2">
+    <div class="p-5 pt-3 rounded-2" style="background-color: rgb(239 239 239);width: 65%">
+        <h4 class="text-gold fw-bold">Mô tả</h4>
+        <p>@Html.DisplayFor(model => model.Room.Description)</p>
+    </div>
+    <div class="p-5 pt-3 rounded-2" style="background-color: rgb(239 239 239);width: 34.5%">
+        <h4 class="text-gold fw-bold">Tiện ích</h4>
+        @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
+        {
+            <ul>
+                @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms.Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
+                {
+                    <li><strong>@amenityRoom.Amenity.Name:</strong> @amenityRoom.Amount</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>Phòng này không có tiện ích nào.</p>
+        }
+    </div>
+</div>
+<div class="container pt-2">
+    <div class="p-5 pt-3 rounded-2" style="background-color: rgb(239 239 239)">
+        <h4 class="text-gold fw-bold">
+            <i class="fa-solid fa-pencil"></i>Phản hồi từ khách hàng
+        </h4>
 
+        @* noi dung *@
+        <div class="container p-3 rounded-2" style="min-height:60px; background-color: #f8f9fa;">
+            <!-- Input Comment -->
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-2" style="width:40px; height:40px; font-weight: bold;">?</div>
+                <input type="text" class="form-control" id="messageInput" placeholder="Make Comments..." oninput="_feedback.toggleButton()" style="min-height: 70px;width:88%">
+                <div class="btn ms-2 btn-gold" id="sendButton" style="display: none;width:8%" onclick="_feedback.SendComment()"><i class="fa-solid fa-paper-plane"></i>Gửi</div>
+            </div>
+
+            <!-- Comment Display -->
+            <div id="ListCMT">
+                
+            </div>
+        </div>
+        @* noi dung *@
+
+
+        @* paging *@
+    </div>
+</div>
 <div class="modal fade" id="bookingModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -189,4 +227,5 @@
 </script>
 @section scripts {
     <script asp-append-version="true" src="~/module/roomBooking.js"></script>
+    <script asp-append-version="true" src="~/module/feeback.js"></script>
 }
