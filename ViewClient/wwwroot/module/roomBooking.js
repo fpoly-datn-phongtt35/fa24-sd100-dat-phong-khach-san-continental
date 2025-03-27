@@ -145,50 +145,41 @@
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     }
-    async function hideConfirmModal() {
-        return new Promise(function (resolve, reject) {
-            $('#bookingModal').modal('show');
-            setTimeout(() => resolve(1), 500);
-        })
-    }
 
-    $('#booking').on('click', async function () {
-        var aa = await hideConfirmModal();
+    let confirmBooking = false;
 
-        if (aa > 0) {
-            var dcm = $('#bookingConfirmationModal');
-            if (dcm != undefined && dcm != null && dcm != '') {
-                dcm.removeClass('show');
-                dcm.css('display', 'none');
-                dcm.removeAttr('aria-modal');
-                dcm.removeAttr('role');
-            }
-        }
-        $('.modal-backdrop').remove();
-
-
+    $('#booking').on('click', function () {
+        $('#bookingModal').modal('show');
     });
 
-    $('#confirmBookingButton').on('click', async function () {
-        var aa = await hideConfirmModal();
+    $('#confirmBookingButton').on('click', function () {
+        confirmBooking = true;
+        $('#bookingModal').modal('hide');
+    });
 
-        if (aa > 0) {
-            return;
+    $('#bookingModal').on('hidden.bs.modal', function () {
+        if (confirmBooking) {
+            $('#bookingConfirmationModal').modal('show');
         }
+    });
 
-        $('#bookingModal').modal('hide').on('hidden.bs.modal', function () {
-            var dcm = $('#bookingConfirmationModal');
-            if (dcm.length > 0) {
-                dcm.addClass('show');
-                dcm.css('display', 'block');
-                dcm.attr('aria-modal', 'true');
-                dcm.attr('role', 'modal');
-            }
-        });
+    $('#bookingConfirmationModal').on('hidden.bs.modal', function () {
+        if (confirmBooking) {
+            confirmBooking = false;
+        } else {
+            $('#bookingModal').modal('show');
+        }
+    });
 
+    $('.btn-close, .btn-secondary', '#bookingConfirmationModal').on('click', function () {
+        confirmBooking = false;
+    });
 
-
-        // Tiếp tục xử lý nếu modal không mở
+    $('#confirmBooking').on('click', function () {
+        confirmBooking = true;
+        $('#bookingConfirmationModal').modal('hide');
+    });
+    $('#confirmBookingButton').on('click', function () {
         var roomName = document.querySelector('.card-title').innerText;
         var totalPrice = document.getElementById('totalPrice').innerText.replace('Tổng tiền sau khi đặt cọc: ', '').replace(' VNĐ', '').trim();
 

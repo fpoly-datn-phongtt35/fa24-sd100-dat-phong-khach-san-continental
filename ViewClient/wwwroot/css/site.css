@@ -35,6 +35,8 @@ html {
 
 
 body {
+    color: #333;
+    font-family: 'Poppins', sans-serif;
     margin-bottom: 60px;
     margin: 0;
     height: 100%;
@@ -213,34 +215,7 @@ body {
     .button-primary:hover {
         background-color: #D70466;
     }
-/* Banner */
-.banner {
-    background-size: cover;
-    background-position: center;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-}
 
-    .banner::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.01);
-    }
-
-    .banner img {
-        position: relative;
-        z-index: 1;
-        max-width: 90%;
-        height: auto;
-    }
 .button {
     font-size: 14px;
     font-weight: 600;
@@ -271,57 +246,33 @@ body {
     }
 /* Ô tìm kiếm */
 .search-box {
-    width: 100%;
-    max-width: 100%;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 1100px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
     padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: -1px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    margin-bottom:15px;
+    transition: all 0.3s ease-in-out;
+    align-self: flex-end;
 }
 
-    .search-box input[type="date"],
-    .search-box input[type="number"],
-    .search-box input[type="text"] {
+    .search-box.sticky {
+        position: fixed;
+        top: 0;
         width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        margin-bottom: 15px; /* Tăng khoảng cách giữa các input */
-        box-sizing: border-box;
-        transition: border-color 0.3s; /* Thêm hiệu ứng chuyển tiếp cho border */
+        max-width: 100%;
+        border-radius: 0;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
-
-        .search-box input[type="date"]:focus,
-        .search-box input[type="number"]:focus,
-        .search-box input[type="text"]:focus {
-            border-color: #06D7A0; /* Màu border khi input được chọn */
-            outline: none; /* Ẩn outline mặc định */
-        }
-
-    .search-box button {
-        margin-top: 10px;
-        padding: 12px;
-        background-color: #f15353;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s; /* Thêm hiệu ứng chuyển tiếp cho transform */
-    }
-
-        .search-box button:hover {
-            background-color: red;
-            transform: scale(1.05); /* Tăng kích thước nút khi hover */
-        }
-
-        .search-box button:active {
-            transform: scale(0.98); /* Giảm kích thước nút khi nhấn */
-        }
-
 #serviceContainer {
     max-height: 200px; /* Chiều cao tối đa cho phần tử */
     overflow-y: auto; /* Thêm thanh cuộn theo chiều dọc */
@@ -1127,12 +1078,6 @@ input.form-control[readonly] {
 }
 
 
-body {
-    background-color: #f8f9fa;
-    color: #333;
-    font-family: 'Poppins', sans-serif;
-}
-
 .text-gold {
     color: #d4af37;
 }
@@ -1235,13 +1180,61 @@ body {
 }
 
 /* Animation cho modal */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
+.banner {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+    .banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
-    to {
+
+    .banner::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+    }
+
+.text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    font-family: "Marschel", serif;
+    font-size: 28px;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+    animation: fadeInZoom 0.8s ease-out forwards;
+}
+
+    .text-overlay p {
+        font-size: 18px;
+        font-weight: normal;
+        margin-top: 10px;
+    }
+
+/* Hiệu ứng xuất hiện chữ */
+@keyframes fadeInZoom {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    100% {
         opacity: 1;
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
