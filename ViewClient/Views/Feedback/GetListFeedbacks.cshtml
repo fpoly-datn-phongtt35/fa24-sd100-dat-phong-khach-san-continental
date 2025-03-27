@@ -1,0 +1,21 @@
+﻿@using Domain.DTO.Paging
+@using ViewClient.Models.Paging
+@model ResponseData<Domain.DTO.Feedback.FeedbackDto>
+@{
+    Layout = null;
+}
+@if (Model != null && Model.data != null)
+{
+    foreach (var i in Model.data)
+    {
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center mb-2">
+                <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-2" style="width:40px; height:40px; font-weight: bold;">M</div>
+                <p class="mb-0 fw-bold">KH</p>
+            </div>
+            <p class="text-dark ps-5 mb-0">
+                @i.Comments
+            </p>
+        </div>
+    }
+}
