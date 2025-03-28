@@ -1,50 +1,27 @@
 ﻿@using Domain.DTO.Paging
+@using View.Views.Shared.Helper
 @model ResponseData<Domain.Models.Role>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h3>Index</h3>
+<h3>Danh sách quyền</h3>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().Id)
+                Tên
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().Name)
+                Mã vai trò
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.data.First().RoleCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().CreatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().ModifiedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().ModifiedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().Deleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().DeletedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.data.First().DeletedTime)
+                Trạng thái
             </th>
             <th></th>
         </tr>
@@ -53,42 +30,25 @@
 @foreach (var item in Model.data) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RoleCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                    @if (item.Status != null)
+                    {
+                        @StatusHelper.DisplayStatusBadge(item.Status)
+                    }
+                    else
+                    {
+                        @: "No data"
+                    }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedTime)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
 }

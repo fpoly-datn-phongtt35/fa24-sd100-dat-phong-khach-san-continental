@@ -1,4 +1,14 @@
-﻿// Hàm định dạng ngày
+﻿window.addEventListener("scroll", function () {
+    var searchBox = document.querySelector(".search-box");
+    var bannerHeight = document.querySelector(".banner").offsetHeight;
+
+    if (window.scrollY > bannerHeight - 80) {
+        searchBox.classList.add("sticky");
+    } else {
+        searchBox.classList.remove("sticky");
+    }
+});
+// Hàm định dạng ngày
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng dạng số
