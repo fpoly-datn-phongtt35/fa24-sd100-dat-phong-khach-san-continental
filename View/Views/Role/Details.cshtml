@@ -1,84 +1,37 @@
-﻿@model Domain.Models.Role
+﻿@using View.Views.Shared.Helper
+@model Domain.Models.Role
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h3>Details</h3>
+<h3>Chi tiết</h3>
 
 <div>
-    <h4>Role</h4>
+    <h4>Quyền</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+        <dt class="col-sm-2">
+            Tên
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RoleCode)
+        <dt class="col-sm-2">
+            Mã vai trò
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.RoleCode)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+        <dt class="col-sm-2">
+            Trạng thái
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Deleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Deleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeletedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeletedTime)
+        <dd class="col-sm-10">
+            @StatusHelper.DisplayStatusBadge(Model.Status)
         </dd>
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </div>
