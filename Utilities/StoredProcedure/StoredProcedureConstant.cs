@@ -165,6 +165,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetRoomBookingDetailById = "SP_GetRoomBookingDetailById";
         public const string SP_GetRoomBookingDetailById2 = "SP_GetRoomBookingDetailById2";
         public const string SP_GetListRoomBookingDetailByRoomBookingId = "SP_GetListRoomBookingDetailByRoomBookingId";
+        public const string SP_GetListRoomBookingDetailNoComments = "SP_GetListRoomBookingDetailNoComments";
         public const string SP_GetRoomBookingDetailsByCustomerId = "SP_GetRoomBookingDetailsByCustomerId";
         //Client 
         public const string SP_ClientLogin = "SP_ClientLogin";

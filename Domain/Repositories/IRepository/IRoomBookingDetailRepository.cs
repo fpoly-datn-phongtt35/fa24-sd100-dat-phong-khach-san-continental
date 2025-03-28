@@ -1,4 +1,5 @@
-﻿using Domain.DTO.RoomBookingDetail;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomBookingDetail;
 using Domain.Models;
 using System.Data;
 
@@ -16,5 +17,6 @@ namespace Domain.Repositories.IRepository
         Task<int> CreateRoomBookingDetail(RoomBookingDetailCreateRequest request);
         Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request);
         Task<DataTable> GetRoomBookingDetailByCustomerId(Guid customerId);
+        Task<DataTable> GetRBDWithoutComments(Guid id);
     }
 }

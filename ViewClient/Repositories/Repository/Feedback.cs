@@ -23,5 +23,16 @@ namespace ViewClient.Repositories.Repository
             }
             return null;
         }
+
+        public async Task<int> AddFeedback(FeedbackCreateRequest request)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("https://localhost:7130/api/Feedback/CreateFeback", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<int>();
+            }
+            return -1;
+        }
     }
 }

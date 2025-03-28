@@ -1,4 +1,5 @@
-﻿using Domain.DTO.RoomBooking;
+﻿using Domain.DTO.Paging;
+using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
 using Newtonsoft.Json;
 using System.Data;
@@ -35,6 +36,30 @@ namespace ViewClient.Repositories.Repository
                 }
             }
 
+            throw new Exception("Lỗi khi gọi API: " + response.ReasonPhrase);
+        }
+
+        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments(Guid id)
+        {
+            string url = $"https://localhost:7130/api/RoomBooking/GetRBDWithoutComments";
+            var response = await _httpClient.PostAsJsonAsync(url, id);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var resultString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<RoomBookingDetailGetByIdRoomBooking>>(resultString);
+
+                if (result != null)
+                {
+                    return result;
+                }
+                else
+                {
+                    throw new Exception("Lấy danh sách phòng không thành công.");
+                }
+            }
+
+            // Xử lý lỗi nếu cần
             throw new Exception("Lỗi khi gọi API: " + response.ReasonPhrase);
         }
 

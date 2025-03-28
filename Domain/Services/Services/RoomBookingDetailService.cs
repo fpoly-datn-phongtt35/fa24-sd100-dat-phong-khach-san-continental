@@ -131,6 +131,39 @@ namespace Domain.Services.Services
             return roomBookingDetailResponse;
         }
 
+        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments(Guid id)
+        {
+            List<RoomBookingDetailGetByIdRoomBooking> roomBookingDetail = new List<RoomBookingDetailGetByIdRoomBooking>();
+            try
+            {
+                DataTable table = await _roomBookingDetailRepository.GetRBDWithoutComments(id);
+                roomBookingDetail = (from row in table.AsEnumerable()
+                                     select new RoomBookingDetailGetByIdRoomBooking
+                                     {
+                                         RoomBookingDetailId = row.Field<Guid>("RoomBookingDetailId"),
+                                         RoomId = row.Field<Guid>("RoomId"),
+                                         CheckInBooking = row.Field<DateTimeOffset?>("CheckInBooking"),
+                                         CheckOutBooking = row.Field<DateTimeOffset?>("CheckOutBooking"),
+                                         Status = row.Field<EntityStatus>("Status"),
+                                         RoomStatus = row.Field<RoomStatus>("RoomStatus"),
+                                         CheckInReality = row.Field<DateTimeOffset?>("CheckInReality"),
+                                         CheckOutReality = row.Field<DateTimeOffset?>("CheckOutReality"),
+                                         Price = row.Field<decimal?>("Price"),
+                                         ServicePrice = row.Field<decimal?>("ServicePrice"),
+                                         ExtraService = row.Field<decimal?>("ExtraService"),
+                                         ExtraPrice = row.Field<decimal?>("ExtraPrice"),
+                                         Expenses = row.Field<decimal?>("Expenses"),
+                                         Note = row.Field<string>("Note"),
+                                         Name = row.Field<string>("Name")
+                                     }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return roomBookingDetail;
+        }
+
         public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetListRoomBookingDetailByRoomBookingId(Guid id)
         {
             List<RoomBookingDetailGetByIdRoomBooking> roomBookingDetail = new List<RoomBookingDetailGetByIdRoomBooking>();
