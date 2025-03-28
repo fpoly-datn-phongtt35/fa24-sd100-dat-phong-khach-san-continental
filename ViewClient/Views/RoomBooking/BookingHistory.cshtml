@@ -7,79 +7,197 @@
 @{
     ViewData["Title"] = "Lịch sử đặt phòng";
 }
+<style>
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.3s;
+        z-index: 9999;
+    }
 
-<h1>Lịch sử đặt phòng</h1>
+    .popup {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 900px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 10000;
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Phương thức đặt phòng
-            </th>
-            <th>
-                Tổng tiền thanh toán
-            </th>
-            <th>
-                Tổng tiền phòng
-            </th>
-            <th>
-                Tổng tiền dịch vụ
-            </th>
-            <th>
-                Tổng tiền phụ thu
-            </th>
-            <th>
-                Trạng thái
-            </th>
-            <th>
-                Ngày tạo
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.data != null && Model.data.Any())
-        {
-            foreach (var item in Model.data)
-            {
+    .popup-overlay.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .stars {
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 36px;
+    }
+
+    .star {
+        color: #ccc;
+        transition: color 0.3s;
+        margin: 0 6px;
+    }
+
+        .star:hover,
+        .star.active {
+            color: gold;
+        }
+
+    .popup h5 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .table th, .table td {
+        text-align: center;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-rating {
+        cursor: pointer;
+        margin-right: 5px;
+    }
+</style>
+<div class="container pt-2">
+    <div class="p-5 pb-1 pt-3 rounded-2" style="background-color: rgb(239 239 239);">
+        <h1>Lịch sử đặt phòng</h1>
+
+        <table class="table table-bordered" style="box-shadow: 1px 1px 1px">
+            <thead>
                 <tr>
-                    <td style="text-align:center;">@StatusHelper.DisplayBookingType(item.BookingType)</td>
-                    <td>@item.TotalPrice?.ToString("N0")</td>
-                    <td>@item.TotalRoomPrice?.ToString("N0")</td>
-                    <td>@item.TotalServicePrice?.ToString("N0")</td>
-                    <td>@item.TotalExtraPrice?.ToString("N0")</td>
-                    <td>@StatusHelper.DisplayRoomBookingStatus(item.Status)</td>
-                    <td>@item.CreatedTime?.ToString("dd-MM-yyyy HH:MM:ss tt")</td>
+                    <th>
+                        Phương thức đặt phòng
+                    </th>
+                    <th>
+                        Tổng tiền thanh toán
+                    </th>
+                    <th>
+                        Tổng tiền phòng
+                    </th>
+                    <th>
+                        Tổng tiền dịch vụ
+                    </th>
+                    <th>
+                        Tổng tiền phụ thu
+                    </th>
+                    <th>
+                        Trạng thái
+                    </th>
+                    <th>
+                        Ngày tạo
+                    </th>
+                    <th style="min-width: 140px">
+                        Thao tác
+                    </th>
                 </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="13">Quý khách chưa có đặt bất kì phòng nào.</td>
-            </tr>
-        }
-    </tbody>
-</table>
-<div class="d-flex justify-content-center">
-    <nav>
-        <ul class="pagination">
-            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = 1, pageSize = Model.PageSize })">
-                    <i class="fas fa-angle-double-left"></i>
-                </a>
-            </li>
-            @for (var i = 1; i <= Model.totalPage; i++)
-            {
-                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
-                </li>
-            }
-            <li class="page-item @(Model.CurrentPage == Model.totalPage ? "disabled" : "")">
-                <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = Model.totalPage, pageSize = Model.PageSize })">
-                    <i class="fas fa-angle-double-right"></i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+            </thead>
+            <tbody>
+                @if (Model.data != null && Model.data.Any())
+                {
+                    foreach (var item in Model.data)
+                    {
+                        <tr>
+                            <td style="text-align:center;">@StatusHelper.DisplayBookingType(item.BookingType)</td>
+                            <td>@item.TotalPrice?.ToString("N0")</td>
+                            <td>@item.TotalRoomPrice?.ToString("N0")</td>
+                            <td>@item.TotalServicePrice?.ToString("N0")</td>
+                            <td>@item.TotalExtraPrice?.ToString("N0")</td>
+                            <td>@StatusHelper.DisplayRoomBookingStatus(item.Status)</td>
+                            <td>@item.CreatedTime?.ToString("dd-MM-yyyy HH:MM:ss tt")</td>
+                            @if (item.Status == Domain.Enums.RoomBookingStatus.PAID)
+                            {
+                                <td>
+                                    <button class="btn btn-gold" onclick="_feedback_send.showPopup()">Đánh giá</button>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <span class="badge bg-secondary">Không đủ điều kiện thao tác</span>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13">Quý khách chưa có đặt bất kì phòng nào.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div id="ratingPopup" class="popup-overlay">
+            <div class="popup">
+                <h5>Rate Rooms</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Room Name</th>
+                                <th>Rating</th>
+                                <th>Comment</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roomTable">
+                            <!-- Rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-outline-secondary p-6" onclick="_feedback_send.closePopup()">Cancel</button>
+                    <button class="btn btn-success" onclick="_feedback_send.submitFeedback()">Submit All</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = 1, pageSize = Model.PageSize })">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    @for (var i = 1; i <= Model.totalPage; i++)
+                    {
+                        <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = i, pageSize = Model.PageSize })">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.CurrentPage == Model.totalPage ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("BookingHistory", new { pageIndex = Model.totalPage, pageSize = Model.PageSize })">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
+
+@section scripts {
+    <script asp-append-version="true" src="~/module/feedback_send.js"></script>
+}

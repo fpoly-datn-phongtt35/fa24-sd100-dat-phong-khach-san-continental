@@ -448,5 +448,23 @@ namespace Domain.Repositories.Repository
 
             return null;
         }
+
+        public async Task<DataTable> GetRBDWithoutComments(Guid id)
+        {
+            try
+            {
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@RoomBookingId ", id != null ? id : DBNull.Value),
+                };
+
+                return _worker.GetDataTable(StoredProcedureConstant.SP_GetListRoomBookingDetailNoComments,
+                    sqlParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

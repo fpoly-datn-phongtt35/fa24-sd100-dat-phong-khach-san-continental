@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.RoomBookingDetail;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ViewClient.Repositories.IRepository
 {
@@ -6,5 +7,6 @@ namespace ViewClient.Repositories.IRepository
     {
         Task<Guid> CreateRoomBookingDetail(RoomBookingDetailCreateRequestForCustomer request);
         Task<int> UpdateRoomBookingDetail(RoomBookingDetailUpdateRequest request);
+        Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments(Guid id);
     }
 }
