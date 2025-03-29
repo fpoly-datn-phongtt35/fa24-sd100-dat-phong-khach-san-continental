@@ -26,7 +26,7 @@ namespace ViewClient.Repositories.Repository
 
         public async Task<int> AddFeedback(FeedbackCreateRequest request)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("https://localhost:7130/api/Feedback/CreateFeback", request);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("https://localhost:7130/api/Feedback/CreateFeedback", request);
 
             if (response.IsSuccessStatusCode)
             {

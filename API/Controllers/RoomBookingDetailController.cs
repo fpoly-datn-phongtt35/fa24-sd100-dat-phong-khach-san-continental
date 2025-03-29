@@ -50,7 +50,7 @@ namespace API.Controllers
         }
 
         [HttpPost(nameof(GetRBDWithoutComments))]
-        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments(Guid id)
+        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments([FromBody] Guid id)
         {
             try
             {

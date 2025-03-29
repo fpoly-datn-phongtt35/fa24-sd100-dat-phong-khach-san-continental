@@ -36,12 +36,15 @@ namespace ViewClient.Controllers
         }
 
         [HttpPost]
-        public async Task<int> Submit(FeedbackCreateRequest request) 
+        public async Task<int> SubmitAll(List<FeedbackCreateRequest> lst) 
         {
             try
             {
-                var rs = await _feedbackService.AddFeedback(request);
-                return rs;
+                foreach (var item in lst) 
+                {
+                    var rs = await _feedbackService.AddFeedback(item);
+                }
+                return 1;
             }
             catch
             {

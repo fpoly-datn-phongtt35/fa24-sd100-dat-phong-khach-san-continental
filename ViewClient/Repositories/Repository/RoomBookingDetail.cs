@@ -3,6 +3,7 @@ using Domain.DTO.RoomBooking;
 using Domain.DTO.RoomBookingDetail;
 using Newtonsoft.Json;
 using System.Data;
+using System.Text;
 using ViewClient.Repositories.IRepository;
 
 namespace ViewClient.Repositories.Repository
@@ -41,8 +42,9 @@ namespace ViewClient.Repositories.Repository
 
         public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments(Guid id)
         {
-            string url = $"https://localhost:7130/api/RoomBooking/GetRBDWithoutComments";
-            var response = await _httpClient.PostAsJsonAsync(url, id);
+            string url = $"https://localhost:7130/api/RoomBookingDetail/GetRBDWithoutComments";
+            var content = new StringContent(JsonConvert.SerializeObject(id), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(url, content);
 
             if (response.IsSuccessStatusCode)
             {
