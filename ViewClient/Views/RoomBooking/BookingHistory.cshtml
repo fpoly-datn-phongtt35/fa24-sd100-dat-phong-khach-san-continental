@@ -40,22 +40,18 @@
         opacity: 1;
     }
 
-    .stars {
-        display: flex;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 36px;
-    }
-
     .star {
-        color: #ccc;
-        transition: color 0.3s;
-        margin: 0 6px;
+        font-size: 30px;
+        cursor: pointer;
+        color: gray; /* Màu mặc định */
     }
 
-        .star:hover,
-        .star.active {
-            color: gold;
+        .star.selected {
+            color: gold; /* Màu vàng khi được chọn */
+        }
+
+        .star:hover {
+            color: gold; /* Màu vàng khi được chọn */
         }
 
     .popup h5 {
@@ -127,7 +123,7 @@
                             @if (item.Status == Domain.Enums.RoomBookingStatus.PAID)
                             {
                                 <td>
-                                    <button class="btn btn-gold" onclick="_feedback_send.showPopup()">Đánh giá</button>
+                                    <button class="btn btn-gold" onclick="_feedback_send.showPopup('@item.Id')">Đánh giá</button>
                                 </td>
                             }
                             else
@@ -151,7 +147,7 @@
             <div class="popup">
                 <h5>Rate Rooms</h5>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-bordered" style="box-shadow: 1px 1px">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -168,7 +164,7 @@
                 </div>
                 <div class="text-end">
                     <button class="btn btn-outline-secondary p-6" onclick="_feedback_send.closePopup()">Cancel</button>
-                    <button class="btn btn-success" onclick="_feedback_send.submitFeedback()">Submit All</button>
+                    <button class="btn btn-success" onclick="_feedback_send.submitAllFeedback()">Submit All</button>
                 </div>
             </div>
         </div>

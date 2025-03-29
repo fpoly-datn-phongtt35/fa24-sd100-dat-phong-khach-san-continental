@@ -115,7 +115,7 @@ namespace ViewClient.Views.Shared
                     badgeClass = "badge bg-warning"; // Badge màu vàng
                     break;
                 case RoomBookingStatus.PAID:
-                    statusText = "Đã thanh toán";
+                    statusText = "Đã đóng";
                     badgeClass = "badge bg-success"; // Badge màu xanh lá
                     break;
                 case RoomBookingStatus.CANCELLED:

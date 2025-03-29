@@ -73,6 +73,19 @@ namespace ViewClient.Controllers
             return View();
         }
 
+        public async Task<List<RoomBookingDetailGetByIdRoomBooking>> GetRBDWithoutComments(Guid id) 
+        {
+            try 
+            {
+                var lst = await _roomBookingDetailRepo.GetRBDWithoutComments(id);
+                return lst;
+            }
+            catch 
+            {
+                return null;
+            }
+        }
+
         public async Task<IActionResult> CreatePaymentLink(PaymentLinkCreateRequest request)
         {
             var apiUrl = "https://localhost:7130/api/Order/create";
