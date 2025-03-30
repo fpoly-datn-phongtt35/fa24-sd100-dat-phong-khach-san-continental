@@ -1101,9 +1101,22 @@ input.form-control[readonly] {
     color: #333;
 }
 
+.luxury-carousel {
+    max-width: 100%;
+    text-align: center;
+}
+
 .luxury-img {
-    border-radius: 15px;
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover; 
+    border-radius: 10px; 
     box-shadow: 0px 4px 10px rgba(212, 175, 55, 0.2);
+}
+@media (max-width: 768px) {
+    .luxury-img {
+        max-height: 250px; 
+    }
 }
 
 .modal-content {

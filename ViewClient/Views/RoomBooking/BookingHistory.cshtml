@@ -85,7 +85,10 @@
                         Phương thức đặt phòng
                     </th>
                     <th>
-                        Tổng tiền thanh toán
+                        Tổng tiền thanh toán(Đã trừ cọc)
+                    </th>
+                    <th>
+                        Tiền cọc
                     </th>
                     <th>
                         Tổng tiền phòng
@@ -115,6 +118,7 @@
                         <tr>
                             <td style="text-align:center;">@StatusHelper.DisplayBookingType(item.BookingType)</td>
                             <td>@item.TotalPrice?.ToString("N0")</td>
+                            <td>@item.Deposit?.ToString("N0")</td>
                             <td>@item.TotalRoomPrice?.ToString("N0")</td>
                             <td>@item.TotalServicePrice?.ToString("N0")</td>
                             <td>@item.TotalExtraPrice?.ToString("N0")</td>

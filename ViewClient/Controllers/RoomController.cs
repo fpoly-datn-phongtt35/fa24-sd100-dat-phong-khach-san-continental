@@ -1,4 +1,5 @@
-﻿using Domain.DTO.Floor;
+﻿using Domain.DTO.Email;
+using Domain.DTO.Floor;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Domain.DTO.RoomType;
@@ -190,6 +191,7 @@ namespace ViewClient.Controllers
                 return View("Error", new ErrorViewModel { Message = ex.Message });
             }
         }
+       
 
     }
 }

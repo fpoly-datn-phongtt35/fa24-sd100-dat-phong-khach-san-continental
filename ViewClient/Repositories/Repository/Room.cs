@@ -1,6 +1,7 @@
 ﻿using Domain.DTO.Paging;
 using Domain.DTO.Room;
 using Newtonsoft.Json;
+using System.Text.Json;
 using ViewClient.Repositories.IRepository;
 
 namespace ViewClient.Repositories.Repository
@@ -42,6 +43,22 @@ namespace ViewClient.Repositories.Repository
             }
             return null;
         }
+
+        public async Task<List<TopBookedRoom>?> GetTop3MostBookedRoomsAsync()
+        {
+            string url = "https://localhost:7130/api/Room/GetTop3MostBookedRooms";
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var resultString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<TopBookedRoom>>(resultString);
+                return result;
+            }
+
+            return null;
+        }
+
 
         public async Task<int?> UpdateRoomStatus(RoomUpdateStatusRequest request)
         {
