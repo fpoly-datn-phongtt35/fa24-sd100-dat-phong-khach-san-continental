@@ -48,6 +48,9 @@
     @if (!groupedData.Any())
     {
         <h3 style="color:#F04770;" class="text-center">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
+        <div id="top-booked-rooms-container">
+            @await Component.InvokeAsync("TopBookedRooms")
+        </div>
     }
     else
     {
@@ -85,14 +88,14 @@
                                                     }
                                                 </div>
 
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="prev">
+                                             @*    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="prev">
                                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                     <span class="visually-hidden">Previous</span>
                                                 </button>
                                                 <button class="carousel-control-next" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="next">
                                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                     <span class="visually-hidden">Next</span>
-                                                </button>
+                                                </button> *@
                                             </div>
                                         }
                                         else

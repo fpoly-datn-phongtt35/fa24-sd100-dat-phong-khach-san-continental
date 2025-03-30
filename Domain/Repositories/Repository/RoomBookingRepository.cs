@@ -366,6 +366,7 @@ public class RoomBookingRepository : IRoomBookingRepository
                 BookingType = (BookingType)row.Field<int?>("BookingType"),
                 CustomerId = row.Field<Guid>("CustomerId"),
                 StaffId = row.Field<Guid?>("StaffId"),
+                Deposit = row.Field<decimal?>("TotalDeposit"),
                 TotalPrice = row.Field<decimal?>("TotalPrice"),
                 TotalRoomPrice = row.Field<decimal?>("TotalRoomPrice"),
                 TotalServicePrice = row.Field<decimal?>("TotalServicePrice"),
