@@ -99,6 +99,11 @@ namespace Domain.Services.Services.Room
         {
             return await _roomRepository.CheckedAvailableRooms2(LstRoomId, request);
         }
+
+        public async Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync()
+        {
+            return await _roomRepository.GetTop3MostBookedRoomsAsync();
+        }
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
         //{
         //    var room = await _roomRepository.GetRoomTypeWithAmenityRoomById(roomId); // Lấy Room từ repository

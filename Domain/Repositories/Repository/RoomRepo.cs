@@ -707,5 +707,22 @@ namespace Domain.Repositories.Repository
             }
             return data;   
         }
+
+        public async Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync()
+        {
+            var dataTable = await _worker.GetDataTableAsync("SP_GetTop3MostBookedRooms",null);
+
+            return dataTable.AsEnumerable().Select(row => new TopBookedRoom
+            {
+                RoomId = row.Field<Guid>("RoomId"),
+                RoomName = row.Field<string>("RoomName"),
+                RoomPrice = row.Field<decimal>("RoomPrice"),
+                TotalBookings = row.Field<int>("TotalBookings"),
+                RoomImages = row.Field<string>("RoomImages")?
+                           .Split(',') // Chuyển chuỗi thành danh sách
+                           .Select(img => img.Trim())
+                           .ToList() ?? new List<string>()
+            }).ToList();
+        }
     }
 }
