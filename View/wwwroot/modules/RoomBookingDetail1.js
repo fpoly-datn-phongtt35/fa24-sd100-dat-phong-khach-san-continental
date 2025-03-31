@@ -69,39 +69,7 @@ $(document).ready(function () {
         executeAction(
             '/RoomBooking/CheckOut2',
             roomBookingDetailId,
-            {},
-            function (response) {
-                if (response.success) {
-                    $.ajax({
-                        url: '/ResidenceRegistration/CheckOutResideecByRBD',
-                        type: 'POST',
-                        data: { roomBookingDetailId: roomBookingDetailId },
-                        success: function (response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'CheckOut thành công!',
-                                text: response.message || 'Checkout thành công'
-                            }).then(function () {
-                                location.reload(); 
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Có lỗi xảy ra!',
-                                text: 'Không thể thực hiện CheckOut ResidenceRegistration: ' + error
-                            });
-                        }
-                    });
-                } else {
-                    // Xử lý nếu action đầu tiên thất bại
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Có lỗi xảy ra',
-                        text: response.message
-                    });
-                }
-            }
+            {}
         );
     }
     function getResidence(roomBookingDetailId) {

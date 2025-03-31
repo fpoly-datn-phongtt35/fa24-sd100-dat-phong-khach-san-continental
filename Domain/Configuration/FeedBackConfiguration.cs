@@ -17,7 +17,7 @@ namespace Domain.Configuration
             builder.HasOne(x => x.RoomBookingDetail)
                 .WithMany(x => x.FeedBacks)
                 .HasForeignKey(x => x.RoomBookingDetailId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

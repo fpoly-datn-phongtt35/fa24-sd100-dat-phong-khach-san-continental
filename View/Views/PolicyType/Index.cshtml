@@ -1,0 +1,71 @@
+﻿@using Domain.DTO.Paging
+@using View.Views.Shared.Helper
+@model ResponseData<Domain.Models.PolicyType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Trang loại bài đăng</h3>
+
+
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="titleOfType" name="titleOfType" class="form-control me-2" placeholder="Tiêu đề" value="@Context.Request.Query["titleOfType"]" style="max-width: 200px;" />
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+
+<script>
+    function clearFilters() {
+        document.getElementById('titleOfType').value = '';
+    }
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th> Tiêu đề </th>
+            <th> Nội dung </th>
+            <th> Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.data) {
+        <tr>
+                <td> @(item.TitleOfType.HasValue ? PolicyTypeHelper.DisplayPolicyType(item.TitleOfType.Value) : "Unknown")</td>
+            <td> @Html.DisplayFor(modelItem => item.Content)</td>
+            <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
+            <td>
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id },
+                             new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id },
+                             new { @class = "btn btn-info" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id },
+                             new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { 
+                        pageIndex = i, 
+                        pageSize = Model.PageSize,
+                        titleOfType = Context.Request.Query["titleOfType"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

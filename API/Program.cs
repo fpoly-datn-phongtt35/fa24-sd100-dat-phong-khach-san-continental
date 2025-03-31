@@ -170,8 +170,8 @@ namespace API
             builder.Services.AddTransient<VoucherRepo>();
 			builder.Services.AddTransient<IVoucherService, VoucherService>();
 
-            builder.Services.AddTransient<IPostTypeService, PostTypeService>();
-            builder.Services.AddTransient<IPostService, PostService>();
+            builder.Services.AddTransient<IPolicyTypeService, PolicyTypeService>();
+            builder.Services.AddTransient<IPolicyService, PolicyService>();
 
             builder.Services.AddTransient<IRoleService, RoleService>();
             builder.Services.AddTransient<IRoomBookingDetailServiceForCustomer, RoomBookingDetailService>();

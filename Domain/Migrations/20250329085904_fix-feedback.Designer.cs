@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ContinentalDbContext))]
-    partial class ContinentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250329085904_fix-feedback")]
+    partial class fixfeedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -441,7 +444,7 @@ namespace Domain.Migrations
                     b.ToTable("PaymentHistory");
                 });
 
-            modelBuilder.Entity("Domain.Models.Policy", b =>
+            modelBuilder.Entity("Domain.Models.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -473,7 +476,7 @@ namespace Domain.Migrations
                     b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("PolicyTypeId")
+                    b.Property<Guid>("PostTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StaffId")
@@ -489,14 +492,14 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PolicyTypeId");
+                    b.HasIndex("PostTypeId");
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("Policy", (string)null);
+                    b.ToTable("Post", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.PolicyType", b =>
+            modelBuilder.Entity("Domain.Models.PostType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -537,7 +540,7 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PolicyType", (string)null);
+                    b.ToTable("PostType", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.ResidenceRegistration", b =>
@@ -1401,21 +1404,21 @@ namespace Domain.Migrations
                     b.Navigation("RoomBooking");
                 });
 
-            modelBuilder.Entity("Domain.Models.Policy", b =>
+            modelBuilder.Entity("Domain.Models.Post", b =>
                 {
-                    b.HasOne("Domain.Models.PolicyType", "PolicyType")
-                        .WithMany("Policies")
-                        .HasForeignKey("PolicyTypeId")
+                    b.HasOne("Domain.Models.PostType", "PostType")
+                        .WithMany("Posts")
+                        .HasForeignKey("PostTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Staff", "Staff")
-                        .WithMany("Policies")
+                        .WithMany("Posts")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PolicyType");
+                    b.Navigation("PostType");
 
                     b.Navigation("Staff");
                 });
@@ -1593,9 +1596,9 @@ namespace Domain.Migrations
                     b.Navigation("Rooms");
                 });
 
-            modelBuilder.Entity("Domain.Models.PolicyType", b =>
+            modelBuilder.Entity("Domain.Models.PostType", b =>
                 {
-                    b.Navigation("Policies");
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Domain.Models.Role", b =>
@@ -1655,7 +1658,7 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Staff", b =>
                 {
-                    b.Navigation("Policies");
+                    b.Navigation("Posts");
 
                     b.Navigation("RoomBookings");
                 });

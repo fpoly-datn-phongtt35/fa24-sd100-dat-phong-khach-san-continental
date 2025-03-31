@@ -26,6 +26,6 @@ namespace Domain.Models
 
         public virtual Role Role { get; set; }
         public virtual List<RoomBooking> RoomBookings { get; set; }
-        public virtual List<Post> Posts { get; set; }
+        public virtual List<Policy> Policies { get; set; }
     }
 }
