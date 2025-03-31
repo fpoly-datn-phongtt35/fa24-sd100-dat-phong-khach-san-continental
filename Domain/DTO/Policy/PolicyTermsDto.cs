@@ -1,8 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ViewClient.ViewModels
+namespace Domain.DTO.Policy
 {
-    public class TermsViewModel
+    public class PolicyTermsDto
     {
         public string PolicyTypeTitle { get; set; }
         public List<Guid> PolicyIds { get; set; }
