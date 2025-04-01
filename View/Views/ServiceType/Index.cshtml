@@ -45,9 +45,17 @@
                     @StatusHelper.DisplayStatusBadge(item.Status)
                 </td>
                 <td>
-                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) 
-                    @Html.ActionLink("Chi tiết", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) 
-                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    <div class="dropdown">
+                        <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@Url.Content("~/images/icons/menu.png")">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { Id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Chi tiết", "Details", new { Id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Xóa", "Delete", new { Id = item.Id }, new { @class = "dropdown-item text-danger" })</li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }

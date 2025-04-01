@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using View.Views.Shared.Helper;
 using Domain.DTO.Policy;
 using Domain.DTO.PolicyType;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
 namespace View.Controllers
 {
     [CustomAuthorize]
@@ -292,6 +294,37 @@ namespace View.Controllers
 
             ModelState.AddModelError("", "Unable to delete the Policy.");
             return View("Error", new Exception("Unable to delete the Policy."));
+        }
+
+        public async Task<IActionResult> PolicyPDF()
+        {
+            var tpolicyGetRequest = new PolicyGetRequest()
+            {
+                PageIndex = 1,
+                PageSize = int.MaxValue
+            };
+            string trequestUrl = "https://localhost:7130/api/PolicyType/GetListPolicyType";
+            var tpolicies = await SendHttpRequest<ResponseData<PolicyType>>(trequestUrl, HttpMethod.Post, tpolicyGetRequest);
+            ViewBag.policyTypeList = tpolicies.data;
+
+
+            var policyGetRequest = new PolicyGetRequest()
+            {
+                PageIndex = 1,
+                PageSize = int.MaxValue
+            };
+            string requestUrl = "https://localhost:7130/api/Policy/GetListPolicy";
+            var policies = await SendHttpRequest<ResponseData<Policy>>(requestUrl, HttpMethod.Post, policyGetRequest);
+
+            if (policies == null)
+            {
+                return View("Error");
+            }
+            return new ViewAsPdf("PolicyPDF", policies, ViewData)
+            {
+                PageMargins = new Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+                PageOrientation = Orientation.Landscape
+            };
         }
     }
 }
