@@ -1,0 +1,48 @@
+﻿@using Domain.DTO.Policy
+@using Domain.Enums
+@using Domain.Models
+@using View.Views.Shared.Helper
+@model Domain.DTO.Paging.ResponseData<Policy>
+
+@{
+    Layout = null;
+    var policyTypeList = ViewBag.policyTypeList as List<PolicyType>;
+}
+<link href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" rel="stylesheet" />
+<h1>Điều khoản, chính sách</h1>
+
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Loại chính sách</th>
+            <th style="border: 1px solid black;">Tên chính sách</th>
+            <th style="border: 1px solid black;">Nội dung</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Policy x in Model.data)
+        {
+            <tr>
+                <td style="border: 1px solid black; width: 12%; text-align: center">
+                    @{
+                        var policyType = policyTypeList.FirstOrDefault(pt => pt.Id == x.PolicyTypeId);
+                        var policyTypeName = policyType?.TitleOfType;
+                        @(policyTypeName.HasValue ? PolicyTypeHelper.DisplayPolicyType(policyTypeName.Value) : "Unknown")
+                    }
+                </td>
+                <td style="border: 1px solid black; width: 12%; text-align: center">@x.Title</td>
+                <td style="border: 1px solid black; width: 20%; padding: 0 10px;">@x.Content</td>
+            </tr>
+            @if ((Model.data.IndexOf(x) + 1) % 2 == 0)
+            {
+                <tr style="page-break-after: always;"></tr>
+            }
+        }
+    </tbody>
+</table>
+
+<style>
+    .pdf-page-break {
+        page-break-after: always;
+    }
+</style>
