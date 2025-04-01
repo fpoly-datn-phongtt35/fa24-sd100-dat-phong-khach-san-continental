@@ -272,7 +272,11 @@ var _roombooking_detail = {
         const differenceInMilliseconds = Math.abs(date2 - date1);
 
         // Chuyển đổi số mili giây thành số ngày
-        const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 3600 * 24));
+        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 3600 * 24));
+        if (differenceInDays <= 1)
+        {
+            differenceInDays = 1;
+        }
 
         return differenceInDays;
     },
@@ -623,7 +627,11 @@ var _roombooking_detail = {
         addButton.addEventListener('click', function () {
             const status = $(`#Status_${roomBookingDetailId}`).val(); 
             if (status === "8" || status === "3") { 
-                alert('Phòng này đã bị hủy hoặc hoàn thành. Không thể thực hiện thêm tạm trú.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thất bại',
+                    text: 'Đơn đặt phòng đã đóng, không thể thêm tạm trú!'
+                });
                 return; 
             }
             //#region tạo khung form thêm mới

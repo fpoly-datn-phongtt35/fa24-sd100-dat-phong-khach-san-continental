@@ -441,7 +441,7 @@ namespace Domain.Migrations
                     b.ToTable("PaymentHistory");
                 });
 
-            modelBuilder.Entity("Domain.Models.Post", b =>
+            modelBuilder.Entity("Domain.Models.Policy", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -473,7 +473,7 @@ namespace Domain.Migrations
                     b.Property<DateTimeOffset?>("ModifiedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("PostTypeId")
+                    b.Property<Guid>("PolicyTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StaffId")
@@ -489,14 +489,14 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostTypeId");
+                    b.HasIndex("PolicyTypeId");
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("Post", (string)null);
+                    b.ToTable("Policy", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.PostType", b =>
+            modelBuilder.Entity("Domain.Models.PolicyType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -537,7 +537,7 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PostType", (string)null);
+                    b.ToTable("PolicyType", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.ResidenceRegistration", b =>
@@ -1362,7 +1362,7 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.RoomBookingDetail", "RoomBookingDetail")
                         .WithMany("FeedBacks")
                         .HasForeignKey("RoomBookingDetailId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("RoomBookingDetail");
@@ -1401,21 +1401,21 @@ namespace Domain.Migrations
                     b.Navigation("RoomBooking");
                 });
 
-            modelBuilder.Entity("Domain.Models.Post", b =>
+            modelBuilder.Entity("Domain.Models.Policy", b =>
                 {
-                    b.HasOne("Domain.Models.PostType", "PostType")
-                        .WithMany("Posts")
-                        .HasForeignKey("PostTypeId")
+                    b.HasOne("Domain.Models.PolicyType", "PolicyType")
+                        .WithMany("Policies")
+                        .HasForeignKey("PolicyTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Staff", "Staff")
-                        .WithMany("Posts")
+                        .WithMany("Policies")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PostType");
+                    b.Navigation("PolicyType");
 
                     b.Navigation("Staff");
                 });
@@ -1593,9 +1593,9 @@ namespace Domain.Migrations
                     b.Navigation("Rooms");
                 });
 
-            modelBuilder.Entity("Domain.Models.PostType", b =>
+            modelBuilder.Entity("Domain.Models.PolicyType", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("Policies");
                 });
 
             modelBuilder.Entity("Domain.Models.Role", b =>
@@ -1655,7 +1655,7 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Staff", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("Policies");
 
                     b.Navigation("RoomBookings");
                 });

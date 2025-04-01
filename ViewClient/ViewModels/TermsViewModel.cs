@@ -4,9 +4,9 @@ namespace ViewClient.ViewModels
 {
     public class TermsViewModel
     {
-        public string PostTypeTitle { get; set; }
-        public List<Guid> PostIds { get; set; }
-        public List<string> PostTitles { get; set; }
-        public List<string> PostContents { get; set; }
+        public string PolicyTypeTitle { get; set; }
+        public List<Guid> PolicyIds { get; set; }
+        public List<string> PolicyTitles { get; set; }
+        public List<string> PolicyContents { get; set; }
     }
 }

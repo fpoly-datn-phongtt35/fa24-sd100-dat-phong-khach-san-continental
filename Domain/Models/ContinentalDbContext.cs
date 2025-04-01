@@ -34,8 +34,8 @@ namespace Domain.Models
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<FeedBack> FeedBacks { get; set; }
-        public DbSet<PostType> PostTypes { get; set; }
-        public DbSet<Post> Posts { get; set; }
+        public DbSet<PolicyType> PolicyTypes { get; set; }
+        public DbSet<Policy> Policies { get; set; }
         public DbSet<Floor> Floors { get; set; }
         public DbSet<RoomBookingDetail> RoomBookingDetails { get; set; }
         public DbSet<RoomBooking> RoomBookings { get; set; }

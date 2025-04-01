@@ -1,0 +1,77 @@
+﻿@using Domain.DTO.Paging
+@using View.Views.Shared.Helper
+@model ResponseData<Domain.Models.PolicyType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Trang loại chính sách</h3>
+
+
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="titleOfType" name="titleOfType" class="form-control me-2" placeholder="Tiêu đề" value="@Context.Request.Query["titleOfType"]" style="max-width: 200px;" />
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+</p>
+
+<script>
+    function clearFilters() {
+        document.getElementById('titleOfType').value = '';
+    }
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th> Tiêu đề </th>
+            <th> Nội dung </th>
+            <th> Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            <tr>
+                <td> @(item.TitleOfType.HasValue ? PolicyTypeHelper.DisplayPolicyType(item.TitleOfType.Value) : "Unknown")</td>
+                <td> @Html.DisplayFor(modelItem => item.Content)</td>
+                <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@Url.Content("~/images/icons/menu.png")">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { Id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Chi tiết", "Details", new { Id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Xóa", "Delete", new { Id = item.Id }, new { @class = "dropdown-item text-danger" })</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        titleOfType = Context.Request.Query["titleOfType"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

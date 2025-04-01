@@ -1,0 +1,15 @@
+﻿using Domain.Enums;
+
+namespace Domain.DTO.PolicyType
+{
+    public class PolicyTypeUpdateRequest
+    {
+        public Guid Id { get; set; }
+        public PolicyTypeEnum? TitleOfType { get; set; }
+        public string? Content { get; set; }
+        public EntityStatus? Status { get; set; } = EntityStatus.Active;
+
+        public DateTimeOffset? ModifiedTime { get; set; }
+        public Guid? ModifiedBy { get; set; }
+    }
+}

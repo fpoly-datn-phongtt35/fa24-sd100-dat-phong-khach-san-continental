@@ -1,0 +1,115 @@
+﻿@using Domain.DTO.Paging
+@using Domain.Models
+@using View.Views.Shared.Helper
+@model ResponseData<Domain.Models.Policy>
+
+@{
+    ViewData["Title"] = "Index";
+    var policyTypeList = ViewBag.policyTypeList as List<PolicyType>;
+    var staffList = ViewBag.StaffList as List<Domain.Models.Staff>;
+}
+
+<h3>Trang chủ chính sách</h3>
+
+<form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
+    <div class="input-group mb-3 w-100">
+        <input type="text" id="title" name="title" class="form-control me-2" placeholder="Tiêu đề" value="@Context.Request.Query["title"]" style="max-width: 200px;" />
+        <input type="text" id="contentOfPolicy" name="contentOfPolicy" class="form-control me-2" placeholder="Nội dung" value="@Context.Request.Query["contentOfPolicy"]" style="max-width: 200px;" />
+        <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
+        <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
+    </div>
+</form>
+
+<script>
+    function clearFilters() {
+        document.getElementById('title').value = '';
+        document.getElementById('contentOfPolicy').value = '';
+    }
+</script>
+
+<p class="d-flex">
+    <a asp-action="Create" class="btn btn-primary me-2">Tạo mới</a>
+    <a asp-action="PolicyPDF" class="btn btn-danger">Xem file PDF</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Loại chính sách
+            </th>
+            <th>
+                Nhân viên
+            </th>
+            <th>
+                Tiêu đề
+            </th>
+            <th>
+                Nội dung
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            <tr>
+                <td>
+                    @{
+                        var policyType = policyTypeList.FirstOrDefault(pt => pt.Id == item.PolicyTypeId);
+                        var policyTypeName = policyType?.TitleOfType;
+                        @(policyTypeName.HasValue ? PolicyTypeHelper.DisplayPolicyType(policyTypeName.Value) : "Unknown")
+                    }
+                </td>
+                <td>
+                    @{
+                        var staff = staffList.FirstOrDefault(s => s.Id == item.StaffId);
+                        var staffName = staff != null ? staff.FirstName + " " + staff.LastName : "Unknown";
+                        @staffName
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @StatusHelper.DisplayStatusBadge(item.Status)
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="button1" type="button" id="dropdownMenuButton-@item.Id"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@Url.Content("~/images/icons/menu.png")">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            <li>@Html.ActionLink("Chỉnh sửa", "Edit", new { Id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Chi tiết", "Details", new { Id = item.Id }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Xóa", "Delete", new { Id = item.Id }, new { @class = "dropdown-item text-danger" })</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center">
+    <nav>
+        <ul class="pagination">
+            @for (var i = 1; i <= Model.totalPage; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageIndex = i,
+                        pageSize = Model.PageSize,
+                        title = Context.Request.Query["title"].ToString(),
+                        contentOfPolicy = Context.Request.Query["contentOfPolicy"].ToString()})">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -7,31 +7,31 @@ using System.Threading.Tasks;
 
 namespace Domain.Helper
 {
-    public class PostTypeHelper
+    public class PolicyTypeHelper
     {
-        public static string DisplayPostType(PostTypeEnum type)
+        public static string DisplayPolicyType(PolicyTypeEnum type)
         {
             switch (type)
             {
-                case PostTypeEnum.General:
+                case PolicyTypeEnum.General:
                     return "Chính sách chung";
-                case PostTypeEnum.PrivacyPolicy:
+                case PolicyTypeEnum.PrivacyPolicy:
                     return "Chính sách bảo mật";
-                case PostTypeEnum.RefundPolicy:
+                case PolicyTypeEnum.RefundPolicy:
                     return "Chính sách hoàn trả";
-                case PostTypeEnum.UsagePolicy:
+                case PolicyTypeEnum.UsagePolicy:
                     return "Chính sách sử dụng";
-                case PostTypeEnum.ServiceAgreement:
+                case PolicyTypeEnum.ServiceAgreement:
                     return "Thỏa thuận dịch vụ";
-                case PostTypeEnum.PaymentPolicy:
+                case PolicyTypeEnum.PaymentPolicy:
                     return "Chính sách thanh toán";
-                case PostTypeEnum.CancellationPolicy:
+                case PolicyTypeEnum.CancellationPolicy:
                     return "Chính sách hủy";
-                case PostTypeEnum.Other:
+                case PolicyTypeEnum.Other:
                     return "Chính sách khác";
-                case PostTypeEnum.BookingPolicy:
+                case PolicyTypeEnum.BookingPolicy:
                     return "Chính sách đặt phòng";
-                case PostTypeEnum.CheckInAndCheckOutPolicy:
+                case PolicyTypeEnum.CheckInAndCheckOutPolicy:
                     return "Chính sách nhận phòng và trả phòng";
                 default:
                     return "Unknown";
