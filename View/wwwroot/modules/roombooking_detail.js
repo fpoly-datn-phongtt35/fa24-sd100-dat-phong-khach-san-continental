@@ -275,10 +275,13 @@ var _roombooking_detail = {
         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 3600 * 24));
         if (differenceInDays <= 1)
         {
-            differenceInDays = 1;
+            return 1;
         }
-
-        return differenceInDays;
+        else
+        {
+            return differenceInDays;
+        }
+        
     },
 
     CalculatePrice: function (Id) {
@@ -451,6 +454,9 @@ var _roombooking_detail = {
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
+                        }
+                        else{
+                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking);
                         }
 
                         
