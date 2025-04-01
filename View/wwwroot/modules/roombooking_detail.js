@@ -273,6 +273,10 @@ var _roombooking_detail = {
 
         // Chuyển đổi số mili giây thành số ngày
         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 3600 * 24));
+        if (differenceInDays <= 1)
+        {
+            differenceInDays = 1;
+        }
 
         return differenceInDays;
     },
