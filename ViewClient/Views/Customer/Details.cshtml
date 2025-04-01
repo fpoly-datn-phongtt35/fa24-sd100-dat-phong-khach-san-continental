@@ -93,6 +93,32 @@
                                 </div>
                             </form>
                         </div>
+
+                         <div class="tab-pane fade" id="password" role="tabpanel">
+                            <form id="change-password-form" asp-action="EditPassword" method="post">
+                                <div class="mb-3">
+                                    <label class="form-label">Mật khẩu cũ</label>
+                                    <input type="password" name="Password" class="form-control" required />
+                                    <span class="text-danger" id="password-error"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Mật khẩu mới</label>
+                                    <input type="password" name="NewPassword" class="form-control" required />
+                                    <span class="text-danger" id="new-password-error"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Xác nhận mật khẩu mới</label>
+                                    <input type="password" name="ConfirmNewPassword" class="form-control" required />
+                                    <span class="text-danger" id="confirm-password-error"></span>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,6 +133,58 @@
         triggerTabList.forEach(function (triggerEl) {
             new bootstrap.Tab(triggerEl)
         })
+
+        document.getElementById('change-password-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Ngăn form tự động submit
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Kiểm tra mật khẩu mới có trùng với xác nhận không
+            const newPassword = formData.get("NewPassword");
+            const confirmPassword = formData.get("ConfirmNewPassword");
+
+            if (newPassword !== confirmPassword) {
+                document.getElementById("confirm-password-error").textContent = "Mật khẩu mới và xác nhận không khớp.";
+                return;
+            }
+
+            // Gửi yêu cầu thay đổi mật khẩu
+            fetch(form.action, {
+                method: "PUT",
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                     console.log("Response data:", data);
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Thành công!",
+                            text: data.message,
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            // Chuyển hướng về trang Details sau khi hiển thị thông báo
+                            window.location.href = "@Url.Action("Details", "Customer")";
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Thất bại!",
+                            text: data.message,
+                            confirmButtonText: "OK"
+                        });
+                    }
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Lỗi hệ thống",
+                        text: "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+                        confirmButtonText: "OK"
+                    });
+                });
+        });
     </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -171,11 +249,13 @@
                     .then((response) => response.json())
                     .then((data) => {
                         if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Thành công!',
-                                text: data.message,
-                            });
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: data.message,
+            }).then(() => {
+                window.location.reload();
+            });
                         } else {
                             Swal.fire({
                                 icon: 'error',
