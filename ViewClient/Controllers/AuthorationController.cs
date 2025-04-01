@@ -44,7 +44,8 @@ namespace ViewClient.Controllers
                 // Proceed with successful login
                 var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.UserData, result.Id.ToString())
+            new Claim(ClaimTypes.UserData, result.Id.ToString()),
+            new Claim(ClaimTypes.Name, result.UserName)
         };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -56,7 +57,6 @@ namespace ViewClient.Controllers
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                HttpContext.Session.SetString("UserName", result.UserName);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -79,7 +79,8 @@ namespace ViewClient.Controllers
                 {
                     var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.UserData, result.Id.ToString())
+                new Claim(ClaimTypes.UserData, result.Id.ToString()),
+                new Claim(ClaimTypes.Name, result.UserName)
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -96,7 +97,6 @@ namespace ViewClient.Controllers
                         authProperties
                     );
 
-                    HttpContext.Session.SetString("UserName", result.UserName);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -114,7 +114,6 @@ namespace ViewClient.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Remove("UserName");
             return RedirectToAction("Index", "Home");
         }
     }

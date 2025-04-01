@@ -2,6 +2,7 @@ using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
 using Domain.Services.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders;
 using ViewClient.Repositories.IRepository;
@@ -17,7 +18,7 @@ namespace ViewClient
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.IdleTimeout = TimeSpan.FromMinutes(70);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -65,6 +66,16 @@ namespace ViewClient
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                var authResult = await context.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                if (!authResult.Succeeded) 
+                {
+                    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+                await next();
+            });
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
