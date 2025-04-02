@@ -213,25 +213,35 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request)
+        public async Task<string> ClientUpdatePassword(ClientUpdatePassword request)
         {
             try
             {
                 string hashedPassword = PasswordHashingHelper.HashPassword(request.Password);
                 string newPasswordHashed = PasswordHashingHelper.HashPassword(request.NewPassword);
 
-                SqlParameter[] sqlParameters = new SqlParameter[]
+                SqlParameter errorMessageParam = new SqlParameter("@ErrorMessage", SqlDbType.NVarChar, 400)
                 {
-                    new SqlParameter("@UserId", request.Id),
-                    new SqlParameter("@Password", hashedPassword),
-                    new SqlParameter("@NewPassword", newPasswordHashed)
+                    Direction = ParameterDirection.Output
                 };
 
-                return await _DbWorker.GetDataTableAsync(StoredProcedureConstant.SP_UpdatePassword, sqlParameters);
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+            new SqlParameter("@UserId", request.Id),
+            new SqlParameter("@Password", hashedPassword),
+            new SqlParameter("@NewPassword", newPasswordHashed),
+            errorMessageParam
+                };
+
+                // Gọi SP nhưng KHÔNG trả về DataTable
+                await _DbWorker.ExecuteNonQueryAsync(StoredProcedureConstant.SP_UpdatePassword, sqlParameters);
+
+                // Lấy giá trị từ OUTPUT parameter
+                return errorMessageParam.Value.ToString();
             }
             catch (Exception ex)
             {
-                throw;
+                return "Lỗi hệ thống: " + ex.Message;
             }
         }
     }

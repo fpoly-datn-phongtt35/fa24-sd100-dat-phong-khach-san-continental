@@ -9,6 +9,6 @@ namespace ViewClient.Repositories.IRepository
         Task<CustomerGetByIdRequest> GetCustomerById(Guid id);
         Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request);
         Task<int> UpdateCustomer(CustomerUpdateRequest request);
-        Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request);
+        Task<string> ClientUpdatePassword(ClientUpdatePassword request);
     }
 }

@@ -710,7 +710,7 @@ namespace Domain.Repositories.Repository
 
         public async Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync()
         {
-            var dataTable = await _worker.GetDataTableAsync("SP_GetTop3MostBookedRooms",null);
+            var dataTable = await _worker.GetDataTableAsync("SP_GetTopMostBookedRooms", null);
 
             return dataTable.AsEnumerable().Select(row => new TopBookedRoom
             {

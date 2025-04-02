@@ -102,23 +102,43 @@ namespace ViewClient.Controllers
             return Json(new { success = false, message = "Đã xảy ra lỗi khi cập nhật thông tin." });
 
         }
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> EditPassword(ClientUpdatePassword request)
         {
             var _UserLogin = Guid.Empty;
 
-            // Lấy thông tin người dùng đã đăng nhập
-            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            if (HttpContext.User.FindFirst(ClaimTypes.UserData) != null)
             {
-                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            }
-            var result = _customerRepo.ClientUpdatePassword(request);
-            if (result == null)
-            {
-                return Json(new { success = false, message = "Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin!" });
+                _UserLogin = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.UserData).Value);
             }
 
-            return Json(new { success = true, message = "Đổi mật khẩu thành công!" });
+            if (_UserLogin == Guid.Empty)
+            {
+                return Json(new { success = false, message = "Người dùng không xác định!" });
+            }
+
+            request.Id = _UserLogin;
+
+            try
+            {
+                var result = await _customerRepo.ClientUpdatePassword(request);
+
+                if (result == null)
+                {
+                    return Json(new { success = false, message = "Không có kết quả trả về từ hệ thống." });
+                }
+
+                if (result == "M?t kh?u cu không dúng." || result.Contains("Lỗi API: BadRequest - {\"message\":\"M?t kh?u cu không dúng.\"}"))
+                {
+                    return Json(new { success = false, message = result ?? "Mật khẩu cũ không đúng" ?? "Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin!" });
+                }
+                return Json(new { success = true, message = "Đổi mật khẩu thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Đã xảy ra lỗi trong quá trình thay đổi mật khẩu: {ex.Message}" });
+            }
         }
+
     }
 }

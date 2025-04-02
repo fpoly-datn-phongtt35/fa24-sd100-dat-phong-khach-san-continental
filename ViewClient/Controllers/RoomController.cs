@@ -191,7 +191,50 @@ namespace ViewClient.Controllers
                 return View("Error", new ErrorViewModel { Message = ex.Message });
             }
         }
-       
 
+        public async Task<IActionResult> DetailForViews(Guid roomId)
+        {
+            string requestUrl = $"/api/Room/GetRoomById?roomId={roomId}";
+            string floorsRequestUrl = "/api/Floor/GetListFloor";
+
+            try
+            {
+                // Lấy danh sách tầng
+                var floorResponse = await _httpClient.PostAsync(floorsRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+                var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
+                var floorList = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
+
+                // Lấy danh sách loại phòng
+                var roomTypeGetRequest = new RoomTypeGetRequest();
+                string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
+                var roomTypesTask = await SendHttpRequest<ResponseData<RoomTypeResponse>>(roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
+
+                // Lấy thông tin phòng
+                var room = await SendHttpRequest<RoomResponse>(requestUrl, HttpMethod.Post);
+                if (room != null)
+                {
+                    // Lấy danh sách dịch vụ
+                    var services = await IndexService();
+                    var roomType = roomTypesTask?.data?.FirstOrDefault(rt => rt.Id == room.RoomTypeId);
+                    var floor = floorList?.data?.FirstOrDefault(f => f.Id == room.FloorId);
+                    var viewModel = new RoomDetailViewModel
+                    {
+                        Room = room,
+                        Floor = floor,
+                        RoomType = roomType,
+                        Services = services
+                    };
+
+                    return View("DetailForView", viewModel);
+                }
+
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi ở đây nếu cần
+                return View("Error", new ErrorViewModel { Message = ex.Message });
+            }
+        }
     }
 }
