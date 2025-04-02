@@ -5,6 +5,6 @@ namespace Domain.DTO.PolicyType
 {
     public class PolicyTypeGetRequest : PagingRequest
     {
-        public PolicyTypeEnum? TitleOfType { get; set; }
+        public string? TitleOfType { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public PolicyTypeEnum? TitleOfType { get; set; }
+        public string? TitleOfType { get; set; }
         public string? Content { get; set; }
         public EntityStatus Status { get; set; } = EntityStatus.Active;
 

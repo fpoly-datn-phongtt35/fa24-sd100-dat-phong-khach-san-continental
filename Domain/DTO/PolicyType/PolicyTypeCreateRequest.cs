@@ -4,7 +4,7 @@ namespace Domain.DTO.PolicyType
 {
     public class PolicyTypeCreateRequest
     {
-        public PolicyTypeEnum? TitleOfType { get; set; }
+        public string? TitleOfType { get; set; }
         public string? Content { get; set; }
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
 

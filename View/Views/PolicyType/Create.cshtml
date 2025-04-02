@@ -13,18 +13,23 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="TitleOfType" class="control-label">Loại bài đăng</label>
                 <select required name="TitleOfType" class="form-select" id="TitleOfType">
                     <option hidden>Chọn loại bài đăng</option>
                     @foreach (var item in Enum.GetValues(typeof(PolicyTypeEnum)))
                     {
                         var type = (PolicyTypeEnum)item;
-                        <option value="@((int)type)" selected="@(Context.Request.Query["TitleOfType"].ToString() == ((int)item).ToString())">
+                        <option value="@((int)type)" selected="@(Context.Request.Query["TitleOfType"].ToString() == ((int)item).ToString())">s
                             @PolicyTypeHelper.DisplayPolicyType(type)
                         </option>
                     }
                 </select>
+                <span asp-validation-for="TitleOfType" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="TitleOfType" class="control-label">Tên loại </label>
+                <input required asp-for="TitleOfType" class="form-control" />
                 <span asp-validation-for="TitleOfType" class="text-danger"></span>
             </div>
             <div class="form-group">

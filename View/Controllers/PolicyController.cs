@@ -139,7 +139,7 @@ namespace View.Controllers
             ViewBag.PolicyTypes = policyTypeList?.data.Select(pt => new SelectListItem
             {
                 Value = pt.Id.ToString(),
-                Text = pt.TitleOfType.HasValue ? Views.Shared.Helper.PolicyTypeHelper.DisplayPolicyType(pt.TitleOfType.Value).ToString() : "Unknown"
+                Text = pt.TitleOfType
             }).ToList();
 
             string StaffsRequestUrl = "https://localhost:7130/api/Staff/GetListStaff";
@@ -227,7 +227,7 @@ namespace View.Controllers
             ViewBag.PolicyTypes = policyTypeResponse?.data.Select(pt => new SelectListItem
             {
                 Value = pt.Id.ToString(),
-                Text = pt.TitleOfType.HasValue ? Views.Shared.Helper.PolicyTypeHelper.DisplayPolicyType(pt.TitleOfType.Value).ToString() : "Unknown"
+                Text = pt.TitleOfType
             });
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
