@@ -1,4 +1,4 @@
-﻿        using Domain.DTO.Client;
+﻿using Domain.DTO.Client;
 using Domain.DTO.Customer;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -32,19 +32,35 @@ namespace ViewClient.Repositories.Repository
             return null;
         }
 
-        public async Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request)
+        public async Task<string> ClientUpdatePassword(ClientUpdatePassword request)
         {
-            string url = $"https://localhost:7130/api/Customer/UpdatePassword";
-            var response = await _httpClient.PutAsJsonAsync(url, request);
-            if (response.IsSuccessStatusCode)
-            {
-                var resultString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<DataTable>(resultString);
-                return result;
-            }
+            string url = "https://localhost:7130/api/Customer/UpdatePassword";
 
-            // Xử lý lỗi nếu cần
-            return null;
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync(url, request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+
+                    if (result != null && result.ContainsKey("message"))
+                    {
+                        return result["message"];
+                    }
+
+                    return "Không nhận được phản hồi từ API.";
+                }
+                else
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    return $"Lỗi API: {response.StatusCode} - {errorMessage}";
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Đã xảy ra lỗi khi gọi API: {ex.Message}";
+            }
         }
 
         public async Task<CustomerGetByIdRequest> GetCustomerById(Guid id)

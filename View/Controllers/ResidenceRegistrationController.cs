@@ -182,7 +182,7 @@ namespace View.Controllers
                 PageSize = int.MaxValue,
             };
             
-            string requestUrl = $"api/ResidenceRegistration/GetResidenceRegistrations";
+            string requestUrl = $"api/ResidenceRegistration/GetResidenceRegistrationsByDate";
             var residenceRegis = await SendHttpRequest<ResponseData<ResidenceResponse>>
                 (requestUrl, HttpMethod.Post, residenceRegistrationGetRequest);
             

@@ -40,7 +40,7 @@
         @foreach (var item in Model.data)
         {
             <tr>
-                <td> @(item.TitleOfType.HasValue ? PolicyTypeHelper.DisplayPolicyType(item.TitleOfType.Value) : "Unknown")</td>
+                <td> @item.TitleOfType</td>
                 <td> @Html.DisplayFor(modelItem => item.Content)</td>
                 <td> @StatusHelper.DisplayStatusBadge(item.Status)</td>
                 <td>

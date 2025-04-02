@@ -1,6 +1,5 @@
 ﻿using Domain.DTO.Policy;
 using Domain.Enums;
-using Domain.Helper;
 using Domain.Repositories.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -144,10 +143,10 @@ namespace Domain.Repositories.Repository
                 );
 
                 var groupedData = dataTable.AsEnumerable()
-                    .GroupBy(row => row.Field<PolicyTypeEnum>("PolicyTypeTitle"))
+                    .GroupBy(row => row.Field<string>("PolicyTypeTitle"))
                     .Select(group => new PolicyTermsDto
                     {
-                        PolicyTypeTitle = PolicyTypeHelper.DisplayPolicyType(group.Key),
+                        PolicyTypeTitle = group.Key,
                         PolicyIds = group.Select(row => row.Field<Guid>("PolicyId")).ToList(),
                         PolicyTitles = group.Select(row => row.Field<string>("PolicyTitle")).ToList(),
                         PolicyContents = group.Select(row => row.Field<string>("PolicyContent")).ToList()

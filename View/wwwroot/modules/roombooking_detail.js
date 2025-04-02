@@ -272,9 +272,16 @@ var _roombooking_detail = {
         const differenceInMilliseconds = Math.abs(date2 - date1);
 
         // Chuyển đổi số mili giây thành số ngày
-        const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 3600 * 24));
-
-        return differenceInDays;
+        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 3600 * 24));
+        if (differenceInDays <= 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return differenceInDays;
+        }
+        
     },
 
     CalculatePrice: function (Id) {
@@ -447,6 +454,9 @@ var _roombooking_detail = {
                             newCOto = dateCheOut.toISOString().slice(0, 16);
 
                             Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
+                        }
+                        else{
+                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking);
                         }
 
                         

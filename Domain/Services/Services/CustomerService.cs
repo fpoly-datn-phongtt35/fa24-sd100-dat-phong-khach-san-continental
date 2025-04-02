@@ -112,7 +112,7 @@ namespace Domain.Services.Services
             }
         }
 
-        public async Task<DataTable> ClientUpdatePassword(ClientUpdatePassword request)
+        public async Task<string> ClientUpdatePassword(ClientUpdatePassword request)
         {
             try
             {

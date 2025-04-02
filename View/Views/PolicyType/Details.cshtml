@@ -14,9 +14,7 @@
             Tiêu đề
         </dt>
         <dd class = "col-sm-10">
-            @((Model.TitleOfType != null)
-                ? PolicyTypeHelper.DisplayPolicyType(Model.TitleOfType.Value)
-                : "Unknown")
+            @(Model.TitleOfType)
         </dd>
         <dt class = "col-sm-2">
            Nội dung

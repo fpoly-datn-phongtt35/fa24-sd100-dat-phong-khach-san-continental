@@ -20,7 +20,7 @@ namespace View.Controllers
             _httpClient = new HttpClient();
         }
 
-        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, PolicyTypeEnum? titleOfType = null)
+        public async Task<ActionResult> Index(int pageIndex = 1, int pageSize = 10, string? titleOfType = null)
         {
             string requestURL = "https://localhost:7130/api/PolicyType/GetListPolicyType";
 
@@ -83,7 +83,6 @@ namespace View.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-            ViewBag.PolicyTypes = Enum.GetValues(typeof(PolicyTypeEnum));
             return View(new PolicyTypeCreateRequest());
         }
 
@@ -119,8 +118,7 @@ namespace View.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
-            ViewBag.PolicyTypes = Enum.GetValues(typeof(PolicyTypeEnum));
-
+ 
             try
             {
                 var response = await _httpClient.PostAsync(requestUrl, content);
