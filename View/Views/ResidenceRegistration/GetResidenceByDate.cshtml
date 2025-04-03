@@ -33,19 +33,18 @@
             <input type="text" id="roomNameFilter" name="roomName" class="form-control"
                    value="@Context.Request.Query["roomName"].ToString()" placeholder="Tên phòng" />
         </div>
-
-        @* <div class="col-auto w-25">
-            <select id="isCheckedOutFilter" name="isCheckedOut" class="form-select">
-                <option value="" @(Context.Request.Query["isCheckOut"].ToString() == "" ? "selected" : "")>Trạng thái checkout</option>
-                <option value="0" @(Context.Request.Query["isCheckOut"].ToString() == "0" ? "selected" : "")>Chưa checkout</option>
-                <option value="1" @(Context.Request.Query["isCheckOut"].ToString() == "1" ? "selected" : "")>Đã checkout</option>
-            </select>
-        </div> *@
-
         <div class="col-auto">
             <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
             <button type="submit" class="btn btn-danger" onclick="clearFilters()">Xóa lọc</button>
-            <a asp-action="ResidenceRegistrationPDF" class="btn btn-danger">Xem file PDF</a>
+            <a asp-action="ResidenceRegistrationPDF"
+               asp-route-pageIndex="@Model.CurrentPage"
+               asp-route-pageSize="@Model.PageSize"
+               asp-route-date="@Context.Request.Query["date"].ToString()"
+               asp-route-fullName="@Context.Request.Query["fullName"].ToString()"
+               asp-route-identityNumber="@Context.Request.Query["identityNumber"].ToString()"
+               asp-route-roomName="@Context.Request.Query["roomName"].ToString()"
+               asp-route-isCheckOut="@Context.Request.Query["isCheckOut"].ToString()"
+               class="btn btn-danger">Xem file PDF</a>
         </div>
     </div>
 </form>
@@ -82,8 +81,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Gender)</td>
                 <td>@Html.DisplayFor(modelItem => item.IdentityNumber)</td>
                 <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                <td>@item.CheckInTime?.DateTime.ToString("d/M/yyyy HH:mm")</td>
-                <td>@item.CheckOutTime?.DateTime.ToString("d/M/yyyy HH:mm")</td>
+                <td>@item.CheckInTime?.DateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@item.CheckOutTime?.DateTime.ToString("dd/MM/yyyy HH:mm")</td>
             </tr>
         }
     </tbody>
