@@ -683,30 +683,51 @@ namespace Domain.Repositories.Repository
             return revenueList;
         }
 
-        public async Task<float> GetCoverageRatio(int month, int year)
+        public async Task<List<MonthlyCoverageDto>> GetMonthlyCoverage()
         {
-            SqlParameter[] parameters = new SqlParameter[]
+            var dataTable = _worker.GetDataTable("SP_GetMonthlyCoverageRatio");
+
+            var monthlyCoverageList = new List<MonthlyCoverageDto>();
+
+            foreach (DataRow row in dataTable.Rows)
             {
-                new SqlParameter("@Month", month),
-                new SqlParameter("@Year", year)
-            };
-
-            var dataTable = _worker.GetDataTable("SP_GetCoverageRatio", parameters);
-
-            float data = 0f; 
-
-            if (dataTable.Rows.Count > 0)
-            {
-                foreach (DataRow row in dataTable.Rows)
+                if (row["YearNumber"] != DBNull.Value && row["MonthNumber"] != DBNull.Value && row["CoverageRatio"] != DBNull.Value)
                 {
-                    if (row["MonthlyCoverageRatio"] != DBNull.Value)
+                    monthlyCoverageList.Add(new MonthlyCoverageDto
                     {
-                        data = Convert.ToSingle(row["MonthlyCoverageRatio"]);
-                    }
+                        YearNumber = Convert.ToInt32(row["YearNumber"]),
+                        MonthNumber = Convert.ToInt32(row["MonthNumber"]),
+                        CoverageRatio = Convert.ToDouble(row["CoverageRatio"])
+                    });
                 }
             }
-            return data;   
+
+            return monthlyCoverageList;
         }
+
+        public async Task<List<WeeklyCoverageDto>> GetWeeklyCoverage()
+        {
+            var dataTable = _worker.GetDataTable("SP_GetWeeklyCoverageRatio");
+
+            var weeklyCoverageList = new List<WeeklyCoverageDto>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (row["Date"] != DBNull.Value && row["CoverageRatio"] != DBNull.Value)
+                {
+                    weeklyCoverageList.Add(new WeeklyCoverageDto
+                    {
+                        Date = Convert.ToDateTime(row["Date"]),
+                        CoverageRatio = Convert.ToDouble(row["CoverageRatio"])
+                    });
+                }
+            }
+
+            return weeklyCoverageList;
+        }
+
+
+
 
         public async Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync()
         {

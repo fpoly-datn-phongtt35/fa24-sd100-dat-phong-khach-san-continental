@@ -85,10 +85,16 @@ namespace Domain.Services.Services.Room
             return await _roomRepository.SearchRooms(request);
         }
 
-        public async Task<float> GetCoverageRatio(int month, int year)
+        public async Task<List<MonthlyCoverageDto>> GetMonthlyCoverage()
         {
-            return await _roomRepository.GetCoverageRatio(month, year);
+            return await _roomRepository.GetMonthlyCoverage();
         }
+
+        public async Task<List<WeeklyCoverageDto>> GetWeeklyCoverage()
+        {
+            return await _roomRepository.GetWeeklyCoverage();
+        }
+
 
         public async Task<bool> CheckedAvailableRooms(List<Guid> LstRoomId, SearchRoomsRequest request)
         {

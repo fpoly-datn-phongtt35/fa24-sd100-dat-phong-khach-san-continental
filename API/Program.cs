@@ -131,6 +131,8 @@ namespace API
             builder.Services.AddTransient<IServiceTypeService, ServiceTypeService>();
             builder.Services.AddTransient<IFloorService, FloorService>();
             builder.Services.AddTransient<IBuildingService, BuildingService>();
+
+
             //AmenityService
             builder.Services.AddTransient<IAmenityAddService, AmenityAddService>();
             builder.Services.AddTransient<IAmenityDeleteService, AmenityDeleteService>();

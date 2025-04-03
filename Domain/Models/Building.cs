@@ -7,6 +7,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
+        [Required(ErrorMessage = "Tên không được để trống")]
         public string? Name { get; set; }  
         public EntityStatus Status { get; set; } 
         public DateTimeOffset? CreatedTime { get; set; }

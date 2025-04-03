@@ -165,88 +165,62 @@
 </div>
 <hr style="height: 1px">
 <!-- Coverage ratio -->
-<div style="flex: 3; margin-left: 23px">
-    <div style="display: flex; justify-content: flex-start; align-items: center; margin-bottom: 20px; width: 100%;">
-        <h3 style="margin-right: 20px;">Tỉ lệ phủ</h3>
-        <form method="get" action="@Url.Action("Index")" style="display: flex; align-items: center; margin-right: 20px;">
-            <label for="Month">Tháng:</label>
-            <select id="Month" name="Month" class="form-control" style="width: 80px; display: inline-block; margin-right: 10px;">
-                @for (int i = 1; i <= 12; i++)
-                {
-                    <option value="@i" selected="@(i == ViewBag.Month ? "selected" : null)">@i</option>
-                }
-            </select>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            <label for="Year">Năm:</label>
-            <select id="Year" name="Year" class="form-control" style="width: 100px; display: inline-block; margin-right: 10px;">
-                @for (int i = DateTime.Now.Year; i >= 2024; i--)
-                {
-                    <option value="@i" selected="@(i == ViewBag.Year ? "selected" : null)">@i</option>
-                }
-            </select>
-
-            <button type="submit" class="btn btn-primary" style="margin-bottom:5px">Lọc</button>
-        </form>
-
-        @if (coverageRatio != null)
-        {
-            <div style="font-size: 1.5rem; font-weight: bold; color: #4CAF50; padding: 10px; border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); display: inline-block; margin-left: 20px;">
-                @String.Format("{0:0.00}", @coverageRatio) %
-            </div>
-        }
-    </div>
-
-    <hr>
-
-    @{
-        var month = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["Month"].FirstOrDefault() ?? DateTime.Now.Month.ToString());
-        var year = Convert.ToInt32(HttpContextAccessor.HttpContext.Request.Query["Year"].FirstOrDefault() ?? DateTime.Now.Year.ToString());
-    }
-
-    @if (coverageRatio == null)
-    {
-        <p>Không có dữ liệu để hiển thị.</p>
-    }
+<div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px;">
+    <canvas id="weeklyCoverageChart" style="max-width: 45%; height: 300px;"></canvas>
+    <canvas id="monthlyCoverageChart" style="max-width: 45%; height: 300px;"></canvas>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const weeklyCoverageData = @Html.Raw(Json.Serialize(ViewBag.WeeklyCoverageData ?? new List<float>()));
+        const weeklyLabels = @Html.Raw(Json.Serialize(ViewBag.WeeklyLabels ?? new List<string>()));
+
+        const monthlyCoverageData = @Html.Raw(Json.Serialize(ViewBag.MonthlyCoverageData ?? new List<float>()));
+        const monthlyLabels = @Html.Raw(Json.Serialize(ViewBag.MonthlyLabels ?? new List<string>()));
+
+        const ctxWeekly = document.getElementById("weeklyCoverageChart").getContext("2d");
+        new Chart(ctxWeekly, {
+            type: "line",
+            data: {
+                labels: weeklyLabels,
+                datasets: [{
+                    label: "Tỷ lệ phủ phòng trong tuần",
+                    data: weeklyCoverageData,
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0, 0, 255, 0.2)",
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        const ctxMonthly = document.getElementById("monthlyCoverageChart").getContext("2d");
+        new Chart(ctxMonthly, {
+            type: "line",
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: "Tỷ lệ phủ phòng theo tháng",
+                    data: monthlyCoverageData,
+                    borderColor: "green",
+                    backgroundColor: "rgba(0, 255, 0, 0.2)",
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    });
+</script>
 
 
-
-
-@* <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-<!-- Thêm một số CSS để tạo kiểu cho các card -->
-<style>
-    .top-customer-list {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .top-customer-card {
-        background-color: #f7f7f7;
-        padding: 20px;
-        border-radius: 10px;
-        width: 200px;
-        text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .top-customer-card i {
-        color: #4CAF50;
-    }
-
-    .top-customer-info h5 {
-        font-size: 18px;
-        margin-top: 10px;
-        color: #333;
-    }
-
-    .top-customer-info p {
-        font-size: 14px;
-        color: #555;
-    }
-</style> *@
 
 
 <div style="margin-left: 20px;margin-top: 20px">
