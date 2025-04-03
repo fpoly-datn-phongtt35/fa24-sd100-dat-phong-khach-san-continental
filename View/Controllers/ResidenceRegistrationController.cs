@@ -174,19 +174,26 @@ namespace View.Controllers
             }
         }
 
-        public async Task<IActionResult> ResidenceRegistrationPDF()
+        public async Task<IActionResult> ResidenceRegistrationPDF(int pageIndex = 1, int pageSize = 10, DateTime? date = null, string? fullName = null, string? identityNumber = null, string? roomName = null, bool? isCheckOut = null)
         {
-            var residenceRegistrationGetRequest = new ResidenceGetRequest()
+            var residenceRegistrationGetRequest = new ResidenceGetByDateRequest
             {
-                PageIndex = 1,
-                PageSize = int.MaxValue,
+                Date = date,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                FullName = fullName,
+                IdentityNumber = identityNumber,
+                RoomName = roomName,
+                IsCheckOut = isCheckOut
             };
-            
+
             string requestUrl = $"api/ResidenceRegistration/GetResidenceRegistrationsByDate";
             var residenceRegis = await SendHttpRequest<ResponseData<ResidenceResponse>>
                 (requestUrl, HttpMethod.Post, residenceRegistrationGetRequest);
             
             if(residenceRegis == null) return View("Error");
+
+            ViewData["FilterDate"] = date.HasValue ? date.Value.ToString("dd/MM/yyyy") : DateTime.UtcNow.ToString("dd/MM/yyyy");
 
             return new ViewAsPdf("ResidenceRegistrationPDF", residenceRegis, ViewData)
             {
