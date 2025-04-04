@@ -31,5 +31,6 @@ namespace Domain.Repositories.IRepository
         Task<List<WeeklyCoverageDto>> GetWeeklyCoverage();
 
         Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync();
+        Task<HotelInfoDto> HotelInfo();
     }
 }

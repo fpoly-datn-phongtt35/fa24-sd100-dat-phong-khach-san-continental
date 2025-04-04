@@ -60,6 +60,19 @@ namespace API.Controllers
             }
         }
 
+        [HttpPost("GetHotelInfo")]
+        public async Task<HotelInfoDto> HotelInfo()
+        {
+            try
+            {
+                return await _roomGetService.HotelInfo();
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException("Not found the room", e);
+            }
+        }
+
         [HttpGet("GetWeeklyCoverage")]
         public async Task<ActionResult<List<WeeklyCoverageDto>>> GetWeeklyCoverage()
         {

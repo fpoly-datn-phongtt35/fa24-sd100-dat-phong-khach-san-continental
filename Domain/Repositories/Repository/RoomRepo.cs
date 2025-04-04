@@ -745,5 +745,30 @@ namespace Domain.Repositories.Repository
                            .ToList() ?? new List<string>()
             }).ToList();
         }
+
+        public async Task<HotelInfoDto> HotelInfo()
+        {
+            var info = await _worker.GetDataTableAsync(StoredProcedureConstant.GetRoomInfo, null);
+
+            if (info == null || info.Rows.Count == 0)
+            {
+                return null; 
+            }
+
+            var row = info.Rows[0];
+
+            var hotelInfo = new HotelInfoDto
+            {
+                TotalRoom = Convert.ToInt32(row["TotalRoom"]),
+                AvailableRoom = Convert.ToInt32(row["AvailableRoom"]),
+                BookedRoom = Convert.ToInt32(row["BookedRoom"]),
+                HotelMaximumOccupancy = Convert.ToInt32(row["HotelMaximumOccupancy"]),
+                InHotel = Convert.ToInt32(row["InHotel"]),
+                AvailableOccupancy = Convert.ToInt32(row["AvailableOccupancy"]),
+                RoomBookedRate = Convert.ToDouble(row["RoomBookedRate"])
+            };
+
+            return hotelInfo;
+        }
     }
 }
