@@ -47,16 +47,29 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost(nameof(GetCoverageRatio))]
-        public async Task<float> GetCoverageRatio(int month, int year)
+        [HttpGet("GetMonthlyCoverage")]
+        public async Task<ActionResult<List<MonthlyCoverageDto>>> GetMonthlyCoverage()
         {
             try
             {
-                return await _roomGetService.GetCoverageRatio(month, year);
+                return Ok(await _roomGetService.GetMonthlyCoverage());
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new Exception(e.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("GetWeeklyCoverage")]
+        public async Task<ActionResult<List<WeeklyCoverageDto>>> GetWeeklyCoverage()
+        {
+            try
+            {
+                return Ok(await _roomGetService.GetWeeklyCoverage());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
