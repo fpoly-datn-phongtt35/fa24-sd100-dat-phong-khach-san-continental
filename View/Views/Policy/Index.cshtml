@@ -60,7 +60,7 @@
                     @{
                         var policyType = policyTypeList.FirstOrDefault(pt => pt.Id == item.PolicyTypeId);
                         var policyTypeName = policyType?.TitleOfType;
-                        @(policyTypeName.HasValue ? PolicyTypeHelper.DisplayPolicyType(policyTypeName.Value) : "Unknown")
+                        @policyTypeName
                     }
                 </td>
                 <td>

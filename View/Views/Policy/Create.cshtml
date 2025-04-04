@@ -20,7 +20,7 @@
                     @foreach (var item in ViewBag.PolicyTypes)
                     {
                         <option value="@item.Id" selected="@(Context.Request.Query["PolicyTypeId"].ToString() == item.Id.ToString())">
-                            @PolicyTypeHelper.DisplayPolicyType(@item.TitleOfType)
+                            @item.TitleOfType
                         </option>
                     }
                 </select>

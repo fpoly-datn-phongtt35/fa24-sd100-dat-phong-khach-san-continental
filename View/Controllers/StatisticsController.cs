@@ -104,67 +104,65 @@ namespace View.Controllers
                 return null;
             }
         }
-        public async Task<IActionResult> Index(int? month, int? year, int? selectedMonthCustomer, int? selectedYearCustomer, int? selectedMonthRoom, int? selectedYearRoom, string revenueFilterType = "Month")
+        public async Task<IActionResult> Index(int? selectedMonthCustomer, int? selectedYearCustomer, int? selectedMonthRoom, int? selectedYearRoom, string revenueFilterType = "Month")
         {
             try
             {
-                // Kiểm tra giá trị đầu vào của revenueFilterType
                 if (revenueFilterType != "Month" && revenueFilterType != "Year")
                 {
-                    revenueFilterType = "Month"; // Đặt lại giá trị mặc định nếu không hợp lệ
+                    revenueFilterType = "Month";
                 }
 
-                // Lấy dữ liệu doanh thu
                 var revenueRequestUrl = $"api/Room/GetRevenueAsync?revenueFilterType={revenueFilterType}";
                 var revenueData = await SendHttpRequest<List<GetRevenue>>(revenueRequestUrl, HttpMethod.Post);
-
-                // Ánh xạ dữ liệu doanh thu
                 var periods = revenueData.Select(x => x.Period).ToList();
-                    var totalAmounts = revenueData.Select(x => x.TotalAmount).ToList();
+                var totalAmounts = revenueData.Select(x => x.TotalAmount).ToList();
 
-                // Lấy dữ liệu top khách hàng
-                if (selectedMonthCustomer == null) selectedMonthCustomer = DateTime.Now.Month; // Mặc định là tháng hiện tại
-                if (selectedYearCustomer == null) selectedYearCustomer = DateTime.Now.Year; // Mặc định là năm hiện tại
+                if (selectedMonthCustomer == null) selectedMonthCustomer = DateTime.Now.Month;
+                if (selectedYearCustomer == null) selectedYearCustomer = DateTime.Now.Year;
 
                 var topCustomerRequestUrl = $"api/Room/GetTopCustomerBookings?selectedMonthCustomer={selectedMonthCustomer}&selectedYearCustomer={selectedYearCustomer}";
                 var topCustomerData = await SendHttpRequest<List<TopCustomerBooking>>(topCustomerRequestUrl, HttpMethod.Post);
 
-                // Lấy dữ liệu top phòng
-                if (selectedMonthRoom == null) selectedMonthRoom = DateTime.Now.Month; // Mặc định là tháng hiện tại
-                if (selectedYearRoom == null) selectedYearRoom = DateTime.Now.Year; // Mặc định là năm hiện tại
+                if (selectedMonthRoom == null) selectedMonthRoom = DateTime.Now.Month;
+                if (selectedYearRoom == null) selectedYearRoom = DateTime.Now.Year;
 
                 var topRoomRequestUrl = $"api/Room/GetTopBookingRoomsAsync?selectedMonthRoom={selectedMonthRoom}&selectedYearRoom={selectedYearRoom}";
                 var topRoomData = await SendHttpRequest<List<TopRoomBookingViewModel>>(topRoomRequestUrl, HttpMethod.Post);
 
-                // coverage ratio
-                if (month == null) month = DateTime.Now.Month; 
-                if (year == null) year = DateTime.Now.Year;
-                var coverageRatioUrl = $"api/Room/GetCoverageRatio?month={month}&year={year}";
+                // Lấy dữ liệu tỷ lệ phủ tuần
+                var coverageWeeklyUrl = "/api/Room/GetWeeklyCoverage";
+                var weeklyCoverageResponse = await SendHttpRequest<List<WeeklyCoverageDto>>(coverageWeeklyUrl, HttpMethod.Get);
+                List<double> weeklyCoverageRatios = new List<double>();
+                List<string> weeklyLabels = new List<string>();
 
-                var coverageRatioResponse = await SendHttpRequest<object>(coverageRatioUrl, HttpMethod.Post);  
-
-                float? coverageRatio = null;
-
-                if (coverageRatioResponse != null)
+                if (weeklyCoverageResponse != null)
                 {
-                    if (float.TryParse(coverageRatioResponse.ToString(), out float parsedValue))
-                    {
-                        coverageRatio = parsedValue;
-                    }
+                    weeklyCoverageRatios = weeklyCoverageResponse.Select(x => x.CoverageRatio).ToList();
+                    weeklyLabels = weeklyCoverageResponse.Select(x => x.Date.ToString("dd/MM/yyyy")).ToList(); // Chuyển DateTime thành chuỗi ngày
                 }
 
-                if (coverageRatio.HasValue)
+                // Lấy dữ liệu tỷ lệ phủ tháng
+                var coverageMonthlyUrl = "/api/Room/GetMonthlyCoverage";
+                var monthlyCoverageResponse = await SendHttpRequest<List<MonthlyCoverageDto>>(coverageMonthlyUrl, HttpMethod.Get);
+                List<double> monthlyCoverageRatios = new List<double>();
+                List<string> monthlyLabels = new List<string>();
+
+                if (monthlyCoverageResponse != null)
                 {
-                    ViewBag.CoverageRatio = coverageRatio.Value;
-                }
-                else
-                {
-                    ViewBag.CoverageRatio = "No data available"; 
+                    monthlyCoverageRatios = monthlyCoverageResponse.Select(x => x.CoverageRatio).ToList();
+                    monthlyLabels = monthlyCoverageResponse.Select(x => $"{x.MonthNumber}/{x.YearNumber}").ToList(); // Chuyển đổi thành "MM/YYYY"
                 }
 
                 // Truyền dữ liệu vào ViewBag
-                ViewBag.Month = month;
-                ViewBag.Year = year;
+                ViewBag.WeeklyCoverageData = weeklyCoverageRatios;
+                ViewBag.WeeklyLabels = weeklyLabels;
+                ViewBag.MonthlyCoverageData = monthlyCoverageRatios;
+                ViewBag.MonthlyLabels = monthlyLabels;
+
+
+
+                // Truyền dữ liệu vào ViewBag
                 ViewBag.Periods = periods;
                 ViewBag.TotalAmounts = totalAmounts;
                 ViewBag.TopCustomers = topCustomerData;
@@ -181,8 +179,6 @@ namespace View.Controllers
                 return View("Error", ex);
             }
         }
-
-
 
 
 

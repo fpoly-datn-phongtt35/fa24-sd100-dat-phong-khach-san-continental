@@ -30,16 +30,24 @@ namespace API.ClientControllers
             }
         }
         [HttpPut("UpdatePassword")]
-        public async Task<DataTable> UpdatePassword(ClientUpdatePassword request)
+        public async Task<IActionResult> UpdatePassword(ClientUpdatePassword request)
         {
             try
             {
-                return await _CustomerRepo.ClientUpdatePassword(request);
+                var resultMessage = await _CustomerRepo.ClientUpdatePassword(request);
+
+                if (resultMessage.Contains("không tồn tại") || resultMessage.Contains("không dúng."))
+                {
+                    return BadRequest(new { message = resultMessage });
+                }
+
+                return Ok(new { message = resultMessage });
             }
             catch (Exception ex)
             {
-                throw ex.InnerException;
+                return StatusCode(500, new { error = ex.Message });
             }
         }
+
     }
 }

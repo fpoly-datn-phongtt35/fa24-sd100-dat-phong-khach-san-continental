@@ -2,6 +2,7 @@
 using Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Domain.DTO.Room
 {
     public class RoomCreateRequest
     {
+        [Required(ErrorMessage = "Tên không được để trống.")]
         public string? Name { get; set; } = string.Empty;
         public decimal? Price { get; set; }
         public string? Address { get; set; }

@@ -7,6 +7,7 @@ namespace Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
+        [Required(ErrorMessage = "Tên không được để trống")]
         public string? Name { get; set; } = string.Empty;
         public int? NumberOfRoom { get; set; }
         public Guid BuildingId { get; set; }

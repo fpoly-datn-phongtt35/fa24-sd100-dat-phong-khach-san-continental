@@ -27,7 +27,10 @@ namespace Domain.Repositories.IRepository
         Task<List<TopRoomBookingViewModel>> GetTopBookingRoomsAsync(int SelectedMonthRoom, int SelectedYearRoom);
         Task<List<TopCustomerBooking>> GetTopCustomerBookings(int SelectedMonthCustomer, int SelectedYearCustomer);
         Task<List<GetRevenue>> GetRevenueAsync(string revenueFilterType);
-        Task<float> GetCoverageRatio(int month, int year);
+        Task<List<MonthlyCoverageDto>> GetMonthlyCoverage();
+        Task<List<WeeklyCoverageDto>> GetWeeklyCoverage();
+
         Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync();
+        Task<HotelInfoDto> HotelInfo();
     }
 }

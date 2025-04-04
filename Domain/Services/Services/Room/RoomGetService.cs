@@ -85,10 +85,16 @@ namespace Domain.Services.Services.Room
             return await _roomRepository.SearchRooms(request);
         }
 
-        public async Task<float> GetCoverageRatio(int month, int year)
+        public async Task<List<MonthlyCoverageDto>> GetMonthlyCoverage()
         {
-            return await _roomRepository.GetCoverageRatio(month, year);
+            return await _roomRepository.GetMonthlyCoverage();
         }
+
+        public async Task<List<WeeklyCoverageDto>> GetWeeklyCoverage()
+        {
+            return await _roomRepository.GetWeeklyCoverage();
+        }
+
 
         public async Task<bool> CheckedAvailableRooms(List<Guid> LstRoomId, SearchRoomsRequest request)
         {
@@ -103,6 +109,11 @@ namespace Domain.Services.Services.Room
         public async Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync()
         {
             return await _roomRepository.GetTop3MostBookedRoomsAsync();
+        }
+
+        public async Task<HotelInfoDto> HotelInfo()
+        {
+            return await _roomRepository.HotelInfo();
         }
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
         //{

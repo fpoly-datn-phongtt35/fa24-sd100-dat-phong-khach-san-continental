@@ -683,34 +683,55 @@ namespace Domain.Repositories.Repository
             return revenueList;
         }
 
-        public async Task<float> GetCoverageRatio(int month, int year)
+        public async Task<List<MonthlyCoverageDto>> GetMonthlyCoverage()
         {
-            SqlParameter[] parameters = new SqlParameter[]
+            var dataTable = _worker.GetDataTable("SP_GetMonthlyCoverageRatio");
+
+            var monthlyCoverageList = new List<MonthlyCoverageDto>();
+
+            foreach (DataRow row in dataTable.Rows)
             {
-                new SqlParameter("@Month", month),
-                new SqlParameter("@Year", year)
-            };
-
-            var dataTable = _worker.GetDataTable("SP_GetCoverageRatio", parameters);
-
-            float data = 0f; 
-
-            if (dataTable.Rows.Count > 0)
-            {
-                foreach (DataRow row in dataTable.Rows)
+                if (row["YearNumber"] != DBNull.Value && row["MonthNumber"] != DBNull.Value && row["CoverageRatio"] != DBNull.Value)
                 {
-                    if (row["MonthlyCoverageRatio"] != DBNull.Value)
+                    monthlyCoverageList.Add(new MonthlyCoverageDto
                     {
-                        data = Convert.ToSingle(row["MonthlyCoverageRatio"]);
-                    }
+                        YearNumber = Convert.ToInt32(row["YearNumber"]),
+                        MonthNumber = Convert.ToInt32(row["MonthNumber"]),
+                        CoverageRatio = Convert.ToDouble(row["CoverageRatio"])
+                    });
                 }
             }
-            return data;   
+
+            return monthlyCoverageList;
         }
+
+        public async Task<List<WeeklyCoverageDto>> GetWeeklyCoverage()
+        {
+            var dataTable = _worker.GetDataTable("SP_GetWeeklyCoverageRatio");
+
+            var weeklyCoverageList = new List<WeeklyCoverageDto>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (row["Date"] != DBNull.Value && row["CoverageRatio"] != DBNull.Value)
+                {
+                    weeklyCoverageList.Add(new WeeklyCoverageDto
+                    {
+                        Date = Convert.ToDateTime(row["Date"]),
+                        CoverageRatio = Convert.ToDouble(row["CoverageRatio"])
+                    });
+                }
+            }
+
+            return weeklyCoverageList;
+        }
+
+
+
 
         public async Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync()
         {
-            var dataTable = await _worker.GetDataTableAsync("SP_GetTop3MostBookedRooms",null);
+            var dataTable = await _worker.GetDataTableAsync("SP_GetTopMostBookedRooms", null);
 
             return dataTable.AsEnumerable().Select(row => new TopBookedRoom
             {
@@ -723,6 +744,31 @@ namespace Domain.Repositories.Repository
                            .Select(img => img.Trim())
                            .ToList() ?? new List<string>()
             }).ToList();
+        }
+
+        public async Task<HotelInfoDto> HotelInfo()
+        {
+            var info = await _worker.GetDataTableAsync(StoredProcedureConstant.GetRoomInfo, null);
+
+            if (info == null || info.Rows.Count == 0)
+            {
+                return null; 
+            }
+
+            var row = info.Rows[0];
+
+            var hotelInfo = new HotelInfoDto
+            {
+                TotalRoom = Convert.ToInt32(row["TotalRoom"]),
+                AvailableRoom = Convert.ToInt32(row["AvailableRoom"]),
+                BookedRoom = Convert.ToInt32(row["BookedRoom"]),
+                HotelMaximumOccupancy = Convert.ToInt32(row["HotelMaximumOccupancy"]),
+                InHotel = Convert.ToInt32(row["InHotel"]),
+                AvailableOccupancy = Convert.ToInt32(row["AvailableOccupancy"]),
+                RoomBookedRate = Convert.ToDouble(row["RoomBookedRate"])
+            };
+
+            return hotelInfo;
         }
     }
 }
