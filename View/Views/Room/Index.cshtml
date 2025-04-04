@@ -1,5 +1,6 @@
 ﻿@using System.Diagnostics
 @using Domain.DTO.Floor
+@using Domain.DTO.Room
 @using Domain.DTO.RoomType
 @using Domain.Enums
 @using Domain.DTO.Paging
@@ -10,55 +11,84 @@
 @{
     ViewData["Title"] = "Danh sách Room";
 }
+@if (ViewBag.HotelInfo != null)
+{
+    var hotelInfo = ViewBag.HotelInfo as HotelInfoDto;
+    <div>
+        <h3>Thông tin khách sạn</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tổng số phòng</th>
+                    <th>Phòng trống</th>
+                    <th>Phòng đã đặt</th>
+                    <th>Sức chứa tối đa</th>
+                    <th>Đang ở</th>
+                    <th>Sức chứa còn lại</th>
+                    <th>Tỷ lệ đặt phòng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@hotelInfo.TotalRoom</td>
+                    <td>@hotelInfo.AvailableRoom</td>
+                    <td>@hotelInfo.BookedRoom</td>
+                    <td>@hotelInfo.HotelMaximumOccupancy</td>
+                    <td>@hotelInfo.InHotel</td>
+                    <td>@hotelInfo.AvailableOccupancy</td>
+                    <td>@hotelInfo.RoomBookedRate %</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
 
 <h3>Danh sách Phòng</h3>
 
-
-
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })" class="d-flex align-items-center">
-        <div class="form-group me-2">
-            <input type="text" name="name" class="form-control" placeholder="Tìm kiếm"
-                   value="@ViewContext.HttpContext.Request.Query["search"]" />
-        </div>
-        <div class="form-group me-2">
-            <select name="roomTypeId" class="form-select" id="roomTypeId">
-                <option value="">Chọn loại phòng</option>
-                @foreach (var roomType in ViewBag.RoomTypes)
-                {
-                    <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
-                        @roomType.Name
-                    </option>
-                }
-            </select>
-        </div>
+    <div class="form-group me-2">
+        <input type="text" name="name" class="form-control" placeholder="Tìm kiếm"
+               value="@ViewContext.HttpContext.Request.Query["search"]" />
+    </div>
+    <div class="form-group me-2">
+        <select name="roomTypeId" class="form-select" id="roomTypeId">
+            <option value="">Chọn loại phòng</option>
+            @foreach (var roomType in ViewBag.RoomTypes)
+            {
+                <option value="@roomType.Id" selected="@(Context.Request.Query["roomTypeId"] == roomType.Id.ToString())">
+                    @roomType.Name
+                </option>
+            }
+        </select>
+    </div>
 
-        <div class="form-group me-2">
-            <select name="floorId" class="form-select" id="floorId">
-                <option value="">Chọn tầng</option>
-                @foreach (var floor in ViewBag.FloorList)
-                {
-                    <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
-                        @floor.Name
-                    </option>
-                }
-            </select>
-        </div>
+    <div class="form-group me-2">
+        <select name="floorId" class="form-select" id="floorId">
+            <option value="">Chọn tầng</option>
+            @foreach (var floor in ViewBag.FloorList)
+            {
+                <option value="@floor.Id" selected="@(Context.Request.Query["floorId"] == floor.Id.ToString())">
+                    @floor.Name
+                </option>
+            }
+        </select>
+    </div>
 
-        <div>
-            <select name="status" class="form-select" id="status">
-                <option hidden>-- Chọn trạng thái --</option>
-                @foreach (var status in Enum.GetValues(typeof(RoomStatus)))
-                {
+    <div>
+        <select name="status" class="form-select" id="status">
+            <option hidden>-- Chọn trạng thái --</option>
+            @foreach (var status in Enum.GetValues(typeof(RoomStatus)))
+            {
                 var statusEnum = (RoomStatus)status;
                 <option value="@((int)statusEnum)" selected="@(Context.Request.Query["status"].ToString() == ((int)status).ToString())">
                     @StatusHelper.DisplayNameRoomStatus(statusEnum)
                 </option>
-                }
-            </select>
-        </div>
+            }
+        </select>
+    </div>
     <button type="submit" class="btn btn-outline-success ms-2">Lọc</button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
-    </form>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Xóa lọc</a>
+</form>
 <p>
     <a asp-action="Create" class="mt-3 btn btn-primary">Tạo mới</a>
 </p>
@@ -94,7 +124,7 @@
                             if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
                             {
                                 <div class="img-container" style="width: 100px; height: 100px; margin: 5px; overflow: hidden; border-radius: 5px;">
-                                    <img src="@firstImage.Image" 
+                                    <img src="@firstImage.Image"
                                          style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                             }
@@ -128,7 +158,7 @@
                     @roomtype1?.Name
                 </td>
                 <td>@StatusHelper.DisplayRoomStatusBadge(item.Status)</td>
-                
+
                 <td>
                     <div class="dropdown">
                         <button class="button1" type="button" id="dropdownMenuButton-@item.Id"

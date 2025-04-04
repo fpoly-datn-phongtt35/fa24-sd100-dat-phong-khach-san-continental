@@ -70,8 +70,13 @@ namespace View.Controllers
             }
         }
 
+
         public async Task<IActionResult> Index(string? name= null, Guid? roomTypeId=null, Guid? floorId = null, RoomStatus? status=null, int pageIndex = 1, int pageSize = 5)
         {
+            string infoRequestUrl = "https://localhost:7130/api/Room/GetHotelInfo";
+            var hotelInfo = await SendHttpRequest<HotelInfoDto>(infoRequestUrl, HttpMethod.Post, null);
+            ViewBag.HotelInfo = hotelInfo;
+
             // Tạo PagingRequest
             var roomRequest = new RoomRequest()
             {
