@@ -12,6 +12,9 @@
     <EmbeddedResource Remove="Pages\**" />
     <None Remove="Pages\**" />
     <None Include="wwwroot\modules\RoomBookingDetail1.js" />
+    <Compile Update="Controllers\RoleController.cs">
+      <DependentUpon>FeedbackController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

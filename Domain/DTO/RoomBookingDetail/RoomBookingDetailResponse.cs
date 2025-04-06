@@ -109,6 +109,8 @@ public static class RoomBookingDetailResponseExtensions
                 : 0;
         }
 
+        if (numberOfNights < 1)
+            numberOfNights = 1;
         
         return new RoomBookingDetailResponse()
         {
