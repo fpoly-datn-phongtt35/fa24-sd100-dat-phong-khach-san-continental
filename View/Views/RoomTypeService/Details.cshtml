@@ -52,11 +52,6 @@
             <label class="control-label1">Thời gian tạo</label>
             <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedTime)</dd>
         </div>
-
-        <div class="form-group mb-3">
-            <label class="control-label1">Được tạo bởi</label>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
-        </div>
     </div>
     
     <div class="col-md-6">
@@ -66,33 +61,14 @@
         </div>
 
         <div class="form-group mb-3">
-            <label class="control-label1">Được tạo bởi</label>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.CreatedBy)</dd>
-        </div>
-
-        <div class="form-group mb-3">
             <label class="control-label1">Thời gian sửa</label>
             <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedTime)</dd>
-        </div>
-        
-        <div class="form-group mb-3">
-            <label class="control-label1">Được sửa bởi</label>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.ModifiedBy)</dd>
         </div>
 
         <div class="form-group mb-3">
             <label class="control-label1">Xóa</label>
             <dd class="col-sm-10">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>
         </div>
-
-        <div class="form-group mb-3">
-            <label class="control-label1">Thời gian xóa</label>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedTime)</dd>
-        </div>
-
-        <div class="form-group mb-3">
-            <label class="control-label1">Được xóa bởi</label>
-            <dd class="col-sm-10">@Html.DisplayFor(model => model.DeletedBy)</dd>
-        </div>
+        
     </div>
 </div>
