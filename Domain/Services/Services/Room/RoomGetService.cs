@@ -115,6 +115,11 @@ namespace Domain.Services.Services.Room
         {
             return await _roomRepository.HotelInfo();
         }
+
+        public async Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync()
+        {
+            return await _roomRepository.GetRoomsWithNiceViewAsync();
+        }
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
         //{
         //    var room = await _roomRepository.GetRoomTypeWithAmenityRoomById(roomId); // Lấy Room từ repository

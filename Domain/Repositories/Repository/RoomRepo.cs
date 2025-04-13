@@ -539,7 +539,8 @@ namespace Domain.Repositories.Repository
                     new("@QuantityRoom", request.QuantityRoom),
                     new("@CheckIn", request.CheckIn),
                     new("@CheckOut", request.CheckOut),
-                    new("@FloorId", request.FloorId)
+                    new("@FloorId", request.FloorId),
+                    new("@RoomTypeId", request.RoomTypeId)
                };
                 var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_SearchRooms, parameters);
                 var roomlist = new List<RoomResponse>();
@@ -769,6 +770,21 @@ namespace Domain.Repositories.Repository
             };
 
             return hotelInfo;
+        }
+
+        public async Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync()
+        {
+            var dataTable = await _worker.GetDataTableAsync("SP_GetRoomsWithNiceView", null);
+
+            return dataTable.AsEnumerable().Select(row => new RoomWithNiceViewDto
+            {
+                Id = row.Field<Guid>("Id"),
+                Name = row.Field<string>("Name"),
+                Price = row.Field<decimal>("Price"),
+                RoomSize = row.Field<double>("RoomSize"),
+                Description = row.Field<string>("Description"),
+                Image = row.Field<string>("Image")
+            }).ToList();
         }
     }
 }

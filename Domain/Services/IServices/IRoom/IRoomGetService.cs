@@ -27,5 +27,6 @@ namespace Domain.Services.IServices.IRoom
         Task<List<WeeklyCoverageDto>> GetWeeklyCoverage();
         Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync();
         Task<HotelInfoDto> HotelInfo();
+        Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync();
     }
 }

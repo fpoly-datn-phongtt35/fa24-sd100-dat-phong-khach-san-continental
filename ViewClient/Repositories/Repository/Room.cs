@@ -44,6 +44,21 @@ namespace ViewClient.Repositories.Repository
             return null;
         }
 
+        public async Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync()
+        {
+            string url = "https://localhost:7130/api/Room/GetRoomsWithNiceView";
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var resultString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<RoomWithNiceViewDto>>(resultString);
+                return result;
+            }
+
+            return null;
+        }
+
         public async Task<List<TopBookedRoom>?> GetTop3MostBookedRoomsAsync()
         {
             string url = "https://localhost:7130/api/Room/GetTop3MostBookedRooms";

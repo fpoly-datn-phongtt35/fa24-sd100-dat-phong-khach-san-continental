@@ -21,7 +21,25 @@ const checkIn = localStorage.getItem("CheckIn");
 const checkOut = localStorage.getItem("CheckOut");
 const maxiumOccupancy = localStorage.getItem("maxiumOccupancy");
 const quantityRoom = localStorage.getItem("quantityRoom");
+document.addEventListener("DOMContentLoaded", function () {
+    const checkInValue = document.getElementById('CheckInValue');
+    const checkOutValue = document.getElementById('CheckOutValue');
+    const maxOccupancyValue = document.getElementById('MaxOccupancyValue');
+    const quantityRoomValue = document.getElementById('QuantityRoomValue');
 
+    if (checkInValue) {
+        checkInValue.value = checkIn;
+    }
+    if (checkOutValue) {
+        checkOutValue.value = checkOut;
+    }
+    if (maxOccupancyValue) {
+        maxOccupancyValue.value = maxiumOccupancy;
+    }
+    if (quantityRoomValue) {
+        quantityRoomValue.value = quantityRoom;
+    }
+});
 // Gán giá trị mặc định
 document.getElementById('maxiumOccupancy').value = maxiumOccupancy || 1;
 document.getElementById('quantityRoom').value = quantityRoom || 1;
