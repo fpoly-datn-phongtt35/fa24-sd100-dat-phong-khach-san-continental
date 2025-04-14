@@ -1,0 +1,26 @@
+﻿@using Domain.DTO.Room
+@model List<RoomWithNiceViewDto>
+
+@if (Model != null && Model.Any())
+{
+    <h3 class="text-center" style="color:#28A745;">Phòng có view đẹp</h3>
+    <div class="row">
+        @foreach (var room in Model)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card shadow-sm border-0">
+                    <a href="@Url.Action("DetailForViews", "Room", new { roomId = room.Id })" class="card-link">
+                        <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(room.Image ?? "default.jpg")}")"
+                             class="card-img-top"
+                             onerror="this.onerror=null; this.src='/images/default.jpg';" />
+
+                        <div class="card-body">
+                            <h5 class="card-title">@room.Name</h5>
+                            <p class="card-text">Giá: <span style="color:#F04770;">@room.Price.ToString("N0") đ / đêm</span></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}

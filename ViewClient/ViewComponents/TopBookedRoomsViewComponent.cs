@@ -12,11 +12,23 @@ namespace ViewClient.ViewComponents
             _roomRepo = roomRepo;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(string type)
         {
-            var rooms = await _roomRepo.GetTop3MostBookedRoomsAsync();
-            Console.WriteLine($"🔥 Lấy được {rooms.Count} phòng!");
-            return View(rooms);
+            switch (type?.ToLower())
+            {
+                case "top-booked":
+                    var topRooms = await _roomRepo.GetTop3MostBookedRoomsAsync();
+                    return View("Default", topRooms);
+
+                case "nice-view":
+                    var niceViewRooms = await _roomRepo.GetRoomsWithNiceViewAsync();
+                    return View("NiceView", niceViewRooms);
+
+                default:
+                    return Content("Invalid type");
+            }
         }
+      
+
     }
 }

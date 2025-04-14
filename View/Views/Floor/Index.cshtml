@@ -12,7 +12,7 @@
 
 <form method="get" action="@Url.Action("Index", new { pageIndex = Model.CurrentPage, pageSize = Model.PageSize })">
     <div class="input-group mb-3 w-100">
-        <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Name" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
+        <input type="text" id="Name" name="Name" class="form-control me-2" placeholder="Tên tầng" value="@Context.Request.Query["Name"]" style="max-width: 200px;" />
 
         <select name="BuildingId" id="BuildingId" class="form-select me-2" style="max-width: 200px;">
             <option hidden>-- Tòa --</option>
@@ -39,7 +39,7 @@
             </select>
         </div>
         
-        <input type="number" name="numberofroom" id="numberofroom" class="form-control" value="@Context.Request.Query["numberofroom"]" placeholder="Number of room" style="max-width: 100px;" />
+        <input type="number" name="numberofroom" id="numberofroom" class="form-control" value="@Context.Request.Query["numberofroom"]" placeholder="Số phòng" style="max-width: 120px;" />
         <button class="btn btn-outline-success ms-2" type="submit">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>

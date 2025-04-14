@@ -3,22 +3,23 @@
 
 @if (Model != null && Model.Any())
 {
-    <h3 class="text-center" style="color:#108AB1;">Top 9 phòng được đặt nhiều nhất</h3>
+    <h3 class="text-center" style="color:#108AB1;">Top các phòng được đặt nhiều nhất</h3>
     <div class="row">
         @foreach (var room in Model)
         {
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="card shadow-sm border-0">
-                    <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(room.RoomImages.FirstOrDefault() ?? "default.jpg")}")"
-                         class="card-img-top"
-                         onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                    <a href="@Url.Action("DetailForViews", "Room", new { roomId = room.RoomId })" class="card-link">
+                        <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(room.RoomImages.FirstOrDefault() ?? "default.jpg")}")"
+                             class="card-img-top"
+                             onerror="this.onerror=null; this.src='/images/default.jpg';" />
 
-                    <div class="card-body">
-                        <h5 class="card-title">@room.RoomName</h5>
-                        <p class="card-text">Giá: <span style="color:#F04770;">@room.RoomPrice.ToString("N0") đ / đêm</span></p>
-                        <p class="card-text">Số lần đặt: @room.TotalBookings</p>
-                        <a asp-action="DetailForViews" asp-controller="Room" asp-route-roomId="@room.RoomId" class="btn btn-primary">Xem chi tiết</a>
-                    </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@room.RoomName</h5>
+                            <p class="card-text">Giá: <span style="color:#F04770;">@room.RoomPrice.ToString("N0") đ / đêm</span></p>
+                            <p class="card-text">Số lần đặt: @room.TotalBookings</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         }
