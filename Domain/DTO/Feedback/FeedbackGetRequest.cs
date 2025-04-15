@@ -12,6 +12,8 @@ namespace Domain.DTO.Feedback
     {
         public Guid? Id { get; set; }
         public Guid? CustomerId { get; set; }
+        public Guid? RoomBookingDetailId { get; set; }
+        public Guid? RoomBookingId { get; set; }
         public Guid? RoomId { get; set; }
         public int? Rating { get; set; }
         public DateTimeOffset? FromDate { get; set; }

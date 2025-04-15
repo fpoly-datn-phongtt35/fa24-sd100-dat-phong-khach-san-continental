@@ -70,7 +70,9 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@Rating", request.Rating.HasValue ? request.Rating : DBNull.Value),
                     new SqlParameter("@FromDate", request.FromDate.HasValue ? request.FromDate : DBNull.Value),
                     new SqlParameter("@ToDate", request.ToDate.HasValue ? request.ToDate : DBNull.Value),
-                    new SqlParameter("@Status", request.Status.HasValue ? (int)request.Status : DBNull.Value)
+                    new SqlParameter("@Status", request.Status.HasValue ? (int)request.Status : DBNull.Value),
+                    new SqlParameter("@RoomBookingDetailId", request.RoomBookingDetailId.HasValue ? request.RoomBookingDetailId : DBNull.Value),
+                    new SqlParameter("@RoomBookingId", request.RoomBookingId.HasValue ? request.RoomBookingId : DBNull.Value)
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListFeedback, sqlParameters);

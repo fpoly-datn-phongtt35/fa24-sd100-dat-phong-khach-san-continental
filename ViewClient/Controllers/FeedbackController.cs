@@ -51,5 +51,19 @@ namespace ViewClient.Controllers
                 return -1;
             }
         }
+
+        [HttpPost]
+        public async Task<int> UpdateFeedback(FeedbackUpdateRequest request)
+        {
+            try
+            {
+                await _feedbackService.UpdateFeedbacnk(request);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
     }
 }
