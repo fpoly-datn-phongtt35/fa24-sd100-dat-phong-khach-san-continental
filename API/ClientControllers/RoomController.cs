@@ -27,5 +27,18 @@ namespace API.ClientControllers
                 throw new Exception(ex.Message);
             }
         }
+        [HttpGet(nameof(GetRoomsWithNiceView))]
+        public async Task<IActionResult> GetRoomsWithNiceView()
+        {
+            try
+            {
+                var rooms = await _roomGetService.GetRoomsWithNiceViewAsync();
+                return Ok(rooms);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

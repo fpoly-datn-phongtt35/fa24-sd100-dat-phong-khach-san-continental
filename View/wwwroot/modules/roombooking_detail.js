@@ -1508,7 +1508,7 @@ var _roombooking_detail = {
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: null,
                 CheckOutReality: null,
-                Price: $("#RoomPr_"+item).text(),
+                Price: $("#RoomPr_" + item).text().replaceAll(',', ''),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);
@@ -1522,7 +1522,7 @@ var _roombooking_detail = {
                 CheckOutBooking: $("#CheckOut_" + item).val(),
                 CheckInReality: $("#CheckInReal_" + item).val(),
                 CheckOutReality: $("#CheckOutReal_" + item).val(),
-                Price: $("#RoomPr_" + item).text(),
+                Price: $("#RoomPr_" + item).text().replaceAll(',', ''),
                 Status: $("#Status_" + item).val()
             }
             lstRoomBookingDetail.push(obj);

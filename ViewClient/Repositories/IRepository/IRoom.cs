@@ -9,5 +9,6 @@ namespace ViewClient.Repositories.IRepository
         Task<int?> UpdateRoomStatus(RoomUpdateStatusRequest request);
         Task<RoomResponse?> GetRoomById(Guid roomId);
         Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync();
+        Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync();
     }
 }

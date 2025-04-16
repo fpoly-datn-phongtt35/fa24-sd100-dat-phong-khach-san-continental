@@ -11,6 +11,32 @@
     var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
 }
 
+<style>
+    .search-form-container {
+        margin: 20px 0;
+    }
+
+    .mt-2rem {
+        margin-top: 1.3rem;
+    }
+    .form-row {
+        display: flex;
+        justify-content: space-between; /* Căn chỉnh các thành phần trên một hàng */
+    }
+
+    .form-group {
+        flex: 0.5; 
+        margin-right: 10px;
+    }
+
+        .form-group:last-child {
+            margin-right: 0;
+        }
+
+    .form-buttons {
+        margin-top: 15px;
+    }
+</style>
 <div class="banner">
     <img src="~/img/banner_khach_san.jpg" alt="Khách Sạn Continental">
     <div class="text-overlay">
@@ -49,17 +75,57 @@
     {
         <h3 style="color:#F04770;" class="text-center">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
         <div id="top-booked-rooms-container">
-            @await Component.InvokeAsync("TopBookedRooms")
+            @await Component.InvokeAsync("TopBookedRooms", new { type = "top-booked" })
+        </div>
+        <div id="top-booked-rooms-container">
+            @await Component.InvokeAsync("TopBookedRooms", new { type = "nice-view" })
         </div>
     }
     else
     {
+        <div class="search-form-container">
+            <form asp-action="SearchRooms" method="get" class="search-form">
+                <input type="hidden" name="CheckIn" id="CheckInValue" />
+                <input type="hidden" name="CheckOut" id="CheckOutValue" />
+                <input type="hidden" name="maxiumOccupancy" id="MaxOccupancyValue" />
+                <input type="hidden" name="quantityRoom" id="QuantityRoomValue" />
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="RoomTypeId">Loại Phòng</label>
+                        <select name="RoomTypeId" id="RoomTypeId" class="form-control">
+                            <option value="">-- Chọn Loại Phòng --</option>
+                            @foreach (var roomType in ViewBag.RoomTypes)
+                            {
+                                <option value="@roomType.Id">@roomType.Name / Số lượng người @roomType.MaximumOccupancy</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-3 mr-0">
+                        <label for="FloorId">Tầng</label>
+                        <select name="FloorId" id="FloorId" class="form-control">
+                            <option value="">-- Chọn Tầng --</option>
+                            @foreach (var floor in ViewBag.FloorList)
+                            {
+                                <option value="@floor.Id">@floor.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 mt-2rem">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-50">Lọc</button> 
+                    </div>
+                </div>
+            </form>
+        </div>
+
         foreach (var group in groupedData)
         {
             var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == group.Key);
             if (roomType != null)
             {
-                <h4 class="room-type-title d-flex">
+                <h4 class="room-type-title d-flex mb-0">
                     Loại phòng: <p style="color:#108AB1;" class="text-uppercase"> @roomType.Name</p> -
                     Số lượng người/phòng: <p style="color:#108AB1;" class="text-uppercase"> @roomType.MaximumOccupancy</p>
                 </h4>
@@ -68,7 +134,7 @@
                     {
                         @foreach (var room in group)
                         {
-                            <div class="col-lg-3 col-md-3 col-sm-4 mb-1 p-4">
+                            <div class="col-lg-3 col-md-3 col-sm-4 mb-1 p-3">
                                 <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link">
                                     <div class="card no-border">
                                         @if (room.Images != null && room.Images.Any(i => !string.IsNullOrEmpty(i.Image)))
@@ -82,20 +148,20 @@
                                                         <div class="carousel-item @(img == room.Images.First() ? "active" : "")">
                                                             <div class="img-container">
                                                                 <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}")"
-                                                                     class="d-block w-100"/>
+                                                                     class="d-block w-100" />
                                                             </div>
                                                         </div>
                                                     }
                                                 </div>
 
-                                             @*    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="prev">
-                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Previous</span>
-                                                </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="next">
-                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Next</span>
-                                                </button> *@
+                                                @*    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        </button> *@
                                             </div>
                                         }
                                         else

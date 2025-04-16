@@ -14,6 +14,7 @@ namespace Domain.DTO.Room
         public int MaxiumOccupancy { get; set; }
         public int QuantityRoom { get; set; }
         public Guid? FloorId { get; set; }
+        public Guid? RoomTypeId { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
     }

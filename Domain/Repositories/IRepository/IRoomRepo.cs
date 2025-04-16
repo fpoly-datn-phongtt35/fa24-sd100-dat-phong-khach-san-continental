@@ -32,5 +32,7 @@ namespace Domain.Repositories.IRepository
 
         Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync();
         Task<HotelInfoDto> HotelInfo();
+
+        Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync();
     }
 }
