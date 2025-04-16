@@ -105,7 +105,7 @@ var _feedback_send = {
                                             <textarea class="form-control" rows="2" placeholder="Your comment" data-room-id="${room.roomBookingDetailId}"></textarea>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-success" onclick="_feedback_send.submit('${room.roomBookingDetailId}')">Submit</button>
+                                            <button class="btn btn-sm btn-success" onclick="_feedback_send.submit('${room.roomBookingDetailId}')">Gửi</button>
                                         </td>
                                     </tr>`;
                                     tableBody.innerHTML += row;
