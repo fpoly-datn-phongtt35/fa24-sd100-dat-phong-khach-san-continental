@@ -7,5 +7,6 @@ namespace ViewClient.Repositories.IRepository
     {
         Task<ResponseData<FeedbackDto>> GetListFeedbacks(FeedbackGetRequest request);
         Task<int> AddFeedback(FeedbackCreateRequest request);
+        Task<int> UpdateFeedbacnk(FeedbackUpdateRequest request);
     }
 }

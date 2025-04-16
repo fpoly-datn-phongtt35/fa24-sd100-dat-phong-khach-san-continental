@@ -1,5 +1,7 @@
-﻿using Domain.DTO.Customer;
+﻿using Azure;
+using Domain.DTO.Customer;
 using Domain.DTO.Email;
+using Domain.DTO.Feedback;
 using Domain.DTO.Order;
 using Domain.DTO.Paging;
 using Domain.DTO.Room;
@@ -8,6 +10,7 @@ using Domain.DTO.RoomBookingDetail;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Claims;
 using System.Text;
 using Utilities;
@@ -23,6 +26,7 @@ namespace ViewClient.Controllers
         private readonly IServiceOderDetail _serviceOderDetailRepo;
         private readonly ICustomer _customerRepo;
         private readonly ISendEmail _emailRepo;
+        private readonly IFeedback _feedBack;
         private readonly HttpClient _httpClient;
         public RoomBookingController(IRoombooking roomBookingRepo,
             IRoomBookingDetail roomBookingDetailRepo,
@@ -30,7 +34,8 @@ namespace ViewClient.Controllers
             ICustomer customerRepo,
             HttpClient httpClient,
             IServiceOderDetail serviceOderDetailRepo,
-            ISendEmail emailRepo)
+            ISendEmail emailRepo, 
+            IFeedback feedBack)
         {
             _roomBookingRepo = roomBookingRepo;
             _roomBookingDetailRepo = roomBookingDetailRepo;
@@ -39,6 +44,12 @@ namespace ViewClient.Controllers
             _serviceOderDetailRepo = serviceOderDetailRepo;
             _customerRepo = customerRepo;
             _emailRepo = emailRepo;
+            _feedBack = feedBack;
+        }
+        [HttpGet]
+        public async Task<ResponseData<FeedbackDto>> GetFeedBackByRBH(Guid roomId, Guid customerId)
+        {
+            return await _feedBack.GetListFeedbacks(new FeedbackGetRequest { CustomerId = customerId, RoomId = roomId });
         }
         [HttpGet]
         public async Task<IActionResult> BookingHistory(RoomBookingGetRequestByCustomer request)

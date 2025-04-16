@@ -34,5 +34,16 @@ namespace ViewClient.Repositories.Repository
             }
             return -1;
         }
+
+        public async Task<int> UpdateFeedbacnk(FeedbackUpdateRequest request)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("https://localhost:7130/api/Feedback/UpdateFeedback", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<int>();
+            }
+            return -1;
+        }
     }
 }
