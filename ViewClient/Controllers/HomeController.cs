@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using ViewClient.Models;
+using ViewClient.Repositories.IRepository;
 
 namespace ViewClient.Controllers
 {
@@ -17,12 +18,14 @@ namespace ViewClient.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly HttpClient _httpClient;
+        private readonly IRoom _room;
 
-        public HomeController(ILogger<HomeController> logger, HttpClient httpClient)
+        public HomeController(ILogger<HomeController> logger, HttpClient httpClient, IRoom room)
         {
             _logger = logger;
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("https://localhost:7130/");
+            _room = room;
         }
         private async Task<T?> SendHttpRequest<T>(string requestUrl, HttpMethod method, object? body = null)
         where T : class
@@ -122,7 +125,16 @@ namespace ViewClient.Controllers
                     data = roomsResponse.LstRoom,
                     totalRecord = roomsResponse.TotalRoom
                 };
- 
+
+                var averageRatings = new Dictionary<Guid, double>();
+                foreach (var room in roomsResponse.LstRoom)
+                {
+                    var avg = await _room.GetAverageRatingByRoomIdAsync(room.Id);
+                    averageRatings[room.Id] = avg != null ? avg.AverageRating ?? 0 : 0;
+                }
+
+                ViewBag.AverageRatings = averageRatings;
+
                 return View("Index", responseData);
             }
             catch (Exception ex)

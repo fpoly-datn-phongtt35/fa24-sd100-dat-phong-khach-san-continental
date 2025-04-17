@@ -28,5 +28,6 @@ namespace Domain.Services.IServices.IRoom
         Task<List<TopBookedRoom>> GetTop3MostBookedRoomsAsync();
         Task<HotelInfoDto> HotelInfo();
         Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync();
+        Task<RoomRatingDto> GetAverageRatingByRoomIdAsync(Guid roomId);
     }
 }

@@ -120,6 +120,11 @@ namespace Domain.Services.Services.Room
         {
             return await _roomRepository.GetRoomsWithNiceViewAsync();
         }
+
+        public async Task<RoomRatingDto> GetAverageRatingByRoomIdAsync(Guid roomId)
+        {
+            return await _roomRepository.GetAverageRatingByRoomIdAsync(roomId);
+        }
         //public async Task<RoomResponse?> GetRoomTypeWithAmenityRoomById(Guid roomId)
         //{
         //    var room = await _roomRepository.GetRoomTypeWithAmenityRoomById(roomId); // Lấy Room từ repository

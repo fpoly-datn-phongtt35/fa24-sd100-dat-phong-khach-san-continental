@@ -8,7 +8,8 @@
 @{
     ViewBag.Title = "Continental";
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
-    var groupedData = Model.data.GroupBy(d => d.RoomTypeId);
+    var allRooms = Model.data;
+    var averageRatings = ViewBag.AverageRatings as Dictionary<Guid, double>;
 }
 
 <style>
@@ -71,7 +72,7 @@
     </form>
 </div>
 <div class="container">
-    @if (!groupedData.Any())
+    @if (!allRooms.Any())
     {
         <h3 style="color:#F04770;" class="text-center">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
         <div id="top-booked-rooms-container">
@@ -120,73 +121,57 @@
             </form>
         </div>
 
-        foreach (var group in groupedData)
-        {
-            var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == group.Key);
-            if (roomType != null)
+        <div class="container py-4">
+            @if (allRooms != null && allRooms.Any())
             {
-                <h4 class="room-type-title d-flex mb-0">
-                    Loại phòng: <p style="color:#108AB1;" class="text-uppercase"> @roomType.Name</p> -
-                    Số lượng người/phòng: <p style="color:#108AB1;" class="text-uppercase"> @roomType.MaximumOccupancy</p>
-                </h4>
-                <div class="row gap-0">
-                    @if (group != null && group.Any())
-                    {
-                        @foreach (var room in group)
-                        {
-                            <div class="col-lg-3 col-md-3 col-sm-4 mb-1 p-3">
-                                <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="card-link">
-                                    <div class="card no-border">
-                                        @if (room.Images != null && room.Images.Any(i => !string.IsNullOrEmpty(i.Image)))
-                                        {
-                                            <div id="carousel-@room.Id.ToString("N")" class="carousel slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
-                                                <div class="carousel-inner">
-                                                    @foreach (var img in room.Images.Where(i => !string.IsNullOrEmpty(i.Image)))
-                                                    {
-                                                        var imagePath = Url.Content($"~/images/{img.Image}");
-
-                                                        <div class="carousel-item @(img == room.Images.First() ? "active" : "")">
-                                                            <div class="img-container">
-                                                                <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}")"
-                                                                     class="d-block w-100" />
-                                                            </div>
-                                                        </div>
-                                                    }
+                @foreach (var room in allRooms)
+                {
+                    var rating = averageRatings.ContainsKey(room.Id) ? averageRatings[room.Id] : 0;
+                    var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == room.RoomTypeId);
+                    <div class="card mb-4 shadow-sm border-0">
+                        <div class="row g-0 align-items-center">
+                            <div class="col-md-5 position-relative">
+                                @if (room.Images != null && room.Images.Any(i => !string.IsNullOrEmpty(i.Image)))
+                                {
+                                    <div id="carousel-@room.Id.ToString("N")" class="carousel slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
+                                        <div class="carousel-inner rounded-start">
+                                            @foreach (var img in room.Images.Where(i => !string.IsNullOrEmpty(i.Image)))
+                                            {
+                                                <div class="carousel-item @(img == room.Images.First() ? "active" : "")">
+                                                    <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}")" class="d-block w-100" style="height: 250px; object-fit: cover;" />
                                                 </div>
-
-                                                @*    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-@room.Id.ToString("N")" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                        </button> *@
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <!-- Hiển thị ảnh mặc định nếu không có ảnh -->
-                                            <div class="img-container">
-                                                <img src="~/images/default.jpg" alt="No Image Available" class="d-block w-100" />
-                                            </div>
-                                        }
-
-                                        <i class="fas fa-heart heart-icon"></i>
-                                        <h5 class="card-title" style="color:black;">@room.Name</h5>
-                                        <p>đ @String.Format("{0:N0}", room.Price) / ngày</p>
+                                            }
+                                        </div>
+                                      
                                     </div>
-                                </a>
+                                }
+                                else
+                                {
+                                    <img src="~/images/default.jpg" alt="No Image" class="img-fluid rounded-start w-100" style="height: 250px; object-fit: cover;" />
+                                }
                             </div>
-                        }
-                    }
-                    else
-                    {
-                        <p class="text-center">Không có phòng nào để hiển thị.</p>
-                    }
-                </div>
+
+                            <div class="col-md-7">
+                                <div class="card-body">
+
+
+                                    <h1 class="card-title fw-bold text-dark">@room.Name - Rating: @rating ⭐</h1>
+                                    <p class="mb-1"><i class="fas fa-user-friends"></i> Số người/phòng: <strong>@roomType?.MaximumOccupancy</strong></p>
+                                    <p class="mb-1"><i class="fas fa-door-closed"></i> Loại phòng: <strong class="text-uppercase text-primary">@roomType?.Name</strong></p>
+                                    <p class="text-muted">Giá: <strong class="text-danger">đ @($"{room.Price:N0}")</strong> / ngày</p>
+                                    <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="btn btn-outline-dark">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             }
-        }
+            else
+            {
+                <p class="text-center">Không có phòng nào để hiển thị.</p>
+            }
+        </div>
+
     }
 </div>
 @* <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
