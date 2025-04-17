@@ -34,5 +34,6 @@ namespace Domain.Repositories.IRepository
         Task<HotelInfoDto> HotelInfo();
 
         Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync();
+        Task<RoomRatingDto> GetAverageRatingByRoomIdAsync(Guid roomId);
     }
 }

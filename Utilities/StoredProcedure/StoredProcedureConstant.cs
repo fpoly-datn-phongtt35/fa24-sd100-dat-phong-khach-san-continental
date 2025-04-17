@@ -47,6 +47,7 @@ namespace Utilities.StoredProcedure
         public const string SP_GetTop3MostBookedRooms = "SP_GetTop3MostBookedRooms";
         public const string GetRoomInfo = "GetRoomInfo";
         public const string SP_GetRoomsWithNiceView = "SP_GetRoomsWithNiceView";
+        public const string SP_GetAverageRatingByRoomId = "SP_GetAverageRatingByRoomId";
         //statistics
         public const string SP_GetTop5MostBookedRoomsLastMonth = "SP_GetTop5MostBookedRoomsLastMonth";
         public const string SP_GetTopMostBookedRoomsCustomer = "SP_GetTopMostBookedRoomsCustomer";

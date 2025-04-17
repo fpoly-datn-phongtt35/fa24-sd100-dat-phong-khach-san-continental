@@ -774,7 +774,7 @@ namespace Domain.Repositories.Repository
 
         public async Task<List<RoomWithNiceViewDto>> GetRoomsWithNiceViewAsync()
         {
-            var dataTable = await _worker.GetDataTableAsync("SP_GetRoomsWithNiceView", null);
+            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetRoomsWithNiceView, null);
 
             return dataTable.AsEnumerable().Select(row => new RoomWithNiceViewDto
             {
@@ -786,5 +786,27 @@ namespace Domain.Repositories.Repository
                 Image = row.Field<string>("Image")
             }).ToList();
         }
+
+        public async Task<RoomRatingDto> GetAverageRatingByRoomIdAsync(Guid roomId)
+        {
+            var parameters = new[]
+            {
+        new SqlParameter("@RoomId", roomId)
+    };
+
+            var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_GetAverageRatingByRoomId, parameters);
+
+            if (dataTable.Rows.Count == 0)
+                return null;
+
+            var row = dataTable.Rows[0];
+
+            return new RoomRatingDto
+            {
+                AverageRating = row.IsNull("AverageRating") ? null : Convert.ToDouble(row["AverageRating"]),
+                TotalReviews = row.IsNull("TotalReviews") ? 0 : Convert.ToInt32(row["TotalReviews"])
+            };
+        }
+
     }
 }
