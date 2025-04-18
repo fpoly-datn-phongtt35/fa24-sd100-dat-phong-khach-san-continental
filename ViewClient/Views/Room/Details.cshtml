@@ -47,53 +47,54 @@
         padding: 0 0.5rem;
     }
 </style>
+<!-- Breadcrumb -->
+<div class="">
+    <div class="rounded-2 py-3 px-3 bg-light shadow-sm border-start border-4 border-warning">
+        <h6 class="text-gold fw-bold m-0">
+            Contiental > Chi tiết phòng > @Html.DisplayFor(model => model.Room.Name)
+        </h6>
+    </div>
+</div>
+
+<!-- Carousel -->
+<div class="">
+    <div class="luxury-carousel rounded-3 overflow-hidden shadow-sm">
+        @if (Model.Room.Images != null && Model.Room.Images.Any())
+        {
+            <div id="roomImageCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Room.Images.Count; i++)
+                    {
+                        var img = Model.Room.Images[i];
+                        var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@imagePath" class="d-block w-100 luxury-img" alt="Room Image"
+                                 onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="text-center text-muted py-5 border rounded">Không có hình ảnh</div>
+        }
+    </div>
+</div>
 
 <div class="container my-4">
     <input id="Id_Room" value="@Model.Room.Id" style="display:none" />
 
-    <!-- Breadcrumb -->
-    <div class="mb-4">
-        <div class="rounded-2 py-2 px-3 bg-light shadow-sm border-start border-4 border-warning">
-            <h6 class="text-gold fw-bold m-0">
-                Contiental > Chi tiết phòng > @Html.DisplayFor(model => model.Room.Name)
-            </h6>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="bg-white rounded-4 shadow-lg p-4 luxury-card">
         <div class="row gx-4 gy-4">
-            <!-- Carousel -->
-            <div class="col-md-7">
-                <div class="luxury-carousel rounded-3 overflow-hidden shadow-sm">
-                    @if (Model.Room.Images != null && Model.Room.Images.Any())
-                    {
-                        <div id="roomImageCarousel" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                @for (int i = 0; i < Model.Room.Images.Count; i++)
-                                {
-                                    var img = Model.Room.Images[i];
-                                    var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
-                                    <div class="carousel-item @(i == 0 ? "active" : "")">
-                                        <img src="@imagePath" class="d-block w-100 luxury-img" alt="Room Image"
-                                             onerror="this.onerror=null; this.src='/images/default.jpg';" />
-                                    </div>
-                                }
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center text-muted py-5 border rounded">Không có hình ảnh</div>
-                    }
-                </div>
-            </div>
 
             <!-- Room Info -->
             <div class="col-md-5 luxury-card">
@@ -166,106 +167,8 @@
             }
         </div>
     </section>
-
-    <!-- Back button -->
-@*     <div class="text-end mb-3">
-        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">← Quay lại</a>
-    </div> *@
 </div>
 
-@* <div class="container">
-    <input id="Id_Room" value="@Model.Room.Id" style="display:none"></input>
-    <div class="mt-3 mb-3">
-        <div class="rounded-2 p-2" style="background-color: rgb(239 239 239)">
-            <h6 class="text-gold fw-bold m-0">
-                <i class="bi bi-house-door-fill"></i> Continental &gt; Chi tiết phòng &gt;
-                @Html.DisplayFor(model => model.Room.Name)
-            </h6>
-        </div>
-    </div>
-    <div class="p-5 rounded-2" style="background-color: rgb(239 239 239)">
-        <div class="d-flex justify-content-end align-items-center mb-4">
-            <a asp-action="Index" asp-controller="Home" class="btn btn-light">Quay lại</a>
-        </div>
-
-        <div class="row">
-            <div class="col-md-7">
-                <div class="luxury-carousel">
-                    @if (Model.Room.Images != null && Model.Room.Images.Any())
-                    {
-                        <div id="roomImageCarousel" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                @for (int i = 0; i < Model.Room.Images.Count; i++)
-                                {
-                                    var img = Model.Room.Images[i];
-                                    var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
-
-                                    <div class="carousel-item @(i == 0 ? "active" : "")">
-                                        <img src="@imagePath" class="d-block w-100 luxury-img" alt="Room Image"
-                                             onerror="this.onerror=null; this.src='/images/default.jpg';" />
-                                    </div>
-                                }
-
-                            </div>
-                            <div class="carousel-indicators">
-                                @for (int i = 0; i < Model.Room.Images.Count; i++)
-                                {
-                                    <button type="button" data-bs-target="#roomImageCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></button>
-                                }
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#roomImageCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-                    }
-                    else
-                    {
-                        <p>Không có hình ảnh</p>
-                    }
-                </div>
-            </div>
-
-            <div class="col-md-5">
-                <div class="luxury-card p-4">
-                    <h3 class="text-gold">Thông tin phòng</h3>
-                    <p><strong>Loại phòng:</strong> @Html.DisplayFor(model => model.RoomType.Name)</p>
-                    <p><strong>Diện tích:</strong> @Html.DisplayFor(model => model.Room.RoomSize) m²</p>
-                    <p><strong>Sức chứa tối đa:</strong> @Html.DisplayFor(model => model.RoomType.MaximumOccupancy) người</p>
-                    <p><strong>Giá:</strong> @Math.Round(Model.Room.Price ?? 0).ToString("N0") VNĐ/đêm</p>
-                    <hr>
-                    <button class="btn btn-gold mt-3" id="booking" data-bs-toggle="modal" data-bs-target="#bookingModal">Đặt phòng ngay</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container pt-2">
-    <div class="p-5 pb-1 pt-3 rounded-2" style="background-color: rgb(239 239 239);">
-        <h4 class="text-gold fw-bold">Mô tả</h4>
-        <p>@Html.DisplayFor(model => model.Room.Description)</p>
-    </div>
-</div>
-<div class="container pt-2">
-    <div class="p-5 pb-1 pt-3 rounded-2" style="background-color: rgb(239 239 239);">
-        <h4 class="text-gold fw-bold">Tiện ích</h4>
-        @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
-        {
-            <ul>
-                @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms.Where(amenityRoom => amenityRoom.Status == EntityStatus.Active))
-                {
-                    <li><strong>@amenityRoom.Amenity.Name:</strong> @amenityRoom.Amount</li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p>Phòng này không có tiện ích nào.</p>
-        }
-    </div>
-</div> *@
 <div class="container luxury-card my-4">
     <h4 class="text-gold"><i class="fa-solid fa-comments"></i> Phản hồi từ khách hàng</h4>
     <div class="p-3 bg-light rounded">

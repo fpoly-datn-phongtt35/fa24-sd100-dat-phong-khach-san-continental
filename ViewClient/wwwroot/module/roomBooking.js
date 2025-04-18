@@ -82,8 +82,8 @@
         var depositPayment = Math.round(totalPayment * 0.2);
 
         // Cập nhật thông tin giao diện
-        $('#depositPayment').text("Đặt cọc: " + depositPayment.toLocaleString() + " VNĐ");
-        $('#totalRoomPayment').text("Tiền phòng: " + totalPayment.toLocaleString() + " VNĐ");
+        $('#depositPayment').text(depositPayment.toLocaleString() + " VNĐ");
+        $('#totalRoomPayment').text(totalPayment.toLocaleString() + " VNĐ");
         updateTotalServicePayment(); // Cập nhật tổng tiền dịch vụ
     } else {
         $('#depositPayment').text("Đặt cọc: 0 VNĐ");
@@ -104,7 +104,7 @@
             });
         }
 
-        $('#totalServicePayment').text("Tiền dịch vụ: " + totalServicePayment.toLocaleString() + " VNĐ");
+        $('#totalServicePayment').text(totalServicePayment.toLocaleString() + " VNĐ");
 
         // Call updateTotalPrice after updating service payment
         updateTotalPrice();
@@ -125,7 +125,7 @@
         if (!isNaN(depositPayment) && !isNaN(roomPrice) && !isNaN(servicePrice)) {
             var totalPrice = Math.round(roomPrice + servicePrice - depositPayment);
             console.log(totalPrice);
-            $('#totalPrice').text("Tổng tiền sau khi đặt cọc: " + totalPrice.toLocaleString() + " VNĐ");
+            $('#totalPrice').text(totalPrice.toLocaleString() + " VNĐ");
         }
     }
 
