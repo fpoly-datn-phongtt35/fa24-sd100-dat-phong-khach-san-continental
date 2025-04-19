@@ -31,6 +31,21 @@ namespace ViewClient.Repositories.Repository
             return null;
         }
 
+        public async Task<RoomRatingDto> GetAverageRatingByRoomIdAsync(Guid roomId)
+        {
+            string url = $"https://localhost:7130/api/Room/GetAverageRatingBy?roomId={roomId}";
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var resultString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<RoomRatingDto>(resultString);
+                return result;
+            }
+
+            return null;
+        }
+
         public async Task<RoomResponse?> GetRoomById(Guid roomId)
         {
             string url = $"https://localhost:7130/api/Room/GetRoomById?roomId={roomId}";

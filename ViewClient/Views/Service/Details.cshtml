@@ -4,137 +4,231 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="header-wrapper">
+<style>
+    /* Container và bố cục tổng thể */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Header */
+    .header-background {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        border-radius: 10px;
+        padding: 40px 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+        text-align: center;
+        color: #ffffff;
+    }
+
+    .header-content .title {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .header-content .price-highlight {
+        background-color: #f1c40f;
+        color: #1e3c72;
+        padding: 5px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    /* Content Container */
+    .content-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    /* Service Details */
+    .service-details {
+        display: flex;
+        gap: 30px;
+    }
+
+    /* Image Container */
+    .image-container {
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .carousel {
+        position: relative;
+        width: 350px;
+        height: 250px;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .carousel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .carousel img.active {
+        opacity: 1;
+    }
+
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .carousel-btn.prev {
+        left: 10px;
+    }
+
+    .carousel-btn.next {
+        right: 10px;
+    }
+
+    .image-container p {
+        text-align: center;
+        color: #777;
+        font-size: 16px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        margin: 0;
+    }
+
+    /* Service Info */
+    .service-info {
+        flex: 1;
+        line-height: 1.6;
+    }
+
+    .service-info h3 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1e3c72;
+        margin-bottom: 15px;
+    }
+
+    .service-info p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .service-info .btn-book {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #2a5298;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .service-info .btn-book:hover {
+        background-color: #1e3c72;
+    }
+</style>
+
+<div class="container">
     <div class="header-background">
         <div class="header-content">
-            <h1 class="title py-3">Trải nghiệm @Model.Name</h1>
-            <h5><strong>Bắt đầu từ:</strong> <span class="price-highlight">@Model.Price VNĐ</span></h5>
+            <h1 class="title">Trải nghiệm @Model.Name</h1>
+            <h5><strong>Giá chỉ từ:</strong> <span class="price-highlight">@Model.Price.ToString("#,##0") VND</span></h5>
         </div>
     </div>
 </div>
 
-<div class="content-container">
-    <div class="service-details">
-        <div class="image-container pt-3">
-            @if (Model.Images != null && Model.Images.Count > 0)
-            {
-                <div class="d-flex flex-wrap image-gallery">
-                    @foreach (var image in Model.Images)
-                    {
-                        var extension = System.IO.Path.GetExtension(image.Image);
-                        if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
+<div class="container">
+    <div class="content-container">
+        <div class="service-details">
+            <div class="image-container">
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div class="carousel">
+                        @foreach (var image in Model.Images)
                         {
-                            var fileName = System.IO.Path.GetFileName(image.Image);
-                            var imagePath = Url.Content($"~/images/service/{fileName}");
+                            var extension = System.IO.Path.GetExtension(image.Image)?.ToLower();
+                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension))
+                            {
+                                var fileName = System.IO.Path.GetFileName(image.Image);
+                                var imagePath = Url.Content($"~/images/service/{fileName}");
 
-                            <div class="image-item m-2">
-                                <img src="@imagePath" alt="Service Image" class="service-image" />
-                            </div>
+                                <img src="@imagePath" alt="Service Image" class="@(Model.Images.First() == image ? "active" : "")" />
+                            }
                         }
-                    }
-                </div>
-            }
-            else
-            {
-                <p>Không có hình ảnh</p>
-            }
-        </div>
+                        @if (Model.Images.Count(i => new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(System.IO.Path.GetExtension(i.Image)?.ToLower())) > 1)
+                        {
+                            <button class="carousel-btn prev">&#10094;</button>
+                            <button class="carousel-btn next">&#10095;</button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>Không có hình ảnh để hiển thị</p>
+                }
+            </div>
 
-        <div class="service-info">
-            <p><strong>Bạn sẽ trải nghiệm:</strong> @Model.Description</p>
+            <div class="service-info">
+                <h3>Bạn sẽ trải nghiệm</h3>
+                <p>@Model.Description</p>
+                <a href="#" class="btn-book">Đặt ngay</a>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    /* Vùng chứa header */
-    .header-wrapper {
-        width: 100%;
-        background: linear-gradient(135deg, #0078D7, #4DAFFF);
-        border-bottom-left-radius: 50px;
-        position: relative;
-        overflow: hidden;
-    }
+<script>
+    // JavaScript cho carousel
+    document.querySelectorAll('.carousel').forEach(carousel => {
+        const images = carousel.querySelectorAll('img');
+        const prevBtn = carousel.querySelector('.prev');
+        const nextBtn = carousel.querySelector('.next');
+        let currentIndex = 0;
 
-    /* Nền xanh và kiểm soát chiều cao */
-    .header-background {
-        padding: 120px 0;
-        text-align: left;
-    }
-
-    /* Nội dung bên trong header */
-    .header-content {
-        max-width: 70%;
-        margin: 0 auto;
-        color: white;
-        transform: translateY(-50px);
-    }
-
-        .header-content .title {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 0;
+        function showImage(index) {
+            images.forEach((img, i) => {
+                img.classList.toggle('active', i === index);
+            });
         }
 
-    .price-highlight {
-        color: #FFD700;
-        font-weight: bold;
-        font-size: 1.2em;
-    }
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                showImage(currentIndex);
+            });
 
-    /* Container cho nội dung chính */
-    .content-container {
-        max-width: 70%;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .service-details {
-        padding: 20px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: none;
-        border: none;
-    }
-
-    /* Hình ảnh dịch vụ */
-    .image-container {
-        position: relative;
-        margin-bottom: 20px;
-        margin-top: -180px;
-        z-index: 1;
-    }
-
-    .image-gallery {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px; /* Khoảng cách giữa các ảnh */
-    }
-
-    .image-item {
-        flex: 0 0 calc(33.33% - 10.67px); /* 33.33% cho 3 ảnh mỗi hàng, trừ đi phần khoảng cách */
-        max-width: calc(33.33% - 10.67px);
-    }
-
-    .service-image {
-        width: 100%;
-        height: 500px; /* Chiều cao cố định cho tất cả ảnh */
-        object-fit: cover; /* Giữ tỷ lệ ảnh, cắt bớt nếu cần */
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .service-info {
-        margin-top: 20px;
-        padding: 20px;
-        background: #fff;
-        border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-        .service-info p {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            });
         }
-</style>
+    });
+</script>

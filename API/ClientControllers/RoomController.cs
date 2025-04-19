@@ -1,4 +1,5 @@
-﻿using Domain.Services.IServices.IRoom;
+﻿using Domain.DTO.Room;
+using Domain.Services.IServices.IRoom;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,19 @@ namespace API.ClientControllers
             {
                 var rooms = await _roomGetService.GetRoomsWithNiceViewAsync();
                 return Ok(rooms);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        [HttpGet(nameof(GetAverageRating))]
+        public async Task<ActionResult<RoomRatingDto>> GetAverageRating(Guid roomId)
+        {
+            try
+            {
+                var result = await _roomGetService.GetAverageRatingByRoomIdAsync(roomId);
+                return Ok(result);
             }
             catch (Exception ex)
             {
