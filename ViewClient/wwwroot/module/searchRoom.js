@@ -11,9 +11,9 @@
 // Hàm định dạng ngày
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng dạng số
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${year}-${month}-${day}`;
+    return `${day}/${month}/${year}`;
 }
 
 // Lấy giá trị từ localStorage
@@ -49,7 +49,7 @@ const formattedToday = formatDate(today);
 
 // Khởi tạo Flatpickr
 document.addEventListener('DOMContentLoaded', function () {
-    const tomorrow = new Date();
+    const tomorrow = new Date(today);        
     tomorrow.setDate(tomorrow.getDate() + 1); // Ngày mai
 
     const minCheckOutDate = new Date(tomorrow);
@@ -57,22 +57,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Flatpickr cho checkIn
     const checkInPicker = $('#checkIn').flatpickr({
-        dateFormat: "d/m/Y", // Định dạng số: ngày/tháng/năm (24/02/2025)
+        dateFormat: "d/m/Y",
         minDate: "today",
-        defaultDate: checkIn || formatDate(tomorrow),
+        defaultDate: checkIn || tomorrow,
         onChange: function (selectedDates) {
             validateDates();
+
             const minCheckOut = new Date(selectedDates[0]);
             minCheckOut.setDate(minCheckOut.getDate() + 1);
             checkOutPicker.set('minDate', minCheckOut);
+
+            const currentCheckOut = checkOutPicker.selectedDates[0];
+            console.log(currentCheckOut);
+            if (!currentCheckOut || currentCheckOut < minCheckOut) {
+                checkOutPicker.setDate(minCheckOut);
+            }
         }
     });
 
     // Flatpickr cho checkOut
     const checkOutPicker = $('#checkOut').flatpickr({
         dateFormat: "d/m/Y",
-        minDate: new Date().fp_incr(1),
-        defaultDate: checkOut || formatDate(minCheckOutDate),
+        minDate: minCheckOutDate,
+        defaultDate: checkOut || minCheckOutDate,
         onChange: function () {
             validateDates();
         }
@@ -96,12 +103,10 @@ function validateDates() {
     const roomQuantityValue = parseInt(document.getElementById('quantityRoom').value, 10);
 
     if (checkInValue && checkOutValue) {
-        // Giả sử định dạng là "dd/mm/yyyy" (24/02/2025)
         const [dayIn, monthIn, yearIn] = checkInValue.split('/');
         const checkInDate = new Date(`${yearIn}-${monthIn}-${dayIn}T14:00:00`);
 
         if (isNaN(checkInDate.getTime())) {
-            console.error("Invalid checkInDate:", checkInDate);
             return false;
         }
 
@@ -109,7 +114,6 @@ function validateDates() {
         const checkOutDate = new Date(`${yearOut}-${monthOut}-${dayOut}T12:00:00`);
 
         if (isNaN(checkOutDate.getTime())) {
-            console.error("Invalid checkOutDate:", checkOutDate);
             return false;
         }
 
