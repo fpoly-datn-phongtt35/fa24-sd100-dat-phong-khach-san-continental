@@ -17,6 +17,19 @@
         margin: 20px 0;
     }
 
+    .banner {
+        width: 100%;
+        height: auto;  
+    }
+
+    .carousel-inner,
+    .carousel-item,
+    .carousel-item img {
+        width: 100%;
+        height: auto;  
+        object-fit: contain;  
+    }
+
     .mt-2rem {
         margin-top: 1.3rem;
     }
@@ -39,12 +52,35 @@
     }
 </style>
 <div class="banner">
-    <img src="~/img/banner_khach_san.jpg" alt="Khách Sạn Continental">
-    <div class="text-overlay">
-        <h1>✨ Khách Sạn Continental – Biểu Tượng Đẳng Cấp & Sang Trọng ✨</h1>
-        <p>Nằm giữa trung tâm thành phố, nơi vẻ đẹp lịch sử giao thoa với tiện nghi hiện đại.</p>
-        <a href="@Url.Action("Introduce", "Home")" class="btn btn-dark btn-lg" style="z-index:1000;">Tìm hiểu thêm</a>
+    <div id="carouselExampleIndicators" class="carousel slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/img/bn1.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="~/img/bn2.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="~/img/bn3.jpg" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
+    @*<div class="text-overlay">     
+        <a href="@Url.Action("Introduce", "Home")" class="btn btn-dark btn-lg" style="z-index:1000;">Tìm hiểu thêm</a>
+    </div>*@
 </div>
 <div class="search-box container">
     <form class="d-flex align-items-center justify-content-center">
@@ -74,7 +110,6 @@
 <div class="container">
     @if (!allRooms.Any())
     {
-        <h3 style="color:#F04770;" class="text-center">Hãy nhập vào thông tin để tìm kiếm phòng!</h3>
         <div id="top-booked-rooms-container">
             @await Component.InvokeAsync("TopBookedRooms", new { type = "top-booked" })
         </div>
@@ -174,20 +209,6 @@
 
     }
 </div>
-@* <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="~/img/banner1.jpg" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="~/img/banner4.jpg" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="~/img/banner3.jpg" class="d-block w-100" alt="...">
-        </div>
-    </div>
-</div>
- *@
 
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
