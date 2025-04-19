@@ -22,6 +22,16 @@
         checkCustomerInfo();
     }
 
+    $('#confirmBookingButton').on("click", function () {
+        // Lấy modal bằng id
+        var bookingModal = new bootstrap.Modal(document.getElementById('bookingConfirmationModal'), {
+            keyboard: false,
+            backdrop: 'static'
+        });
+
+        // Gọi phương thức show để hiển thị
+        bookingModal.show();
+    });
 
     $('.service-quantity').on('input', function () {
         var value = $(this).val();
@@ -148,37 +158,37 @@
 
     let confirmBooking = false;
 
-    $('#booking').on('click', function () {
+   /* $('#booking').on('click', function () {
         $('#bookingModal').modal('show');
-    });
+    });*/
 
-    $('#confirmBookingButton').on('click', function () {
+    /*$('#confirmBookingButton').on('click', function () {
         confirmBooking = true;
-        $('#bookingModal').modal('hide');
-    });
+        *//*$('#bookingModal').modal('hide');*//*
+    });*/
 
-    $('#bookingModal').on('hidden.bs.modal', function () {
+   /* $('#bookingModal').on('hidden.bs.modal', function () {
         if (confirmBooking) {
             $('#bookingConfirmationModal').modal('show');
         }
-    });
+    });*/
 
-    $('#bookingConfirmationModal').on('hidden.bs.modal', function () {
+    /*$('#bookingConfirmationModal').on('hidden.bs.modal', function () {
         if (confirmBooking) {
             confirmBooking = false;
         } else {
             $('#bookingModal').modal('show');
         }
-    });
+    });*/
 
     $('.btn-close, .btn-secondary', '#bookingConfirmationModal').on('click', function () {
         confirmBooking = false;
     });
 
-    $('#confirmBooking').on('click', function () {
+    /*$('#confirmBooking').on('click', function () {
         confirmBooking = true;
         $('#bookingConfirmationModal').modal('hide');
-    });
+    });*/
     $('#confirmBookingButton').on('click', function () {
         var roomName = document.querySelector('.card-title').innerText;
         var totalPrice = document.getElementById('totalPrice').innerText.replace('Tổng tiền sau khi đặt cọc: ', '').replace(' VNĐ', '').trim();
@@ -200,7 +210,7 @@
         document.getElementById('modalTotalPrice').innerText = totalPrice + ' VNĐ';
         document.getElementById('modalServices').innerText = services.join(', ') || 'Không có dịch vụ nào';
 
-        $('#bookingModal').modal('hide');
+        /*$('#bookingModal').modal('hide');*/
     });
 
 
