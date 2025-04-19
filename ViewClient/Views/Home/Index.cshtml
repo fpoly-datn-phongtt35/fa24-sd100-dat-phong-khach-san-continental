@@ -109,15 +109,16 @@
         </div>
     </form>
 </div>
+
 <div class="py-4">
     @if (!allRooms.Any())
     {
         <div id="top-booked-rooms-container">
             @await Component.InvokeAsync("TopBookedRooms", new { type = "top-booked" })
         </div>
-       @*  <div id="top-booked-rooms-container">
+        @*<div id="top-booked-rooms-container">
             @await Component.InvokeAsync("TopBookedRooms", new { type = "nice-view" })
-        </div> *@
+        </div>*@
     }
     else
     {
