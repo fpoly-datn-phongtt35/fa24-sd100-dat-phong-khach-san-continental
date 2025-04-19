@@ -51,7 +51,7 @@
 <!-- Breadcrumb -->
 <div class="">
     <div class="rounded-2 py-3 px-3 bg-light shadow-sm border-start border-4 border-warning">
-        <h6 class="text-dark fw-bold m-0">
+        <h6 class="fw-bold m-0" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px;">
             Contiental - Chi tiết phòng - @Html.DisplayFor(model => model.Room.Name)
         </h6>
     </div>
@@ -93,7 +93,7 @@
     <input id="Id_Room" value="@Model.Room.Id" style="display:none" />
 
     <div class="container">
-        <h5 class="text-gold fw-bold">Hoàn thành đơn đặt phòng của bạn</h5>
+        <h5 class="fw-bold" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px; padding-top: 20px">Hoàn thành đơn đặt phòng của bạn</h5>
     </div>
     <!-- Main Content -->
     <div class="">
@@ -176,10 +176,6 @@
                             <li><strong>Loại phòng:</strong> @Html.DisplayFor(model => model.RoomType.Name)</li>
                             <li><strong>Diện tích:</strong> @Html.DisplayFor(model => model.Room.RoomSize) m²</li>
                             <li><strong>Sức chứa tối đa:</strong> @Html.DisplayFor(model => model.RoomType.MaximumOccupancy) người</li>
-                            <li>
-                                <strong>Giá:</strong>
-                                <span class="text-danger fw-bold fs-5">@Math.Round(Model.Room.Price ?? 0).ToString("N0")</span> VNĐ/đêm
-                            </li>
                         </ul>
                     </div>
 
@@ -198,7 +194,7 @@
         <div class="bg-light border-start border-5 border-warning rounded-4 shadow-sm px-4 py-5">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-info-circle-fill text-warning fs-4 me-2"></i>
-                <h4 class="text-gold fw-bold m-0">Mô tả</h4>
+                <h4 class="fw-bold m-0" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px; padding-top: 20px">Mô tả</h4>
             </div>
             <p class="text-dark fs-6" style="line-height: 1.7;">
                 @Html.DisplayFor(model => model.Room.Description)
@@ -211,7 +207,7 @@
         <div class="bg-light border-start border-5 border-warning rounded-4 shadow-sm px-4 py-5">
             <div class="d-flex align-items-center mb-3">
                 <i class="bi bi-stars text-warning fs-4 me-2"></i>
-                <h4 class="text-gold fw-bold m-0">Tiện ích</h4>
+                <h4 class="fw-bold m-0" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px; padding-top: 20px">Tiện ích</h4>
             </div>
 
             @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
@@ -240,7 +236,7 @@
 </div>
 
 <div class="container luxury-card my-4">
-    <h4 class="text-gold"><i class="fa-solid fa-comments"></i> Phản hồi từ khách hàng</h4>
+    <h4 class="" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px; padding-top: 20px"><i class="fa-solid fa-comments"></i> Phản hồi từ khách hàng</h4>
     <div class="p-3 bg-light rounded">
         <div id="ListCMT"></div>
     </div>
