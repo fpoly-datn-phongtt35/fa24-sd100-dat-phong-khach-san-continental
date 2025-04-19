@@ -126,14 +126,19 @@ namespace ViewClient.Controllers
                     totalRecord = roomsResponse.TotalRoom
                 };
 
-                var averageRatings = new Dictionary<Guid, double>();
+                var averageRatings = new Dictionary<Guid, RoomRatingDto>();
                 foreach (var room in roomsResponse.LstRoom)
                 {
                     var avg = await _room.GetAverageRatingByRoomIdAsync(room.Id);
-                    averageRatings[room.Id] = avg != null ? avg.AverageRating ?? 0 : 0;
+                    averageRatings[room.Id] = new RoomRatingDto
+                    {
+                        AverageRating = avg?.AverageRating ?? 0,
+                        TotalReviews = avg?.TotalReviews ?? 0
+                    };
                 }
 
                 ViewBag.AverageRatings = averageRatings;
+                
 
                 return View("Index", responseData);
             }

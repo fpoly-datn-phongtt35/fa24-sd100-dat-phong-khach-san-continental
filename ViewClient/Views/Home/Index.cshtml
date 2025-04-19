@@ -1,5 +1,6 @@
 ﻿@using System.Diagnostics
 @using Domain.DTO.Floor
+@using Domain.DTO.Room
 @using Domain.DTO.RoomType
 @using Domain.Enums
 @using Domain.DTO.Paging
@@ -9,7 +10,8 @@
     ViewBag.Title = "Continental";
     var roomtypeList = ViewBag.RoomTypes as List<Domain.DTO.RoomType.RoomTypeResponse>;
     var allRooms = Model.data;
-    var averageRatings = ViewBag.AverageRatings as Dictionary<Guid, double>;
+    var averageRatings = (Dictionary<Guid, RoomRatingDto>)ViewBag.AverageRatings;
+
 }
 
 <style>
@@ -103,11 +105,12 @@
             </div>
         </div>
         <div class="text-center ms-lg-2" style="margin-left: 30px; margin-top:28px;">
-            <button type="submit" id="validateButton" class="btn btn-danger"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
+            <button type="submit" id="validateButton" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
         </div>
     </form>
 </div>
-<div>
+
+<div class="py-4">
     @if (!allRooms.Any())
     {
         <div id="top-booked-rooms-container">
@@ -119,7 +122,7 @@
     }
     else
     {
-        <div class="search-form-container">
+        <div class="search-form-container ps-5">
             <form asp-action="SearchRooms" method="get" class="search-form">
                 <input type="hidden" name="CheckIn" id="CheckInValue" />
                 <input type="hidden" name="CheckOut" id="CheckOutValue" />
@@ -150,7 +153,7 @@
                     </div>
                     <div class="form-group col-md-2 mt-2rem">
                         <label>&nbsp;</label>
-                        <button type="submit" class="btn btn-primary w-50">Lọc</button> 
+                        <button type="submit" class="btn btn-dark w-50">Lọc</button> 
                     </div>
                 </div>
             </form>
@@ -161,7 +164,7 @@
             {
                 @foreach (var room in allRooms)
                 {
-                    var rating = averageRatings.ContainsKey(room.Id) ? averageRatings[room.Id] : 0;
+                    var rating = averageRatings.ContainsKey(room.Id) ? averageRatings[room.Id] : new RoomRatingDto();
                     var roomType = roomtypeList.FirstOrDefault(rt => rt.Id == room.RoomTypeId);
                     <div class="card mb-4 shadow-sm border-0">
                         <div class="row g-0 align-items-center">
@@ -187,15 +190,42 @@
                             </div>
 
                             <div class="col-md-7">
-                                <div class="card-body">
+                                <div class="card-body p-4">
+                                    <h2 class="card-title text-black fw-semibold mb-2" style="font-size: 1.5rem;">
+                                        @room.Name
+                                    </h2>
 
+                                    <p class="mb-3 text-black">
+                                        <span style="font-size: 1.1rem; font-weight: 500;">
+                                            @rating.AverageRating
+                                            <i class="bi bi-star ms-1" style="font-size: 1.2rem;"></i>
+                                        </span>
+                                        <small class="ms-1" style="font-size: 0.9rem; opacity: 0.7;">
+                                            (@rating.TotalReviews review)
+                                        </small>
+                                    </p>
 
-                                    <h1 class="card-title fw-bold text-dark">@room.Name - Rating: @rating ⭐</h1>
-                                    <p class="mb-1"><i class="fas fa-user-friends"></i> Số người/phòng: <strong>@roomType?.MaximumOccupancy</strong></p>
-                                    <p class="mb-1"><i class="fas fa-door-closed"></i> Loại phòng: <strong class="text-uppercase text-primary">@roomType?.Name</strong></p>
-                                    <p class="text-muted">Giá: <strong class="text-danger">đ @($"{room.Price:N0}")</strong> / ngày</p>
-                                    <a href="@Url.Action("Details", "Room", new { roomId = room.Id })" class="btn btn-outline-dark">Xem chi tiết</a>
+                                    <p class="mb-2 text-black d-flex align-items-center">
+                                        <i class="bi bi-people me-2"></i>
+                                        <span>Sức chứa: <strong>@roomType?.MaximumOccupancy</strong> người</span>
+                                    </p>
+
+                                    <p class="mb-2 text-black d-flex align-items-center">
+                                        <i class="bi bi-layout-text-sidebar-reverse me-2"></i>
+                                        <span>Loại phòng: <strong class="text-uppercase">@roomType?.Name</strong></span>
+                                    </p>
+
+                                    <p class="mb-3 text-black d-flex align-items-center">
+                                        <i class="bi bi-cash me-2"></i>
+                                        <span>Giá: <strong class="text-black">đ @($"{room.Price:N0}")</strong> / ngày</span>
+                                    </p>
+
+                                    <a href="@Url.Action("Details", "Room", new { roomId = room.Id })"
+                                       class="btn btn-outline-dark rounded-pill px-4 py-2 fw-medium shadow-sm d-inline-flex align-items-center">
+                                        <i class="me-2"></i>Đặt phòng ngay
+                                    </a>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -212,4 +242,5 @@
 
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 }

@@ -682,7 +682,6 @@ body {
 
     .card p:hover {
         font-weight: bolder;
-        color: red;
     }
 
         .status-badge {
