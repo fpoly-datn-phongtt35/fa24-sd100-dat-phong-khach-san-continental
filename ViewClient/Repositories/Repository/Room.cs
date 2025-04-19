@@ -33,7 +33,7 @@ namespace ViewClient.Repositories.Repository
 
         public async Task<RoomRatingDto> GetAverageRatingByRoomIdAsync(Guid roomId)
         {
-            string url = $"https://localhost:7130/api/Room/GetAverageRatingBy?roomId={roomId}";
+            string url = $"https://localhost:7130/api/Room/GetAverageRating?roomId={roomId}";
             var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)

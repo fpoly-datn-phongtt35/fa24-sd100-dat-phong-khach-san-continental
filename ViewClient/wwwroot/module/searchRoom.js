@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
             checkOutPicker.set('minDate', minCheckOut);
 
             const currentCheckOut = checkOutPicker.selectedDates[0];
-            console.log(currentCheckOut);
             if (!currentCheckOut || currentCheckOut < minCheckOut) {
                 checkOutPicker.setDate(minCheckOut);
             }
