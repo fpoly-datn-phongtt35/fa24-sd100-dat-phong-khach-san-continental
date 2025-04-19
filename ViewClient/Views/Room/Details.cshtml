@@ -81,14 +81,6 @@
         min-height: 500px;
     }
 </style>
-<!-- Breadcrumb -->
-<div class="">
-    <div class="rounded-2 py-3 px-3 bg-light shadow-sm border-start border-4 border-warning">
-        <h6 class="fw-bold m-0" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px;">
-            Contiental - Chi tiết phòng - @Html.DisplayFor(model => model.Room.Name)
-        </h6>
-    </div>
-</div>
 
 <!-- Carousel -->
 @{
@@ -184,14 +176,14 @@
     <input id="Id_Room" value="@Model.Room.Id" style="display:none" />
 
     <div class="container">
-        <h5 class="fw-bold" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px; padding-top: 20px">Hoàn thành đơn đặt phòng của bạn</h5>
+        <h5 class="fw-bold" style="font-family: 'Montserrat', sans-serif; font-weight: lighter; font-size: 1rem; color: #666; text-transform: uppercase; margin-bottom: 20px;">Contiental - Đơn đặt phòng - @Html.DisplayFor(model => model.Room.Name)</h5>
     </div>
     <!-- Main Content -->
     <div class="">
         <div class="container d-flex">
             <div class="luxury-card me-2" style="width: 70%">
                 <div class="">
-                    <div class="card-title h5">@Model.Room.Name</div>
+                    <div class="card-title h5 mb-3">@Model.Room.Name</div>
                     <p><i class="fa-regular fa-clock"></i> Giờ nhận phòng: <strong id="checkIn">Từ 14:00</strong></p>
                     <p><i class="fa-regular fa-clock"></i> Giờ trả phòng: <strong id="checkOut">Trước 12:00</strong></p>
                     <p>Giá: @Math.Round(Model.Room.Price ?? 0) VNĐ/đêm</p>
@@ -254,7 +246,7 @@
                 </div>
                 <div class="modal-footer">
                     @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button> *@
-                    <button type="button" class="btn btn-primary" id="confirmBookingButton">Đặt phòng</button>
+                    <button type="button" class="btn btn-dark" id="confirmBookingButton" style="">Đặt phòng</button>
                 </div>
             </div>
             <!-- Room Info -->
