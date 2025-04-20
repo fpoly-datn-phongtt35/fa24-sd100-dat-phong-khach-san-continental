@@ -5,7 +5,7 @@
     var periods = ViewBag.Periods as List<string>;
     var totalAmounts = ViewBag.TotalAmounts as List<decimal>;
     var topCustomers = ViewBag.TopCustomers as List<Domain.DTO.Room.TopCustomerBooking>;
-    var coverageRatio = ViewBag.CoverageRatio ;
+    var coverageRatio = ViewBag.CoverageRatio;
     var topRooms = ViewBag.TopRooms as List<Domain.DTO.Room.TopRoomBookingViewModel>;
     var revenueFilterType = HttpContextAccessor.HttpContext.Request.Query["revenueFilterType"].ToString();
 }
@@ -91,7 +91,7 @@
                         </div>
                         <div class="top-customer-info">
                             <h5>@($"{customer.FirstName} {customer.LastName}")</h5>
-                            <p>Tiền: @String.Format("{0:N0}",@customer.TotalPrice) VND / Lần đặt: @customer.BookingCount</p>
+                            <p>Tiền: @String.Format("{0:N0}", @customer.TotalPrice) VND / Lần đặt: @customer.BookingCount</p>
                         </div>
                     </div>
                 }
@@ -106,58 +106,59 @@
     <style>
 
         .top-customer-list {
-        display: flex;
-        flex-direction: column;
-        background-color: #f8f9fa;
-        width: 85%; /* Chiếm 95% chiều ngang của phần chứa */
-        border-radius: 0; /* Làm góc nhọn */
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            width: 85%; /* Chiếm 95% chiều ngang của phần chứa */
+            border-radius: 0; /* Làm góc nhọn */
         }
 
 
 
 
         .top-customer-card {
-        display: flex;
-        align-items: center;
-        padding: 8px;
-        background-color: white;
-        border-radius: 0px;
-        transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background-color: white;
+            border-radius: 0px;
+            transition: transform 0.2s;
         }
 
-        .top-customer-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
+            .top-customer-card:hover {
+                transform: scale(1.02);
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            }
 
         .top-customer-icon {
-        font-size: 40px;
-        color: #007bff;
-        margin-left: 11px;
+            font-size: 40px;
+            color: #007bff;
+            margin-left: 11px;
         }
 
-        .top-customer-info{
-        margin-left: 10px;
-        }
-        .top-customer-info h5 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
+        .top-customer-info {
+            margin-left: 10px;
         }
 
-        .top-customer-info p {
-        margin: 5px 0 0 0;
-        font-size: 14px;
-        color: #666;
-        }
+            .top-customer-info h5 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .top-customer-info p {
+                margin: 5px 0 0 0;
+                font-size: 14px;
+                color: #666;
+            }
 
         .top-customer-card:nth-child(odd) {
-        background-color: white; /* Màu nền trắng cho các khách hàng lẻ (odd) */
+            background-color: white; /* Màu nền trắng cho các khách hàng lẻ (odd) */
         }
 
         .top-customer-card:nth-child(even) {
-        background-color: #f1f1f1; /* Màu nền xám cho các khách hàng chẵn (even) */
+            background-color: #f1f1f1; /* Màu nền xám cho các khách hàng chẵn (even) */
         }
     </style>
 
@@ -195,7 +196,13 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true, // Đảm bảo bắt đầu từ 0
+                        min: 0              // Không hiển thị số âm
+                    }
+                }
             }
         });
 
@@ -214,11 +221,18 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true, // Đảm bảo bắt đầu từ 0
+                        min: 0              // Không hiển thị số âm
+                    }
+                }
             }
         });
     });
 </script>
+
 
 
 
@@ -275,7 +289,6 @@
                     <th>Địa chỉ</th>
                     <th>Diện tích (m²)</th>
                     <th>Số lần đặt</th>
-                    <th>Hình ảnh</th>
                 </tr>
             </thead>
             <tbody>
@@ -286,29 +299,10 @@
                         <td>@(i + 1)</td>
                         <td>@room.Name</td>
                         <td>@room.RoomTypeName</td>
-                        <td>@String.Format("{0:N0}",@room.Price) VNĐ</td>
+                        <td>@String.Format("{0:N0}", @room.Price) VNĐ</td>
                         <td>@room.Address</td>
                         <td>@room.RoomSize</td>
                         <td>@room.BookingCount</td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                @if (room.Images != null && room.Images.Any())
-                                {
-                                    var firstImage = room.Images.FirstOrDefault();
-                                    var extension = System.IO.Path.GetExtension(firstImage);
-                                    if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension.ToLower()))
-                                    {
-                                        <div class="img-container d-flex justify-content-start" style="width: 100px; height: 100px; margin: 5px;">
-                                            <img class="responsive-img" src="~/images/@firstImage" alt="@room.Name" style="object-fit: cover; width: 100%; height: 100%; border-radius: 10px;">
-                                        </div>
-                                    }
-                                }
-                                else
-                                {
-                                    <p>Không có ảnh</p>
-                                }
-                            </div>
-                        </td>
                     </tr>
                 }
             </tbody>
