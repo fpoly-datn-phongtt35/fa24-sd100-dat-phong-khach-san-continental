@@ -19,8 +19,9 @@
         </div>
         <div class="form-group mb-3">
             <label asp-for="NumberOfRoom" class="control-label1">Số lượng phòng</label>
-            <input asp-for="NumberOfRoom" class="form-control"/>
+            <input asp-for="NumberOfRoom" class="form-control" type="number" min="1" max="1000" />
             <span asp-validation-for="NumberOfRoom" class="text-danger"></span>
+
         </div>
     </div>
 

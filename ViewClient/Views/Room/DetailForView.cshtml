@@ -5,109 +5,229 @@
 @model RoomDetailViewModel
 
 <style>
-    body {
-        background-color: #f4f4f4;
+    .room-main {
+        height: 100%;
+        min-height: 500px;
+        padding: 3px;
     }
 
-    .gold-text {
-        color: #c9a74f;
+        .room-main img {
+            width: 100%;
+            height: 73%;
+            object-fit: cover;
+            display: block;
+            border-radius: 15px 0 0 15px;
+        }
+
+    .room-grid-small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 0px;
+    }
+
+    .room-grid-small {
+        padding: 2px;
+        height: 100%;
+        position: relative;
+    }
+
+    .room-grid-wrapper {
+        height: 100%;
+        min-height: 500px;
     }
 
     .luxury-card {
         background: #fff;
         border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+		box-shadow: none;
     }
 
-    .carousel-item img {
-        border-radius: 10px;
+    
+
+    .room-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: #333;
     }
 
-    .btn-gold {
-        background: #c9a74f;
-        color: white;
-        border-radius: 8px;
+    body {
+        background-color: #f1f2f3;
     }
 
-        .btn-gold:hover {
-            background: #b08c3e;
-        }
+    .amenity-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        border-radius: 999px;
+        background-color: #fff;
+        color: #333;
+        font-size: 14px;
+    }
+
 </style>
 
-<div class="container py-5">
-    <div class="luxury-card mb-4">
-        <h6 class="fw-bold gold-text">Contiental > Chi tiết phòng > @Model.Room.Name</h6>
+
+
+<div class="container py-4">
+    <div class=" mb-4">
+        <h6 class="fw-bold room-title">Contiental > Chi tiết phòng > @Model.Room.Name</h6>
     </div>
 
-    <div class="row">
-        <div class="col-md-7">
-            <div id="roomCarousel" class="carousel slide luxury-card" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @if (Model.Room.Images != null && Model.Room.Images.Any())
-                    {
-                        @for (int i = 0; i < Model.Room.Images.Count; i++)
+    
+    @{
+        var totalImages = Model.Room.Images.Count;
+        var extraCount = totalImages - 5;
+    }
+    <div style="max-height:353px">
+        @if (Model.Room.Images != null && Model.Room.Images.Any())
+        {
+            <div class="row g-0">
+                <!-- Ảnh lớn bên trái -->
+                <div class="col-md-6">
+                    <div class="room-main shadow-soft h-100">
+                        <a href="@Url.Content($"~/images/{System.IO.Path.GetFileName(Model.Room.Images[0].Image)}")"
+                           class="glightbox"
+                           data-gallery="room-gallery">
+                            <img src="@Url.Content($"~/images/{System.IO.Path.GetFileName(Model.Room.Images[0].Image)}")"
+                                 alt="Ảnh chính"
+                                 onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ảnh nhỏ chia làm 2x2 bên phải -->
+                <div class="col-md-6">
+                    <div class="room-grid-wrapper">
+                        @for (int row = 0; row < 2; row++)
                         {
-                            var img = Model.Room.Images[i];
-                            var imagePath = Url.Content($"~/images/{System.IO.Path.GetFileName(img.Image)}");
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@imagePath" class="d-block w-100" alt="Room Image" onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                            <div class="row g-0 flex-fill">
+                                @for (int col = 0; col < 2; col++)
+                                {
+                                    int index = 1 + row * 2 + col;
+                                    if (index < totalImages)
+                                    {
+                                        var imageUrl = Url.Content($"~/images/{System.IO.Path.GetFileName(Model.Room.Images[index].Image)}");
+                                        string borderRadius = "";
+
+                                        if (index == 2) borderRadius = "border-top-right-radius: 15px;";
+                                        if (index == 4) borderRadius = "border-bottom-right-radius: 15px;";
+                                        var isLast = (index == 4 && extraCount > 0);
+
+                                        <div class="col-6 room-grid-small">
+                                            <a href="@imageUrl" class="glightbox d-block h-100 " data-gallery="room-gallery">
+                                                <img src="@imageUrl"
+                                                     alt="Ảnh phụ"
+                                                     onerror="this.onerror=null; this.src='/images/default.jpg';"
+                                                     style="@borderRadius" />
+
+                                                @if (isLast)
+                                                {
+                                                    <div class="position-absolute" style="
+                                                        bottom: 6px;
+                                                        right: 10px;
+                                                        background-color: rgba(255, 255, 255, 0.9);
+                                                        color: #000;
+                                                        padding: 4px 10px;
+                                                        border-radius: 20px;
+                                                        font-size: 0.9rem;
+                                                        font-weight: 600;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        gap: 4px;
+                                                        box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                                                        +@extraCount
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                                            <path d="M14 4v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4h12zm-1 0H3v9a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4zM8 1a2 2 0 0 1 2 2H6a2 2 0 0 1 2-2z" />
+                                                        </svg>
+                                                    </div>
+                                                }
+
+                                            </a>
+                                        </div>
+                                    }
+                                }
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <p class="text-muted">Không có hình ảnh</p>
-                    }
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
-        </div>
 
-        <div class="col-md-5">
-            <div class="luxury-card">
-                <h3 class="gold-text">Thông tin phòng</h3>
-                <p><strong>Loại phòng:</strong> @Model.RoomType.Name</p>
-                <p><strong>Diện tích:</strong> @Model.Room.RoomSize m²</p>
-                <p><strong>Sức chứa:</strong> @Model.RoomType.MaximumOccupancy người</p>
-                <p><strong>Giá:</strong> <span class="text-danger fw-bold">@Math.Round(Model.Room.Price ?? 0).ToString("N0") VNĐ/đêm</span></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="luxury-card my-4">
-        <h4 class="gold-text">Mô tả</h4>
-        <p>@Model.Room.Description</p>
-    </div>
-
-    <div class="luxury-card my-4">
-        <h4 class="gold-text">Tiện ích</h4>
-        @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
-        {
-            <div class="d-flex flex-wrap">
-                @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms.Where(a => a.Status == EntityStatus.Active))
-                {
-                    <div class="d-flex align-items-center m-2">
-                        <i class="fa-solid fa-check amenity-icon"> </i>
-                        <span> <strong> @amenityRoom.Amenity.Name:</strong> @amenityRoom.Amount</span>
+                        <!-- Ẩn các ảnh còn lại để lightbox nhận diện -->
+                        @for (int i = 5; i < totalImages; i++)
+                        {
+                            var imageUrl = Url.Content($"~/images/{System.IO.Path.GetFileName(Model.Room.Images[i].Image)}");
+                            <a href="@imageUrl" class="glightbox d-none" data-gallery="room-gallery"></a>
+                        }
                     </div>
-                }
+                </div>
             </div>
         }
         else
         {
-            <p class="text-muted">Phòng này không có tiện ích nào.</p>
+            <p class="text-muted">Không có hình ảnh</p>
         }
+    </div>
+    
+
+    <h1 class="room-title mt-4">@Model.Room.Name</h1>
+        <p style="font-size: 1.1rem; color: #555;">
+                Khách sạn
+                <span style="color: orange;">★</span>
+            <span style="color: orange;">★</span>
+        </p>
+
+    <div class="row my-3 d-flex align-items-stretch">
+        <!-- Cột trái -->
+        <div class="col-md-8">
+            <div class="luxury-card h-100">
+                <div class="row my-3">
+                    <div class="mb-3 col-md-6">
+                        <h5 class="room-title">Mô tả của phòng</h5>
+                        <span>@Model.Room.Description</span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5 class="room-title">Tiện ích của phòng</h5>
+                        @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
+                        {
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach (var amenityRoom in Model.Room.RoomType.AmenityRooms.Where(a => a.Status == EntityStatus.Active))
+                                {
+                                    <span class="amenity-badge">
+                                        @amenityRoom.Amenity.Name (@amenityRoom.Amount)
+                                    </span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Phòng này không có tiện ích nào.</p>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải -->
+        <div class="col-md-4">
+            <div class="luxury-card h-100">
+                <h5 class="room-title mb-3 my-3">Thông tin phòng</h5>
+                <p>Loại phòng: @Model.RoomType.Name</p>
+                <p>Diện tích: @Model.Room.RoomSize m²</p>
+                <p>Sức chứa: @Model.RoomType.MaximumOccupancy người</p>
+                <p>
+                    Giá:
+                    <span class="text-danger fw-bold">
+                        @Math.Round(Model.Room.Price ?? 0).ToString("N0") VNĐ/đêm
+                    </span>
+                </p>
+            </div>
+        </div>
     </div>
 
 
     <div class="luxury-card my-4">
-        <h4 class="gold-text"><i class="fa-solid fa-comments"></i> Phản hồi từ khách hàng</h4>
+        <h5 class="room-title"><i class="fa-solid fa-comments"></i> Phản hồi từ khách hàng</h5>
         <div class="p-3 bg-light rounded">
             <div id="ListCMT"></div>
         </div>
@@ -116,3 +236,13 @@
 @section scripts {
     <script asp-append-version="true" src="~/module/feeback.js"></script>
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const lightbox = GLightbox({
+            selector: '.glightbox'
+        });
+    });
+</script>

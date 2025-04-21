@@ -1,4 +1,4 @@
-﻿@using Domain.DTO.Paging
+﻿ @using Domain.DTO.Paging
 @using Domain.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using View.Views.Shared.Helper
@@ -39,7 +39,7 @@
             </select>
         </div>
         
-        <input type="number" name="numberofroom" id="numberofroom" class="form-control" value="@Context.Request.Query["numberofroom"]" placeholder="Số phòng" style="max-width: 120px;" />
+        <input type="number" name="numberofroom" id="numberofroom" class="form-control" value="@Context.Request.Query["numberofroom"]" placeholder="Số phòng" style="max-width: 120px;" min="1" max="100" />
         <button class="btn btn-outline-success ms-2" type="submit">Lọc</button>
         <button type="submit" class="btn btn-danger ms-2" onclick="clearFilters()">Xóa bộ lọc</button>
     </div>

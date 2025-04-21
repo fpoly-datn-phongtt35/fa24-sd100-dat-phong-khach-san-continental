@@ -59,8 +59,9 @@
                 <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Name)</dd>
             </div>
             <div class="row mb-2">
-            <dt class="col-4 mb-2">@Html.DisplayName("Giá")</dt>
-            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Price)</dd>
+                <dt class="col-4 mb-2">@Html.DisplayName("Giá")</dt>
+                <dd class="col-8 mb-2">@String.Format("{0:N0} VNĐ", Model.Price)</dd>
+
 
             <dt class="col-4 mb-2">@Html.DisplayName("Địa chỉ")</dt>
             <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Address)</dd>
@@ -72,19 +73,13 @@
             <dd class="col-8 mb-2">@Html.DisplayFor(model => model.RoomSize)</dd>
 
             <dt class="col-4 mb-2">@Html.DisplayName("Trạng thái")</dt>
-            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.Status)</dd>
+                <dd class="col-8 mb-2">@StatusHelper.DisplayRoomStatusBadge(Model.Status)</dd>
 
             <dt class="col-4 mb-2">@Html.DisplayName("Thời gian tạo")</dt>
             <dd class="col-8 mb-2">@Html.DisplayFor(model => model.CreatedTime)</dd>
-
-            <dt class="col-4 mb-2">@Html.DisplayName("Được tạo bởi")</dt>
-            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.CreatedBy)</dd>
-
             <dt class="col-4 mb-2">@Html.DisplayName("Thời gian sửa")</dt>
             <dd class="col-8 mb-2">@Html.DisplayFor(model => model.ModifiedTime)</dd>
 
-            <dt class="col-4 mb-2">@Html.DisplayName("Được sửa bởi")</dt>
-            <dd class="col-8 mb-2">@Html.DisplayFor(model => model.ModifiedBy)</dd>
 
             <dt class="col-4 mb-2">@Html.DisplayName("Xóa")</dt>
             <dd class="col-8 mb-2">@(Model.Deleted ? "Đã xóa" : "Chưa xóa")</dd>

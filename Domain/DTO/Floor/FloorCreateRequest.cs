@@ -13,6 +13,8 @@ namespace Domain.DTO.Floor
         public Guid BuildingId { get; set; }
         [Required(ErrorMessage = "Tên không được để trống")]
         public string? Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Số tầng không được để trống")]
+        [Range(1, 1000, ErrorMessage = "Số tầng phải lớn hơn 0 và nhỏ hơn 1000")]
         public int? NumberOfRoom { get; set; }
         public EntityStatus? Status { get; set; } = EntityStatus.Active;
         public DateTimeOffset? CreatedTime { get; set; }
