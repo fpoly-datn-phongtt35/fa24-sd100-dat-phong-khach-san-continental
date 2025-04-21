@@ -15,6 +15,7 @@ public class RoomTypeServiceAddRequest
     [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn 0")]
     public int? Amount { get; set; }
     
+    [Required(ErrorMessage = "Trạng thái không được để trống")]
     public EntityStatus Status { get; set; }
     public DateTimeOffset? CreatedTime { get; set; }
     public Guid? CreatedBy { get; set; }
