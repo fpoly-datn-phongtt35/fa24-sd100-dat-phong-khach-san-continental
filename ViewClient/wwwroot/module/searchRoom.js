@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     tomorrow.setDate(tomorrow.getDate() + 1); // Ngày mai
 
     const minCheckOutDate = new Date(tomorrow);
-    minCheckOutDate.setDate(minCheckOutDate.getDate() + 1); // Ngày trả phòng tối thiểu
+    minCheckOutDate.setDate(minCheckOutDate.getDate()); // Ngày trả phòng tối thiểu
 
     // Flatpickr cho checkIn
     const checkInPicker = $('#checkIn').flatpickr({
