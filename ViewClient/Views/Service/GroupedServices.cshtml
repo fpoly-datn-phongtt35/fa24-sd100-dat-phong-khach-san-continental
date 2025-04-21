@@ -3,7 +3,7 @@
 
 <div class="container-fluid flex-grow-1 d-flex flex-column align-items-center">
     <main style="width: 100%;">
-        <img src="@Url.Content("~/img/banner_service.png")" alt="Service Banner" style="width: 100vw; 
+        <img src="@Url.Content("~/img/banner_service.png")" alt="Service Banner" style="width: 100vw;
         height: auto; max-height: 400px; object-fit: cover; display: block; margin-bottom: 20px;">
 
         <!-- Dining Section -->
@@ -12,7 +12,7 @@
                 <span style="font-size: 15px; color: #888888;">DỊCH VỤ TẠI KHÁCH SẠN CONTINENTAL</span><br>
                 <br>
                 <span style="font-size: 36px; font-weight: bold;">TẬN HƯỞNG ĐỒ ĂN, THỨC UỐNG VÀ CÁC DỊCH VỤ</span><br>
-                <span style="font-size: 36px; font-weight: bold;">KHÁC TẠI CON HIGHLANDS</span><br>
+                <span style="font-size: 36px; font-weight: bold;">KHÁC TẠI CONTINENTAL</span><br>
                 <br>
                 <br>
                 <span style="font-size: 15px; color:  #888888">TẠI KHÁCH SẠN NÀY</span>
@@ -20,25 +20,27 @@
 
             @{
                 var imageList = new List<string>
-                {
-                    "~/images/service/2f317dfa-6540-4ed8-bf07-d5985d4b6d8a.jpg",
-                    "~/img/picker-ball.jpg",
-                    "~/img/the-market.png",
-                    "~/images/service/image4.jpg",
-                    "~/images/service/image5.jpg"
-                };
+            {
+            "~/images/service/2f317dfa-6540-4ed8-bf07-d5985d4b6d8a.jpg",
+            "~/img/picker-ball.jpg",
+            "~/img/the-market.png",
+            "~/images/service/image4.jpg",
+            "~/images/service/image5.jpg"
+            };
                 var index = 0;
             }
 
             @if (Model != null && Model.Any())
             {
+                var isOdd = true;
                 foreach (var group in Model)
                 {
-                    // Lấy ảnh từ danh sách theo chỉ số, lặp lại nếu vượt quá 5
                     var imagePath = imageList[index % imageList.Count];
                     index++;
 
-                    <div class="dining-item" style="display: flex; gap: 20px; margin-bottom: 40px; text-align: left; border: 1px solid #ddd; border-radius: 10px; padding: 20px; box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); max-width: 800px; margin-left: auto; margin-right: auto; min-height: 300px;">
+                    var itemClass = isOdd ? "dining-item odd" : "dining-item even";
+
+                    <div class="@itemClass" style="display: flex; gap: 20px; margin-bottom: 40px; text-align: left; border: 1px solid #ddd; border-radius: 10px; padding: 20px; box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); max-width: 800px; margin-left: auto; margin-right: auto; min-height: 300px;">
                         <div class="image-container" style="width: 400px; height: 250px; border-radius: 10px; overflow: hidden;">
                             @{
                                 var extension = System.IO.Path.GetExtension(imagePath)?.ToLower();
@@ -54,8 +56,8 @@
                         </div>
                         <div class="content" style="flex: 1; max-width: 350px;">
                             <h2 style="font-size: 24px; margin-bottom: 10px; font-weight: bold;">@(string.IsNullOrWhiteSpace(group.ServiceTypeName) ? "Unknown Type" : group.ServiceTypeName.ToUpper())</h2>
-                            <p>Gồm các dịch vụ sau</p>
-                            <div class="details" style="font-size: 14px; color: #555;">
+                            <p style="color: #C0C0C0">Bao gồm</p>
+                            <div class="details" style="font-size: 20px; color: #555;">
                                 @for (int i = 0; i < group.ServiceNames.Count; i++)
                                 {
                                     <p style="margin: 0;">
@@ -65,11 +67,10 @@
                                     </p>
                                 }
                             </div>
-                            <div class="buttons" style="margin-top: 20px; display: flex; gap: 10px;">
-                                <a href="#" style="text-decoration: none; color: #000000;" onmouseover="this.style.color='#007bff'" onmouseout="this.style.color='#000000'">Tìm hiểu thêm</a>
-                            </div>
                         </div>
                     </div>
+
+                    isOdd = !isOdd;
                 }
             }
             else
@@ -136,18 +137,35 @@
 </div>
 
 <style>
-.faq-question:hover {
-color: #007bff;
-}
-.faq-answer {
-transition: all 0.3s ease;
-}
-.faq-toggle {
-transition: transform 0.3s ease;
-}
-.faq-toggle.open {
-transform: rotate(180deg);
-}
+    .faq-question:hover {
+        color: #007bff;
+    }
+
+    .faq-answer {
+        transition: all 0.3s ease;
+    }
+
+    .faq-toggle {
+        transition: transform 0.3s ease;
+    }
+
+        .faq-toggle.open {
+            transform: rotate(180deg);
+        }
+
+    .dining-item.odd {
+        flex-direction: row; 
+    }
+
+    .dining-item.even {
+        flex-direction: row-reverse; 
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+    }
 </style>
 
 <script>
@@ -164,40 +182,3 @@ transform: rotate(180deg);
         }
     }
 </script>
-
-
-@* @using ViewClient.ViewModels *@
-@* @model List<GroupedServiceViewModel> *@
-@* *@
-@* <div class="container-fluid flex-grow-1 d-flex flex-column align-items-center"> *@
-@*     <main style="width: 100%;"> *@
-@*         <h1>TEST</h1> *@
-@*         <h2 style="text-align: center; margin-top:30px">Danh sách dịch vụ</h2> *@
-@* *@
-@*         @if (Model != null && Model.Any()) *@
-@*         { *@
-@*             <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-top: 20px;"> *@
-@*                 @foreach (var group in Model) *@
-@*                 { *@
-@*                     <div style="flex: 1 0 22%; max-width: 22%; text-align: center; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"> *@
-@*                         <strong>@(string.IsNullOrWhiteSpace(group.ServiceTypeName) ? "Unknown Type" : group.ServiceTypeName)</strong> *@
-@*                         <div style="text-align: center; margin-top: 10px;"> *@
-@*                             @for (int i = 0; i < group.ServiceNames.Count; i++) *@
-@*                             { *@
-@*                                 <p style="margin: 0;"> *@
-@*                                     <a href="@Url.Action("Details", "Service", new { id = group.ServiceIds[i] })"> *@
-@*                                         @group.ServiceNames[i] *@
-@*                                     </a> *@
-@*                                 </p> *@
-@*                             } *@
-@*                         </div> *@
-@*                     </div> *@
-@*                 } *@
-@*             </div> *@
-@*         } *@
-@*         else *@
-@*         { *@
-@*             <p style="text-align: center; color: red;">Không có dữ liệu để hiển thị.</p> *@
-@*         } *@
-@*     </main> *@
-@* </div> *@

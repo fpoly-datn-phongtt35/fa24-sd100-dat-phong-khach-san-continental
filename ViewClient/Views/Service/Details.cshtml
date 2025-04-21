@@ -4,231 +4,265 @@
     ViewData["Title"] = "Details";
 }
 
+<link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
 <style>
-    /* Container và bố cục tổng thể */
     .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
     }
 
-    /* Header */
     .header-background {
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
         border-radius: 10px;
-        padding: 40px 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .header-content {
+        padding: 0px 20px;
+        margin-bottom: 0;
         text-align: center;
-        color: #ffffff;
     }
 
-    .header-content .title {
-        font-size: 36px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
+        .header-background .title-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .header-content .price-highlight {
-        background-color: #f1c40f;
-        color: #1e3c72;
-        padding: 5px 15px;
-        border-radius: 5px;
-        font-weight: bold;
-    }
+        .header-background .service-label {
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
 
-    /* Content Container */
+        .header-background .underline {
+            width: 40px;
+            height: 2px;
+            background-color: #000000;
+            margin-bottom: 40px;
+        }
+
+        .header-background .service-name {
+            font-family: 'Times New Roman', serif;
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-background .price-highlight {
+            background-color: #f1c40f;
+            color: #1e3c72;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            display: none; 
+        }
+
     .content-container {
         background-color: #ffffff;
         border-radius: 10px;
+        padding: 10px 30px;
+        margin-bottom: 30px;
+        margin-top: 0;
+    }
+
+    .image-layout-wrapper {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 30px;
         margin-bottom: 30px;
     }
 
-    /* Service Details */
-    .service-details {
+    .image-layout {
         display: flex;
-        gap: 30px;
+        gap: 20px;
+        height: 400px;
     }
 
-    /* Image Container */
-    .image-container {
-        flex: 1;
-        max-width: 400px;
-    }
-
-    .carousel {
-        position: relative;
-        width: 350px;
-        height: 250px;
+    .main-image {
+        width: 66%;
+        height: 100%;
         overflow: hidden;
         border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border: 2px solid #C0C0C0;
     }
 
-    .carousel img {
-        width: 100%;
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+            .main-image img:hover {
+                transform: scale(1.05);
+            }
+
+    .side-images {
+        width: 33%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
         height: 100%;
-        object-fit: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        transition: opacity 0.5s ease;
     }
 
-    .carousel img.active {
-        opacity: 1;
-    }
-
-    .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #ffffff;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        font-size: 18px;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
-
-    .carousel-btn:hover {
-        background-color: rgba(0, 0, 0, 0.7);
-    }
-
-    .carousel-btn.prev {
-        left: 10px;
-    }
-
-    .carousel-btn.next {
-        right: 10px;
-    }
-
-    .image-container p {
-        text-align: center;
-        color: #777;
-        font-size: 16px;
-        padding: 20px;
-        background-color: #f5f5f5;
-        border-radius: 8px;
-        margin: 0;
-    }
-
-    /* Service Info */
-    .service-info {
+    .side-image {
         flex: 1;
-        line-height: 1.6;
+        overflow: hidden;
+        border-radius: 8px;
+        border: 2px solid #C0C0C0; 
+        position: relative;
     }
 
-    .service-info h3 {
-        font-size: 24px;
-        font-weight: bold;
-        color: #1e3c72;
-        margin-bottom: 15px;
-    }
+        .side-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
 
-    .service-info p {
-        font-size: 16px;
-        color: #333;
-        margin-bottom: 20px;
-    }
+            .side-image img:hover {
+                transform: scale(1.05);
+            }
 
-    .service-info .btn-book {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #2a5298;
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
+    .view-all-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #C0C0C0;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: background-color 0.3s ease;
+        cursor: pointer;
     }
 
-    .service-info .btn-book:hover {
-        background-color: #1e3c72;
+        .view-all-icon:hover {
+            background-color: rgba(255, 255, 321, 1);
+        }
+
+        .view-all-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #2a5298;
+        }
+
+    .service-info {
+        margin-top: 30px;
+    }
+
+        .service-info p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+    .hidden-image {
+        display: none;
     }
 </style>
 
 <div class="container">
     <div class="header-background">
-        <div class="header-content">
-            <h1 class="title">Trải nghiệm @Model.Name</h1>
-            <h5><strong>Giá chỉ từ:</strong> <span class="price-highlight">@Model.Price.ToString("#,##0") VND</span></h5>
+        <div class="title-section">
+            <div class="service-label">DỊCH VỤ</div>
+            <div class="underline"></div>
+            <div class="service-name">@Model.Name</div>
+            <div class="price-highlight">@Model.Price.ToString("#,##0") VND</div>
         </div>
     </div>
-</div>
 
-<div class="container">
     <div class="content-container">
-        <div class="service-details">
-            <div class="image-container">
-                @if (Model.Images != null && Model.Images.Any())
-                {
-                    <div class="carousel">
-                        @foreach (var image in Model.Images)
-                        {
-                            var extension = System.IO.Path.GetExtension(image.Image)?.ToLower();
-                            if (new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension))
-                            {
-                                var fileName = System.IO.Path.GetFileName(image.Image);
-                                var imagePath = Url.Content($"~/images/service/{fileName}");
+        @if (Model.Images != null && Model.Images.Any())
+        {
+            var validImages = Model.Images
+            .Where(i => new[] { ".jpg", ".jpeg", ".png", ".gif" }
+            .Contains(System.IO.Path.GetExtension(i.Image)?.ToLower()))
+            .ToList();
 
-                                <img src="@imagePath" alt="Service Image" class="@(Model.Images.First() == image ? "active" : "")" />
-                            }
-                        }
-                        @if (Model.Images.Count(i => new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(System.IO.Path.GetExtension(i.Image)?.ToLower())) > 1)
+            <div class="image-layout-wrapper">
+                <div class="image-layout">
+                    <div class="main-image">
+                        @if (validImages.Any())
                         {
-                            <button class="carousel-btn prev">&#10094;</button>
-                            <button class="carousel-btn next">&#10095;</button>
+                            var fileName = System.IO.Path.GetFileName(validImages[0].Image);
+                            var imagePath = Url.Content($"~/images/service/{fileName}");
+                            <a href="@imagePath" class="glightbox" data-gallery="service-gallery">
+                                <img src="@imagePath" alt="Main Service Image" />
+                            </a>
                         }
                     </div>
-                }
-                else
-                {
-                    <p>Không có hình ảnh để hiển thị</p>
-                }
+
+                    <div class="side-images">
+                        @if (validImages.Count > 1)
+                        {
+                            var sideImage = validImages[1];
+                            var fileName = System.IO.Path.GetFileName(sideImage.Image);
+                            var imagePath = Url.Content($"~/images/service/{fileName}");
+                            <div class="side-image">
+                                <a href="@imagePath" class="glightbox" data-gallery="service-gallery">
+                                    <img src="@imagePath" alt="Side Service Image 1" />
+                                </a>
+                            </div>
+                        }
+                        @if (validImages.Count > 2)
+                        {
+                            var sideImage = validImages[2];
+                            var fileName = System.IO.Path.GetFileName(sideImage.Image);
+                            var imagePath = Url.Content($"~/images/service/{fileName}");
+                            <div class="side-image">
+                                <a href="@imagePath" class="glightbox" data-gallery="service-gallery">
+                                    <img src="@imagePath" alt="Side Service Image 2" />
+                                </a>
+                                @if (validImages.Count > 3)
+                                {
+                                    <a href="@Url.Content($"~/images/service/{System.IO.Path.GetFileName(validImages[0].Image)}")" class="view-all-icon glightbox" data-gallery="service-gallery">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zm-9 9h7v7H4v-7zm9 0h7v7h-7v-7z" />
+                                        </svg>
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
 
-            <div class="service-info">
-                <h3>Bạn sẽ trải nghiệm</h3>
-                <p>@Model.Description</p>
-                <a href="#" class="btn-book">Đặt ngay</a>
-            </div>
+            @for (int i = 3; i < validImages.Count; i++)
+            {
+                var fileName = System.IO.Path.GetFileName(validImages[i].Image);
+                var imagePath = Url.Content($"~/images/service/{fileName}");
+                <a href="@imagePath" class="glightbox hidden-image" data-gallery="service-gallery"></a>
+            }
+        }
+        else
+        {
+            <p>Không có hình ảnh để hiển thị</p>
+        }
+
+        <div class="service-info">
+            <p>@Model.Description</p>
         </div>
     </div>
 </div>
 
 <script>
-    // JavaScript cho carousel
-    document.querySelectorAll('.carousel').forEach(carousel => {
-        const images = carousel.querySelectorAll('img');
-        const prevBtn = carousel.querySelector('.prev');
-        const nextBtn = carousel.querySelector('.next');
-        let currentIndex = 0;
-
-        function showImage(index) {
-            images.forEach((img, i) => {
-                img.classList.toggle('active', i === index);
-            });
-        }
-
-        if (prevBtn && nextBtn) {
-            prevBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + images.length) % images.length;
-                showImage(currentIndex);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % images.length;
-                showImage(currentIndex);
-            });
-        }
+    const lightbox = GLightbox({
+        selector: '.glightbox',
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: false
     });
 </script>
