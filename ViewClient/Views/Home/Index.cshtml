@@ -17,6 +17,7 @@
 <style>
     .search-form-container {
         margin: 20px 0;
+        padding-left: 100px;
     }
 
     .banner {
@@ -33,7 +34,7 @@
     }
 
     .mt-2rem {
-        margin-top: 1.3rem;
+        margin-top: 1.5rem;
     }
     .form-row {
         display: flex;
@@ -122,7 +123,7 @@
     }
     else
     {
-        <div class="search-form-container ps-5">
+        <div class="search-form-container ps-xxl-5">
             <form asp-action="SearchRooms" method="get" class="search-form">
                 <input type="hidden" name="CheckIn" id="CheckInValue" />
                 <input type="hidden" name="CheckOut" id="CheckOutValue" />

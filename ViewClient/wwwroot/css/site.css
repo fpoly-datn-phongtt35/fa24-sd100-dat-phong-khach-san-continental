@@ -247,7 +247,7 @@ body {
 /* Ô tìm kiếm */
 .search-box {
     position: absolute;
-    top: 10%;
+    top: 12%;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;

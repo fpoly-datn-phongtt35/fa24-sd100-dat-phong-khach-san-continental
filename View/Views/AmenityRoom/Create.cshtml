@@ -18,8 +18,8 @@
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label asp-for="RoomTypeId" class="control-label1">Loại phòng</label>
-                <select asp-for="RoomTypeId" class="form-select">
-                    <option hidden>-- Chọn loại phòng --</option>
+                <select asp-for="RoomTypeId" class="form-select" required="required">
+                    <option value="" selected disabled>-- Chọn loại phòng --</option>
                     @foreach (var roomType in ViewBag.RoomTypes)
                     {
                         <option value="@roomType.Id">@roomType.Name</option>
@@ -30,8 +30,8 @@
 
             <div class="form-group mb-3">
                 <label asp-for="AmenityId" class="control-label1">Tiện nghi</label>
-                <select asp-for="AmenityId" class="form-select">
-                    <option hidden>-- Chọn tiện nghi --</option>
+                <select asp-for="AmenityId" class="form-select" required="required">
+                    <option selected disabled>-- Chọn tiện nghi --</option>
                     @foreach (var amenity in ViewBag.Amenities)
                     {
                     <option value="@amenity.Id">@amenity.Name</option>
@@ -44,8 +44,8 @@
         <div class="col-md-6">
             <div class="form-group mb-3">
                 <label asp-for="Status" class="control-label1">Trạng thái</label>
-                <select name="status" class="form-select" id="status">
-                    <option hidden>Chọn trạng thái</option>
+                <select name="status" class="form-select" id="status" required>
+                    <option disabled>Chọn trạng thái</option>
                     @foreach (var status in Enum.GetValues(typeof(EntityStatus)))
                     {
                     var statusEnum = (EntityStatus)status;
@@ -57,7 +57,11 @@
             </div>
             <div class="form-group mb-3">
                 <label asp-for="Amount" class="control-label1">Số lượng</label>
-                <input asp-for="Amount" class="form-control"/>
+                <div class="input-group">
+                    <button type="button" class="btn btn-outline-secondary" onclick="decreaseAmount()">-</button>
+                    <input asp-for="Amount" class="form-control text-center" type="number" min="1" value="1" id="amountInput" oninput="restrictInput()"/>
+                    <button type="button" class="btn btn-outline-secondary" onclick="increaseAmount()">+</button>
+                </div>
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
         </div>
@@ -80,3 +84,25 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<script>
+    function increaseAmount() {
+        let input = document.getElementById('amountInput');
+        input.value = parseInt(input.value) + 1;
+    }
+
+    function decreaseAmount() {
+        let input = document.getElementById('amountInput');
+        let value = parseInt(input.value);
+        if (value > 1) {
+            input.value = value - 1;
+        }
+    }
+
+    function restrictInput() {
+        let input = document.getElementById('amountInput');
+        if (input.value < 1 || isNaN(input.value)) {
+            input.value = 1;
+        }
+    }
+</script>
