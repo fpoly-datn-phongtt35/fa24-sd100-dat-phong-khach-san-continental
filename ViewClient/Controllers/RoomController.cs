@@ -13,6 +13,7 @@ using System.Text;
 using ViewClient.Models;
 using ViewClient.Models.DTO;
 using ViewClient.Repositories.IRepository;
+using ViewClient.Repositories.Repository;
 
 namespace ViewClient.Controllers
 {
@@ -224,7 +225,20 @@ namespace ViewClient.Controllers
                         RoomType = roomType,
                         Services = services
                     };
+                    var averageRatings = new Dictionary<Guid, RoomRatingDto>();
 
+                    var roomList = new List<RoomResponse> { room };
+                    foreach (var roomDetail in roomList)
+                    {
+                        var avg = await _roomRepo.GetAverageRatingByRoomIdAsync(room.Id);
+                        averageRatings[room.Id] = new RoomRatingDto
+                        {
+                            AverageRating = avg?.AverageRating ?? 0,
+                            TotalReviews = avg?.TotalReviews ?? 0
+                        };
+                    }
+
+                    ViewBag.AverageRatings = averageRatings;
                     return View("DetailForView", viewModel);
                 }
 

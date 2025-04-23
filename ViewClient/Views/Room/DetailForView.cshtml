@@ -1,9 +1,13 @@
-﻿@using Domain.Enums
+﻿@using Domain.DTO.Room
+@using Domain.Enums
 @using ViewClient.Models.DTO
 @using ViewClient.Views.Shared
 
 @model RoomDetailViewModel
-
+@{
+    var averageRatings = (Dictionary<Guid, RoomRatingDto>)ViewBag.AverageRatings;
+    var rating = averageRatings.ContainsKey(Model.Room.Id) ? averageRatings[Model.Room.Id] : new RoomRatingDto();
+}
 <style>
     .room-main {
         height: 100%;
@@ -12,20 +16,22 @@
     }
 
         .room-main img {
-            width: 100%;
-            height: 73%;
+            width: 644px;
+            height: 371px;
             object-fit: cover;
             display: block;
             border-radius: 15px 0 0 15px;
         }
 
     .room-grid-small img {
-        width: 100%;
-        height: 100%;
+        width: 320px;
+        height: 184px;
         object-fit: cover;
         display: block;
         border-radius: 0px;
+        flex-shrink: 0; /* Ngăn không cho ảnh bị co lại */
     }
+
 
     .room-grid-small {
         padding: 2px;
@@ -41,14 +47,15 @@
     .luxury-card {
         background: #fff;
         border-radius: 12px;
-		box-shadow: none;
+        box-shadow: none;
     }
 
-    
+
 
     .room-title {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600; /* hoặc 700 nếu bạn muốn đậm hơn */
+
         color: #333;
     }
 
@@ -56,7 +63,20 @@
         background-color: #f1f2f3;
     }
 
+    .room-title2 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        color: black;
+    }
+
+    .room-title1 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        color: black;
+    }
+
     .amenity-badge {
+        font-family: 'Montserrat', sans-serif;
         display: inline-block;
         padding: 6px 12px;
         border: 1px solid #ddd;
@@ -64,6 +84,7 @@
         background-color: #fff;
         color: #333;
         font-size: 14px;
+        font-weight: 700;
     }
 
 </style>
@@ -75,7 +96,7 @@
         <h6 class="fw-bold room-title">Contiental > Chi tiết phòng > @Model.Room.Name</h6>
     </div>
 
-    
+
     @{
         var totalImages = Model.Room.Images.Count;
         var extraCount = totalImages - 5;
@@ -166,26 +187,46 @@
             <p class="text-muted">Không có hình ảnh</p>
         }
     </div>
-    
 
-    <h1 class="room-title mt-4">@Model.Room.Name</h1>
-        <p style="font-size: 1.1rem; color: #555;">
-                Khách sạn
-                <span style="color: orange;">★</span>
-            <span style="color: orange;">★</span>
-        </p>
 
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h1 class="room-title mb-0">@Model.Room.Name</h1>
+        <div class="rating text-end">
+            @rating.AverageRating
+            <i style="color: orange;" class="bi bi-star-fill"></i>
+            <small>(@rating.TotalReviews đánh giá)</small>
+        </div>
+    </div>
+    <p style="font-size: 1.1rem; color: #555;">
+        Khách sạn
+        <i style="color: orange;" class="bi bi-star-fill"></i>
+        <i style="color: orange;" class="bi bi-star-fill"></i>
+    </p>
     <div class="row my-3 d-flex align-items-stretch">
         <!-- Cột trái -->
         <div class="col-md-8">
             <div class="luxury-card h-100">
                 <div class="row my-3">
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-7">
                         <h5 class="room-title">Mô tả của phòng</h5>
-                        <span>@Model.Room.Description</span>
+                        @{
+                            var description = Model.Room.Description ?? "";
+                            var maxLength = 300; // Số ký tự tối đa trước khi "xem thêm"
+                            var shortDescription = description.Length > maxLength ? description.Substring(0, maxLength) : description;
+                            var isLong = description.Length > maxLength;
+                        }
+                        <div class="room-title1" id="descriptionText">
+                            @Html.Raw(isLong ? shortDescription + "..." : description)
+                        </div>
+
+                        @if (isLong)
+                        {
+                            <a href="javascript:void(0)" id="toggleDescription" class="text-primary">Xem thêm</a>
+                        }
+
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <h5 class="room-title">Tiện ích của phòng</h5>
                         @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
                         {
@@ -212,10 +253,10 @@
         <div class="col-md-4">
             <div class="luxury-card h-100">
                 <h5 class="room-title mb-3 my-3">Thông tin phòng</h5>
-                <p>Loại phòng: @Model.RoomType.Name</p>
-                <p>Diện tích: @Model.Room.RoomSize m²</p>
-                <p>Sức chứa: @Model.RoomType.MaximumOccupancy người</p>
-                <p>
+                <p class="room-title2">Loại phòng: @Model.RoomType.Name</p>
+                <p class="room-title2">Diện tích: @Model.Room.RoomSize m²</p>
+                <p class="room-title2">Sức chứa: @Model.RoomType.MaximumOccupancy người</p>
+                <p class="room-title2">
                     Giá:
                     <span class="text-danger fw-bold">
                         @Math.Round(Model.Room.Price ?? 0).ToString("N0") VNĐ/đêm
@@ -225,16 +266,17 @@
         </div>
     </div>
 
-
+    <input type="hidden" id="Id_Room" value="@Model.Room.Id" />
     <div class="luxury-card my-4">
-        <h5 class="room-title"><i class="fa-solid fa-comments"></i> Phản hồi từ khách hàng</h5>
-        <div class="p-3 bg-light rounded">
+        <h5 class="room-title"><i class=" fa-solid fa-comments"></i> Phản hồi từ khách hàng</h5>
+        <div class="p-3 bg-light rounded room-title1">
             <div id="ListCMT"></div>
         </div>
     </div>
 </div>
 @section scripts {
     <script asp-append-version="true" src="~/module/feeback.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -244,5 +286,23 @@
         const lightbox = GLightbox({
             selector: '.glightbox'
         });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fullText = `@Html.Raw(description.Replace("`", "\\`").Replace(Environment.NewLine, "<br/>"))`;
+        const shortText = `@Html.Raw(shortDescription.Replace("`", "\\`").Replace(Environment.NewLine, "<br/>"))...`;
+
+        const desc = document.getElementById('descriptionText');
+        const toggleBtn = document.getElementById('toggleDescription');
+        let expanded = false;
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function () {
+                expanded = !expanded;
+                desc.innerHTML = expanded ? fullText : shortText;
+                toggleBtn.innerText = expanded ? 'Thu gọn' : 'Xem thêm';
+            });
+        }
     });
 </script>
