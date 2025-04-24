@@ -8,7 +8,7 @@
 @{
     ViewData["Title"] = "Details";
     bool isUserLoggedIn = Context.User.Identity.IsAuthenticated;
-} 
+}
 <style>
     .text-gold {
         color: #c59d5f;
@@ -50,24 +50,25 @@
 
     .room-main {
         height: 100%;
-        min-height: 500px;
+        min-height: 300px;
         padding: 3px;
     }
 
         .room-main img {
-            width: 100%;
-            height: 72%;
+            width: 644px;
+            height: 371px;
             object-fit: cover;
             display: block;
             border-radius: 15px 0 0 15px;
         }
 
     .room-grid-small img {
-        width: 100%;
-        height: 100%;
+        width: 320px;
+        height: 184px;
         object-fit: cover;
         display: block;
         border-radius: 0px;
+        flex-shrink: 0; /* Ngăn không cho ảnh bị co lại */
     }
 
     .room-grid-small {
@@ -78,7 +79,7 @@
 
     .room-grid-wrapper {
         height: 100%;
-        min-height: 500px;
+        min-height: 300px;
     }
 </style>
 
@@ -262,7 +263,7 @@
                         </ul>
                     </div>
 
-                   @*  <div class="text-end mt-4">
+                    @*  <div class="text-end mt-4">
                         <button class="btn btn-gold px-4 py-2 shadow-sm" id="booking" data-bs-toggle="modal" data-bs-target="#bookingModal">
                             Đặt phòng ngay
                         </button>
@@ -326,7 +327,7 @@
 </div>
 @* <div class="modal fade" id="bookingModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
-        
+
     </div>
 </div> *@
 <div class="modal fade" id="bookingConfirmationModal" data-bs-keyboard="false" tabindex="-1"
