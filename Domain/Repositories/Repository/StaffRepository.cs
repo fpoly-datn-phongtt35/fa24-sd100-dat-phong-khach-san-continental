@@ -38,7 +38,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@LastName",! string.IsNullOrEmpty(request.LastName) ? request.LastName : DBNull.Value),
                     new SqlParameter("@Email", ! string.IsNullOrEmpty(request.Email) ? request.Email : DBNull.Value),
                     new SqlParameter("@PhoneNumber", ! string.IsNullOrEmpty(request.PhoneNumber) ? request.PhoneNumber : DBNull.Value),
-                    new SqlParameter("@RoleId", RoleConfig.Id_Staff1),
+                    new SqlParameter("@RoleId", RoleConfig.Id_Admin),
                     new SqlParameter("@Status", EntityStatus.Active),
                     new SqlParameter("@CreatedTime", DateTime.Now),
                     new SqlParameter("@Deleted", false)
@@ -137,7 +137,7 @@ namespace Domain.Repositories.Repository
                     new SqlParameter("@LastName",! string.IsNullOrEmpty(request.LastName) ? request.LastName : DBNull.Value),
                     new SqlParameter("@Email", ! string.IsNullOrEmpty(request.Email) ? request.Email : DBNull.Value),
                     new SqlParameter("@PhoneNumber", ! string.IsNullOrEmpty(request.PhoneNumber) ? request.PhoneNumber : DBNull.Value),
-                    new SqlParameter("@RoleId", RoleConfig.Id_Staff1),
+                    new SqlParameter("@RoleId", RoleConfig.Id_Admin),
                     new SqlParameter("@Status", EntityStatus.Active),
                     new SqlParameter("@UpdatedTime", DateTime.Now),
                 };

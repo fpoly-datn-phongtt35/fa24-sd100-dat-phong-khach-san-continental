@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\room\" />
     <Folder Include="wwwroot\modules\Amenity\" />
     <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
