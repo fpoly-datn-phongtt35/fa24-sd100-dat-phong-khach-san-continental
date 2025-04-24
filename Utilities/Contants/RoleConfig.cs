@@ -9,7 +9,7 @@ namespace Utilities.Contants
     public class RoleConfig
     {
         //public static string Id_Staff = "D03790D6-E8AA-489B-AF3D-FD450FC0696B";
-        public static string Id_Admin = "AC3C6215-109D-40D3-BFE6-56E793E65A20";
-        public static string Id_Staff1 = "05fff70c-fb38-46ab-94f7-fc273085cb88";
+        public static string Id_Admin = "f61e5cc6-f430-4d91-aa26-322c14ed0178";
+        public static string Id_QA= "9c79ad14-7732-4d1b-a57c-f375036c3327";
     }
 }
