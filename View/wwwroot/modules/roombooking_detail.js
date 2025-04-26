@@ -1532,6 +1532,11 @@ var _roombooking_detail = {
     },
 
     submit: async function () {
+        getRoomRq.FloorId = null;
+        getRoomRq.MaxPrice = null;
+        getRoomRq.MinPrice = null;
+        getRoomRq.Name = null;
+        getRoomRq.RoomTypeId = null;
         const confrm = await global.Noti("Xác nhận cập nhật", "Bạn có chắc chắn muốn cập nhật không?");
         var flag = true;
         if (confrm > 0) {
