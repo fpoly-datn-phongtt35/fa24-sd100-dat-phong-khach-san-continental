@@ -11,7 +11,7 @@ namespace Domain.Configuration
             builder.ToTable("PolicyType");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.Content).IsUnicode(true).IsRequired();
+            builder.Property(x => x.Content).IsUnicode(true);
             builder.Property(x => x.TitleOfType).IsUnicode(true).IsRequired();
           
         }
