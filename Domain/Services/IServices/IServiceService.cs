@@ -4,6 +4,7 @@ using Domain.DTO.ServiceType;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,6 @@ namespace Domain.Services.IServices
         Task<int> DeleteService(ServiceDeleteRequest request);
         Task<Service> GetServiceById(Guid Id);
         Task<ResponseData<Service>> GetServices(ServiceGetRequest request);
-        Task<List<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType();
+        Task<ResponseData<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType(int pageIndex, int pageSize);
     }
 }

@@ -17,6 +17,6 @@ namespace Domain.Repositories.IRepository
         Task<int> DeleteService(ServiceDeleteRequest request);
         Task<DataTable> GetServiceById(Guid id);
         Task<DataTable> GetServices(ServiceGetRequest request);
-        Task<List<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType();
+        Task<DataTable> GetAllServiceNamesGroupedByServiceType(int pageIndex, int pageSize);
     }
 }
