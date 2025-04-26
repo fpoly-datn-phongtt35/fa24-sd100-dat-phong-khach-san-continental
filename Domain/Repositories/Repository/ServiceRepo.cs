@@ -102,30 +102,21 @@ namespace Domain.Repositories.Repository
             }
         }
 
-        public async Task<List<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType()
+        public async Task<DataTable> GetAllServiceNamesGroupedByServiceType(int pageIndex, int pageSize)
         {
             try
             {
-                var dataTable = await _DbWorker.GetDataTableAsync(
-                    StoredProcedureConstant.SP_GetAllServiceNamesGroupedByServiceType,
-                    Array.Empty<SqlParameter>() 
-                );
+                SqlParameter[] sqlParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@PageIndex", pageIndex),
+                    new SqlParameter("@PageSize", pageSize)
+                };
 
-                var groupedData = dataTable.AsEnumerable()
-                    .GroupBy(row => row.Field<string>("ServiceTypeName"))
-                    .Select(group => new ServiceTypeGroupDto
-                    {
-                        ServiceTypeName = group.Key, 
-                        ServiceIds = group.Select(row => row.Field<Guid>("ServiceId")).ToList(),
-                        ServiceNames = group.Select(row => row.Field<string>("ServiceName")).ToList() 
-                    })
-                    .ToList();
-
-                return groupedData;
+                return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetAllServiceNamesGroupedByServiceType, sqlParameters);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Error", ex);
+                throw ex;
             }
         }
 

@@ -6,6 +6,7 @@ using Domain.Models;
 using Domain.Repositories.IRepository;
 using Domain.Repositories.Repository;
 using Domain.Services.IServices;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -103,17 +104,50 @@ namespace Domain.Services.Services
             return model;
         }
 
-        public async Task<List<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType()
+        public async Task<ResponseData<ServiceTypeGroupDto>> GetAllServiceNamesGroupedByServiceType(int pageIndex, int pageSize)
         {
+            if (pageIndex < 1 || pageSize < 1)
+            {
+                throw new ArgumentException("pageIndex và pageSize phải lớn hơn 0.");
+            }
+
+            var model = new ResponseData<ServiceTypeGroupDto>();
             try
             {
-                return await _serviceRepo.GetAllServiceNamesGroupedByServiceType();
+                DataTable table = await _serviceRepo.GetAllServiceNamesGroupedByServiceType(pageIndex, pageSize);
+
+                model.data = table.AsEnumerable()
+                    .GroupBy(row => row.Field<string>("ServiceTypeName"))
+                    .Select(group => new ServiceTypeGroupDto
+                    {
+                        ServiceTypeName = group.Key,
+                        ServiceIds = group.Select(row => row.Field<Guid>("ServiceId")).ToList(),
+                        ServiceNames = group.Select(row => row.Field<string>("ServiceName")).ToList()
+                    })
+                    .ToList();
+
+                model.CurrentPage = pageIndex;
+                model.PageSize = pageSize;
+
+                try
+                {
+                    model.totalRecord = table.Rows.Count > 0 ? Convert.ToInt32(table.Rows[0]["TotalRows"]) : 0;
+                }
+                catch
+                {
+                    model.totalRecord = model.data.Count;
+                }
+
+                model.totalPage = (int)Math.Ceiling((double)model.totalRecord / pageSize);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Error", ex);
+                throw new InvalidOperationException("Đã có lỗi xảy ra", ex);
             }
+
+            return model;
         }
+        
 
 
 
