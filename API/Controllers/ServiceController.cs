@@ -34,11 +34,11 @@ namespace API.Controllers
         }
 
         [HttpGet("GetAllServiceNamesGroupedByServiceType")]
-        public async Task<IActionResult> GetAllServiceNamesGroupedByServiceType()
+        public async Task<IActionResult> GetAllServiceNamesGroupedByServiceType( int pageIndex, int pageSize)
         {
             try
             {
-                var groupedServices = await _serviceSV.GetAllServiceNamesGroupedByServiceType();
+                var groupedServices = await _serviceSV.GetAllServiceNamesGroupedByServiceType(pageIndex, pageSize);
                 return Ok(groupedServices
                 );
             }
