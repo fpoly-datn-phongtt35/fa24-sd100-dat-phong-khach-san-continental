@@ -1,4 +1,5 @@
 ﻿@{
+@using Domain.DTO.Room
     @using Microsoft.Extensions.Primitives
 
     @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
@@ -9,6 +10,41 @@
     var topRooms = ViewBag.TopRooms as List<Domain.DTO.Room.TopRoomBookingViewModel>;
     var revenueFilterType = HttpContextAccessor.HttpContext.Request.Query["revenueFilterType"].ToString();
 }
+@if (ViewBag.HotelInfo != null)
+{
+    
+    var hotelInfo = ViewBag.HotelInfo as HotelInfoDto;
+    <div>
+        <h3>Thông tin khách sạn</h3>
+        <table class="table table-bordered">
+            <thead >
+                <tr>
+                    <th style="color: black;">Tổng số phòng</th>
+                    <th style="color: black;">Phòng trống</th>
+                    <th style="color: black;">Phòng đã đặt</th>
+                    <th style="color: black;">Sức chứa tối đa</th>
+                    <th style="color: black;">Đang ở</th>
+                    <th style="color: black;">Sức chứa còn lại</th>
+                    <th style ="color: black;">Tỷ lệ đặt phòng</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>@hotelInfo.TotalRoom</td>
+                    <td>@hotelInfo.AvailableRoom</td>
+                    <td>@hotelInfo.BookedRoom</td>
+                    <td>@hotelInfo.HotelMaximumOccupancy</td>
+                    <td>@hotelInfo.InHotel</td>
+                    <td>@hotelInfo.AvailableOccupancy</td>
+                    <td>@hotelInfo.RoomBookedRate %</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+
 
 <div style="display: flex; flex-direction: row; gap: 20px;">
 
