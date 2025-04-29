@@ -95,7 +95,7 @@
 
 <div class="container py-4">
     <div class=" mb-4">
-        <h6 class="fw-bold room-title">Continental > Chi tiết phòng > @Model.Room.Name</h6>
+        <h6  class="fw-bold room-title">Continental > Chi tiết phòng > @Model.Room.Name</h6>
     </div>
 
 
@@ -192,7 +192,7 @@
 
 
     <div class="d-flex justify-content-between align-items-center mt-4">
-        <h1 class="room-title mb-0">@Model.Room.Name</h1>
+        <h1 style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: left;" class="room-title my-4">@Model.Room.Name</h1>
         <div class="rating text-end">
             @rating.AverageRating
             <i style="color: orange;" class="bi bi-star-fill"></i>
@@ -200,7 +200,9 @@
         </div>
     </div>
     <p style="font-size: 1.1rem; color: #555;" class="room-title2">
-        Khách sạn
+        Continental
+        <i style="color: orange;" class="bi bi-star-fill"></i>
+        <i style="color: orange;" class="bi bi-star-fill"></i>
         <i style="color: orange;" class="bi bi-star-fill"></i>
         <i style="color: orange;" class="bi bi-star-fill"></i>
     </p>
@@ -208,9 +210,10 @@
         <!-- Cột trái -->
         <div class="col-md-8">
             <div class="luxury-card h-100">
-                <div class="row my-3">
+                <div class="row ">
                     <div class="mb-3 col-md-7">
-                        <h5 class="room-title">Mô tả của phòng</h5>
+                        <h5 class="room-title">Mô tả</h5>
+                        <p style="color: #C0C0C0; width: 200px; border-top: 1px solid rgba(192, 192, 192, 0.5); margin: 0;">&nbsp;</p>
                         @{
                             var description = Model.Room.Description ?? "";
                             var maxLength = 300; // Số ký tự tối đa trước khi "xem thêm"
@@ -229,7 +232,8 @@
                     </div>
 
                     <div class="col-md-5">
-                        <h5 class="room-title">Tiện ích của phòng</h5>
+                        <h5 class="room-title">Tiện ích</h5>
+                        <p style="color: #C0C0C0; width: 200px; border-top: 1px solid rgba(192, 192, 192, 0.5); margin: 0;">&nbsp;</p>
                         @if (Model.Room.RoomType.AmenityRooms != null && Model.Room.RoomType.AmenityRooms.Any())
                         {
                             <div class="d-flex flex-wrap gap-2">
@@ -254,7 +258,8 @@
         <!-- Cột phải -->
         <div class="col-md-4">
             <div class="luxury-card h-10">
-                <h5 class="room-title mb-3 my-3">Thông tin phòng</h5>
+                <h5 class="room-title">Thông tin phòng</h5>
+                <p style="color: #C0C0C0; width: 200px; border-top: 1px solid rgba(192, 192, 192, 0.5); margin: 0;">&nbsp;</p>
                 <p class="room-title2">Loại phòng: @Model.RoomType.Name</p>
                 <p class="room-title2">Diện tích: @Model.Room.RoomSize m²</p>
                 <p class="room-title2">Sức chứa: @Model.RoomType.MaximumOccupancy người</p>
