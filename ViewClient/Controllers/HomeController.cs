@@ -120,11 +120,7 @@ namespace ViewClient.Controllers
                     (roomTypeRequestUrl, HttpMethod.Post, roomTypeGetRequest);
 
                 ViewBag.RoomTypes = roomTypesTask?.data ?? new List<RoomTypeResponse>();
-                var responseData = new ResponseData<Domain.DTO.Room.RoomResponse>
-                {
-                    data = roomsResponse.LstRoom,
-                    totalRecord = roomsResponse.TotalRoom
-                };
+               
 
                 var averageRatings = new Dictionary<Guid, RoomRatingDto>();
                 foreach (var room in roomsResponse.LstRoom)
@@ -138,8 +134,15 @@ namespace ViewClient.Controllers
                 }
 
                 ViewBag.AverageRatings = averageRatings;
-                
+                ViewBag.PageNumber = request.PageNumber;
+                ViewBag.PageSize = request.PageSize;
+                ViewBag.TotalRecord = roomsResponse.TotalRecord;
 
+                var responseData = new ResponseData<Domain.DTO.Room.RoomResponse>
+                {
+                    data = roomsResponse.LstRoom,
+                    totalRecord = roomsResponse.TotalRecord
+                };
                 return View("Index", responseData);
             }
             catch (Exception ex)

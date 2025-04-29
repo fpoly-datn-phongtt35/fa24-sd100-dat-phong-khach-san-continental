@@ -11,5 +11,6 @@ namespace Domain.DTO.Room
         public int TotalRoom {  get; set; }
         public int TotalOccupancy {  get; set; }
         public List<RoomResponse> LstRoom { get; set; }
+        public int TotalRecord { get; set; }
     }
 }
