@@ -113,6 +113,10 @@ namespace View.Controllers
                     revenueFilterType = "Month";
                 }
 
+                string infoRequestUrl = "https://localhost:7130/api/Room/GetHotelInfo";
+                var hotelInfo = await SendHttpRequest<HotelInfoDto>(infoRequestUrl, HttpMethod.Post, null);
+                ViewBag.HotelInfo = hotelInfo;
+
                 var revenueRequestUrl = $"api/Room/GetRevenueAsync?revenueFilterType={revenueFilterType}";
                 var revenueData = await SendHttpRequest<List<GetRevenue>>(revenueRequestUrl, HttpMethod.Post);
                 var periods = revenueData.Select(x => x.Period).ToList();

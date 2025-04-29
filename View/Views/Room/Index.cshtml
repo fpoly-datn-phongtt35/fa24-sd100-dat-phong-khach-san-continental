@@ -11,37 +11,7 @@
 @{
     ViewData["Title"] = "Danh sách Room";
 }
-@if (ViewBag.HotelInfo != null)
-{
-    var hotelInfo = ViewBag.HotelInfo as HotelInfoDto;
-    <div>
-        <h3>Thông tin khách sạn</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Tổng số phòng</th>
-                    <th>Phòng trống</th>
-                    <th>Phòng đã đặt</th>
-                    <th>Sức chứa tối đa</th>
-                    <th>Đang ở</th>
-                    <th>Sức chứa còn lại</th>
-                    <th>Tỷ lệ đặt phòng</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@hotelInfo.TotalRoom</td>
-                    <td>@hotelInfo.AvailableRoom</td>
-                    <td>@hotelInfo.BookedRoom</td>
-                    <td>@hotelInfo.HotelMaximumOccupancy</td>
-                    <td>@hotelInfo.InHotel</td>
-                    <td>@hotelInfo.AvailableOccupancy</td>
-                    <td>@hotelInfo.RoomBookedRate %</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-}
+
 
 <h3>Danh sách Phòng</h3>
 
