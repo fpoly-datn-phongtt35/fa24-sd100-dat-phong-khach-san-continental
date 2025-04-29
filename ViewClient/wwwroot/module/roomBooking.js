@@ -22,12 +22,11 @@
         checkCustomerInfo();
     }
 
-    setTimeout(function () {
-        var ele = $("#lastName");
-        if (ele) {
-            $(".images_div").css('height', '579px')
-        }
-    }, 1000);
+    
+    var ele = $("#lastName");
+    if (ele.length > 0) {
+        $(".images_div").css('height', '579px');
+    }
         
 
     $('#confirmBookingButton').on("click", function () {
