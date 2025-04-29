@@ -11,8 +11,8 @@
             <h1 style="font-size: 32px; margin-bottom: 40px; text-align: center;">
                 <span style="font-size: 15px; color: #888888;">DỊCH VỤ TẠI KHÁCH SẠN CONTINENTAL</span><br>
                 <br>
-                <span style="font-size: 36px; font-weight: bold;">TẬN HƯỞNG ĐỒ ĂN, THỨC UỐNG VÀ CÁC DỊCH VỤ</span><br>
-                <span style="font-size: 36px; font-weight: bold;">KHÁC TẠI CONTINENTAL</span><br>
+                <span style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: left;">TẬN HƯỞNG ĐỒ ĂN, THỨC UỐNG VÀ CÁC DỊCH VỤ</span><br>
+                <span style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: left;">KHÁC TẠI CONTINENTAL</span><br>
                 <br>
                 <br>
                 <span style="font-size: 15px; color: #888888">TẠI KHÁCH SẠN NÀY</span>
@@ -57,9 +57,9 @@
                             }
                         </div>
                         <div class="content" style="flex: 1; max-width: 350px;">
-                            <h2 style="font-size: 24px; margin-bottom: 10px; font-weight: bold;">@(string.IsNullOrWhiteSpace(group.ServiceTypeName) ? "Unknown Type" : group.ServiceTypeName.ToUpper())</h2>
-                            <p style="color: #C0C0C0">Bao gồm</p>
-                            <div class="details" style="font-size: 20px; color: #555;">
+                            <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: left;">@(string.IsNullOrWhiteSpace(group.ServiceTypeName) ? "Unknown Type" : group.ServiceTypeName.ToUpper())</h2>
+                            <p style="color: #C0C0C0">.........</p>
+                            <div class="details" style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: left;">
                                 @for (int i = 0; i < group.ServiceNames.Count; i++)
                                 {
                                     <p style="margin: 0;">
@@ -163,7 +163,7 @@
 
         <!-- FAQ Section -->
         <div class="faq-section" style="padding: 40px 20px; background: #f9f9f9; max-width: 1200px; margin: 0 auto;">
-            <h2 style="font-size: 24px; margin-bottom: 20px; text-align: center; font-weight: bold;">CÂU HỎI THƯỜNG GẶP</h2>
+            <h2 class="pb-3" style="font-size: 24px; font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: center;">CÂU HỎI THƯỜNG GẶP</h2>
 
             <div class="faq-item" style="border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; padding: 10px 0; margin-bottom: 10px;">
                 <div class="faq-question" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding-bottom: 10px;" onclick="toggleAnswer(this)">
