@@ -293,6 +293,52 @@
             width: fit-content;
             margin: 0.5rem auto 0; /* Căn giữa nút */
         }
+        /* Pagination tổng thể */
+        .pagination-container {
+            padding: 20px 0;
+        }
+
+        .pagination {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+            .pagination .page-item {
+                margin: 0 5px;
+                transition: transform 0.2s ease-in-out;
+            }
+
+                .pagination .page-item:hover:not(.disabled):not(.active) {
+                    transform: scale(1.1);
+                }
+
+            .pagination .page-link {
+                color: #333;
+                border: none;
+                background-color: transparent;
+                font-weight: 500;
+                padding: 10px 16px;
+                border-radius: 8px;
+            }
+
+            .pagination .page-item.active .page-link {
+                background-color: #000;
+                color: #fff;
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .pagination .page-item.disabled .page-link {
+                color: #ccc;
+                pointer-events: none;
+            }
+
+            .pagination .page-link:focus {
+                outline: none;
+                box-shadow: none;
+            }
     }
 </style>
 
@@ -405,6 +451,45 @@ else
             }
         </div>
     </div>
+    @if (ViewBag.TotalRecord > ViewBag.PageSize)
+    {
+        int currentPage = ViewBag.PageNumber;
+        int totalPages = (int)Math.Ceiling((double)ViewBag.TotalRecord / ViewBag.PageSize);
+
+        <div class="pagination-container mt-5 d-flex justify-content-center">
+            <form method="get" asp-action="SearchRooms" id="paginationForm" class="d-inline-block">
+                <input type="hidden" name="CheckIn" id="CheckInPaging" />
+                <input type="hidden" name="CheckOut" id="CheckOutPaging" />
+                <input type="hidden" name="maxiumOccupancy" id="MaxOccupancyPaging" />
+                <input type="hidden" name="quantityRoom" id="QuantityRoomPaging" />
+                <input type="hidden" name="PageSize" value="@ViewBag.PageSize" />
+
+                <nav aria-label="Room pagination">
+                    <ul class="pagination pagination-lg shadow-sm rounded">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <button class="page-link" type="submit" name="PageNumber" value="@(currentPage - 1)" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </button>
+                        </li>
+
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active fw-bold" : "")">
+                                <button class="page-link" type="submit" name="PageNumber" value="@i">@i</button>
+                            </li>
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <button class="page-link" type="submit" name="PageNumber" value="@(currentPage + 1)" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    }
+
 }
 
 

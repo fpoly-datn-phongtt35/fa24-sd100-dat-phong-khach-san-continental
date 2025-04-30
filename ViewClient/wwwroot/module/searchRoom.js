@@ -40,6 +40,25 @@ document.addEventListener("DOMContentLoaded", function () {
         quantityRoomValue.value = quantityRoom;
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const checkInPaging = document.getElementById('CheckInPaging');
+    const checkOutPaging = document.getElementById('CheckOutPaging');
+    const maxOccupancyPaging = document.getElementById('MaxOccupancyPaging');
+    const quantityRoomPaging = document.getElementById('QuantityRoomPaging');
+
+    if (checkInPaging) {
+        checkInPaging.value = checkIn;
+    }
+    if (checkOutPaging) {
+        checkOutPaging.value = checkOut;
+    }
+    if (maxOccupancyPaging) {
+        maxOccupancyPaging.value = maxiumOccupancy;
+    }
+    if (quantityRoomPaging) {
+        quantityRoomPaging.value = quantityRoom;
+    }
+});
 // Gán giá trị mặc định
 document.getElementById('maxiumOccupancy').value = maxiumOccupancy || 1;
 document.getElementById('quantityRoom').value = quantityRoom || 1;
@@ -49,7 +68,7 @@ const formattedToday = formatDate(today);
 
 // Khởi tạo Flatpickr
 document.addEventListener('DOMContentLoaded', function () {
-    const tomorrow = new Date(today);        
+    const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1); // Ngày mai
 
     const minCheckOutDate = new Date(tomorrow);
