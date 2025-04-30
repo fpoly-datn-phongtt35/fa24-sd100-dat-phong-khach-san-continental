@@ -45,7 +45,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkOutPaging = document.getElementById('CheckOutPaging');
     const maxOccupancyPaging = document.getElementById('MaxOccupancyPaging');
     const quantityRoomPaging = document.getElementById('QuantityRoomPaging');
+    const roomTypePaging = document.getElementById('roomTypePaging');
+    const floorPaging = document.getElementById('floorPaging');
 
+    const roomTypeId = sessionStorage.getItem("RoomTypeId");
+    const floorId = sessionStorage.getItem("FloorId");
+
+    if (roomTypePaging && roomTypeId) {
+        roomTypePaging.value = roomTypeId;
+    }
+    if (floorPaging && floorId) {
+        floorPaging.value = floorId;
+    }
     if (checkInPaging) {
         checkInPaging.value = checkIn;
     }
@@ -174,3 +185,4 @@ document.getElementById('validateButton').addEventListener('click', function (ev
         document.querySelector('form').submit();
     }
 });
+

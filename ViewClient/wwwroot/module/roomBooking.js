@@ -141,7 +141,6 @@
         // Ensure all values are valid numbers
         if (!isNaN(depositPayment) && !isNaN(roomPrice) && !isNaN(servicePrice)) {
             var totalPrice = Math.round(roomPrice + servicePrice - depositPayment);
-            console.log(totalPrice);
             $('#totalPrice').text(totalPrice.toLocaleString() + " VNĐ");
         }
     }
