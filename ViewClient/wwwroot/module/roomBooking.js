@@ -22,6 +22,13 @@
         checkCustomerInfo();
     }
 
+    
+    var ele = $("#lastName");
+    if (ele.length > 0) {
+        $(".images_div").css('height', '579px');
+    }
+        
+
     $('#confirmBookingButton').on("click", function () {
         // Lấy modal bằng id
         var bookingModal = new bootstrap.Modal(document.getElementById('bookingConfirmationModal'), {

@@ -157,51 +157,16 @@
     }
 
     .luxury-card {
-        position: absolute; /* Đặt bảng vào lớp overlay */
-        top: 40%; /* Đặt bảng giữa banner */
-        left: 50%;
-        transform: translate(-50%, -50%); /* Canh giữa cả theo chiều dọc và ngang */
         background: rgba(255, 255, 255, 0.9); /* Lớp nền mờ để bảng không bị loá ánh sáng */
         border-radius: 15px;
-        padding: 30px;
-        width: 90%;
-        max-width: 900px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        z-index: 10; /* Đảm bảo bảng nằm trên ảnh banner */
     }
     .btn-rating {
         cursor: pointer;
         margin-right: 5px;
     }
 </style>
-<div class="banner">
-    <div id="carouselExampleIndicators" class="carousel slide">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="/img/bn1.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="/img/bn2.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="/img/bn3.jpg" class="d-block w-100" alt="...">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-</div>
+
 <div class="container pt-2">
     <div class="p-5 pb-1 pt-3 luxury-card" style="min-width: 85%">
         <h1>Lịch sử đặt phòng</h1>
