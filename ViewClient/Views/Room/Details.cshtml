@@ -251,8 +251,8 @@
                 </div>
             </div>
             <!-- Room Info -->
-            <div class="luxury-card" style="width:30%">
-                <div class=" rounded-4 h-100 d-flex flex-column justify-content-between">
+            <div class="" style="width:30%">
+                <div class="luxury-card rounded-4 h-100 d-flex flex-column justify-content-between">
                     <div>
                         @* <h3 class="text-gold fw-bold mb-4">Thông tin phòng</h3> *@
 
@@ -262,12 +262,14 @@
                             <li><strong>Sức chứa tối đa:</strong> @Html.DisplayFor(model => model.RoomType.MaximumOccupancy) người</li>
                         </ul>
                     </div>
-
-                    @*  <div class="text-end mt-4">
-                        <button class="btn btn-gold px-4 py-2 shadow-sm" id="booking" data-bs-toggle="modal" data-bs-target="#bookingModal">
-                            Đặt phòng ngay
-                        </button>
-                    </div> *@
+                </div>
+                <div class="luxury-card mt-2 images_div position-relative overflow-hidden rounded-4" style="height: 405px;">
+                    <img src="~/img/banner3.jpg" class="w-100 h-100" style="object-fit: cover;" alt="Quảng cáo khách sạn">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center" style="color: white;">
+                        <h5 class="fw-bold">Ưu đãi mùa hè</h5>
+                        <p>Giảm giá tới 30% cho phòng cao cấp</p>
+                        <button class="btn btn-light btn-sm mt-2">Xem chi tiết</button>
+                    </div>
                 </div>
             </div>
         </div>

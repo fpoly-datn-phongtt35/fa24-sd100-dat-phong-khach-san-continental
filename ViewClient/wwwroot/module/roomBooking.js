@@ -22,6 +22,13 @@
         checkCustomerInfo();
     }
 
+    
+    var ele = $("#lastName");
+    if (ele.length > 0) {
+        $(".images_div").css('height', '579px');
+    }
+        
+
     $('#confirmBookingButton').on("click", function () {
         // Lấy modal bằng id
         var bookingModal = new bootstrap.Modal(document.getElementById('bookingConfirmationModal'), {
@@ -134,7 +141,6 @@
         // Ensure all values are valid numbers
         if (!isNaN(depositPayment) && !isNaN(roomPrice) && !isNaN(servicePrice)) {
             var totalPrice = Math.round(roomPrice + servicePrice - depositPayment);
-            console.log(totalPrice);
             $('#totalPrice').text(totalPrice.toLocaleString() + " VNĐ");
         }
     }

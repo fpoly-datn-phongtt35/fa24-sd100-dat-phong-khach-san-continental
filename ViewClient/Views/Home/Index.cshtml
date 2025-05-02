@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="text-center ms-lg-2" style="margin-left: 30px; margin-top:28px;">
-            <button type="submit" id="validateButton" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
+            <button type="submit" id="validateButton" class="btn btn-dark" onclick="clearFilterSession()"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i>Tìm Kiếm</button>
         </div>
     </form>
 </div>
@@ -100,11 +100,11 @@
         flex: 1;
     }
 
-    .form-group label {
-        font-weight: 500;
-        color: #212529;
-        margin-bottom: 0.5rem;
-    }
+        .form-group label {
+            font-weight: 500;
+            color: #212529;
+            margin-bottom: 0.5rem;
+        }
 
     .form-control {
         border-radius: 0.5rem;
@@ -113,10 +113,10 @@
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .form-control:focus {
-        border-color: #495057;
-        box-shadow: 0 0 0 0.2rem rgba(73, 80, 87, 0.1);
-    }
+        .form-control:focus {
+            border-color: #495057;
+            box-shadow: 0 0 0 0.2rem rgba(73, 80, 87, 0.1);
+        }
 
     .btn-dark {
         border-radius: 0.5rem;
@@ -126,18 +126,18 @@
         transition: background 0.3s ease, transform 0.2s ease;
     }
 
-    .btn-dark:hover {
-        background: #495057;
-        transform: translateY(-2px);
-    }
+        .btn-dark:hover {
+            background: #495057;
+            transform: translateY(-2px);
+        }
 
     .rooms-container {
-        background: #e9ecef;  
+        background: #e9ecef;
         padding: 1rem 10%;
     }
 
     .rooms-wrapper {
-        background: #ffffff; 
+        background: #ffffff;
         border-radius: 0.75rem;
         padding: 1.5rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -147,29 +147,29 @@
         border-radius: 0.75rem;
         overflow: hidden;
         background: #ffffff;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);  
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
     }
 
-    .room-card .row {
-        display: flex;
-    }
+        .room-card .row {
+            display: flex;
+        }
 
-    .room-card .image-col {
-        flex: 0 0 48%;  
-        max-width: 48%;
-    }
+        .room-card .image-col {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
 
-    .room-card .content-col {
-        flex: 0 0 52%;  
-        max-width: 52%;
-    }
+        .room-card .content-col {
+            flex: 0 0 52%;
+            max-width: 52%;
+        }
 
-    .room-card img {
-        height: 300px;  
-        object-fit: cover;
-        border-radius: 0.75rem 0 0 0.75rem;
-    }
+        .room-card img {
+            height: 300px;
+            object-fit: cover;
+            border-radius: 0.75rem 0 0 0.75rem;
+        }
 
     .carousel-inner {
         border-radius: 0.75rem 0 0 0.75rem;
@@ -191,7 +191,7 @@
     }
 
     .divider {
-        border-top: 1px solid rgba(0, 0, 0, 0.1); 
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
         margin: 1rem 0;
     }
 
@@ -201,17 +201,17 @@
         color: #212529;
     }
 
-    .rating .bi-star-fill {
-        color: #f1c40f;
-        font-size: 1rem;
-        margin-left: 0.25rem;
-    }
+        .rating .bi-star-fill {
+            color: #f1c40f;
+            font-size: 1rem;
+            margin-left: 0.25rem;
+        }
 
-    .rating small {
-        font-size: 0.85rem;
-        color: #6c757d;
-        margin-left: 0.5rem;
-    }
+        .rating small {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-left: 0.5rem;
+        }
 
     .info-item {
         font-size: 0.95rem;
@@ -221,25 +221,25 @@
         align-items: center;
     }
 
-    .info-item i {
-        margin-right: 0.5rem;
-        color: #495057;
-    }
+        .info-item i {
+            margin-right: 0.5rem;
+            color: #495057;
+        }
 
     .btn-book {
         border-radius: 0.5rem;
         padding: 0.5rem 1.5rem;
-        background: #343a40; 
-        color: #ffffff;  
+        background: #343a40;
+        color: #ffffff;
         border: none;
         transition: background 0.3s ease, transform 0.2s ease;
-        float: right;  
+        float: right;
     }
 
-    .btn-book:hover {
-        background: #495057;
-        transform: translateY(-2px);
-    }
+        .btn-book:hover {
+            background: #495057;
+            transform: translateY(-2px);
+        }
 
     .text-muted {
         font-size: 1rem;
@@ -293,6 +293,52 @@
             width: fit-content;
             margin: 0.5rem auto 0; /* Căn giữa nút */
         }
+        /* Pagination tổng thể */
+        .pagination-container {
+            padding: 20px 0;
+        }
+
+        .pagination {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+            .pagination .page-item {
+                margin: 0 5px;
+                transition: transform 0.2s ease-in-out;
+            }
+
+                .pagination .page-item:hover:not(.disabled):not(.active) {
+                    transform: scale(1.1);
+                }
+
+            .pagination .page-link {
+                color: #333;
+                border: none;
+                background-color: transparent;
+                font-weight: 500;
+                padding: 10px 16px;
+                border-radius: 8px;
+            }
+
+            .pagination .page-item.active .page-link {
+                background-color: #000;
+                color: #fff;
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .pagination .page-item.disabled .page-link {
+                color: #ccc;
+                pointer-events: none;
+            }
+
+            .pagination .page-link:focus {
+                outline: none;
+                box-shadow: none;
+            }
     }
 </style>
 
@@ -332,8 +378,9 @@ else
                         </select>
                     </div>
                 </div>
-                <div class="form-group text-end" style="padding-bottom: 5px; width: 10%;">
-                    <button type="submit" class="btn btn-dark">Lọc</button>
+                <div class="form-group d-flex justify-content-end" style="padding-bottom: 5px; width: 100%;">
+                    <button type="submit" class="btn btn-dark me-2">Lọc</button>
+                    <button type="submit" onclick="clearFilterSession()" class="btn btn-dark" style="white-space: nowrap;">Xoá lọc</button>
                 </div>
             </div>
         </form>
@@ -397,6 +444,7 @@ else
                         </div>
                     </div>
                 }
+
             }
             else
             {
@@ -404,10 +452,80 @@ else
             }
         </div>
     </div>
+    @if (ViewBag.TotalRecord > ViewBag.PageSize)
+    {
+        int currentPage = ViewBag.PageNumber;
+        int totalPages = (int)Math.Ceiling((double)ViewBag.TotalRecord / ViewBag.PageSize);
+
+        <div class="pagination-container mt-5 d-flex justify-content-center">
+            <form method="get" asp-action="SearchRooms" id="paginationForm" class="d-inline-block">
+                <input type="hidden" name="CheckIn" id="CheckInPaging" />
+                <input type="hidden" name="CheckOut" id="CheckOutPaging" />
+                <input type="hidden" name="maxiumOccupancy" id="MaxOccupancyPaging" />
+                <input type="hidden" name="quantityRoom" id="QuantityRoomPaging" />
+                <input type="hidden" name="roomTypeId" id="roomTypePaging" />
+                <input type="hidden" name="floorId" id="floorPaging" />
+                <input type="hidden" name="PageSize" value="@ViewBag.PageSize" />
+
+                <nav aria-label="Room pagination">
+                    <ul class="pagination pagination-lg shadow-sm rounded">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <button class="page-link" type="submit" name="PageNumber" value="@(currentPage - 1)" aria-label="Trước">
+                                <span aria-hidden="true">«</span>
+                            </button>
+                        </li>
+
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active fw-bold" : "")">
+                                <button class="page-link" type="submit" name="PageNumber" value="@i">@i</button>
+                            </li>
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <button class="page-link" type="submit" name="PageNumber" value="@(currentPage + 1)" aria-label="Sau">
+                                <span aria-hidden="true">»</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    }
+
 }
 
 
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script>
+        document.getElementById("RoomTypeId")?.addEventListener("change", function () {
+            sessionStorage.setItem("RoomTypeId", this.value);
+        });
+
+        document.getElementById("FloorId")?.addEventListener("change", function () {
+            sessionStorage.setItem("FloorId", this.value);
+        });
+
+        window.addEventListener("load", function () {
+            const roomTypeId = sessionStorage.getItem("RoomTypeId");
+            const floorId = sessionStorage.getItem("FloorId");
+
+            const roomTypeDropdown = document.getElementById("RoomTypeId");
+            const floorDropdown = document.getElementById("FloorId");
+
+            if (roomTypeDropdown && roomTypeId) {
+                roomTypeDropdown.value = roomTypeId;
+            }
+            if (floorDropdown && floorId) {
+                floorDropdown.value = floorId;
+            }
+        });
+
+        function clearFilterSession() {
+            sessionStorage.removeItem("RoomTypeId");
+            sessionStorage.removeItem("FloorId");
+        }
+    </script>
 }

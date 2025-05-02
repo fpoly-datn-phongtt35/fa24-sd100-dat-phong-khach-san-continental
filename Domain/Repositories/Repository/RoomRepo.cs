@@ -540,7 +540,9 @@ namespace Domain.Repositories.Repository
                     new("@CheckIn", request.CheckIn),
                     new("@CheckOut", request.CheckOut),
                     new("@FloorId", request.FloorId),
-                    new("@RoomTypeId", request.RoomTypeId)
+                    new("@RoomTypeId", request.RoomTypeId),
+                    new("@PageNumber", request.PageNumber),
+                    new("@PageSize", request.PageSize)
                };
                 var dataTable = await _worker.GetDataTableAsync(StoredProcedureConstant.SP_SearchRooms, parameters);
                 var roomlist = new List<RoomResponse>();
@@ -553,10 +555,11 @@ namespace Domain.Repositories.Repository
                 if (roomlist.Count > 0)
                 {
                     Response.LstRoom = roomlist;
-                    Response.TotalRoom = roomlist.Count;
+                    Response.TotalRoom = Convert.ToInt32(dataTable.Rows[0]["TotalRooms"]);
                     Response.TotalOccupancy = Convert.ToInt32(dataTable.Rows[0]["TotalOccupancy"]); ;
+                    var totalRecord = Convert.ToInt32(dataTable.Rows[0]["TotalRecord"]);
+                    Response.TotalRecord = totalRecord;
                 }
-
             }
             catch (Exception ex)
             {
