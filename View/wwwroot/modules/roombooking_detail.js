@@ -262,8 +262,7 @@ var _roombooking_detail = {
         _roombooking_detail.CalculatePrice(Id);
         _roombooking_detail.CalculatingRoomPrice();
     },
-
-    calculateDaysDifference: function (startDate, endDate) {
+    calculateDaysDifference2: function (startDate, endDate) {
         // Chuyển đổi các chuỗi ngày thành đối tượng Date
         const date1 = new Date(startDate);
         const date2 = new Date(endDate);
@@ -273,6 +272,24 @@ var _roombooking_detail = {
 
         // Chuyển đổi số mili giây thành số ngày
         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 3600 * 24));
+        if (differenceInDays <= 1) {
+            return 1;
+        }
+        else {
+            return differenceInDays;
+        }
+
+    },
+    calculateDaysDifference: function (startDate, endDate) {
+        // Chuyển đổi các chuỗi ngày thành đối tượng Date
+        const date1 = new Date(startDate);
+        const date2 = new Date(endDate);
+
+        // Tính toán số mili giây giữa hai ngày
+        const differenceInMilliseconds = Math.abs(date2 - date1);
+
+        // Chuyển đổi số mili giây thành số ngày
+        const differenceInDays = Math.round(differenceInMilliseconds / (1000 * 3600 * 24));
         if (differenceInDays <= 1)
         {
             return 1;
@@ -440,23 +457,25 @@ var _roombooking_detail = {
                         var newCIfrom;
                         var newCOto
                         if (item.checkInReality != null && item.checkOutReality != null) {
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
+                            var daydiff = _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutReality);
+                            Price = (item.price) / daydiff;
                         }
 
                         else if (item.checkInReality != null) {
                             const dateChein = new Date(item.checkInReality);
                             newCIfrom = dateChein.toISOString().slice(0, 16);
-
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
+                            var daydiff = _roombooking_detail.calculateDaysDifference(item.checkInReality, item.checkOutBooking);
+                            Price = (item.price) / daydiff;
                         }
                         else if (item.checkOutReality != null) {
                             const dateCheOut = new Date(item.checkOutReality);
                             newCOto = dateCheOut.toISOString().slice(0, 16);
-
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality) ;
+                            var daydiff = _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutReality)
+                            Price = (item.price) / daydiff;
                         }
-                        else{
-                            Price = (item.price) / _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking);
+                        else {
+                            var daydiff = _roombooking_detail.calculateDaysDifference(item.checkInBooking, item.checkOutBooking)
+                            Price = (item.price) / daydiff;
                         }
 
                         
