@@ -70,7 +70,8 @@ namespace Domain.Repositories.Repository
                 {
                     new SqlParameter("@Name", !string.IsNullOrEmpty(Search.Name) ? Search.Name : DBNull.Value),
                     new SqlParameter("@PageSize", Search.PageSize),
-                    new SqlParameter("@PageIndex", Search.PageIndex)
+                    new SqlParameter("@PageIndex", Search.PageIndex),
+                    new SqlParameter("Status", Search.Status)
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetListServiceType, sqlParameters);
