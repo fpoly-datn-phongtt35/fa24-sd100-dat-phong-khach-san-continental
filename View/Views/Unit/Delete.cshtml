@@ -2,7 +2,7 @@
 @model Domain.DTO.Unit.UnitResponse
 
 @{
-ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete";
 }
 
 <h3>Xác nhận xóa đơn vị</h3>
@@ -18,7 +18,7 @@ ViewData["Title"] = "Delete";
             <input type="hidden" asp-for="Id" />
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Tên đơn vị</label>
+                <label asp-for="Name" class="control-label">Tên đơn vị </label>
                 <input asp-for="Name" class="form-control" disabled />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
@@ -30,5 +30,5 @@ ViewData["Title"] = "Delete";
 </div>
 
 @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Paging;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Domain.DTO.ServiceType
     public class ServiceTypeGetRequest : PagingRequest
     {
         public string? Name { get; set; } = string.Empty;
+        public EntityStatus? Status { get; set; }
     }
 }

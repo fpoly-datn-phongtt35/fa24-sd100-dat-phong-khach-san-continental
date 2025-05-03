@@ -1,4 +1,4 @@
-﻿@model ErrorViewModel
+﻿@model Exception
 @{
     ViewData["Title"] = "Error";
 }
@@ -9,7 +9,7 @@
 @if (Model != null)
 {
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        @* <strong>Request ID:</strong> <code>@Model.RequestId</code> *@
     </p>
 }
 
