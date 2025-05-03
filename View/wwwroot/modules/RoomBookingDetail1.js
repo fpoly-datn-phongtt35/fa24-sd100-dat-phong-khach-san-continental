@@ -282,7 +282,7 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Thông báo',
-                    text: 'Không hỗ trợ nhận phòng muộn quá 6 tiếng'
+                    text: 'Không hỗ trợ nhận phòng sớm hơn 6 tiếng'
                 });
                 return;
             }
