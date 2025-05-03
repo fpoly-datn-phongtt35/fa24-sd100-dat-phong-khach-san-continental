@@ -5,7 +5,9 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Text;
+using View.Models.NewFolder;
 using WEB.CMS.Customize;
 
 namespace View.Controllers
@@ -90,13 +92,14 @@ namespace View.Controllers
         // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiceCreateRequest request)
+        public async Task<IActionResult> Create(ServiceTypeCreateRequest request)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             if (ModelState.IsValid)
             {
                 request.Status = EntityStatus.Active;
                 request.CreatedTime = DateTimeOffset.Now;
-                request.CreatedBy = Guid.NewGuid();
+                request.CreatedBy = userId;
                 var response = await _client.PostAsJsonAsync("api/ServiceType/CreateServiceType", request);
 
                 if (response.IsSuccessStatusCode)
@@ -107,11 +110,10 @@ namespace View.Controllers
             return View(request);
         }
 
-        // GET: ServiceController/Edit/5
+        // GET: ServiceTypeController/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
             string requestUrl = $"api/ServiceType/GetServiceTypeById?id={id}";
-
             var jsonRequest = JsonConvert.SerializeObject(new { Id = id });
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
@@ -119,7 +121,6 @@ namespace View.Controllers
 
             try
             {
-                
                 var response = await _client.PostAsync(requestUrl, content);
 
                 if (!response.IsSuccessStatusCode)
@@ -127,11 +128,8 @@ namespace View.Controllers
                     return View("Error");
                 }
 
-
                 var responseString = await response.Content.ReadAsStringAsync();
-                var services = JsonConvert.DeserializeObject<ServiceType>(responseString);
-
-
+                var services = JsonConvert.DeserializeObject<ServiceTypeModel>(responseString);
 
                 return View(services);
             }
@@ -141,26 +139,51 @@ namespace View.Controllers
             }
         }
 
-        // POST: ServiceController/Edit/5
+        // POST: ServiceTypeController/Edit/5
         [HttpPost]
-        public async Task<IActionResult> Edit(Service request)
+        public async Task<IActionResult> Edit(ServiceTypeModel model)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             ViewBag.Statuses = Enum.GetValues(typeof(EntityStatus));
 
-            request.ModifiedTime = DateTimeOffset.Now;
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", model);
+            }
+
+            var request = new ServiceTypeUpdateRequest
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description,
+                Status = model.Status,
+                Deleted = model.Deleted,
+                ModifiedTime = DateTimeOffset.Now,
+                ModifiedBy = userId
+            };
+
             var response = await _client.PutAsJsonAsync("api/ServiceType/UpdateServiceType", request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError("", $"Lỗi khi cập nhật: {errorContent}");
+                return View("Edit", model);
+            }
+
             return RedirectToAction("Index");
         }
 
         // DELETE: ServiceTypeController/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
+            var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             string requestUrl = "https://localhost:7130/api/ServiceType/DeleteServiceType";
 
             var request = new ServiceTypeDeleteRequest
             {
                 Id = id,
-                DeletedBy = Guid.NewGuid(),  //tạm thời, sau lấy giá trị từ người dùng đang đăng nhập
+                DeletedBy = userId,
                 DeletedTime = DateTimeOffset.Now
             };
 
