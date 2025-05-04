@@ -180,6 +180,10 @@ document.getElementById('maxiumOccupancy').addEventListener('change', validateDa
 document.getElementById('quantityRoom').addEventListener('change', validateDates);
 
 document.addEventListener('DOMContentLoaded', function () {
+    function clearFilterSession() {
+        sessionStorage.removeItem("RoomTypeId");
+        sessionStorage.removeItem("FloorId");
+    }
     // Xử lý validateButton
     const validateButton = document.getElementById('validateButton');
     validateButton.addEventListener('click', function (event) {
@@ -199,11 +203,6 @@ document.addEventListener('DOMContentLoaded', function () {
             searchForm.submit();
         }
     });
-
-    function clearFilterSession() {
-        sessionStorage.removeItem("RoomTypeId");
-        sessionStorage.removeItem("FloorId");
-    }
 
     function submitFilterForm(form) {
         const checkInValue = document.getElementById('CheckInValue');
