@@ -203,8 +203,16 @@ namespace View.Controllers
         public async Task<IActionResult> Create()
         {
             // Lấy danh sách ServiceType
+            var stRq = new ServiceTypeCreateRequest
+            {
+                Status = (EntityStatus)1
+            };
             string serviceTypeRequestUrl = "api/ServiceType/GetListServiceType";
-            var serviceTypeResponse = await _client.PostAsync(serviceTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var serviceTypeResponse = await _client.PostAsync(
+                serviceTypeRequestUrl,
+                new StringContent(JsonConvert.SerializeObject(stRq), Encoding.UTF8, "application/json")
+            );
+
             var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
             var serviceType = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
 
@@ -212,7 +220,10 @@ namespace View.Controllers
             // Unit
             string requestUrl = $"api/Unit/GetFilteredUnits";
 
-            var unitGetRequest = new UnitGetRequest();
+            var unitGetRequest = new UnitGetRequest
+            {
+                Status = (EntityStatus) 1
+            };
 
             var units = await SendHttpRequest<ResponseData<UnitResponse>>
                 (requestUrl, HttpMethod.Get, unitGetRequest);
@@ -278,15 +289,25 @@ namespace View.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             // Lấy danh sách ServiceType
+            var stRq = new ServiceTypeCreateRequest
+            {
+                Status = (EntityStatus)1
+            };
             string serviceTypeRequestUrl = "api/ServiceType/GetListServiceType";
-            var serviceTypeResponse = await _client.PostAsync(serviceTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var serviceTypeResponse = await _client.PostAsync(
+                serviceTypeRequestUrl,
+                new StringContent(JsonConvert.SerializeObject(stRq), Encoding.UTF8, "application/json")
+            );
             var serviceTypeResponseString = await serviceTypeResponse.Content.ReadAsStringAsync();
             var serviceType = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(serviceTypeResponseString);
 
             // Unit
             string requestUrl1 = $"api/Unit/GetFilteredUnits";
 
-            var unitGetRequest = new UnitGetRequest();
+            var unitGetRequest = new UnitGetRequest
+            {
+                Status = (EntityStatus)1
+            };
 
             var units = await SendHttpRequest<ResponseData<UnitResponse>>
                 (requestUrl1, HttpMethod.Get, unitGetRequest);
