@@ -50,11 +50,11 @@
         <div class="row g-3">
             <div class="col-md-3">
                 <h6 for="checkIn" class="form-label">Ngày Nhận Phòng</h6>
-                <input type="date" id="checkIn" name="checkIn" class="form-control" title="Ngày nhận phòng" required>
+                <input type="date" id="checkIn" name="CheckIn" class="form-control" title="Ngày nhận phòng" required>
             </div>
             <div class="col-md-3">
                 <h6 for="checkOut" class="form-label">Ngày Trả Phòng</h6>
-                <input type="date" id="checkOut" name="checkOut" class="form-control" title="Ngày trả phòng" required>
+                <input type="date" id="checkOut" name="CheckOut" class="form-control" title="Ngày trả phòng" required>
             </div>
             <div class="col-md-3">
                 <h6 for="maxiumOccupancy" class="form-label">Số Người</h6>
@@ -351,7 +351,7 @@
 else
 {
     <div class="search-form-container">
-        <form asp-action="SearchRooms" method="get" class="search-form">
+        <form id="filterRoomTypeFloor" asp-action="SearchRooms" method="get" class="search-form">
             <input type="hidden" name="CheckIn" id="CheckInValue" />
             <input type="hidden" name="CheckOut" id="CheckOutValue" />
             <input type="hidden" name="maxiumOccupancy" id="MaxOccupancyValue" />
@@ -379,8 +379,8 @@ else
                     </div>
                 </div>
                 <div class="form-group d-flex justify-content-end" style="padding-bottom: 5px; width: 100%;">
-                    <button type="submit" class="btn btn-dark me-2">Lọc</button>
-                    <button type="submit" onclick="clearFilterSession()" class="btn btn-dark" style="white-space: nowrap;">Xoá lọc</button>
+                    <button type="submit" id="filterButton" class="btn btn-dark me-2">Lọc</button>
+                    <button type="submit" id="clearFilterButton" class="btn btn-dark" style="white-space: nowrap;">Xoá lọc</button>
                 </div>
             </div>
         </form>
@@ -465,7 +465,8 @@ else
                 <input type="hidden" name="quantityRoom" id="QuantityRoomPaging" />
                 <input type="hidden" name="roomTypeId" id="roomTypePaging" />
                 <input type="hidden" name="floorId" id="floorPaging" />
-                <input type="hidden" name="PageSize" value="@ViewBag.PageSize" />
+                <input type="hidden" name="PageSize" value="@ViewBag.PageSize" id="PageSize" />
+                <input type="hidden" name="PageNumber" id="pageNumberHidden" value="@currentPage" />
 
                 <nav aria-label="Room pagination">
                     <ul class="pagination pagination-lg shadow-sm rounded">
@@ -499,33 +500,4 @@ else
 @section scripts {
     <script asp-append-version="true" src="~/module/searchRoom.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <script>
-        document.getElementById("RoomTypeId")?.addEventListener("change", function () {
-            sessionStorage.setItem("RoomTypeId", this.value);
-        });
-
-        document.getElementById("FloorId")?.addEventListener("change", function () {
-            sessionStorage.setItem("FloorId", this.value);
-        });
-
-        window.addEventListener("load", function () {
-            const roomTypeId = sessionStorage.getItem("RoomTypeId");
-            const floorId = sessionStorage.getItem("FloorId");
-
-            const roomTypeDropdown = document.getElementById("RoomTypeId");
-            const floorDropdown = document.getElementById("FloorId");
-
-            if (roomTypeDropdown && roomTypeId) {
-                roomTypeDropdown.value = roomTypeId;
-            }
-            if (floorDropdown && floorId) {
-                floorDropdown.value = floorId;
-            }
-        });
-
-        function clearFilterSession() {
-            sessionStorage.removeItem("RoomTypeId");
-            sessionStorage.removeItem("FloorId");
-        }
-    </script>
 }
