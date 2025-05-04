@@ -275,10 +275,10 @@ $(document).ready(function () {
 
         // Kiểm tra nếu Ngày nhận thực tế nhỏ hơn Ngày nhận Dự kiến
         if (CheckInCompare < CheckInTimeInPlanParsed) {
-            const actualHour = CheckInCompare.getHours();
+            const diffInMs = CheckInTimeInPlanParsed - CheckInCompare; // chênh lệch thời gian (ms)
+            const diffInHours = diffInMs / (1000 * 60 * 60); // chuyển đổi sang giờ
 
-            // Nếu giờ của Ngày nhận thực tế nhỏ hơn 8h
-            if (actualHour < 8) {
+            if (diffInHours > 6) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Thông báo',
