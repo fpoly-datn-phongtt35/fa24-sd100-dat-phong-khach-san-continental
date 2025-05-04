@@ -78,6 +78,19 @@ namespace ViewClient.Repositories.Repository
             return null;
         }
 
+        public async Task<bool> IsCustomerRestrictedAsync(Guid customerId)
+        {
+            string url = $"https://localhost:7130/api/Customer/IsCustomerRestricted?customerId={customerId}";
+            var response = await _httpClient.PostAsJsonAsync(url, customerId);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<bool>();
+                return result;
+            }
+            return false;
+        }
+
         public async Task<int> UpdateCustomer(CustomerUpdateRequest request)
         {
             string url = $"https://localhost:7130/api/Customer/UpdateCustomer";

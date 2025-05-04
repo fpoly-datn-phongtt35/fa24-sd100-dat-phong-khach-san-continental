@@ -53,6 +53,10 @@ namespace Domain.Services.Services
                     {
                         model.Messenger = "Thông tin người dùng cần xem lại.";
                     }
+                    if (table.Columns.Contains("IsExistingCustomer") && !row.IsNull("IsExistingCustomer"))
+                    {
+                        model.IsExistingCustomer = row.Field<bool>("IsExistingCustomer");
+                    }
                 }
             }
             catch (Exception ex)
@@ -218,6 +222,18 @@ namespace Domain.Services.Services
                 throw ex;
             }
             return customer;
+        }
+
+        public async Task<bool> IsCustomerRestrictedAsync(Guid customerId)
+        {
+            try
+            {
+                return await _customerRepo.IsCustomerRestrictedAsync(customerId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<int> UpdateCustomer(CustomerUpdateRequest request)

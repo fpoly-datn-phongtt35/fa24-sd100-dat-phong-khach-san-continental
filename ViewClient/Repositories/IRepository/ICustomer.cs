@@ -10,5 +10,6 @@ namespace ViewClient.Repositories.IRepository
         Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request);
         Task<int> UpdateCustomer(CustomerUpdateRequest request);
         Task<string> ClientUpdatePassword(ClientUpdatePassword request);
+        Task<bool> IsCustomerRestrictedAsync(Guid customerId);
     }
 }

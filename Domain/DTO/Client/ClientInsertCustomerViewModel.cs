@@ -10,5 +10,6 @@ namespace Domain.DTO.Client
     {
         public Guid Id { get; set; }
         public string? Messenger { get; set; }
+        public bool IsExistingCustomer { get; set; }
     }
 }

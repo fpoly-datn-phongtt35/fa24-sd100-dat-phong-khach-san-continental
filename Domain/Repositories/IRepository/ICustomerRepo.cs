@@ -17,5 +17,6 @@ namespace Domain.Repositories.IRepository
         Task<DataTable> ClientLogin(LoginSubmitModel request);
         Task<DataTable> ClientInsertCustomer(ClientCreateCustomerRequest request);
         Task<string> ClientUpdatePassword(ClientUpdatePassword request);
+        Task<bool> IsCustomerRestrictedAsync(Guid customerId);
     }
 }

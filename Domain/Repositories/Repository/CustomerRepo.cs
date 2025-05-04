@@ -244,5 +244,16 @@ namespace Domain.Repositories.Repository
                 return "Lỗi hệ thống: " + ex.Message;
             }
         }
+
+        public async Task<bool> IsCustomerRestrictedAsync(Guid customerId)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+               {
+                    new SqlParameter("@Id", customerId)
+               };
+
+            var result = await _DbWorker.ExecuteScalarAsync(StoredProcedureConstant.SP_CheckCustomerStatusById, sqlParameters);
+            return result != null && result != DBNull.Value && Convert.ToInt32(result) == 1;
+        }
     }
 }
