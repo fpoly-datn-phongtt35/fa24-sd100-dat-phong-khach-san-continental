@@ -177,7 +177,8 @@ namespace View.Controllers
             var policyTypesRequest = new PolicyTypeGetRequest
             {
                 PageIndex = 1,
-                PageSize = 100
+                PageSize = 100,
+                Status = (EntityStatus)1
             };
             var policyTypeResponse = await SendHttpRequest<ResponseData<PolicyType>>(policyTypesRequestUrl, HttpMethod.Post, policyTypesRequest);
             ViewBag.PolicyTypes = policyTypeResponse?.data;
@@ -221,7 +222,8 @@ namespace View.Controllers
             var policyTypesRequest = new PolicyTypeGetRequest
             {
                 PageIndex = 1,
-                PageSize = 100
+                PageSize = 100,
+                Status = (EntityStatus)1
             };
             var policyTypeResponse = await SendHttpRequest<ResponseData<PolicyType>>(policyTypesRequestUrl, HttpMethod.Post, policyTypesRequest);
             ViewBag.PolicyTypes = policyTypeResponse?.data.Select(pt => new SelectListItem

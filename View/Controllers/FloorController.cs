@@ -97,7 +97,11 @@ namespace View.Controllers
         public async Task<IActionResult> Create()
         {
             string buildingRequestUrl = "api/Building/GetListBuilding";
-            var buildingResponse = await _client.PostAsync(buildingRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var buildingRq = new BuildingCreateRequest
+            {
+                Status = (EntityStatus)1
+            };
+            var buildingResponse = await _client.PostAsync(buildingRequestUrl, new StringContent(JsonConvert.SerializeObject(buildingRq), Encoding.UTF8, "application/json"));
             var buildingResponseString = await buildingResponse.Content.ReadAsStringAsync();
             var building = JsonConvert.DeserializeObject<ResponseData<Building>>(buildingResponseString);
             ViewBag.Buildings = building?.data;
@@ -127,7 +131,11 @@ namespace View.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             string buildingRequestUrl = "api/Building/GetListBuilding";
-            var buildingResponse = await _client.PostAsync(buildingRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var buildingRq = new BuildingCreateRequest
+            {
+                Status = (EntityStatus)1
+            };
+            var buildingResponse = await _client.PostAsync(buildingRequestUrl, new StringContent(JsonConvert.SerializeObject(buildingRq), Encoding.UTF8, "application/json"));
             var buildingResponseString = await buildingResponse.Content.ReadAsStringAsync();
             var building = JsonConvert.DeserializeObject<ResponseData<ServiceType>>(buildingResponseString);
 

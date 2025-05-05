@@ -20,7 +20,7 @@ namespace ViewClient.Controllers
             _client.BaseAddress = new Uri("https://localhost:7130/");
         }
 
-        public async Task<IActionResult> GroupedServices(int pageIndex = 1, int pageSize = 1)
+        public async Task<IActionResult> GroupedServices(int pageIndex = 1, int pageSize = 5)
         {
             string requestUrl = $"api/Service/GetAllServiceNamesGroupedByServiceType?pageIndex={pageIndex}&pageSize={pageSize}";
 
