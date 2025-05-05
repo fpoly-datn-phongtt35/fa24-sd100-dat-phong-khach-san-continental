@@ -17,6 +17,18 @@ namespace API.ClientControllers
         {
             _CustomerRepo = CustomerRepo;
         }
+        [HttpPost("IsCustomerRestricted")]
+        public async Task<bool> IsCustomerRestricted(Guid customerId)
+        {
+            try
+            {
+                return await _CustomerRepo.IsCustomerRestrictedAsync(customerId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         [HttpPost("ClientCreateCustomer")]
         public async Task<ClientInsertCustomerViewModel> ClientCreateCustomer(ClientCreateCustomerRequest request)
         {

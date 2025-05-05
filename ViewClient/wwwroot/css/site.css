@@ -715,7 +715,7 @@ body {
     }
 }
 h3{
-    color: #F78C6A;
+    /*color: #F78C6A;*/
     font-weight:bold;
 }
 h4 {
@@ -1158,7 +1158,6 @@ input.form-control[readonly] {
 .modal-body input {
     border-radius: 6px;
     border: 1px solid #ccc;
-    padding: 8px;
 }
 
 /* Footer modal */

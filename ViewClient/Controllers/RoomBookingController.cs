@@ -170,17 +170,26 @@ namespace ViewClient.Controllers
                     };
                     var insertCustomer = await _customerRepo.ClientInsertCustomer(customer);
                     customerId = insertCustomer.Id;
-                    var gmail = new AccountRequest
+                    var checkIsCustomerRestricted = await _customerRepo.IsCustomerRestrictedAsync(customerId);
+                    if(checkIsCustomerRestricted == true)
                     {
-                        UserName = parts[0],
-                        EmailType = 1,
-                        Password = passwordHash,
-                        ToEmail = roomBookingDetailCreateRequest.Customer.Email
-                    };
-                    var sendEmail = _emailRepo.SendAccountAsync(gmail);
+                        return StatusCode(404, new { error = "Tài khoản đã bị khóa. Vui lòng liên hệ CSKH để được hỗ trợ." });
+                    }
+                    if(insertCustomer.IsExistingCustomer == false && insertCustomer.Messenger != "Số điện thoại hoặc email đã tồn tại!")
+                    {
+                        var gmail = new AccountRequest
+                        {
+                            UserName = parts[0],
+                            EmailType = 1,
+                            Password = passwordHash,
+                            ToEmail = roomBookingDetailCreateRequest.Customer.Email
+                        };
+                        var sendEmail = _emailRepo.SendAccountAsync(gmail);
+                    }
+                    
                     if (customerId == Guid.Empty)
                     {
-                        return StatusCode(422, new { error = "Thông tin của bạn cần chính xác.", message = insertCustomer.Messenger });
+                        return StatusCode(422, new { error = "Số điện thoại hoặc email của bạn đã được sử dụng. Vui lòng liên hệ CSKH để được hỗ trợ.", message = insertCustomer.Messenger });
                     }
                 }
                 var room = await _roomRepo.GetRoomById(roomBookingDetailCreateRequest.RoomId);

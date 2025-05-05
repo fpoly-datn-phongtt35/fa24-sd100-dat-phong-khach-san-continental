@@ -17,10 +17,12 @@ namespace ViewClient.Controllers
         private readonly ILogin _loginRepo;
         private readonly IRegister _registerRepo;
         private readonly ISendEmail _sendEmail;
-        public AuthorationController(ILogin loginRepo, IRegister registerRepo)
+        private readonly ICustomer _customerRepo;
+        public AuthorationController(ILogin loginRepo, IRegister registerRepo, ICustomer customerRepo)
         {
             _loginRepo = loginRepo;
             _registerRepo = registerRepo;
+            _customerRepo = customerRepo;
         }
         [HttpGet]
         public IActionResult Login()
@@ -40,7 +42,12 @@ namespace ViewClient.Controllers
                     ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không đúng.");
                     return View(loginInput);
                 }
-
+                var checkIsCustomerRestricted = await _customerRepo.IsCustomerRestrictedAsync(result.Id);
+                if(checkIsCustomerRestricted == true)
+                {
+                    ModelState.AddModelError(string.Empty, "Tài khoản đã bị khóa. Vui lòng liên hệ CSKH để được hỗ trợ.");
+                    return View(loginInput);
+                }
                 // Proceed with successful login
                 var claims = new List<Claim>
         {

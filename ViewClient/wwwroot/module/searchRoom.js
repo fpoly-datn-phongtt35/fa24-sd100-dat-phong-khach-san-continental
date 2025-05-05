@@ -178,11 +178,183 @@ function showToast(message) {
 
 document.getElementById('maxiumOccupancy').addEventListener('change', validateDates);
 document.getElementById('quantityRoom').addEventListener('change', validateDates);
-document.getElementById('validateButton').addEventListener('click', function (event) {
-    event.preventDefault();
-    if (validateDates()) {
-        saveToLocalStorage();
-        document.querySelector('form').submit();
+
+document.addEventListener('DOMContentLoaded', function () {
+    function clearFilterSession() {
+        sessionStorage.removeItem("RoomTypeId");
+        sessionStorage.removeItem("FloorId");
+    }
+    // Xử lý validateButton
+    const validateButton = document.getElementById('validateButton');
+    validateButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        if (validateDates()) {
+            saveToLocalStorage();
+            const checkIn = document.getElementById('checkIn');
+            const checkOut = document.getElementById('checkOut');
+
+            const [dayIn, monthIn, yearIn] = checkIn.value.split('/');
+            checkIn.value = `${yearIn}-${monthIn}-${dayIn}T14:00:00`;
+
+            const [dayOut, monthOut, yearOut] = checkOut.value.split('/');
+            checkOut.value = `${yearOut}-${monthOut}-${dayOut}T12:00:00`;
+            const searchForm = validateButton.closest('form');
+            clearFilterSession();
+            searchForm.submit();
+        }
+    });
+
+    function submitFilterForm(form) {
+        const checkInValue = document.getElementById('CheckInValue');
+        const checkOutValue = document.getElementById('CheckOutValue');
+
+        // Định dạng ngày trước khi gửi
+        if (checkInValue && checkInValue.value) {
+            const [dayIn, monthIn, yearIn] = checkInValue.value.split('/');
+            checkInValue.value = `${yearIn}-${monthIn}-${dayIn}T14:00:00`;
+        }
+        if (checkOutValue && checkOutValue.value) {
+            const [dayOut, monthOut, yearOut] = checkOutValue.value.split('/');
+            checkOutValue.value = `${yearOut}-${monthOut}-${dayOut}T12:00:00`;
+        }
+
+        form.submit();
+    }
+
+    const filterForm = document.getElementById('filterRoomTypeFloor');
+    if (filterForm) {
+        filterForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const isClearFilter = event.submitter && event.submitter.id === 'clearFilterButton';
+            const roomTypeDropdown = document.getElementById('RoomTypeId');
+            const floorDropdown = document.getElementById('FloorId');
+
+            if (isClearFilter) {
+                clearFilterSession();
+                if (roomTypeDropdown) {
+                    roomTypeDropdown.value = "";
+                }
+                if (floorDropdown) {
+                    floorDropdown.value = "";
+                }
+                submitFilterForm(this);
+            } else {
+                submitFilterForm(this);
+            }
+        });
+    } else {
+        console.warn('filterRoomTypeFloor not found in the DOM');
+    }
+
+    // Xử lý dropdown RoomTypeId
+    const roomTypeDropdown = document.getElementById('RoomTypeId');
+    if (roomTypeDropdown) {
+        roomTypeDropdown.addEventListener('change', function (event) {
+            sessionStorage.setItem('RoomTypeId', this.value);
+        });
+    } else {
+        console.warn('RoomTypeId not found in the DOM');
+    }
+
+    // Xử lý dropdown FloorId
+    const floorDropdown = document.getElementById('FloorId');
+    if (floorDropdown) {
+        floorDropdown.addEventListener('change', function (event) {
+            sessionStorage.setItem('FloorId', this.value);
+        });
+    } else {
+        console.warn('FloorId not found in the DOM');
+    }
+
+    const roomTypeId = sessionStorage.getItem('RoomTypeId');
+    const floorId = sessionStorage.getItem('FloorId');
+    if (roomTypeDropdown && roomTypeId) {
+        const validRoomTypeValues = Array.from(roomTypeDropdown.options).map(option => option.value);
+        if (validRoomTypeValues.includes(roomTypeId)) {
+            roomTypeDropdown.value = roomTypeId;
+        } else {
+            console.warn('RoomTypeId from sessionStorage not found in dropdown options:', roomTypeId);
+        }
+    }
+
+    if (floorDropdown && floorId) {
+        const validFloorValues = Array.from(floorDropdown.options).map(option => option.value);
+        if (validFloorValues.includes(floorId)) {
+            floorDropdown.value = floorId;
+        } else {
+            console.warn('FloorId from sessionStorage not found in dropdown options:', floorId);
+        }
+    }
+
+    // Xử lý paginationForm
+    const paginationForm = document.getElementById('paginationForm');
+    if (paginationForm) {
+
+        let pageNumberInput = document.getElementById('pageNumberHidden');
+        if (!pageNumberInput) {
+            pageNumberInput = document.createElement('input');
+            pageNumberInput.type = 'hidden';
+            pageNumberInput.name = 'PageNumber';
+            pageNumberInput.id = 'pageNumberHidden';
+            paginationForm.appendChild(pageNumberInput);
+        }
+        paginationForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const CheckInPaging = document.getElementById('CheckInPaging');
+            const CheckOutPaging = document.getElementById('CheckOutPaging');
+            const roomTypePaging = document.getElementById('roomTypePaging');
+            const floorPaging = document.getElementById('floorPaging');
+            const pageSizeInput = document.getElementById('PageSize');
+
+            if (CheckInPaging && CheckInPaging.value) {
+                try {
+                    const [dayIn, monthIn, yearIn] = CheckInPaging.value.split('/');
+                    if (dayIn && monthIn && yearIn) {
+                        CheckInPaging.value = `${yearIn}-${monthIn}-${dayIn}T14:00:00`;
+                    } else {
+                        console.warn('Invalid CheckInPaging format:', CheckInPaging.value);
+                    }
+                } catch (error) {
+                    console.error('Error formatting CheckInPaging:', error);
+                }
+            } else {
+                console.warn('CheckInPaging is empty or not found:', CheckInPaging?.value);
+            }
+
+            if (CheckOutPaging && CheckOutPaging.value) {
+                try {
+                    const [dayOut, monthOut, yearOut] = CheckOutPaging.value.split('/');
+                    if (dayOut && monthOut && yearOut) {
+                        CheckOutPaging.value = `${yearOut}-${monthOut}-${dayOut}T12:00:00`;
+                    } else {
+                        console.warn('Invalid CheckOutPaging format:', CheckOutPaging.value);
+                    }
+                } catch (error) {
+                    console.error('Error formatting CheckOutPaging:', error);
+                }
+            } else {
+                console.warn('CheckOutPaging is empty or not found:', CheckOutPaging?.value);
+            }
+
+            let pageNumber = '';
+            if (event.submitter && event.submitter.name === 'PageNumber') {
+                pageNumber = event.submitter.value;
+                pageNumberInput.value = pageNumber;
+            } else {
+                console.warn('No valid submitter found for PageNumber:', event.submitter);
+            }
+            const pageSizeValue = pageSizeInput ? pageSizeInput.value : null;
+            console.log('Form data before submit:', {
+                roomTypeId: roomTypePaging?.value,
+                floorId: floorPaging?.value,
+                PageSize: document.getElementById('PageSize')?.value,
+                PageNumber: pageNumber
+            });
+
+            event.target.submit();
+        });
+    } else {
+        console.warn('paginationForm not found in the DOM');
     }
 });
-

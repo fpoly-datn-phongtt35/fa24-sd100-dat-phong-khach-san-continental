@@ -227,7 +227,6 @@
 
 
         var depositText = $('#depositPayment').text();
-        console.log(depositPayment);
         var deposit = parseFloat(depositText.replace("Đặt cọc: ", "").replace(" VNĐ", "").replace(/,/g, ""));
         var priceText = $('#totalRoomPayment').text();
         var price = parseFloat(priceText.replace("Tiền phòng: ", "").replace(" VNĐ", "").replace(/,/g, ""));
@@ -261,7 +260,6 @@
             var servicePrice = parseFloat($(this).closest('.form-check').find('span').data('price'));
             bookingDetails.SelectedServices.push({ ServiceId: serviceId, Quantity: quantity, Price: Math.round(servicePrice) });
         });
-        console.log(JSON.stringify(bookingDetails));
         // Gửi dữ liệu đặt phòng
         $.ajax({
             url: bookingUrl,
@@ -283,9 +281,64 @@
                 }
             },
             error: function (xhr, status, error) {
+
+                if (xhr.status === 404) {
+                    var errorResponse = xhr.responseJSON;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi Đặt Phòng',
+                        text: errorResponse && errorResponse.error
+                            ? errorResponse.error
+                            : 'Tài khoản đã bị khóa. Vui lòng liên hệ CSKH.',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#6c757d', 
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'elegant-swal',
+                            title: 'swal-title',
+                            content: 'swal-text',
+                            confirmButton: 'swal-confirm'
+                        }
+                    });
+                } else if (xhr.status === 422) {
+                    var errorResponse = xhr.responseJSON;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi Đặt Phòng',
+                        text: errorResponse && errorResponse.error
+                            ? errorResponse.error
+                            : 'Số điện thoại hoặc email của bạn đã được sử dụng. Vui lòng liên hệ CSKH để được hỗ trợ.',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#6c757d',
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'elegant-swal',
+                            title: 'swal-title',
+                            content: 'swal-text',
+                            confirmButton: 'swal-confirm'
+                        }
+                    });
+                }
+                else {
+                    // Lỗi chung
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi Đặt Phòng',
+                        text: 'Đã xảy ra lỗi khi đặt phòng. Vui lòng thử lại hoặc liên hệ CSKH.',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#6c757d',
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'elegant-swal',
+                            title: 'swal-title',
+                            content: 'swal-text',
+                            confirmButton: 'swal-confirm'
+                        }
+                    });
+                }
                 showToast("Hãy kiểm tra lại thông tin cá nhân, thông tin đặt phòng!");
-                console.log(xhr.responseText);
                 $('#validationMessage').html("Đã xảy ra lỗi trong quá trình đặt phòng: " + xhr.responseText).show();
+
             }
         });
     });

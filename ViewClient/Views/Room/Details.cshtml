@@ -191,6 +191,13 @@
 
                     @if (!isUserLoggedIn)
                     {
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @Html.ValidationSummary(true, "", new { @class = "mb-0" })
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
                         <h6>Thông tin cá nhân:</h6>
                         <div class="row">
                             <div class="col-6">
@@ -341,23 +348,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><strong>Tên phòng:</strong> <h3 id="modalRoomName">Deluxe Room</h3></p>
+                <p><strong>Tên phòng:</strong> <span id="modalRoomName" class="highlight-text">Deluxe Room</span></p>
 
-                <div class="row mb-3">
-                    <div class="col-6">
+                <div class="row">
+                    <div class="col-5">
                         <label for="modalCheckIn" class="form-label"><strong>Ngày nhận phòng:</strong></label>
                     </div>
-                    <div class="col-6">
-                        <input type="text" id="modalCheckIn" name="checkIn" class="form-control" disabled>
+                    <div class="col-4">
+                        <input type="text" id="modalCheckIn" name="checkIn" class="form-control highlight-text" disabled>
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-6">
+                <div class="row">
+                    <div class="col-4">
                         <label for="modalCheckOut" class="form-label"><strong>Ngày trả phòng:</strong></label>
                     </div>
-                    <div class="col-6">
-                        <input type="text" id="modalCheckOut" name="checkOut" class="form-control" disabled>
+                    <div class="col-4">
+                        <input type="text" id="modalCheckOut" name="checkOut" class="form-control highlight-text" disabled>
                     </div>
                 </div>
 
@@ -519,7 +526,7 @@
     .highlight-text {
         font-size: 18px;
         font-weight: bold;
-        color: #d9534f;
+        @* color: #d9534f; *@
     }
 
     .form-control[disabled] {
@@ -527,7 +534,6 @@
         color: #495057;
         border: none;
         font-weight: bold;
-        text-align: right;
     }
 
 
@@ -543,6 +549,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const lightbox = GLightbox({

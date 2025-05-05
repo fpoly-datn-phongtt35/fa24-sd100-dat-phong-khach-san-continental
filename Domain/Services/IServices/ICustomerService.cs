@@ -19,5 +19,6 @@ namespace Domain.Services.IServices
         Task<ClientAuthenicationViewModel> ClientRegister(RegisterSubmitModel register);
         Task<ClientInsertCustomerViewModel> ClientInsertCustomer(ClientCreateCustomerRequest request);
         Task<string> ClientUpdatePassword(ClientUpdatePassword request);
+        Task<bool> IsCustomerRestrictedAsync(Guid customerId);
     }
 }

@@ -253,7 +253,7 @@ namespace View.Controllers
             }
         }
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 5, Guid? roomBookingId = null, Guid? customerId = null, PaymentType? note = null, decimal? amount = null, PaymentMethod? paymentMethod = null, decimal? fromAmount = null, decimal? toAmount = null)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 20, Guid? roomBookingId = null, Guid? customerId = null, PaymentType? note = null, decimal? amount = null, PaymentMethod? paymentMethod = null, decimal? fromAmount = null, decimal? toAmount = null)
         {
             string requestUrl = "api/PaymentHistory/GetListPaymentHistory";
             var request = new PaymentHistoryGetRequest

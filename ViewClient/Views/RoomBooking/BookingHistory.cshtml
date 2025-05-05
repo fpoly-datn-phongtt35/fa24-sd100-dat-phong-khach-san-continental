@@ -216,7 +216,7 @@
                             <td>@item.TotalServicePrice?.ToString("N0")</td>
                             <td>@item.TotalExtraPrice?.ToString("N0")</td>
                             <td>@StatusHelper.DisplayRoomBookingStatus(item.Status)</td>
-                            <td>@item.CreatedTime?.ToString("dd-MM-yyyy HH:MM:ss tt")</td>
+                            <td>@item.CreatedTime?.ToString("dd-MM-yyyy hh:mm:ss")</td>
                             @if (item.Status == Domain.Enums.RoomBookingStatus.PAID)
                             {
                                 <td>

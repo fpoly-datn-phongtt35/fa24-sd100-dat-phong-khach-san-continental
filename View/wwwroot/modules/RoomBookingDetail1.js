@@ -207,7 +207,14 @@ $(document).ready(function () {
     $('#btnUpdate').click(function () {
         const roomBookingDetailId = $(this).data('room-booking-detail-id');
         const selectedCheckInDateTime = $('#checkInRealityPicker').val();
-        const selectedCheckOutDateTime = $('#checkOutRealityPicker').val();
+        const selectedCheckOutDateTime = $('#checkOutRealityPicker').val(); 
+        var CheckInTimeInPlan = $('#CheckInTimeInPlan').text();
+        var CheckOutTimeInPlan = $('#CheckOutTimeInPlan').text();
+
+        const CheckInTimeInPlanParsed = parseDate(CheckInTimeInPlan.trim());
+        const CheckOutTimeInPlanParsed = parseDate(CheckOutTimeInPlan.trim());
+        const CheckInCompare = parseDate(selectedCheckInDateTime);
+
         const note = $('#Note').val().trim();
         const noteCheckin = $('#NoteCheckin').val().trim();
         const noteCheckout = $('#NoteCheckout').val().trim();
@@ -253,6 +260,33 @@ $(document).ready(function () {
 
 
         console.log('note input:', note);
+        console.log('note checkin:', CheckInTimeInPlan);
+        console.log('note checkout:', CheckOutTimeInPlan);
+        console.log('note checkínelected:', selectedCheckInDateTime);
+
+        if (CheckInCompare > CheckOutTimeInPlanParsed) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Thông báo',
+                text: 'Đơn đặt phòng đã hết hiệu lực, không thể nhận phòng nữa.'
+            });
+            return;
+        }
+
+        // Kiểm tra nếu Ngày nhận thực tế nhỏ hơn Ngày nhận Dự kiến
+        if (CheckInCompare < CheckInTimeInPlanParsed) {
+            const diffInMs = CheckInTimeInPlanParsed - CheckInCompare; // chênh lệch thời gian (ms)
+            const diffInHours = diffInMs / (1000 * 60 * 60); // chuyển đổi sang giờ
+
+            if (diffInHours > 6) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thông báo',
+                    text: 'Không hỗ trợ nhận phòng sớm hơn 6 tiếng'
+                });
+                return;
+            }
+        }
 
         if (expenses > 0 && !note) {
             Swal.fire({
@@ -349,6 +383,30 @@ $(document).ready(function () {
     });
 });
 
+function parseDate(dateStr) {
+    // VD: "14/05/2025 02:00 PM"
+    const parts = dateStr.split(/[\s/:]+/);
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
+    let hours = parts[3];
+    const minutes = parts[4];
+    const period = parts[5];
+
+    if (period === "PM" && hours !== "12") {
+        hours = parseInt(hours, 10) + 12;
+    } else if (period === "AM" && hours === "12") {
+        hours = 0;
+    }
+
+    const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+
+    return new Date(formattedDate);
+}
+
+
+
+
 function validateExpenses() {
     const expensesInput = document.getElementById('Expenses');
     let value = expensesInput.value;
@@ -391,7 +449,7 @@ $(document).ready(function ()
                 return {
                     results: $.map(response, function (item) {
                         return {
-                            text: item.name + ' - ' + item.description,
+                            text: item.name,
                             id: item.id,
                         }
                     })
@@ -428,7 +486,7 @@ $(document).ready(function ()
                 return {
                     results: $.map(response, function (item) {
                         return {
-                            text: item.name + ' - ' + item.description,
+                            text: item.name + ' - ' + item.price,
                             id: item.id,
                         }
                     })

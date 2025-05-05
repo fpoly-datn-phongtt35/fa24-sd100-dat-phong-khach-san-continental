@@ -132,20 +132,113 @@ public class UnitController : Controller
         if(updatedUnit != null) return RedirectToAction("Index");
         return View("Error");
     }
-
+    
     public async Task<IActionResult> Delete(Guid unitId)
     {
-        string requestUrl = $"/api/Unit/UpdateUnit?id={unitId}";
-        var unit = await SendHttpRequest<UnitResponse>(requestUrl, HttpMethod.Post);
-        if (unit != null) return View(unit);
-        return View("Error");
-    }
+        try
+        {
+            // Tạo URL để lấy thông tin đơn vị
+            string requestUrl = $"/api/Unit/GetUnitById?id={unitId}";
 
+            // Tạo yêu cầu HTTP GET
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+
+            // Gửi yêu cầu
+            var response = await httpClient.SendAsync(request);
+
+            // Kiểm tra phản hồi
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var unit = JsonConvert.DeserializeObject<UnitResponse>(responseString);
+                if (unit != null)
+                {
+                    return View(unit);
+                }
+            }
+            else
+            {
+                // Ghi log lỗi nếu cần
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Failed to get unit: {response.StatusCode}, {errorMessage}");
+            }
+
+            // Nếu không tìm thấy đơn vị hoặc có lỗi, trả về view Error
+            return View("Error");
+        }
+        catch (Exception ex)
+        {
+            // Ghi log lỗi
+            Console.WriteLine($"Error in Delete GET: {ex.Message}");
+            return View("Error");
+        }
+    }
+    
+    [HttpPost]
     public async Task<IActionResult> Delete(UnitDeleteRequest unitDeleteRequest)
     {
-        string requestUrl = $"/api/Unit/DeleteUnit?id={unitDeleteRequest.Id}";
-        var deletedUnit = await SendHttpRequest<UnitResponse>(requestUrl, HttpMethod.Put, unitDeleteRequest);
-        if(deletedUnit != null) return RedirectToAction("Index");
-        return View("Error");
+        try
+        {
+            if (unitDeleteRequest == null || unitDeleteRequest.Id == Guid.Empty)
+            {
+                Console.WriteLine("UnitDeleteRequest is null or has invalid Id");
+                return View("Error");
+            }
+
+            string requestUrl = "/api/Unit/DeleteUnit";
+            var request = new HttpRequestMessage(HttpMethod.Put, requestUrl);
+
+            var json = JsonConvert.SerializeObject(unitDeleteRequest);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var deletedUnit = JsonConvert.DeserializeObject<UnitResponse>(responseString);
+                if (deletedUnit != null)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    Console.WriteLine("Deserialization returned null for deleted unit");
+                }
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                var allowedMethods = response.Headers.Contains("Allow")
+                    ? string.Join(", ", response.Headers.GetValues("Allow"))
+                    : "Unknown";
+                Console.WriteLine($"Failed to delete unit: {response.StatusCode}, {errorMessage}");
+                Console.WriteLine($"Allowed methods: {allowedMethods}");
+            }
+
+            return View("Error");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in Delete POST: {ex.Message}");
+            return View("Error");
+        }
     }
+    
+    // public async Task<IActionResult> Delete(Guid unitId)
+    // {
+    //     string requestUrl = $"/api/Unit/GetUnit?id={unitId}";
+    //     var unit = await SendHttpRequest<UnitResponse>(requestUrl, HttpMethod.Post);
+    //     if (unit != null) return View(unit);
+    //     return View("Error");
+    // }
+    //
+    // [HttpPost]
+    // public async Task<IActionResult> Delete(UnitDeleteRequest unitDeleteRequest)
+    // {
+    //     string requestUrl = $"/api/Unit/DeleteUnit?id={unitDeleteRequest.Id}";
+    //     var deletedUnit = await SendHttpRequest<UnitResponse>(requestUrl, HttpMethod.Put, unitDeleteRequest);
+    //     if (deletedUnit != null) return RedirectToAction("Index");
+    //     return View("Error");
+    // }
 }

@@ -86,7 +86,7 @@ namespace ViewClient.Controllers
             return await SearchRooms(request);
         }
         public async Task<IActionResult> SearchRooms(SearchRoomsRequest request)
-        {
+        {   
             string roomsRequestUrl = $"/api/Room/SearchRooms";
 
             try
