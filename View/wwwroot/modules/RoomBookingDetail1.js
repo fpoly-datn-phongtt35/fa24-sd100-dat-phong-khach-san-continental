@@ -486,7 +486,7 @@ $(document).ready(function ()
                 return {
                     results: $.map(response, function (item) {
                         return {
-                            text: item.name + ' - ' + item.price,
+                            text: item.name,
                             id: item.id,
                         }
                     })
