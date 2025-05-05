@@ -161,14 +161,22 @@ namespace View.Controllers
         {
             // Lấy danh sách tầng
             string floorRequestUrl = "api/Floor/GetListFloor";
-            var floorResponse = await _httpClient.PostAsync(floorRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var floorRq = new FloorGetRequest
+            {
+                Status = (EntityStatus)1
+            };
+            var floorResponse = await _httpClient.PostAsync(floorRequestUrl, new StringContent(JsonConvert.SerializeObject(floorRq), Encoding.UTF8, "application/json"));
             var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
             var floor = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
             ViewBag.Floors = floor?.data;
 
             // Lấy danh sách loại phòng
             string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
-            var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var rtrq = new RoomTypeGetRequest
+            {
+                Status = (EntityStatus)1
+            };
+            var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent(JsonConvert.SerializeObject(rtrq), Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
             var roomTypes = JsonConvert.DeserializeObject<ResponseData<RoomType>>(roomTypeResponseString);
             ViewBag.RoomTypes = roomTypes?.data; // Chỉ lấy dữ liệu
@@ -243,14 +251,22 @@ namespace View.Controllers
         {
             // Lấy danh sách tầng
             string floorRequestUrl = "api/Floor/GetListFloor";
-            var floorResponse = await _httpClient.PostAsync(floorRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var floorRq = new FloorGetRequest
+            {
+                Status = (EntityStatus)1
+            };
+            var floorResponse = await _httpClient.PostAsync(floorRequestUrl, new StringContent(JsonConvert.SerializeObject(floorRq), Encoding.UTF8, "application/json"));
             var floorResponseString = await floorResponse.Content.ReadAsStringAsync();
             var floor = JsonConvert.DeserializeObject<ResponseData<Floor>>(floorResponseString);
             ViewBag.Floors = floor?.data;
 
             // Lấy danh sách loại phòng
             string roomTypeRequestUrl = "api/RoomType/GetFilteredRoomTypes";
-            var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent("{}", Encoding.UTF8, "application/json"));
+            var rtrq = new RoomTypeGetRequest
+            {
+                Status = (EntityStatus)1
+            };
+            var roomTypeResponse = await _httpClient.PostAsync(roomTypeRequestUrl, new StringContent(JsonConvert.SerializeObject(rtrq), Encoding.UTF8, "application/json"));
             var roomTypeResponseString = await roomTypeResponse.Content.ReadAsStringAsync();
             var roomTypes = JsonConvert.DeserializeObject<ResponseData<RoomType>>(roomTypeResponseString);
             ViewBag.RoomTypes = roomTypes?.data; // Chỉ lấy dữ liệu

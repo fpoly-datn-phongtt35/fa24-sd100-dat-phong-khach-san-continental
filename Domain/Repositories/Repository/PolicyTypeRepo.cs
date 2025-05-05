@@ -116,7 +116,8 @@ namespace Domain.Repositories.Repository
                 {
                 new SqlParameter("@TitleOfType", request.TitleOfType),
                 new SqlParameter("@PageSize", request.PageSize),
-                new SqlParameter("@PageIndex", request.PageIndex)
+                new SqlParameter("@PageIndex", request.PageIndex),
+                new SqlParameter("@Status", request.Status),
                 };
 
                 return _DbWorker.GetDataTable(StoredProcedureConstant.SP_GetAllPolicyType, sqlParameters);
