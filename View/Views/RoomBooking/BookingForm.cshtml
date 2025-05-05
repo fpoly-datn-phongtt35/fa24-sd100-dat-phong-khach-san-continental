@@ -15,21 +15,21 @@
 }
 <style>
     .text-color-blue{
-        color: #92979d !important;
+    color: #92979d !important;
     }
 
     .table-scroll {
-        overflow-x: scroll;
-        scroll-behavior: smooth;
-        max-width:100%;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    max-width:100%;
     }
 
     .hid{
-        display : none;
+    display : none;
     }
 
     .element-shadow{
-        box-shadow: 1px 2px 3px;
+    box-shadow: 1px 2px 3px;
     }
 </style>
 <div class="" style="min-height:600px;">
@@ -85,7 +85,7 @@
                             <th scope="col">Ngày trả dự kiến</th>
                             <th scope="col">Thành tiền</th>
                             @* <th scope="col" style="min-width:150px">Phụ thu</th> *@
-                           @*  <th scope="col">Ngày nhận thực tế</th>
+                            @*  <th scope="col">Ngày nhận thực tế</th>
                             <th scope="col">Ngày trả thực tế</th> *@
                             @* <th scope="col" style="min-width:150px">Phí hư tổn</th> *@
                             @* <th scope="col" style="min-width:150px">Ghi chú</th> *@
@@ -118,14 +118,14 @@
                                 <div class="fw-bold" style="color:#00b0f9">Tổng giá ban đầu</div>
                                 @if (RB != null && decimal.TryParse(RB.TotalPrice?.ToString(), out totalPrice))
                                 {
-                                // Chuyển đổi thành công
+                                    // Chuyển đổi thành công
                                     <div class="text-right d-flex">
                                         <div id="TotalStart">@totalPrice.ToString("C0", nfi)</div>
                                     </div>
                                 }
                                 else
                                 {
-                                // Xử lý khi RB null hoặc không thể chuyển đổi
+                                    // Xử lý khi RB null hoặc không thể chuyển đổi
                                     <div class="text-right d-flex">
                                         <div id="TotalStart" class="me-1">0</div> ₫
                                     </div>
@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="">
             <div id="form_add_Cus" class="mt-4 p-2 rounded-2 element-shadow" style="height:300px;width:100%">
                 <h2 class="text-color-blue">Khách hàng</h2>
@@ -219,8 +219,8 @@
     <div>
         <a class="btn btn-secondary text-decoration-none text-white" href="/roombooking">Quay lại</a>
         @if (idRoomBooking != null && RB.Status != Domain.Enums.RoomBookingStatus.CANCELLED
-          && RB.Status != Domain.Enums.RoomBookingStatus.PAID
-          && RB.Status != Domain.Enums.RoomBookingStatus.FAILED)
+         && RB.Status != Domain.Enums.RoomBookingStatus.PAID
+         && RB.Status != Domain.Enums.RoomBookingStatus.FAILED)
         {
             <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
             <button class="ms-3 btn btn-warning" onclick="_roombooking_detail.BlockedBill('@idRoomBooking')">Đóng đơn đặt phòng</button>
@@ -228,6 +228,10 @@
         else if (idRoomBooking == null)
         {
             <button class="ms-3 btn btn-success btn-luu" onclick="_roombooking_detail.submit()">Lưu</button>
+        }
+        else if(RB.Status == Domain.Enums.RoomBookingStatus.PAID)
+        {
+            <a asp-action="RoomBookingPdf" asp-route-rbId="@idRoomBooking" class="btn btn-danger mt-2 ms-1" id="rbPdf">Xuất PDF</a>
         }
     </div>
     <div>
