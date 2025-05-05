@@ -126,19 +126,22 @@ namespace API.Controllers
                         if (paymentInfo.status == "PAID")
                         {
                             // Lấy thông tin RoomBooking
-                            var roomBooking = await _roomBookingGetService.GetRoomBookingById(paymentHistory.RoomBookingId);
+                            var roomBooking =
+                                await _roomBookingGetService.GetRoomBookingById(paymentHistory.RoomBookingId);
                             if (roomBooking == null) return;
 
                             // Cập nhật Amount dựa trên Note
                             if (paymentHistory.Note == PaymentType.Bill)
                             {
-                                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, paymentInfo.amount);
+                                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id,
+                                    paymentInfo.amount);
                             }
                             else if (paymentHistory.Note == PaymentType.Deposit)
                             {
                                 await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id,
                                     (int)roomBooking.TotalRoomPrice * 20 / 100);
-                                await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
+                                await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId,
+                                    5);
                             }
                         }
                         else if (paymentInfo.status == "CANCELLED" && paymentHistory.Note == PaymentType.Bill)
@@ -163,8 +166,6 @@ namespace API.Controllers
             // Chờ tất cả các tác vụ xử lý song song hoàn tất
             await Task.WhenAll(tasks);
         }
-
-
 
 
         [HttpGet("payment/callback-refactor")]
@@ -228,7 +229,7 @@ namespace API.Controllers
                 throw new Exception("Không tìm thấy thông tin RoomBooking");
 
             var roomBooking = roomBookingResponse.ToRoomBooking();
-            
+
             var customer = await _customerService.GetCustomerById(roomBookingResponse.CustomerId);
             if (customer == null)
                 throw new Exception("Không tìm thấy thông tin Customer");
@@ -278,7 +279,8 @@ namespace API.Controllers
         {
             if (paymentHistory.Note == PaymentType.Bill)
             {
-                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, paymentLinkInformation.amount);
+                await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id,
+                    paymentLinkInformation.amount);
                 await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 2);
             }
             else if (paymentHistory.Note == PaymentType.Deposit)
@@ -287,7 +289,7 @@ namespace API.Controllers
                 await _paymentHistoryService.UpdatePaymentHistoryAmount(paymentHistory.Id, depositAmount);
                 await _roomBookingUpdateService.UpdateRoomBookingStatus(paymentHistory.RoomBookingId, 5);
             }
-            
+
             return await _paymentHistoryService.GetTotalPaidAmountByRoomBookingId(roomBooking.Id);
         }
 
@@ -308,29 +310,113 @@ namespace API.Controllers
                 case 1: // Nhắc nhở khi có lịch đặt phòng đến hẹn
                     subject = "Nhắc nhở lịch đặt phòng";
                     body = $@"
-                <h3>Xin chào,</h3>
-                <p>Đây là nhắc nhở rằng bạn có một lịch đặt phòng sắp đến hạn.</p>
-                <p>Chi tiết đặt phòng:</p>
-                <ul>
-                    <li><strong>Phòng:</strong>  {emailRequest.RoomDetails}</li>
-                    <li><strong>Thời gian đặt:</strong>    {emailRequest.BookingTime}</li>
-                </ul>
-                <p>Xin vui lòng đảm bảo đến đúng giờ. Xin cảm ơn!</p>";
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Nhắc nhở lịch đặt phòng</title>
+                </head>
+                <body style='margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;'>
+                    <table align='center' border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px; background-color: #ffffff; border: 1px solid #e0e0e0; margin: 20px auto;'>
+                        <!-- Header -->
+                        <tr>
+                            <td style='background-color: #ffffff; padding: 20px; text-align: center;'>
+                                <h2 style='color: #000000; margin: 0; font-size: 24px;'>Nhắc nhở lịch đặt phòng</h2>
+                            </td>
+                        </tr>
+                        <!-- Body -->
+                        <tr>
+                            <td style='padding: 20px;'>
+                                <p style='font-size: 16px; color: #333333; line-height: 1.5;'>Xin chào,</p>
+                                <p style='font-size: 16px; color: #333333; line-height: 1.5;'>Đây là nhắc nhở rằng bạn có một lịch đặt phòng sắp đến hạn. Vui lòng kiểm tra thông tin dưới đây:</p>
+                                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='margin: 20px 0;'>
+                                    <tr>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'><strong>Phòng:</strong></td>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'>{emailRequest.RoomDetails}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'><strong>Thời gian đặt:</strong></td>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'>{emailRequest.BookingTime}</td>
+                                    </tr>
+                                </table>
+                                <p style='font-size: 16px; color: #333333; line-height: 1.5;'>Xin vui lòng đảm bảo đến đúng giờ. Nếu cần hỗ trợ, hãy liên hệ với chúng tôi!</p>
+                                <p style='text-align: center; margin: 20px 0;'>
+                                    <a href='#' style='background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;'>Xem chi tiết</a>
+                                </p>
+                            </td>
+                        </tr>
+                        <!-- Footer -->
+                        <tr>
+                            <td style='background-color: #f8f8f8; padding: 20px; text-align: center; font-size: 14px; color: #666666;'>
+                                <p style='margin: 0;'>13 Trịnh Văn Bô, phường Phương Canh, quận Nam Từ Liêm</p>
+                                <p style='margin: 5px 0;'>Email: duantotnghiepfptpolytechnic@gmail.com | Hotline: 84 968458834</p>
+                                <p style='margin: 5px 0;'>© 2025 Continental. Bảo lưu mọi quyền.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>";
                     break;
 
                 case 2: // Xác nhận đặt phòng
                     subject = "Xác nhận đặt phòng";
                     body = $@"
-                    <h3>Xin chào,</h3>
-                    <p>Bạn đã đặt phòng thành công.</p>
-                    <p>Chi tiết đặt phòng:</p>
-                    <ul style='font-family: Arial, sans-serif;'>
-                        <li><strong>Phòng:  </strong>{emailRequest.RoomDetails}</li>
-                        <li><strong>Thời gian đặt:  </strong>{emailRequest.BookingTime}</li>
-                        <li><strong>Tổng tiền phòng:  </strong>{FormatCurrency(emailRequest.TotalPrice)} VND</li>
-                        <li><strong>Số tiền đã thanh toán:  </strong>{FormatCurrency(emailRequest.PaidAmount)} VND</li>
-                    </ul>
-                    <p>Nếu bạn không thực hiện đặt phòng này, hãy bỏ qua email này. Xin cảm ơn!</p>";
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Xác nhận đặt phòng</title>
+                </head>
+                <body style='margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;'>
+                    <table align='center' border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px; background-color: #ffffff; border: 1px solid #e0e0e0; margin: 20px auto;'>
+                        <!-- Header -->
+                        <tr>
+                            <td style='background-color: #ffffff; padding: 20px; text-align: center;'>
+                                <h2 style='color: #000000; margin: 0; font-size: 24px;'>Nhắc nhở lịch đặt phòng</h2>
+                            </td>
+                        </tr>
+                        <!-- Body -->
+                        <tr>
+                            <td style='padding: 20px;'>
+                                <p style='font-size: 16px; color: #333333; line-height: 1.5;'>Xin chào,</p>
+                                <p style='font-size: 16px; color: #333333; line-height: 1.5;'>Cảm ơn bạn đã đặt phòng với chúng tôi. Dưới đây là chi tiết đặt phòng của bạn:</p>
+                                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='margin: 20px 0;'>
+                                    <tr>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'><strong>Phòng:</strong></td>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'>{emailRequest.RoomDetails}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'><strong>Thời gian đặt:</strong></td>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'>{emailRequest.BookingTime}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'><strong>Tổng tiền phòng:</strong></td>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'>{FormatCurrency(emailRequest.TotalPrice)} VND</td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'><strong>Số tiền đã thanh toán:</strong></td>
+                                        <td style='padding: 10px 0; font-size: 16px; color: #333333;'>{FormatCurrency(emailRequest.PaidAmount)} VND</td>
+                                    </tr>
+                                </table>
+                                <p style='font-size: 16px; color: #333333; line-height: 1.5;'>Nếu bạn không thực hiện đặt phòng này, vui lòng liên hệ chúng tôi ngay lập tức.</p>
+                                <p style='text-align: center; margin: 20px 0;'>
+                                    <a href='#' style='background-color: #28a745; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;'>Xem chi tiết đặt phòng</a>
+                                </p>
+                            </td>
+                        </tr>
+                        <!-- Footer -->
+                        <tr>
+                            <td style='background-color: #f8f8f8; padding: 20px; text-align: center; font-size: 14px; color: #666666;'>
+                                <p style='margin: 0;'>13 Trịnh Văn Bô, phường Phương Canh, quận Nam Từ Liêm</p>
+                                <p style='margin: 5px 0;'>Email: duantotnghiepfptpolytechnic@gmail.com | Hotline: 84 968458834</p>
+                                <p style='margin: 5px 0;'>© 2025 Continental. Bảo lưu mọi quyền.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>";
                     break;
 
                 default:
