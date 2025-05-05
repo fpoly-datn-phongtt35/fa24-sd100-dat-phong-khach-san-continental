@@ -244,7 +244,7 @@ namespace API.Controllers
                 RoomDetails = roomDetails,
                 BookingTime = checkinDetails,
                 TotalPrice = roomBookingResponse.TotalPrice ?? 0,
-                PaidAmount = totalPaidAmount
+                PaidAmount = totalPaidAmount,
             };
 
             await SendEmail(emailRequest);
