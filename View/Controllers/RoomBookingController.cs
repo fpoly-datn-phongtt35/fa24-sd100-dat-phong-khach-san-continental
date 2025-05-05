@@ -20,6 +20,8 @@ using Domain.Services.IServices.IRoomBooking;
 using Domain.Services.IServices.IRoomType;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Rotativa.AspNetCore;
+using View.Models.RoomBooking;
 using WEB.CMS.Customize;
 
 namespace View.Controllers;
@@ -63,6 +65,70 @@ public class RoomBookingController : Controller
         _roomBookingService = roomBookingGetService;
         _serviceService = serviceService;
         _roomGetService = roomGetService;
+    }
+
+    public async Task<IActionResult> RoomBookingPdf(Guid rbId)
+    {
+        if (rbId == Guid.Empty)
+        {
+            return BadRequest("ID đặt phòng không hợp lệ.");
+        }
+
+        var roomBooking = await _roomBookingService.GetRoomBookingById(rbId);
+        if (roomBooking == null)
+        {
+            return NotFound("Không tìm thấy đặt phòng.");
+        }
+
+        var customer = await _customerService.GetCustomerById(roomBooking.CustomerId);
+
+        var roomDetails = await _roomBookingDetailServiceForCustomer.GetListRoomBookingDetailByRoomBookingId(rbId);
+
+        var pdfDto = new RoomBookingPdfDto
+        {
+            Id = roomBooking.Id,
+            CustomerId = roomBooking.CustomerId,
+            CustomerName = customer != null ? $"{customer.FirstName} {customer.LastName}" : "Không xác định",
+            Status = roomBooking.Status,
+            TotalRoomPrice = roomBooking.TotalRoomPrice,
+            TotalServicePrice = roomBooking.TotalServicePrice,
+            TotalExtraPrice = roomBooking.TotalExtraPrice,
+            TotalPriceReality = roomBooking.TotalPriceReality,
+            CreatedTime = roomBooking.CreatedTime,
+            RoomDetails = roomDetails?.Select(async rd =>
+            {
+                var room = await _roomGetService.GetRoomById(rd.RoomId);
+                var serviceDetails = await _serviceOrderDetailService.GetListServiceOrderDetailByRoomBookingDetailId(rd.RoomBookingDetailId);
+                return new RoomBookingDetailPdfDto
+                {
+                    Id = rd.RoomBookingDetailId,
+                    RoomName = room != null ? room.Name : "Không xác định", 
+                    RoomPrice = rd.Price ?? 0,
+                    CheckInReality = rd.CheckInReality,
+                    CheckOutReality = rd.CheckOutReality,
+                    Expenses = rd.Expenses,
+                    Status = rd.Status,
+                    ServiceDetails = serviceDetails?.Select(async sd =>
+                    {
+                        var service = await _serviceService.GetServiceById(sd.ServiceId);
+                        return new ServiceOrderDetailPdfDto
+                        {
+                            Id = sd.Id,
+                            ServiceName = service != null ? service.Name : "Không xác định", 
+                            Price = sd.Price,
+                            Quantity = sd.Quantity,
+                            TotalPrice = sd.Price * sd.Quantity
+                        };
+                    }).Select(t => t.Result).ToList() ?? new List<ServiceOrderDetailPdfDto>()
+                };
+            }).Select(t => t.Result).ToList() ?? new List<RoomBookingDetailPdfDto>()
+        };
+
+        return new ViewAsPdf("RoomBookingPdf", pdfDto)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 
     public async Task<List<ServiceType>> GetlistServiceType(string txt_search)

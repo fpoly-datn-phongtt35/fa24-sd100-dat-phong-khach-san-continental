@@ -1,0 +1,238 @@
+﻿@model RoomBookingPdfDto
+@using System.Globalization
+@using View.Models.RoomBooking
+@{
+    Layout = null; // Tắt layout chung
+    var culture = new CultureInfo("vi-VN");
+    var nfi = (NumberFormatInfo)culture.NumberFormat.Clone();
+    nfi.CurrencyGroupSeparator = ",";
+    nfi.CurrencySymbol = "₫";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Hóa đơn đặt phòng</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0; /* Xóa padding của body để đảm bảo chiều ngang đầy đủ */
+            font-size: 12pt;
+        }
+
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-bottom: 10px; /* Tăng khoảng cách dưới các tiêu đề */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Thêm khoảng cách dưới bảng */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 14pt;
+        }
+
+        .header {
+            text-align: center;
+            margin: 20px 0; /* Điều chỉnh margin cho header */
+        }
+
+        .sub-table {
+            width: 80%;  
+            margin-top: 5px;
+            margin-left: 0; 
+            margin-bottom: 20px;  
+        }
+
+        .room-section {
+            margin: 0 20px 30px 20px; 
+        }
+
+        .total-cost-section {
+            margin: 0 20px;  
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;  
+            flex-wrap: nowrap;  
+            align-items: flex-start;  
+            margin: 50px 20px 20px 20px; 
+            width: calc(100% - 40px); 
+            box-sizing: border-box; 
+        }
+
+        .signature-box {
+            width: 49%; 
+            min-height: 120px; 
+            display: inline-block; 
+            box-sizing: border-box;  
+        }
+
+            .signature-box.left {
+                text-align: left; 
+            }
+
+            .signature-box.right {
+                text-align: right;  
+            }
+
+            .signature-box p {
+                margin: 10px 0;
+            }
+
+        .signature-title {
+            width: 150px;  
+            margin: 0 auto; 
+            text-align: center; 
+        }
+
+        .signature-line {
+            width: 250px;  
+            border-top: 1px solid #000;
+            margin: 150px auto 0 auto;  
+        }
+
+        .continental-header {
+            position: absolute;  
+            top: 10px;
+            left: 10px;
+            margin: 0;
+            font-size: 24pt; 
+            color: #333;  
+        }
+    </style>
+</head>
+<body>
+    <h1 class="continental-header">Continental</h1>
+    <div class="header">
+        <h1>HÓA ĐƠN ĐẶT PHÒNG</h1>
+        <p>Khách hàng: @Model.CustomerName</p>
+        <p>Ngày: @String.Format(culture, "{0:dd/MM/yyyy}", Model.CreatedTime)</p>
+    </div>
+
+    <h1>Danh sách phòng</h1>
+    @if (Model.RoomDetails != null && Model.RoomDetails.Any())
+    {
+        @foreach (var room in Model.RoomDetails.Select((value, index) => new { value, index }))
+        {
+            <div class="room-section">
+                <h2>Phòng @(room.index + 1): @room.value.RoomName</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Giá phòng (₫/đêm)</th>
+                            <th>Check-in thực tế</th>
+                            <th>Check-out thực tế</th>
+                            <th>Phí hư tổn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@String.Format(nfi, "{0:N0}", room.value.RoomPrice)</td>
+                            <td>@(room.value.CheckInReality?.ToString("dd/MM/yyyy HH:mm", culture) ?? "Chưa check-in")</td>
+                            <td>@(room.value.CheckOutReality?.ToString("dd/MM/yyyy HH:mm", culture) ?? "Chưa check-out")</td>
+                            <td>@String.Format(nfi, "{0:N0}", room.value.Expenses ?? 0)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Dịch vụ liên quan</h4>
+                <table class="sub-table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên dịch vụ</th>
+                            <th>Giá (₫)</th>
+                            <th>Số lượng</th>
+                            <th>Tổng giá (₫)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (room.value.ServiceDetails != null && room.value.ServiceDetails.Any())
+                        {
+                            @foreach (var service in room.value.ServiceDetails.Select((value, index) => new { value, index }))
+                            {
+                                <tr>
+                                    <td>@(service.index + 1)</td>
+                                    <td>@service.value.ServiceName</td>
+                                    <td>@String.Format(nfi, "{0:N0}", service.value.Price)</td>
+                                    <td>@service.value.Quantity</td>
+                                    <td>@String.Format(nfi, "{0:N0}", service.value.TotalPrice)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">Không có dịch vụ nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="clear: both;"></div>
+            </div>
+        }
+    }
+    else
+    {
+        <p style="margin: 0 20px;">Không có phòng nào.</p>
+    }
+
+    <div class="total-cost-section">
+        <h2>Tổng hợp chi phí</h2>
+        <table>
+            <tr>
+                <td class="total">Tổng tiền phòng</td>
+                <td class="total">@String.Format(nfi, "{0:N0}", Model.TotalRoomPrice)</td>
+            </tr>
+            <tr>
+                <td class="total">Tổng tiền dịch vụ</td>
+                <td class="total">@String.Format(nfi, "{0:N0}", Model.TotalServicePrice)</td>
+            </tr>
+            <tr>
+                <td class="total">Tổng phụ thu</td>
+                <td class="total">@String.Format(nfi, "{0:N0}", Model.TotalExtraPrice)</td>
+            </tr>
+            <tr>
+                <td class="total">Tổng giá thực tế</td>
+                <td class="total">@String.Format(nfi, "{0:N0}", Model.TotalPriceReality)</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="clear: both;"></div>
+    <div class="signature-section">
+        <div class="signature-box left">
+            <div class="signature-title">
+                <p>Lễ tân</p>
+                <p>(Ký và ghi rõ họ tên)</p>
+            </div>
+            <div class="signature-line"></div>
+        </div>
+        <div class="signature-box right">
+            <div class="signature-title">
+                <p>Khách hàng</p>
+                <p>(Ký và ghi rõ họ tên)</p>
+            </div>
+            <div class="signature-line"></div>
+        </div>
+    </div>
+</body>
+</html>

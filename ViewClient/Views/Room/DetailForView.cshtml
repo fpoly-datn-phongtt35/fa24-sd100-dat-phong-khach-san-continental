@@ -194,7 +194,7 @@
     <div class="d-flex justify-content-between align-items-center mt-4">
         <h1 style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: black; text-transform: uppercase; text-align: left;" class="room-title my-4">@Model.Room.Name</h1>
         <div class="rating text-end">
-            @rating.AverageRating
+            @(rating.AverageRating.HasValue ? rating.AverageRating.Value.ToString("F2") : "N/A")            
             <i style="color: orange;" class="bi bi-star-fill"></i>
             <small>(@rating.TotalReviews đánh giá)</small>
         </div>
